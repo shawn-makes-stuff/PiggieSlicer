@@ -36,6 +36,7 @@ private:
     void OnEnterWindow(wxMouseEvent &);
     void OnTimer(wxTimerEvent &event);
     void Dismiss();
+    bool IsMouseInPopup() const;
 
     void CreateBmps();
 

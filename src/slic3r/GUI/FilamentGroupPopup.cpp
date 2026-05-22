@@ -338,7 +338,15 @@ void FilamentGroupPopup::OnRadioBtn(int idx)
     }
 }
 
-void FilamentGroupPopup::OnTimer(wxTimerEvent &event) { Dismiss(); }
+void FilamentGroupPopup::OnTimer(wxTimerEvent&)
+{
+    if (IsMouseInPopup()) {
+        StartTimer();
+        return;
+    }
+
+    Dismiss();
+}
 
 void FilamentGroupPopup::Dismiss() {
     m_active = false;
@@ -348,17 +356,20 @@ void FilamentGroupPopup::Dismiss() {
 
 void FilamentGroupPopup::OnLeaveWindow(wxMouseEvent &)
 {
-    wxPoint pos = this->ScreenToClient(wxGetMousePosition());
-    if (this->GetClientRect().Contains(pos)) return;
+    if (this->GetScreenRect().Contains(wxGetMousePosition())) return;
     StartTimer();
 }
 
 void FilamentGroupPopup::OnEnterWindow(wxMouseEvent &)
 {
     // Ignore spurious ENTER synthesized by PopupWindow::OnMouseEvent2 on macOS.
-    wxPoint pos = this->ScreenToClient(wxGetMousePosition());
-    if (!this->GetClientRect().Contains(pos)) return;
+    if (!this->GetScreenRect().Contains(wxGetMousePosition())) return;
     ResetTimer();
+}
+
+bool FilamentGroupPopup::IsMouseInPopup() const
+{
+    return this->GetScreenRect().Contains(wxGetMousePosition());
 }
 
 void FilamentGroupPopup::UpdateButtonStatus(int hover_idx)
