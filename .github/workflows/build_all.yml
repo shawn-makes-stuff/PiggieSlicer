@@ -13,6 +13,8 @@ on:
      - 'localization/**'
      - 'resources/**'
      - ".github/workflows/build_*.yml"
+     - 'signpath/**'
+     - 'scripts/*.ps1'
      - 'scripts/flatpak/**'
 
   pull_request:
@@ -26,9 +28,11 @@ on:
      - '**/CMakeLists.txt'
      - 'version.inc'
      - ".github/workflows/build_*.yml"
+     - 'signpath/**'
      - 'build_linux.sh'
      - 'build_release_vs2022.bat'
      - 'build_release_macos.sh'
+     - 'scripts/*.ps1'
      - 'scripts/flatpak/**'
 
 
