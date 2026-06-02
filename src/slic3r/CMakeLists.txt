@@ -243,6 +243,8 @@ set(SLIC3R_GUI_SOURCES
     GUI/Automation/AutomationRegistry.hpp
     GUI/Automation/ImGuiItemTable.cpp
     GUI/Automation/ImGuiItemTable.hpp
+    GUI/Automation/WxUiBackend.cpp
+    GUI/Automation/WxUiBackend.hpp
     GUI/I18N.cpp
     GUI/I18N.hpp
     GUI/DragDropPanel.cpp
