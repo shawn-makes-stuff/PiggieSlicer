@@ -7,6 +7,7 @@
 #include "slic3r/GUI/Plater.hpp"
 #include "slic3r/GUI/GLCanvas3D.hpp"
 #include "libslic3r/Model.hpp"
+#include "libslic3r/GCode/ThumbnailData.hpp"
 
 #include <wx/window.h>
 #include <wx/toplevel.h>
@@ -15,7 +16,13 @@
 #include <wx/textctrl.h>   // wxTextEntry
 #include <wx/choice.h>
 #include <wx/checkbox.h>
+#include <wx/uiaction.h>   // wxUIActionSimulator (synthetic mouse/keyboard)
+#include <wx/dcclient.h>   // wxClientDC
+#include <wx/dcmemory.h>   // wxMemoryDC
+#include <wx/mstream.h>    // wxMemoryOutputStream
 
+#include <cctype>          // std::toupper
+#include <cstdlib>         // std::atoi
 #include <chrono>
 #include <cstdint>
 #include <future>
@@ -167,6 +174,163 @@ AppState WxUiBackend::app_state() {
     });
 }
 
-// click/type/keys/screenshots implemented in Task 16.
+// ---------------------------------------------------------------------------
+// Input helpers (anonymous namespace)
+// ---------------------------------------------------------------------------
+namespace {
+// Map a normalized key name (single char, or "enter"/"tab"/"f5"/...) to a wx
+// keycode. Returns 0 when unmapped (caller skips it).
+long wx_keycode(const std::string& key) {
+    if (key.size() == 1) return (long)std::toupper((unsigned char)key[0]);
+    if (key == "enter" || key == "return") return WXK_RETURN;
+    if (key == "tab")    return WXK_TAB;
+    if (key == "esc" || key == "escape") return WXK_ESCAPE;
+    if (key == "space")  return WXK_SPACE;
+    if (key == "delete") return WXK_DELETE;
+    if (key == "backspace") return WXK_BACK;
+    if (key.size() >= 2 && (key[0] == 'f' || key[0] == 'F')) {
+        int n = std::atoi(key.c_str() + 1);
+        if (n >= 1 && n <= 12) return WXK_F1 + (n - 1);
+    }
+    return 0;
+}
+
+// Press (down==true) or release (down==false) the modifier keys. Cmd maps to
+// Ctrl on the platforms we drive here.
+void apply_modifiers_down(wxUIActionSimulator& sim,
+                          const std::vector<KeyModifier>& mods, bool down) {
+    for (KeyModifier m : mods) {
+        long code = (m == KeyModifier::Ctrl)  ? WXK_CONTROL :
+                    (m == KeyModifier::Shift) ? WXK_SHIFT :
+                    (m == KeyModifier::Alt)   ? WXK_ALT : WXK_CONTROL; // Cmd~Ctrl
+        if (down) sim.KeyDown((int)code); else sim.KeyUp((int)code);
+    }
+}
+} // namespace
+
+bool WxUiBackend::click(const UiNode& node, MouseButton button, bool dbl,
+                        const std::vector<KeyModifier>& modifiers) {
+    return run_on_gui(m_gui_timeout_ms, [&]() -> bool {
+        // Raise/focus the owning top-level window so OS input lands on it.
+        if (auto* w = reinterpret_cast<wxWindow*>(node.handle)) {
+            if (wxWindow* tlw = wxGetTopLevelParent(w)) tlw->Raise();
+            w->SetFocus();
+        }
+        const int cx = node.rect.x + node.rect.w / 2;
+        const int cy = node.rect.y + node.rect.h / 2;
+        wxUIActionSimulator sim;
+        sim.MouseMove(cx, cy);
+        apply_modifiers_down(sim, modifiers, true);
+        const int b = (button == MouseButton::Right)  ? wxMOUSE_BTN_RIGHT :
+                      (button == MouseButton::Middle) ? wxMOUSE_BTN_MIDDLE :
+                                                        wxMOUSE_BTN_LEFT;
+        if (dbl) sim.MouseDblClick(b); else sim.MouseClick(b);
+        apply_modifiers_down(sim, modifiers, false);
+        return true;
+    });
+}
+
+bool WxUiBackend::type_text(const std::string& text) {
+    return run_on_gui(m_gui_timeout_ms, [&]() -> bool {
+        wxUIActionSimulator sim;
+        // wxUIActionSimulator::Text takes a const char*; `text` is already UTF-8.
+        sim.Text(text.c_str());
+        return true;
+    });
+}
+
+bool WxUiBackend::send_keys(const std::vector<KeyChord>& chords) {
+    return run_on_gui(m_gui_timeout_ms, [&]() -> bool {
+        wxUIActionSimulator sim;
+        for (const KeyChord& c : chords) {
+            const long code = wx_keycode(c.key);
+            if (code == 0) continue;
+            apply_modifiers_down(sim, c.modifiers, true);
+            sim.Char((int)code);
+            apply_modifiers_down(sim, c.modifiers, false);
+        }
+        return true;
+    });
+}
+
+// ---------------------------------------------------------------------------
+// Screenshot helpers (anonymous namespace)
+// ---------------------------------------------------------------------------
+namespace {
+PngImage wximage_to_png(const wxImage& image) {
+    wxMemoryOutputStream mem;
+    if (!image.SaveFile(mem, wxBITMAP_TYPE_PNG))
+        throw AutomationError(kErrScreenshotFail, "PNG encode failed");
+    PngImage out;
+    out.width  = image.GetWidth();
+    out.height = image.GetHeight();
+    const size_t n = mem.GetSize();
+    out.png.resize(n);
+    mem.CopyTo(out.png.data(), n);
+    return out;
+}
+
+// RGBA ThumbnailData -> wxImage (mirrors GLCanvas3D::debug_output_thumbnail —
+// note the vertical flip GL rows require).
+wxImage thumbnail_to_wximage(const ThumbnailData& td) {
+    wxImage image((int)td.width, (int)td.height);
+    image.InitAlpha();
+    for (unsigned int r = 0; r < td.height; ++r) {
+        unsigned int rr = (td.height - 1 - r) * td.width;
+        for (unsigned int c = 0; c < td.width; ++c) {
+            const unsigned char* px = td.pixels.data() + 4 * (rr + c);
+            image.SetRGB((int)c, (int)r, px[0], px[1], px[2]);
+            image.SetAlpha((int)c, (int)r, px[3]);
+        }
+    }
+    return image;
+}
+} // namespace
+
+PngImage WxUiBackend::screenshot_window(const UiNode* target) {
+    return run_on_gui(m_gui_timeout_ms, [&]() -> PngImage {
+        wxWindow* win = target ? reinterpret_cast<wxWindow*>(target->handle)
+                               : static_cast<wxWindow*>(wxGetApp().mainframe);
+        if (win == nullptr)
+            throw AutomationError(kErrScreenshotFail, "no window to capture");
+        const wxSize sz = win->GetClientSize();
+        if (sz.x <= 0 || sz.y <= 0)
+            throw AutomationError(kErrScreenshotFail, "window has no client area");
+        wxBitmap bmp(sz.x, sz.y);
+        wxClientDC dc(win);
+        wxMemoryDC mdc(bmp);
+        mdc.Blit(0, 0, sz.x, sz.y, &dc, 0, 0);
+        mdc.SelectObject(wxNullBitmap);
+        return wximage_to_png(bmp.ConvertToImage());
+    });
+}
+
+PngImage WxUiBackend::screenshot_viewport3d(std::optional<int> plate,
+                                            std::optional<int> width,
+                                            std::optional<int> height) {
+    return run_on_gui(m_gui_timeout_ms, [&]() -> PngImage {
+        Plater* p = wxGetApp().plater();
+        if (p == nullptr)
+            throw AutomationError(kErrScreenshotFail, "no plater");
+        GLCanvas3D* canvas = p->get_current_canvas3D();
+        if (canvas == nullptr)
+            throw AutomationError(kErrScreenshotFail, "no 3D canvas");
+        const unsigned int w = width  ? (unsigned)*width  : 800u;
+        const unsigned int h = height ? (unsigned)*height : 600u;
+
+        // Render the active plate's 3D scene into an offscreen RGBA buffer.
+        // render_thumbnail makes the canvas's GL context current itself. The
+        // pixel size is governed by w/h; `sizes` stays empty as elsewhere.
+        // Fields: {sizes, printable_only, parts_only, show_bed, transparent_background, plate_id}.
+        const int plate_id = plate ? *plate : 0; // v1: default active plate
+        const ThumbnailsParams params{ {}, false, false, true, false, plate_id };
+
+        ThumbnailData data;
+        canvas->render_thumbnail(data, w, h, params, Camera::EType::Ortho);
+        if (!data.is_valid())
+            throw AutomationError(kErrScreenshotFail, "thumbnail render failed");
+        return wximage_to_png(thumbnail_to_wximage(data));
+    });
+}
 
 }}} // namespace Slic3r::GUI::Automation
