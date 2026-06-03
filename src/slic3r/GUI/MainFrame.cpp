@@ -3896,7 +3896,13 @@ int MainFrame::select_tab_by_name(const std::string& name)
     if      (name == "prepare")      { page = m_plater; offset = 0; }
     else if (name == "preview")      { page = m_plater; offset = 1; }
     else if (name == "home")         page = m_webview;
-    else if (name == "device")       page = m_monitor;
+    else if (name == "device")
+        // The Device tab is m_monitor for Bambu printers but m_printer_view for
+        // third-party printers (show_device swaps them in place), so pick whichever
+        // is currently paged.
+        page = (m_monitor != nullptr && m_tabpanel->FindPage(m_monitor) != wxNOT_FOUND)
+                   ? static_cast<wxWindow*>(m_monitor)
+                   : static_cast<wxWindow*>(m_printer_view);
     else if (name == "multi_device") page = m_multi_machine;
     else if (name == "project")      page = m_project;
     else if (name == "calibration")  page = m_calibration;
