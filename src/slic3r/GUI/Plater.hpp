@@ -173,7 +173,15 @@ public:
     bool reset_bed_type_combox_choices(bool is_sidebar_init = false);
     void change_top_border_for_mode_sizer(bool increase_border);
     void update_filaments_area_height();
-    void update_filaments_counter(bool force_layout = false);
+    void refresh_mixed_filament_panel();
+    void rebuild_mixed_filament_panel();
+    void update_mixed_filament_preview();
+    void add_mixed_filament();
+    void remove_mixed_filament(size_t mixed_index = size_t(-1));
+    void edit_mixed_filament(size_t mixed_index);
+    void persist_mixed_filaments();
+    void sync_mixed_filaments_from_project();
+    std::vector<std::string> mixed_filament_physical_colors() const;
     void msw_rescale();
     void sys_color_changed();
     void search();
@@ -193,6 +201,9 @@ public:
     void on_bed_type_change(BedType bed_type);
     void load_ams_list(MachineObject* obj);
     std::map<int, DynamicPrintConfig> build_filament_ams_list(MachineObject* obj);
+    bool is_anycubic_material_sync_available() const;
+    std::map<int, DynamicPrintConfig> build_anycubic_filament_ams_list(wxString* error_message = nullptr);
+    void sync_anycubic_materials();
     void sync_ams_list(bool is_from_big_sync_btn = false);
     bool sync_extruder_list();
     bool need_auto_sync_extruder_list_after_connect_priner(const MachineObject* obj);

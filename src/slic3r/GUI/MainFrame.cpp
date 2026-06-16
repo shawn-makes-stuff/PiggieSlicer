@@ -14,9 +14,11 @@
 #include <wx/debug.h>
 #include <wx/utils.h>
 
-#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/property_tree/ptree.hpp>
+
+#include <nlohmann/json.hpp>
 
 #include "libslic3r/Print.hpp"
 #include "libslic3r/Polygon.hpp"
@@ -92,6 +94,54 @@ wxDEFINE_EVENT(EVT_SHOW_IP_DIALOG, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UPDATE_MACHINE_LIST, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UPDATE_PRESET_CB, SimpleEvent);
 
+
+namespace {
+
+static bool is_anycubic_printer_preset(const PresetBundle& preset_bundle)
+{
+    const auto& printers = preset_bundle.printers;
+    const auto& preset   = printers.get_edited_preset();
+    const auto  pwv      = printers.get_preset_with_vendor_profile(preset);
+    return pwv.vendor && pwv.vendor->name == "Anycubic";
+}
+
+static bool is_anycubic_lan_config(const DynamicPrintConfig& cfg)
+{
+    auto opt = cfg.opt<ConfigOptionEnum<PrintHostType>>("host_type");
+    return opt && opt->value == htAnycubicLan;
+}
+
+static std::string saved_anycubic_lan_host()
+{
+    auto* app_config = wxGetApp().app_config;
+    if (!app_config)
+        return {};
+
+    const std::string raw = app_config->get("piggie_lan_printers");
+    if (raw.empty())
+        return {};
+
+    try {
+        auto printers = nlohmann::json::parse(raw);
+        std::string host;
+        int host_count = 0;
+        if (printers.is_array()) {
+            for (const auto& printer : printers) {
+                std::string ip = printer.value("ip", "");
+                boost::trim(ip);
+                if (!ip.empty()) {
+                    host = ip;
+                    ++host_count;
+                }
+            }
+        }
+        return host_count == 1 ? host : std::string();
+    } catch (...) {
+        return {};
+    }
+}
+
+}
 
 
 // BBS: backup
@@ -1732,11 +1782,20 @@ bool MainFrame::can_send_gcode() const
 {
     if (m_plater && !m_plater->model().objects.empty())
     {
-        auto cfg = wxGetApp().preset_bundle->printers.get_edited_preset().config;
+        auto* preset_bundle = wxGetApp().preset_bundle;
+        if (!preset_bundle)
+            return false;
+
+        auto cfg = preset_bundle->printers.get_edited_preset().config;
 
         const auto *print_host_opt = cfg.option<ConfigOptionString>("print_host");
-        if (! print_host_opt) return false;
-        else return !print_host_opt->value.empty();
+        if (print_host_opt && !print_host_opt->value.empty())
+            return true;
+
+        if (is_anycubic_printer_preset(*preset_bundle) || is_anycubic_lan_config(cfg))
+            return !saved_anycubic_lan_host().empty();
+
+        return false;
     }
     return true;
 }

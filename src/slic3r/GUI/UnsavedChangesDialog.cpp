@@ -11,6 +11,7 @@
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/Color.hpp"
+#include "libslic3r/Utils.hpp"
 #include "format.hpp"
 #include "GUI_App.hpp"
 #include "Plater.hpp"
@@ -797,6 +798,7 @@ UnsavedChangesDialog::UnsavedChangesDialog(const wxString &caption, const wxStri
     , m_app_config_key(app_config_key)
     , m_buttons(act_buttons)
 {
+    SetIcon(wxIcon(Slic3r::var("splash_logo.png"), wxBITMAP_TYPE_PNG));
     build(Preset::TYPE_INVALID, nullptr, "", header);
     this->CenterOnScreen();
     wxGetApp().UpdateDlgDarkUI(this);
@@ -811,6 +813,7 @@ UnsavedChangesDialog::UnsavedChangesDialog(Preset::Type type, PresetCollection *
                 wxDefaultSize,
                 wxCAPTION | wxCLOSE_BOX)
 {
+    SetIcon(wxIcon(Slic3r::var("splash_logo.png"), wxBITMAP_TYPE_PNG));
     if (new_selected_preset.empty() || no_transfer)
         m_buttons &= ~ActionButtons::TRANSFER;
     build(type, dependent_presets, new_selected_preset);

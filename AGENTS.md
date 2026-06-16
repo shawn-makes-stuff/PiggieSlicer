@@ -1,57 +1,25 @@
 # CLAUDE.md
 
-OrcaSlicer — open-source C++17 3D slicer. wxWidgets GUI, CMake build system.
+## Project Structure & Module Organization
+PiggieSlicer's C++17 sources live in `src/`, split by feature modules and platform adapters. User assets, icons, and printer presets are in `resources/`; translations stay in `localization/`. Tests sit in `tests/`, grouped by domain (`libslic3r/`, `sla_print/`, etc.) with fixtures under `tests/data/`. CMake helpers reside in `cmake/`, and longer references live in `doc/` and `SoftFever_doc/`. Automation scripts belong in `scripts/` and `tools/`. Treat everything in `deps/` and `deps_src/` as vendored snapshots.
 
-## Build Commands
+## Build, Test, and Development Commands
+Use out-of-source builds:
 
-```bash
-# macOS
-cmake --build build/arm64 --config RelWithDebInfo --target all --
+- `cmake -S . -B build -DCMAKE_BUILD_TYPE=Release` configures dependencies and generates build files.
+- `cmake --build build --target OrcaSlicer --config Release` compiles the app target inherited from upstream; the Windows app output is branded as `PiggieSlicer.exe`.
+- `cmake --build build --target tests` then `ctest --test-dir build --output-on-failure` runs automated suites.
 
-# Linux
-cmake --build build --config RelWithDebInfo --target all --
+Platform helpers such as `build_linux.sh`, `build_release_macos.sh`, and `build_release_vs2022.bat` wrap the same flow with toolchain flags.
 
-# Windows (replace %build_type% with Debug/Release/RelWithDebInfo)
-cmake --build . --config %build_type% --target ALL_BUILD -- -m
-```
+## Coding Style & Naming Conventions
+`.clang-format` enforces 4-space indents, a 140-column limit, aligned initializers, and brace wrapping for classes and functions. Prefer `CamelCase` for classes, `snake_case` for functions and locals, and `SCREAMING_CASE` for constants, matching conventions in `src/`.
 
-## Testing
+## Testing Guidelines
+Unit tests rely on Catch2 (`tests/catch2/`). Name specs after the component under test and keep deterministic fixtures or sample G-code in `tests/data/`. Document manual printer validation when automated coverage is insufficient, especially for Anycubic LAN, ACE Pro, and Full Spectrum mixed-filament workflows.
 
-Catch2 framework. Tests in `tests/` directory.
+## Commit & Pull Request Guidelines
+Use concise, sentence-style commit subjects. Complete `.github/pull_request_template.md`, include screenshots for UI changes, and mention impacted presets, translations, printer protocols, or release packaging.
 
-```bash
-cd build && ctest --output-on-failure           # all tests
-ctest --test-dir ./tests/libslic3r              # individual suite
-ctest --test-dir ./tests/fff_print
-```
-
-## Code Style
-
-- C++17, selective C++20. PascalCase classes, snake_case functions/variables
-- `#pragma once` for headers. Smart pointers and RAII preferred
-- Parallelization via TBB — be mindful of shared state
-
-## Key Entry Points
-
-- App startup: `src/OrcaSlicer.cpp`
-- Slicing pipeline: `src/libslic3r/Print.cpp`
-- All print/printer/material settings: `src/libslic3r/PrintConfig.cpp`
-- GUI: `src/slic3r/GUI/`
-- Core algorithms: `src/libslic3r/` (GCode/, Fill/, Support/, Geometry/, Format/, Arachne/)
-- Printer profiles: `resources/profiles/[manufacturer].json`
-
-## Critical Constraints
-
-- **Backward compatibility required** for .3mf project files and printer profiles
-- **Cross-platform** — all changes must work on Windows, macOS, and Linux
-- Profile/format changes need version migration handling
-- Dependencies built separately in `deps/build/`, then linked to main app
-
-## Code review focus areas
-
-- Changes must not cause regressions in existing functionality, defaults, profiles, or project compatibility.
-- Features gated by options must not affect existing behavior when those options are disabled.
-- Changes should follow the existing code style and architecture. Architectural changes should be justified in code comments and the PR description.
-- Add helper functions or utilities only when existing code cannot reasonably be reused. Avoid duplication.
-- Keep code concise and clear. Manually simplify AI generated bloated codes before review.
-- Include targeted tests or documented verification for behavior changes, especially in slicing logic, profiles, formats, and GUI defaults.
+## Security & Configuration Tips
+Follow `SECURITY.md` for vulnerability reporting. Keep API tokens and printer credentials out of tracked configs; use `sandboxes/` for experimental settings. When touching third-party code in `deps_src/`, record the upstream commit or release in your PR description.

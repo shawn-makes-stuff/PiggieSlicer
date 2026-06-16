@@ -10,6 +10,7 @@
 #include <string>
 #include <regex>
 #include <future>
+#include <cstdio>
 #include <boost/algorithm/string.hpp>
 #include <boost/iterator/counting_iterator.hpp>
 #include <boost/optional.hpp>
@@ -22,6 +23,8 @@
 #include <boost/uuid/uuid_io.hpp>
 
 #include <wx/sizer.h>
+#include <wx/choice.h>
+#include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/bmpcbox.h>
@@ -117,6 +120,7 @@
 #include "../Utils/UndoRedo.hpp"
 #include "../Utils/PresetUpdater.hpp"
 #include "../Utils/Process.hpp"
+#include "../Utils/AcLan.hpp"
 #include "RemovableDriveManager.hpp"
 #include "InstanceCheck.hpp"
 #include "NotificationManager.hpp"
@@ -185,6 +189,110 @@ static const std::pair<unsigned int, unsigned int> THUMBNAIL_SIZE_3MF = { 512, 5
 
 namespace Slic3r {
 namespace GUI {
+
+namespace {
+
+static std::string bare_anycubic_host(std::string host)
+{
+    boost::trim(host);
+    const auto scheme = host.find("://");
+    if (scheme != std::string::npos)
+        host = host.substr(scheme + 3);
+    host = host.substr(0, host.find('/'));
+    host = host.substr(0, host.find(':'));
+    return host;
+}
+
+static std::string rgb_to_html_colour(int r, int g, int b)
+{
+    char buf[8];
+    std::snprintf(buf, sizeof(buf), "#%02X%02X%02X",
+                  std::clamp(r, 0, 255),
+                  std::clamp(g, 0, 255),
+                  std::clamp(b, 0, 255));
+    return buf;
+}
+
+static wxColour html_to_wx_colour(const std::string& html)
+{
+    wxColour colour(from_u8(html));
+    return colour.IsOk() ? colour : wxColour(200, 200, 200);
+}
+
+static StaticBox* make_colour_swatch(wxWindow* parent, const wxColour& colour, int dip)
+{
+    auto* swatch = new StaticBox(parent, wxID_ANY, wxDefaultPosition, wxSize(parent->FromDIP(dip), parent->FromDIP(dip)));
+    swatch->SetCornerRadius(parent->FromDIP(5));
+    swatch->SetBorderColor(StateColor(wxColour("#DBDBDB")));
+    swatch->SetBorderWidth(1);
+    swatch->SetBackgroundColor(StateColor(colour));
+    swatch->SetBackgroundColour(colour);
+    return swatch;
+}
+
+static bool is_anycubic_printer_preset(const PresetBundle& preset_bundle)
+{
+    const auto& printers = preset_bundle.printers;
+    const auto& preset   = printers.get_edited_preset();
+    const auto  pwv      = printers.get_preset_with_vendor_profile(preset);
+    return pwv.vendor && pwv.vendor->name == "Anycubic";
+}
+
+static bool is_anycubic_lan_config(const DynamicPrintConfig& cfg)
+{
+    auto opt = cfg.opt<ConfigOptionEnum<PrintHostType>>("host_type");
+    return opt && opt->value == htAnycubicLan;
+}
+
+static std::string anycubic_saved_lan_host()
+{
+    auto* app_config = wxGetApp().app_config;
+    if (!app_config)
+        return {};
+
+    const std::string raw = app_config->get("piggie_lan_printers");
+    if (raw.empty())
+        return {};
+
+    try {
+        auto printers = json::parse(raw);
+        std::string host;
+        int host_count = 0;
+        if (printers.is_array()) {
+            for (const auto& printer : printers) {
+                std::string ip = printer.value("ip", "");
+                boost::trim(ip);
+                if (!ip.empty()) {
+                    host = ip;
+                    ++host_count;
+                }
+            }
+        }
+        return host_count == 1 ? host : std::string();
+    } catch (...) {
+        return {};
+    }
+}
+
+static bool resolve_anycubic_print_host(DynamicPrintConfig& cfg, bool allow_anycubic_preset = false)
+{
+    if (!is_anycubic_lan_config(cfg) && !allow_anycubic_preset)
+        return !cfg.opt_string("print_host").empty();
+
+    if (!cfg.opt_string("print_host").empty())
+        return true;
+
+    std::string host = anycubic_saved_lan_host();
+    if (host.empty())
+        return false;
+
+    cfg.opt_string("print_host") = host;
+    if (auto* host_type = cfg.option<ConfigOptionEnum<PrintHostType>>("host_type", true))
+        host_type->value = htAnycubicLan;
+    return true;
+}
+
+}
 
 wxDEFINE_EVENT(EVT_SCHEDULE_BACKGROUND_PROCESS,     SimpleEvent);
 wxDEFINE_EVENT(EVT_SLICING_UPDATE,                  SlicingStatusEvent);
@@ -533,6 +641,19 @@ struct Sidebar::priv
     wxScrolledWindow* m_panel_filament_content;
     wxScrolledWindow* m_scrolledWindow_filament_content;
     wxStaticLine* m_staticline2;
+    StaticBox* m_panel_mixed_filament_title = nullptr;
+    ScalableButton* m_mixed_filament_icon = nullptr;
+    wxStaticText* m_staticText_mixed_filament_settings = nullptr;
+    ScalableButton* m_bpButton_add_mixed_filament = nullptr;
+    ScalableButton* m_bpButton_del_mixed_filament = nullptr;
+    wxScrolledWindow* m_panel_mixed_filament_content = nullptr;
+    wxBoxSizer* sizer_mixed_filaments = nullptr;
+    wxChoice* m_mixed_choice_a = nullptr;
+    wxChoice* m_mixed_choice_b = nullptr;
+    wxSlider* m_mixed_slider = nullptr;
+    wxStaticText* m_mixed_ratio_label = nullptr;
+    StaticBox* m_mixed_preview_swatch = nullptr;
+    size_t m_editing_mixed_filament = size_t(-1);
     wxPanel* m_panel_project_title;
     ScalableButton* m_filament_icon = nullptr;
     Button * m_flushing_volume_btn = nullptr;
@@ -2145,9 +2266,12 @@ Sidebar::Sidebar(Plater *parent)
 
     ams_btn = new ScalableButton(p->m_panel_filament_title, wxID_ANY, "ams_fila_sync", wxEmptyString, wxDefaultSize, wxDefaultPosition,
                                                  wxBU_EXACTFIT | wxNO_BORDER, false, 16); // ORCA match icon size with other icons as 16x16
-    ams_btn->SetToolTip(_L("Synchronize filament list from AMS"));
+    ams_btn->SetToolTip(_L("Sync materials"));
     ams_btn->Bind(wxEVT_BUTTON, [this, scrolled_sizer](wxCommandEvent &e) {
-        sync_ams_list();
+        if (is_anycubic_material_sync_available())
+            sync_anycubic_materials();
+        else
+            sync_ams_list();
     });
 
     ams_btn->Bind(wxEVT_UPDATE_UI, &Sidebar::update_sync_ams_btn_enable, this);
@@ -2199,6 +2323,90 @@ Sidebar::Sidebar(Plater *parent)
     update_filaments_area_height(); // ORCA
 
     scrolled_sizer->Add(p->m_panel_filament_content, 0, wxEXPAND | wxTOP | wxBOTTOM, FromDIP(SidebarProps::ContentMarginV())); // ORCA use vertical margin on parent otherwise it shows scrollbar even on 1 filament
+    }
+
+    {
+    // PiggieSlicer / FullSpectrum: virtual mixed-filament sidebar panel.
+    p->m_panel_mixed_filament_title = new StaticBox(p->scrolled, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxBORDER_NONE);
+    p->m_panel_mixed_filament_title->SetBackgroundColor(title_bg);
+    p->m_panel_mixed_filament_title->SetBackgroundColor2(0xF1F1F1);
+    p->m_panel_mixed_filament_title->Bind(wxEVT_LEFT_UP, [this](wxMouseEvent& e) {
+        if (e.GetPosition().x > (p->m_bpButton_add_mixed_filament->GetPosition().x - FromDIP(30)))
+            return;
+        p->m_panel_mixed_filament_content->Show(!p->m_panel_mixed_filament_content->IsShown());
+        m_scrolled_sizer->Layout();
+    });
+
+    auto* mixed_title_sizer = new wxBoxSizer(wxHORIZONTAL);
+    p->m_mixed_filament_icon = new ScalableButton(p->m_panel_mixed_filament_title, wxID_ANY, "param_multi_material");
+    p->m_staticText_mixed_filament_settings = new Label(p->m_panel_mixed_filament_title, _L("Mixed Filaments"), LB_PROPAGATE_MOUSE_EVENT);
+    mixed_title_sizer->Add(p->m_mixed_filament_icon, 0, wxALIGN_CENTER | wxLEFT, FromDIP(SidebarProps::TitlebarMargin()));
+    mixed_title_sizer->AddSpacer(FromDIP(SidebarProps::ElementSpacing()));
+    mixed_title_sizer->Add(p->m_staticText_mixed_filament_settings, 0, wxALIGN_CENTER);
+    mixed_title_sizer->AddStretchSpacer(1);
+
+    p->m_bpButton_del_mixed_filament = new ScalableButton(p->m_panel_mixed_filament_title, wxID_ANY, "delete_filament");
+    p->m_bpButton_del_mixed_filament->SetToolTip(_L("Remove last custom mixed filament"));
+    p->m_bpButton_del_mixed_filament->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+        remove_mixed_filament();
+    });
+    mixed_title_sizer->Add(p->m_bpButton_del_mixed_filament, 0, wxALIGN_CENTER | wxLEFT, FromDIP(SidebarProps::IconSpacing()));
+
+    p->m_bpButton_add_mixed_filament = new ScalableButton(p->m_panel_mixed_filament_title, wxID_ANY, "add_filament");
+    p->m_bpButton_add_mixed_filament->SetToolTip(_L("Add mixed filament"));
+    p->m_bpButton_add_mixed_filament->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+        add_mixed_filament();
+    });
+    mixed_title_sizer->Add(p->m_bpButton_add_mixed_filament, 0, wxALIGN_CENTER | wxLEFT, FromDIP(SidebarProps::IconSpacing()));
+    mixed_title_sizer->AddSpacer(FromDIP(SidebarProps::TitlebarMargin()));
+    mixed_title_sizer->SetMinSize(-1, FromDIP(30));
+    p->m_panel_mixed_filament_title->SetSizer(mixed_title_sizer);
+
+    auto* mixed_spliter_1 = new ::StaticLine(p->scrolled);
+    mixed_spliter_1->SetLineColour("#A6A9AA");
+    scrolled_sizer->Add(mixed_spliter_1, 0, wxEXPAND);
+    scrolled_sizer->Add(p->m_panel_mixed_filament_title, 0, wxEXPAND | wxALL, 0);
+    auto* mixed_spliter_2 = new ::StaticLine(p->scrolled);
+    mixed_spliter_2->SetLineColour("#CECECE");
+    scrolled_sizer->Add(mixed_spliter_2, 0, wxEXPAND);
+
+    p->m_panel_mixed_filament_content = new wxScrolledWindow(p->scrolled, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    p->m_panel_mixed_filament_content->SetScrollRate(0, 5);
+    p->m_panel_mixed_filament_content->SetBackgroundColour(wxColour(255, 255, 255));
+    auto* mixed_content_sizer = new wxBoxSizer(wxVERTICAL);
+
+    auto* mixed_picker_row = new wxBoxSizer(wxHORIZONTAL);
+    mixed_picker_row->AddSpacer(FromDIP(SidebarProps::ContentMargin()));
+    mixed_picker_row->Add(new Label(p->m_panel_mixed_filament_content, Label::Body_12, "A"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(4));
+    p->m_mixed_choice_a = new wxChoice(p->m_panel_mixed_filament_content, wxID_ANY);
+    p->m_mixed_choice_a->SetMinSize(wxSize(FromDIP(92), -1));
+    mixed_picker_row->Add(p->m_mixed_choice_a, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(8));
+    mixed_picker_row->Add(new Label(p->m_panel_mixed_filament_content, Label::Body_12, "B"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(4));
+    p->m_mixed_choice_b = new wxChoice(p->m_panel_mixed_filament_content, wxID_ANY);
+    p->m_mixed_choice_b->SetMinSize(wxSize(FromDIP(92), -1));
+    mixed_picker_row->Add(p->m_mixed_choice_b, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(8));
+    p->m_mixed_preview_swatch = make_colour_swatch(p->m_panel_mixed_filament_content, wxColour("#EC6FA6"), 22);
+    mixed_picker_row->Add(p->m_mixed_preview_swatch, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(SidebarProps::ContentMargin()));
+    mixed_content_sizer->Add(mixed_picker_row, 0, wxEXPAND | wxTOP, FromDIP(SidebarProps::ContentMarginV()));
+
+    auto* mixed_ratio_row = new wxBoxSizer(wxHORIZONTAL);
+    mixed_ratio_row->AddSpacer(FromDIP(SidebarProps::ContentMargin()));
+    p->m_mixed_ratio_label = new Label(p->m_panel_mixed_filament_content, Label::Body_12, _L("50% A / 50% B"));
+    mixed_ratio_row->Add(p->m_mixed_ratio_label, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(8));
+    p->m_mixed_slider = new wxSlider(p->m_panel_mixed_filament_content, wxID_ANY, 50, 0, 100);
+    mixed_ratio_row->Add(p->m_mixed_slider, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(SidebarProps::ContentMargin()));
+    mixed_content_sizer->Add(mixed_ratio_row, 0, wxEXPAND | wxTOP, FromDIP(4));
+
+    p->sizer_mixed_filaments = new wxBoxSizer(wxVERTICAL);
+    mixed_content_sizer->Add(p->sizer_mixed_filaments, 0, wxEXPAND | wxALL, FromDIP(SidebarProps::ContentMargin()));
+    p->m_panel_mixed_filament_content->SetSizer(mixed_content_sizer);
+
+    p->m_mixed_choice_a->Bind(wxEVT_CHOICE, [this](wxCommandEvent&) { update_mixed_filament_preview(); });
+    p->m_mixed_choice_b->Bind(wxEVT_CHOICE, [this](wxCommandEvent&) { update_mixed_filament_preview(); });
+    p->m_mixed_slider->Bind(wxEVT_SLIDER, [this](wxCommandEvent&) { update_mixed_filament_preview(); });
+
+    scrolled_sizer->Add(p->m_panel_mixed_filament_content, 0, wxEXPAND | wxTOP | wxBOTTOM, FromDIP(SidebarProps::ContentMarginV()));
+    refresh_mixed_filament_panel();
     }
 
     {
@@ -2467,22 +2675,30 @@ void Sidebar::update_all_preset_comboboxes()
         //p->btn_connect_printer->Show();
         p->m_printer_connect->Show();
 
-        // ORCA: show/hide sync-ams button based on filament sync mode
+        // ORCA: show/hide sync-materials button based on filament sync mode
         auto agent = wxGetApp().getAgent();
-        if (agent && agent->get_filament_sync_mode() != FilamentSyncMode::none)
+        if (is_anycubic_material_sync_available())
+            p->m_bpButton_ams_filament->Show();
+        else if (agent && agent->get_filament_sync_mode() != FilamentSyncMode::none)
             p->m_bpButton_ams_filament->Show();
         else
             p->m_bpButton_ams_filament->Hide();
 
         auto print_btn_type = MainFrame::PrintSelectType::eExportGcode;
-        wxString url = from_u8(PrintHost::get_print_host_webui(&cfg));
+        DynamicPrintConfig print_host_cfg = cfg;
+        const bool has_anycubic_print_host = resolve_anycubic_print_host(print_host_cfg, is_anycubic_printer_preset(preset_bundle));
+        wxString url = cfg.opt_string("print_host_webui").empty() ? cfg.opt_string("print_host") : cfg.opt_string("print_host_webui");
         wxString apikey;
+        if (url.empty() && is_anycubic_lan_config(print_host_cfg) && has_anycubic_print_host)
+            url = print_host_cfg.opt_string("print_host");
         if(url.empty())
             url = wxString::Format("file://%s/web/orca/missing_connection.html", from_u8(resources_dir()));
         else {
-            const auto host_type = cfg.option<ConfigOptionEnum<PrintHostType>>("host_type")->value;
-            if (cfg.has("printhost_apikey") && (host_type != htSimplyPrint))
-                apikey = cfg.opt_string("printhost_apikey");
+            if (!url.Lower().starts_with("http"))
+                url = wxString::Format("http://%s", url);
+            const auto host_type = print_host_cfg.option<ConfigOptionEnum<PrintHostType>>("host_type")->value;
+            if (print_host_cfg.has("printhost_apikey") && (host_type != htSimplyPrint))
+                apikey = print_host_cfg.opt_string("printhost_apikey");
             print_btn_type = preset_bundle.is_bbl_vendor() ? MainFrame::PrintSelectType::ePrintPlate : MainFrame::PrintSelectType::eSendGcode;
         }
 
@@ -2550,6 +2766,7 @@ void Sidebar::update_all_preset_comboboxes()
         for (PlaterPresetComboBox* cb : p->combos_filament)
             cb->update();
     }
+    refresh_mixed_filament_panel();
 
     if (p->combo_printer) {
         p->combo_printer->update();
@@ -2594,6 +2811,7 @@ void Sidebar::update_presets(Preset::Type preset_type)
             p->combos_filament[i]->update();
 
         update_dynamic_filament_list();
+        refresh_mixed_filament_panel();
         break;
     }
 
@@ -2835,6 +3053,288 @@ bool Sidebar::reset_bed_type_combox_choices(bool is_sidebar_init)
     return true;
 }
 
+std::vector<std::string> Sidebar::mixed_filament_physical_colors() const
+{
+    std::vector<std::string> colors;
+    auto* pb = wxGetApp().preset_bundle;
+    if (pb) {
+        if (const auto* opt = pb->project_config.option<ConfigOptionStrings>("filament_colour"))
+            colors = opt->values;
+    }
+    if (colors.empty())
+        colors.emplace_back("#EC6FA6");
+    return colors;
+}
+
+void Sidebar::sync_mixed_filaments_from_project()
+{
+    auto* pb = wxGetApp().preset_bundle;
+    if (!pb)
+        return;
+
+    const std::vector<std::string> colors = mixed_filament_physical_colors();
+    std::string serialized;
+    if (const auto* opt = pb->project_config.option<ConfigOptionString>("mixed_filament_definitions"))
+        serialized = opt->value;
+
+    pb->mixed_filaments.auto_generate(colors);
+    pb->mixed_filaments.load_custom_entries(serialized, colors);
+}
+
+void Sidebar::refresh_mixed_filament_panel()
+{
+    if (!p->m_mixed_choice_a || !p->m_mixed_choice_b)
+        return;
+
+    sync_mixed_filaments_from_project();
+    const std::vector<std::string> colors = mixed_filament_physical_colors();
+    if (auto* pb = wxGetApp().preset_bundle) {
+        const auto& rows = pb->mixed_filaments.mixed_filaments();
+        if (p->m_editing_mixed_filament >= rows.size() ||
+            (p->m_editing_mixed_filament != size_t(-1) &&
+             (rows[p->m_editing_mixed_filament].deleted || !rows[p->m_editing_mixed_filament].enabled)))
+            p->m_editing_mixed_filament = size_t(-1);
+    }
+
+    const int old_a = p->m_mixed_choice_a->GetSelection();
+    const int old_b = p->m_mixed_choice_b->GetSelection();
+    p->m_mixed_choice_a->Clear();
+    p->m_mixed_choice_b->Clear();
+    for (size_t i = 0; i < colors.size(); ++i) {
+        const wxString label = wxString::Format(_L("Filament %d"), int(i + 1));
+        p->m_mixed_choice_a->Append(label);
+        p->m_mixed_choice_b->Append(label);
+    }
+
+    const bool can_mix = colors.size() >= 2;
+    p->m_mixed_choice_a->Enable(can_mix);
+    p->m_mixed_choice_b->Enable(can_mix);
+    p->m_mixed_slider->Enable(can_mix);
+    p->m_bpButton_add_mixed_filament->Enable(can_mix);
+    p->m_bpButton_add_mixed_filament->SetToolTip(p->m_editing_mixed_filament == size_t(-1) ?
+                                                     _L("Add mixed filament") :
+                                                     _L("Update mixed filament"));
+
+    if (!colors.empty()) {
+        p->m_mixed_choice_a->SetSelection(old_a >= 0 && old_a < int(colors.size()) ? old_a : 0);
+        p->m_mixed_choice_b->SetSelection(old_b >= 0 && old_b < int(colors.size()) ? old_b : (can_mix ? 1 : 0));
+    }
+
+    rebuild_mixed_filament_panel();
+    update_mixed_filament_preview();
+}
+
+void Sidebar::update_mixed_filament_preview()
+{
+    if (!p->m_mixed_preview_swatch || !p->m_mixed_ratio_label)
+        return;
+
+    const std::vector<std::string> colors = mixed_filament_physical_colors();
+    const int ia = p->m_mixed_choice_a ? p->m_mixed_choice_a->GetSelection() : wxNOT_FOUND;
+    const int ib = p->m_mixed_choice_b ? p->m_mixed_choice_b->GetSelection() : wxNOT_FOUND;
+    const int mix_b = p->m_mixed_slider ? p->m_mixed_slider->GetValue() : 50;
+    p->m_mixed_ratio_label->SetLabel(wxString::Format(_L("%d%% A / %d%% B"), 100 - mix_b, mix_b));
+
+    wxColour preview("#CECECE");
+    if (ia >= 0 && ib >= 0 && ia < int(colors.size()) && ib < int(colors.size()))
+        preview = html_to_wx_colour(MixedFilamentManager::blend_color(colors[ia], colors[ib], 100 - mix_b, mix_b));
+
+    p->m_mixed_preview_swatch->SetBackgroundColor(StateColor(preview));
+    p->m_mixed_preview_swatch->SetBackgroundColour(preview);
+    p->m_mixed_preview_swatch->Refresh();
+}
+
+void Sidebar::add_mixed_filament()
+{
+    auto* pb = wxGetApp().preset_bundle;
+    if (!pb || !p->m_mixed_choice_a || !p->m_mixed_choice_b || !p->m_mixed_slider)
+        return;
+
+    const std::vector<std::string> colors = mixed_filament_physical_colors();
+    const int ia = p->m_mixed_choice_a->GetSelection();
+    const int ib = p->m_mixed_choice_b->GetSelection();
+    if (ia < 0 || ib < 0 || ia == ib || ia >= int(colors.size()) || ib >= int(colors.size()))
+        return;
+
+    auto& rows = pb->mixed_filaments.mixed_filaments();
+    if (p->m_editing_mixed_filament < rows.size()) {
+        MixedFilament& mf = rows[p->m_editing_mixed_filament];
+        mf.component_a = unsigned(ia + 1);
+        mf.component_b = unsigned(ib + 1);
+        mf.mix_b_percent = std::clamp(p->m_mixed_slider->GetValue(), 0, 100);
+        mf.enabled = true;
+        mf.deleted = false;
+        mf.manual_pattern.clear();
+        mf.gradient_component_ids.clear();
+        mf.gradient_component_weights.clear();
+        mf.pointillism_all_filaments = false;
+        mf.distribution_mode = int(MixedFilament::Simple);
+        mf.local_z_max_sublayers = 0;
+        mf.component_a_surface_offset = 0.f;
+        mf.component_b_surface_offset = 0.f;
+        p->m_editing_mixed_filament = size_t(-1);
+    } else {
+        pb->mixed_filaments.add_custom_filament(unsigned(ia + 1), unsigned(ib + 1), p->m_mixed_slider->GetValue(), colors);
+    }
+    persist_mixed_filaments();
+    refresh_mixed_filament_panel();
+}
+
+void Sidebar::remove_mixed_filament(size_t mixed_index)
+{
+    auto* pb = wxGetApp().preset_bundle;
+    if (!pb)
+        return;
+
+    auto& rows = pb->mixed_filaments.mixed_filaments();
+    if (mixed_index == size_t(-1)) {
+        for (size_t i = rows.size(); i > 0; --i) {
+            if (rows[i - 1].enabled && !rows[i - 1].deleted) {
+                mixed_index = i - 1;
+                break;
+            }
+        }
+    }
+
+    if (mixed_index >= rows.size())
+        return;
+
+    if (rows[mixed_index].custom)
+        rows.erase(rows.begin() + mixed_index);
+    else {
+        rows[mixed_index].deleted = true;
+        rows[mixed_index].enabled = false;
+    }
+    p->m_editing_mixed_filament = size_t(-1);
+    persist_mixed_filaments();
+    refresh_mixed_filament_panel();
+}
+
+void Sidebar::edit_mixed_filament(size_t mixed_index)
+{
+    auto* pb = wxGetApp().preset_bundle;
+    if (!pb || !p->m_mixed_choice_a || !p->m_mixed_choice_b || !p->m_mixed_slider)
+        return;
+
+    auto& rows = pb->mixed_filaments.mixed_filaments();
+    if (mixed_index >= rows.size())
+        return;
+
+    const MixedFilament& mf = rows[mixed_index];
+    if (mf.deleted || !mf.enabled)
+        return;
+
+    const int a = int(mf.component_a) - 1;
+    const int b = int(mf.component_b) - 1;
+    if (a >= 0 && a < int(p->m_mixed_choice_a->GetCount()))
+        p->m_mixed_choice_a->SetSelection(a);
+    if (b >= 0 && b < int(p->m_mixed_choice_b->GetCount()))
+        p->m_mixed_choice_b->SetSelection(b);
+    p->m_mixed_slider->SetValue(std::clamp(mf.mix_b_percent, 0, 100));
+    p->m_editing_mixed_filament = mixed_index;
+    p->m_bpButton_add_mixed_filament->SetToolTip(_L("Update mixed filament"));
+    update_mixed_filament_preview();
+}
+
+void Sidebar::persist_mixed_filaments()
+{
+    auto* pb = wxGetApp().preset_bundle;
+    if (!pb)
+        return;
+
+    const std::string serialized = pb->mixed_filaments.serialize_custom_entries();
+    if (auto* opt = pb->project_config.option<ConfigOptionString>("mixed_filament_definitions", true))
+        opt->value = serialized;
+
+    update_dynamic_filament_list();
+    if (auto* plater = wxGetApp().plater()) {
+        const size_t paint_filament_count = std::min(plater->get_filament_count_with_mixed(),
+                                                     static_cast<size_t>(EnforcerBlockerType::ExtruderMax));
+        for (ModelObject* mo : wxGetApp().model().objects) {
+            for (ModelVolume* mv : mo->volumes)
+                mv->update_extruder_count(paint_filament_count);
+        }
+
+        plater->on_config_change(pb->full_config());
+        plater->schedule_background_process();
+        if (auto* canvas = plater->canvas3D())
+            canvas->set_as_dirty();
+        plater->update();
+    }
+}
+
+void Sidebar::rebuild_mixed_filament_panel()
+{
+    if (!p->sizer_mixed_filaments || !p->m_panel_mixed_filament_content)
+        return;
+
+    p->sizer_mixed_filaments->Clear(true);
+    auto* pb = wxGetApp().preset_bundle;
+    const std::vector<std::string> colors = mixed_filament_physical_colors();
+
+    bool has_visible_row = false;
+    size_t shown = 0;
+    if (pb) {
+        const auto& rows = pb->mixed_filaments.mixed_filaments();
+        for (size_t i = 0; i < rows.size(); ++i) {
+            const MixedFilament& mf = rows[i];
+            if (mf.deleted || !mf.enabled)
+                continue;
+            has_visible_row = true;
+            ++shown;
+
+            auto* card = new StaticBox(p->m_panel_mixed_filament_content);
+            card->SetBackgroundColor(StateColor(wxColour("#FFFFFF")));
+            card->SetBorderColor(StateColor(wxColour("#DBDBDB")));
+            card->SetCornerRadius(FromDIP(6));
+            auto* row = new wxBoxSizer(wxHORIZONTAL);
+
+            const wxColour mixed_colour = html_to_wx_colour(mf.display_color);
+            row->Add(make_colour_swatch(card, mixed_colour, 20), 0, wxALIGN_CENTER_VERTICAL | wxALL, FromDIP(6));
+
+            const wxString label = wxString::Format(_L("F%d + F%d  %d%% B"),
+                                                    int(mf.component_a), int(mf.component_b), int(mf.mix_b_percent));
+            auto* text = new Label(card, Label::Body_12, label);
+            text->SetBackgroundColour(wxColour("#FFFFFF"));
+            row->Add(text, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
+
+            auto* edit = new ScalableButton(card, wxID_ANY, "edit");
+            edit->SetToolTip(_L("Edit mixed filament"));
+            edit->Bind(wxEVT_BUTTON, [this, i](wxCommandEvent&) { edit_mixed_filament(i); });
+            row->Add(edit, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
+
+            auto* remove = new ScalableButton(card, wxID_ANY, "delete_filament");
+            remove->SetToolTip(_L("Remove mixed filament"));
+            remove->Bind(wxEVT_BUTTON, [this, i](wxCommandEvent&) { remove_mixed_filament(i); });
+            row->Add(remove, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
+
+            card->SetSizer(row);
+            p->sizer_mixed_filaments->Add(card, 0, wxEXPAND | wxBOTTOM, FromDIP(6));
+        }
+    }
+
+    if (shown == 0) {
+        auto* empty = new Label(p->m_panel_mixed_filament_content, Label::Body_12,
+                                _L("Add at least two project filaments to create mixed filaments."));
+        empty->SetForegroundColour(wxColour("#7C7E86"));
+        empty->SetBackgroundColour(wxColour("#FFFFFF"));
+        p->sizer_mixed_filaments->Add(empty, 0, wxEXPAND | wxBOTTOM, FromDIP(6));
+    }
+
+    if (p->m_bpButton_del_mixed_filament)
+        p->m_bpButton_del_mixed_filament->Show(has_visible_row);
+
+    p->m_panel_mixed_filament_content->FitInside();
+    wxSize min_size = p->m_panel_mixed_filament_content->GetSizer()->GetMinSize();
+    const int max_height = FromDIP(220);
+    min_size.y = std::min(min_size.y, max_height);
+    p->m_panel_mixed_filament_content->SetMinSize(wxSize(-1, min_size.y));
+    p->m_panel_mixed_filament_content->SetMaxSize(wxSize(-1, max_height));
+    p->m_panel_mixed_filament_content->Layout();
+    p->m_panel_mixed_filament_title->Layout();
+    Layout();
+}
+
 void Sidebar::change_top_border_for_mode_sizer(bool increase_border)
 {
     // BBS
@@ -2929,6 +3429,15 @@ void Sidebar::msw_rescale()
     p->m_bpButton_set_filament->msw_rescale();
     p->m_flushing_volume_btn->Rescale();
     set_flushing_volume_warning(is_flush_config_modified()); // ORCA reapply appearance
+    if (p->m_mixed_filament_icon)
+        p->m_mixed_filament_icon->msw_rescale();
+    if (p->m_bpButton_add_mixed_filament)
+        p->m_bpButton_add_mixed_filament->msw_rescale();
+    if (p->m_bpButton_del_mixed_filament)
+        p->m_bpButton_del_mixed_filament->msw_rescale();
+    if (p->m_panel_mixed_filament_title && p->m_panel_mixed_filament_title->GetSizer())
+        p->m_panel_mixed_filament_title->GetSizer()->SetMinSize(-1, 3 * wxGetApp().em_unit());
+    refresh_mixed_filament_panel();
 
     //BBS
     p->left_extruder->Rescale();
@@ -3014,6 +3523,13 @@ void Sidebar::sys_color_changed()
     p->m_bpButton_set_filament->msw_rescale();
     p->m_flushing_volume_btn->Rescale();
     set_flushing_volume_warning(is_flush_config_modified()); // ORCA reapply appearance
+    if (p->m_mixed_filament_icon)
+        p->m_mixed_filament_icon->msw_rescale();
+    if (p->m_bpButton_add_mixed_filament)
+        p->m_bpButton_add_mixed_filament->msw_rescale();
+    if (p->m_bpButton_del_mixed_filament)
+        p->m_bpButton_del_mixed_filament->msw_rescale();
+    refresh_mixed_filament_panel();
 
     // BBS
 #if 0
@@ -3129,6 +3645,7 @@ void Sidebar::on_filament_count_change(size_t num_filaments)
 
     Layout();
     p->m_panel_filament_title->Refresh();
+    refresh_mixed_filament_panel();
     update_ui_from_settings();
     update_dynamic_filament_list();
 }
@@ -3180,6 +3697,7 @@ void Sidebar::on_filaments_delete(size_t filament_id)
 
     Layout();
     p->m_panel_filament_title->Refresh();
+    refresh_mixed_filament_panel();
     update_ui_from_settings();
     dynamic_filament_list.update();
 }
@@ -3493,8 +4011,225 @@ void Sidebar::load_ams_list(MachineObject* obj)
     p->combo_printer->update();
 }
 
+bool Sidebar::is_anycubic_material_sync_available() const
+{
+    auto* preset_bundle = wxGetApp().preset_bundle;
+    if (!preset_bundle)
+        return false;
+
+    const DynamicPrintConfig& cfg = preset_bundle->printers.get_edited_preset().config;
+    return is_anycubic_printer_preset(*preset_bundle) || is_anycubic_lan_config(cfg);
+}
+
+std::map<int, DynamicPrintConfig> Sidebar::build_anycubic_filament_ams_list(wxString* error_message)
+{
+    std::map<int, DynamicPrintConfig> filament_ams_list;
+
+    auto* preset_bundle = wxGetApp().preset_bundle;
+    if (!preset_bundle) {
+        if (error_message) *error_message = _L("No printer preset is selected.");
+        return filament_ams_list;
+    }
+
+    const DynamicPrintConfig& cfg = preset_bundle->printers.get_edited_preset().config;
+    std::string host = bare_anycubic_host(cfg.opt_string("print_host"));
+    if (host.empty())
+        host = anycubic_saved_lan_host();
+    if (host.empty()) {
+        if (error_message) *error_message = _L("Set the Anycubic printer IP address in the printer connection settings before syncing materials.");
+        return filament_ams_list;
+    }
+
+    AcLanCreds creds = AcLan::fetch_credentials(host);
+    if (!creds.ok) {
+        if (error_message) *error_message = from_u8(creds.error.empty() ? "Could not connect to the Anycubic printer." : creds.error);
+        return filament_ams_list;
+    }
+
+    AcLan::Status status = AcLan::query_status(creds, 3000);
+    if (!status.ok && !status.raw_error.empty()) {
+        if (error_message) *error_message = from_u8(status.raw_error);
+        return filament_ams_list;
+    }
+
+    std::vector<AcLan::AceBox> boxes = status.boxes;
+    if (boxes.empty() && !status.ace.empty()) {
+        AcLan::AceBox fallback;
+        fallback.id = 0;
+        fallback.slots = status.ace;
+        boxes.push_back(std::move(fallback));
+    }
+
+    if (boxes.empty()) {
+        if (error_message) *error_message = _L("No ACE Pro materials were reported by the printer.");
+        return filament_ams_list;
+    }
+
+    auto build_slot_config = [](const AcLan::AceBox& box, const AcLan::AceSlot& slot) {
+        const bool has_material = !slot.material.empty() || !slot.sku.empty() || slot.status != 0;
+        std::string material = slot.material;
+        boost::trim(material);
+        boost::to_upper(material);
+
+        std::string colour = rgb_to_html_colour(slot.r, slot.g, slot.b);
+        if (!has_material && slot.r == 0 && slot.g == 0 && slot.b == 0)
+            colour = "#CECECE";
+
+        DynamicPrintConfig slot_config;
+        slot_config.set_key_value("filament_id", new ConfigOptionStrings{has_material ? (slot.sku.empty() ? UNKNOWN_FILAMENT_ID : slot.sku) : ""});
+        slot_config.set_key_value("tag_uid", new ConfigOptionStrings{slot.sku});
+        slot_config.set_key_value("ams_id", new ConfigOptionStrings{std::to_string(box.id)});
+        slot_config.set_key_value("slot_id", new ConfigOptionStrings{std::to_string(slot.index)});
+        slot_config.set_key_value("filament_type", new ConfigOptionStrings{has_material ? material : ""});
+        slot_config.set_key_value("tray_name", new ConfigOptionStrings{
+            (boost::format("ACE %1%-%2%") % (box.id + 1) % (slot.index + 1)).str()});
+        slot_config.set_key_value("filament_colour", new ConfigOptionStrings{colour});
+        slot_config.set_key_value("filament_multi_colour", new ConfigOptionStrings{colour});
+        slot_config.set_key_value("filament_colour_type", new ConfigOptionStrings{"1"});
+        slot_config.set_key_value("filament_exist", new ConfigOptionBools{has_material});
+        slot_config.set_key_value("filament_slot_placeholder", new ConfigOptionBools{!has_material});
+        slot_config.set_key_value("filament_is_support", new ConfigOptionBools{false});
+        return slot_config;
+    };
+
+    for (const auto& box : boxes) {
+        for (const auto& slot : box.slots) {
+            if (slot.index < 0)
+                continue;
+            filament_ams_list.emplace(box.id * 4 + slot.index, build_slot_config(box, slot));
+        }
+    }
+
+    if (filament_ams_list.empty() && error_message)
+        *error_message = _L("No ACE Pro material slots were reported by the printer.");
+
+    return filament_ams_list;
+}
+
+void Sidebar::sync_anycubic_materials()
+{
+    wxBusyCursor cursor;
+
+    if (!wxGetApp().preset_bundle)
+        return;
+
+    wxString error_message;
+    auto& preset_bundle = *wxGetApp().preset_bundle;
+    preset_bundle.filament_ams_list = build_anycubic_filament_ams_list(&error_message);
+    p->ams_list_device = bare_anycubic_host(preset_bundle.printers.get_edited_preset().config.opt_string("print_host"));
+    if (p->ams_list_device.empty())
+        p->ams_list_device = anycubic_saved_lan_host();
+
+    if (preset_bundle.filament_ams_list.empty()) {
+        MessageDialog dlg(this,
+            error_message.empty() ? _L("No ACE Pro materials were reported by the printer.") : error_message,
+            _L("Sync materials"), wxOK | wxICON_WARNING);
+        dlg.ShowModal();
+        return;
+    }
+
+    bool exist_at_list_one_filament = false;
+    for (auto& cur : preset_bundle.filament_ams_list) {
+        auto& temp_config = cur.second;
+        if (!temp_config.opt_string("filament_type", 0u).empty() || temp_config.opt_bool("filament_exist", 0u)) {
+            exist_at_list_one_filament = true;
+            break;
+        }
+    }
+    if (!exist_at_list_one_filament) {
+        MessageDialog dlg(this, _L("ACE Pro did not report any loaded materials."), _L("Sync materials"), wxOK | wxICON_WARNING);
+        dlg.ShowModal();
+        return;
+    }
+
+    std::vector<std::string> color_before_sync;
+    std::vector<bool>        is_support_before;
+    DynamicPrintConfig&      project_config = preset_bundle.project_config;
+    ConfigOptionStrings*     color_opt = project_config.option<ConfigOptionStrings>("filament_colour");
+    for (int i = 0; i < p->combos_filament.size(); ++i) {
+        is_support_before.push_back(is_support_filament(i));
+        color_before_sync.push_back(i < color_opt->values.size() ? color_opt->values[i] : "");
+    }
+
+    MergeFilamentInfo merge_info;
+    std::vector<std::pair<DynamicPrintConfig*, std::string>> unknowns;
+    std::map<int, AMSMapInfo> maps;
+    auto sync_color_only = wxGetApp().app_config->get("sync_ams_filament_mode") == "1";
+    auto n = preset_bundle.sync_ams_list(unknowns, false, maps, false, merge_info, sync_color_only);
+
+    wxString detail;
+    for (auto& uk : unknowns) {
+        auto tray_name     = uk.first->opt_string("tray_name", 0u);
+        auto filament_type = uk.first->opt_string("filament_type", 0u);
+        detail += from_u8("\n- " + tray_name + "(" + filament_type + ") ") + _L(uk.second);
+    }
+
+    if (n == 0) {
+        MessageDialog dlg(this,
+            _L("There are no compatible materials, and sync is not performed.") + detail,
+            _L("Sync materials"), wxOK | wxICON_WARNING);
+        dlg.ShowModal();
+        return;
+    }
+
+    if (!unknowns.empty()) {
+        MessageDialog dlg(this,
+            _L("Some ACE Pro materials were unknown or incompatible and were mapped to generic presets.") + detail,
+            _L("Sync materials"), wxOK);
+        dlg.ShowModal();
+    }
+
+    if (!sync_color_only) {
+        wxGetApp().plater()->on_filament_count_change(n);
+    }
+
+    for (auto& c : p->combos_filament)
+        c->update();
+    update_filaments_area_height();
+
+    for (int i = 0; i < p->combos_filament.size(); ++i) {
+        if (i >= color_before_sync.size())
+            auto_calc_flushing_volumes(i);
+        else if (i < color_opt->values.size() && color_before_sync[i] != color_opt->values[i] && wxGetApp().app_config->get("auto_calculate_flush") != "disabled")
+            auto_calc_flushing_volumes(i);
+        else if (is_support_filament(i) != is_support_before[i] && wxGetApp().app_config->get("auto_calculate_flush") == "all")
+            auto_calc_flushing_volumes(i);
+    }
+
+    Layout();
+
+    if (!sync_color_only) {
+        wxGetApp().get_tab(Preset::TYPE_FILAMENT)->select_preset(preset_bundle.filament_presets[0]);
+        preset_bundle.export_selections(*wxGetApp().app_config);
+        update_dynamic_filament_list();
+    } else {
+        wxGetApp().plater()->update_filament_colors_in_full_config();
+        for (auto& c : p->combos_filament)
+            c->update();
+        obj_list()->update_filament_colors();
+        update_dynamic_filament_list();
+    }
+
+    clear_combos_filament_badge();
+    size_t tray_idx = 0;
+    for (auto& entry : preset_bundle.filament_ams_list) {
+        if (tray_idx >= p->combos_filament.size())
+            break;
+        if (!entry.second.opt_string("filament_id", 0u).empty()) {
+            p->combos_filament[tray_idx]->SetToolTip(_L("Material information has been synchronized from ACE Pro."));
+            p->combos_filament[tray_idx]->ShowBadge(true);
+        }
+        tray_idx++;
+    }
+}
+
 void Sidebar::sync_ams_list(bool is_from_big_sync_btn)
 {
+    if (is_anycubic_material_sync_available()) {
+        sync_anycubic_materials();
+        return;
+    }
+
     wxBusyCursor cursor;
     // Force load ams list
     auto obj = wxGetApp().getDeviceManager()->get_selected_machine();
@@ -16097,9 +16832,22 @@ void Plater::send_gcode_legacy(int plate_idx, Export3mfProgressFn proFn, bool us
 {
     // if physical_printer is selected, send gcode for this printer
     // DynamicPrintConfig* physical_printer_config = wxGetApp().preset_bundle->physical_printers.get_selected_printer_config();
-    DynamicPrintConfig* physical_printer_config = &Slic3r::GUI::wxGetApp().preset_bundle->printers.get_edited_preset().config;
+    auto* preset_bundle = Slic3r::GUI::wxGetApp().preset_bundle;
+    if (!preset_bundle)
+        return;
+    DynamicPrintConfig* physical_printer_config = &preset_bundle->printers.get_edited_preset().config;
     if (! physical_printer_config || p->model.objects.empty())
         return;
+
+    DynamicPrintConfig resolved_anycubic_config;
+    if (is_anycubic_printer_preset(*preset_bundle) || is_anycubic_lan_config(*physical_printer_config)) {
+        resolved_anycubic_config = *physical_printer_config;
+        if (!resolve_anycubic_print_host(resolved_anycubic_config, is_anycubic_printer_preset(*preset_bundle))) {
+            show_error(this, _L("Set the Anycubic printer IP address before printing."), false);
+            return;
+        }
+        physical_printer_config = &resolved_anycubic_config;
+    }
 
     PrintHostJob upload_job(physical_printer_config);
     if (upload_job.empty())
