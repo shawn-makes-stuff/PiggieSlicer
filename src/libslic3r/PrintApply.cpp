@@ -1287,6 +1287,62 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
         }
     }
 
+    // PiggieSlicer / FullSpectrum: rebuild the virtual mixed-filament manager from config.
+    int   mixed_gradient_mode   = 0;
+    float mixed_height_lower    = 0.04f;
+    float mixed_height_upper    = 0.16f;
+    bool  mixed_advanced_dither = false;
+    float mixed_pointillism_pixel_size = 0.f;
+    float mixed_pointillism_line_gap   = 0.f;
+    float mixed_surface_indentation    = 0.f;
+    std::string mixed_custom_definitions;
+    if (new_full_config.has("mixed_filament_gradient_mode")) {
+        if (const ConfigOptionBool *opt = new_full_config.option<ConfigOptionBool>("mixed_filament_gradient_mode"))
+            mixed_gradient_mode = opt->value ? 1 : 0;
+        else
+            mixed_gradient_mode = new_full_config.opt_int("mixed_filament_gradient_mode");
+    }
+    if (new_full_config.has("mixed_filament_height_lower_bound"))
+        mixed_height_lower = float(new_full_config.opt_float("mixed_filament_height_lower_bound"));
+    if (new_full_config.has("mixed_filament_height_upper_bound"))
+        mixed_height_upper = float(new_full_config.opt_float("mixed_filament_height_upper_bound"));
+    if (new_full_config.has("mixed_filament_advanced_dithering")) {
+        if (const ConfigOptionBool *opt = new_full_config.option<ConfigOptionBool>("mixed_filament_advanced_dithering"))
+            mixed_advanced_dither = opt->value;
+        else
+            mixed_advanced_dither = (new_full_config.opt_int("mixed_filament_advanced_dithering") != 0);
+    }
+    if (new_full_config.has("mixed_filament_pointillism_pixel_size"))
+        mixed_pointillism_pixel_size = float(new_full_config.opt_float("mixed_filament_pointillism_pixel_size"));
+    if (new_full_config.has("mixed_filament_pointillism_line_gap"))
+        mixed_pointillism_line_gap = float(new_full_config.opt_float("mixed_filament_pointillism_line_gap"));
+    if (new_full_config.has("mixed_filament_surface_indentation"))
+        mixed_surface_indentation = float(new_full_config.opt_float("mixed_filament_surface_indentation"));
+    if (new_full_config.has("mixed_filament_definitions"))
+        mixed_custom_definitions = new_full_config.opt_string("mixed_filament_definitions");
+
+    mixed_gradient_mode = std::clamp(mixed_gradient_mode, 0, 1);
+    mixed_height_lower  = std::max(0.01f, mixed_height_lower);
+    mixed_height_upper  = std::max(mixed_height_lower, mixed_height_upper);
+    mixed_pointillism_pixel_size = std::max(0.f, mixed_pointillism_pixel_size);
+    mixed_pointillism_line_gap   = std::max(0.f, mixed_pointillism_line_gap);
+    mixed_surface_indentation    = std::clamp(mixed_surface_indentation, -2.f, 2.f);
+
+    // Regenerate mixed (virtual) filaments from physical filament colours and
+    // re-apply user custom mixed definitions.
+    std::vector<std::string> physical_filament_colors = m_config.filament_colour.values;
+    physical_filament_colors.resize(num_extruders, "#26A69A");
+    m_mixed_filament_mgr.clear_custom_entries();
+    m_mixed_filament_mgr.auto_generate(physical_filament_colors);
+    m_mixed_filament_mgr.load_custom_entries(mixed_custom_definitions, physical_filament_colors);
+    m_mixed_filament_mgr.apply_gradient_settings(mixed_gradient_mode,
+                                                 mixed_height_lower,
+                                                 mixed_height_upper,
+                                                 mixed_advanced_dither);
+    (void) mixed_pointillism_pixel_size;
+    (void) mixed_pointillism_line_gap;
+    (void) mixed_surface_indentation;
+
     ModelObjectStatusDB model_object_status_db;
 
     // 1) Synchronize model objects.
@@ -1690,6 +1746,28 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
             for (size_t state_idx = static_cast<size_t>(EnforcerBlockerType::Extruder1); state_idx < used_facet_states.size(); ++state_idx) {
                 if (used_facet_states[state_idx])
                     painting_extruders.emplace_back(state_idx);
+            }
+
+            // PiggieSlicer / FullSpectrum: a painted virtual mixed-filament id has no physical
+            // PrintRegion of its own. Replace it with its physical component extruders so painted
+            // regions exist for them; the per-layer virtual->physical fold in apply_mm_segmentation
+            // then routes each painted mixed mask into one of those physical regions.
+            if (!painting_extruders.empty() && num_extruders > 0) {
+                std::vector<unsigned int> phys;
+                auto add = [&phys](unsigned int e) {
+                    if (std::find(phys.begin(), phys.end(), e) == phys.end()) phys.push_back(e);
+                };
+                for (unsigned int s : painting_extruders) {
+                    if (s <= (unsigned int) num_extruders) { add(s); continue; }
+                    if (const MixedFilament *mf = m_mixed_filament_mgr.mixed_filament_from_id(s, num_extruders)) {
+                        if (mf->component_a >= 1 && mf->component_a <= num_extruders) add(mf->component_a);
+                        if (mf->component_b >= 1 && mf->component_b <= num_extruders) add(mf->component_b);
+                    } else {
+                        add(s);
+                    }
+                }
+                std::sort(phys.begin(), phys.end());
+                painting_extruders.swap(phys);
             }
         }
         if (model_object_status.print_object_regions_status == ModelObjectStatus::PrintObjectRegionsStatus::Valid) {

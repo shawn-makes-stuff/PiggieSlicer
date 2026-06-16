@@ -149,6 +149,7 @@ static t_config_enum_values s_keys_map_PrintHostType {
     { "flashforge",     htFlashforge },
     { "simplyprint",    htSimplyPrint },
     { "elegoolink",     htElegooLink },
+    { "anycubiclan",    htAnycubicLan },
     { "3dprinteros",    ht3DPrinterOS },
     { "moonraker",      htMoonraker }
 };
@@ -4861,6 +4862,7 @@ void PrintConfigDef::init_fff_params()
     def->enum_values.push_back("flashforge");
     def->enum_values.push_back("simplyprint");
     def->enum_values.push_back("elegoolink");
+    def->enum_values.push_back("anycubiclan");
     def->enum_values.push_back("3dprinteros");
     def->enum_values.push_back("moonraker");
     def->enum_labels.push_back("PrusaLink");
@@ -4877,6 +4879,7 @@ void PrintConfigDef::init_fff_params()
     def->enum_labels.push_back("Flashforge");
     def->enum_labels.push_back("SimplyPrint");
     def->enum_labels.push_back("Elegoo Link");
+    def->enum_labels.push_back("Anycubic LAN");
     def->enum_labels.push_back("3DPrinterOS");
     def->enum_labels.push_back("Moonraker (Klipper)");
     def->mode = comAdvanced;

@@ -915,6 +915,28 @@ static inline void apply_mm_segmentation(PrintObject &print_object, ThrowOnCance
                     }
                 }
 
+                // PiggieSlicer / FullSpectrum: fold painted virtual mixed-filament masks into
+                // the physical extruder they resolve to on THIS layer (single-nozzle ACE: that
+                // physical extruder alternates per layer = a colour change + purge). Downstream
+                // therefore only ever sees physical extruders -> no virtual filament OOB.
+                {
+                    const MixedFilamentManager &mfm = print_object.print()->mixed_filament_manager();
+                    const size_t num_total = mfm.total_filaments(num_extruders);
+                    for (size_t v = num_extruders; v < num_total && v < segmentation[layer_id].size(); ++v) {
+                        ExPolygons &vmask = segmentation[layer_id][v];
+                        if (vmask.empty())
+                            continue;
+                        const unsigned int phys = mfm.resolve(unsigned(v + 1), num_extruders, int(layer_id),
+                                                              float(layer.print_z), float(layer.height));
+                        if (phys >= 1 && phys <= num_extruders) {
+                            ByExtruder &region = by_extruder[phys - 1];
+                            append(region.expolygons, std::move(vmask));
+                            region.bbox = get_extents(region.expolygons);
+                            layer_split = true;
+                        }
+                    }
+                }
+
                 if (!layer_split)
                     continue;
 

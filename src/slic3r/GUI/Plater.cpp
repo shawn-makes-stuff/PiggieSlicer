@@ -17348,6 +17348,60 @@ std::vector<Slic3r::ColorRGBA> Plater::get_extruders_colors()
     return colors_out;
 }
 
+static void sync_mixed_filaments_from_project(PresetBundle *pb, const std::vector<std::string> &phys)
+{
+    if (!pb)
+        return;
+
+    const std::string defs = pb->project_config.has("mixed_filament_definitions") ?
+        pb->project_config.opt_string("mixed_filament_definitions") : std::string();
+
+    static PresetBundle *s_last_pb = nullptr;
+    static std::vector<std::string> s_last_phys;
+    static std::string s_last_defs;
+
+    const bool manager_empty_but_should_have_rows = phys.size() > 1 && pb->mixed_filaments.mixed_filaments().empty();
+    if (pb != s_last_pb || phys != s_last_phys || defs != s_last_defs || manager_empty_but_should_have_rows) {
+        pb->mixed_filaments.auto_generate(phys);
+        pb->mixed_filaments.load_custom_entries(defs, phys);
+        s_last_pb   = pb;
+        s_last_phys = phys;
+        s_last_defs = defs;
+    }
+}
+
+size_t Plater::get_filament_count_with_mixed() const
+{
+    std::vector<std::string> phys;
+    if (auto *pb = wxGetApp().preset_bundle) {
+        if (const auto *opt = pb->project_config.option<ConfigOptionStrings>("filament_colour"))
+            phys = opt->values;
+        sync_mixed_filaments_from_project(pb, phys);
+        return phys.size() + pb->mixed_filaments.enabled_count();
+    }
+    return 0;
+}
+
+std::vector<Slic3r::ColorRGBA> Plater::get_extruders_colors_with_mixed()
+{
+    std::vector<Slic3r::ColorRGBA> colors = get_extruders_colors();
+    auto *pb = wxGetApp().preset_bundle;
+    if (pb == nullptr)
+        return colors;
+
+    std::vector<std::string> phys;
+    if (const auto *opt = pb->project_config.option<ConfigOptionStrings>("filament_colour"))
+        phys = opt->values;
+    sync_mixed_filaments_from_project(pb, phys);
+
+    unsigned char rgba[4] = {};
+    for (const std::string &hex : pb->mixed_filaments.display_colors()) {
+        Slic3r::GUI::BitmapCache::parse_color4(hex, rgba);
+        colors.push_back({ float(rgba[0]) / 255.f, float(rgba[1]) / 255.f, float(rgba[2]) / 255.f, float(rgba[3]) / 255.f });
+    }
+    return colors;
+}
+
 void Plater::on_bed_type_change(BedType bed_type)
 {
     sidebar().on_bed_type_change(bed_type);

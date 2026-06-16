@@ -670,8 +670,17 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
     std::vector<int> firstLayerExtruders;
     firstLayerExtruders.clear();
 
+    // PiggieSlicer / FullSpectrum: resolve virtual mixed-filament IDs to a physical
+    // extruder per layer (single-nozzle ACE alternates the tool = color change + purge).
+    const Print *mf_print = object.print();
+    const MixedFilamentManager &mf_mgr = mf_print->mixed_filament_manager();
+    const size_t mf_num_physical = mf_print->config().filament_diameter.size();
+
     // Collect the object extruders.
     for (auto layer : object.layers()) {
+        auto mf_resolve = [&](unsigned int fid) -> unsigned int {
+            return mf_mgr.resolve(fid, mf_num_physical, layerCount, float(layer->print_z), float(layer->height));
+        };
         LayerTools &layer_tools = this->tools_for_layer(layer->print_z);
 
         // Override extruder with the next
@@ -696,11 +705,13 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
                 }
 
                 if (something_nonoverriddable){
-               		layer_tools.extruders.emplace_back((extruder_override == 0) ? region.config().outer_wall_filament_id.value : extruder_override);
+                    unsigned int wall_fid = (extruder_override == 0) ? region.config().outer_wall_filament_id.value : (unsigned int) extruder_override;
+                    wall_fid = mf_resolve(wall_fid);
+               		layer_tools.extruders.emplace_back(wall_fid);
                     if (extruder_override == 0 && region.config().wall_loops.value > 1)
-                        layer_tools.extruders.emplace_back(region.config().inner_wall_filament_id.value);
+                        layer_tools.extruders.emplace_back(mf_resolve((unsigned int) region.config().inner_wall_filament_id.value));
                     if (layerCount == 0) {
-                        firstLayerExtruders.emplace_back((extruder_override == 0) ? region.config().outer_wall_filament_id.value : extruder_override);
+                        firstLayerExtruders.emplace_back((int) wall_fid);
                     }
                 }
 
@@ -734,13 +745,13 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
             if (something_nonoverriddable || !m_print_config_ptr) {
             	if (extruder_override == 0) {
                     if (has_internal_solid)
-                        layer_tools.extruders.emplace_back(region.config().internal_solid_filament_id);
+                        layer_tools.extruders.emplace_back(mf_resolve((unsigned int) region.config().internal_solid_filament_id.value));
                     if (has_top_solid_surface)
-                        layer_tools.extruders.emplace_back(region.config().top_surface_filament_id);
+                        layer_tools.extruders.emplace_back(mf_resolve((unsigned int) region.config().top_surface_filament_id.value));
                     if (has_bottom_surface)
-                        layer_tools.extruders.emplace_back(region.config().bottom_surface_filament_id);
+                        layer_tools.extruders.emplace_back(mf_resolve((unsigned int) region.config().bottom_surface_filament_id.value));
 	                if (has_infill)
-	                    layer_tools.extruders.emplace_back(region.config().sparse_infill_filament_id);
+	                    layer_tools.extruders.emplace_back(mf_resolve((unsigned int) region.config().sparse_infill_filament_id.value));
                 } else if (has_internal_solid || has_top_solid_surface || has_bottom_surface || has_infill)
             		layer_tools.extruders.emplace_back(extruder_override);
             }

@@ -470,6 +470,11 @@ set(lisbslic3r_sources
     FilamentGroup.cpp
     FilamentGroupUtils.hpp
     FilamentGroupUtils.cpp
+    MixedFilament.hpp
+    MixedFilament.cpp
+    filament_mixer.h
+    filament_mixer.cpp
+    filament_mixer_model.h
     GCode/ToolOrderUtils.hpp
     GCode/ToolOrderUtils.cpp
     FlushVolPredictor.hpp

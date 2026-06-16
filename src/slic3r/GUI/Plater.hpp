@@ -181,6 +181,7 @@ public:
     void edit_mixed_filament(size_t mixed_index);
     void persist_mixed_filaments();
     void sync_mixed_filaments_from_project();
+    void update_filaments_counter(bool force_layout = false);
     std::vector<std::string> mixed_filament_physical_colors() const;
     void msw_rescale();
     void sys_color_changed();
@@ -570,6 +571,8 @@ public:
     void on_filament_count_change(size_t extruders_count);
     void on_filaments_delete(size_t extruders_count, size_t filament_id, int replace_filament_id = -1);
     std::vector<Slic3r::ColorRGBA> get_extruders_colors();
+    size_t get_filament_count_with_mixed() const;
+    std::vector<Slic3r::ColorRGBA> get_extruders_colors_with_mixed();
     // BBS
     void on_bed_type_change(BedType bed_type);
 

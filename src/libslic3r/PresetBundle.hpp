@@ -4,6 +4,7 @@
 #include "Preset.hpp"
 #include "AppConfig.hpp"
 #include "enum_bitmask.hpp"
+#include "MixedFilament.hpp"
 
 #include <memory>
 #include <shared_mutex>
@@ -336,6 +337,11 @@ public:
     // they are being serialized / deserialized from / to the .amf, .3mf, .config, .gcode,
     // and they are being used by slicing core.
     DynamicPrintConfig          project_config;
+
+    // PiggieSlicer / FullSpectrum: GUI-side virtual mixed-filament manager. Edited by the
+    // mixed-filament UI and serialized into project_config["mixed_filament_definitions"];
+    // Print::apply rebuilds its own manager from that string at slice time.
+    MixedFilamentManager        mixed_filaments;
 
     // There will be an entry for each system profile loaded,
     // and the system profiles will point to the VendorProfile instances owned by PresetBundle::vendors.

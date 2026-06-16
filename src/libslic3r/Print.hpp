@@ -12,6 +12,7 @@
 #include "Slicing.hpp"
 #include "TriangleMeshSlicer.hpp"
 #include "GCode/ToolOrdering.hpp"
+#include "MixedFilament.hpp"
 #include "GCode/WipeTower.hpp"
 #include "GCode/WipeTower2.hpp"
 #include "GCode/ThumbnailData.hpp"
@@ -948,6 +949,8 @@ public:
     const PrintConfig&          config() const { return m_config; }
     const PrintObjectConfig&    default_object_config() const { return m_default_object_config; }
     const PrintRegionConfig& default_region_config() const { return m_default_region_config; }
+    const MixedFilamentManager& mixed_filament_manager() const { return m_mixed_filament_mgr; }
+    MixedFilamentManager&       mixed_filament_manager()       { return m_mixed_filament_mgr; }
     ConstPrintObjectPtrsAdaptor objects() const { return ConstPrintObjectPtrsAdaptor(&m_objects); }
     PrintObject*                get_object(size_t idx) { return const_cast<PrintObject*>(m_objects[idx]); }
     const PrintObject*          get_object(size_t idx) const { return m_objects[idx]; }
@@ -1136,6 +1139,7 @@ private:
     PrintConfig                             m_config;
     PrintObjectConfig                       m_default_object_config;
     PrintRegionConfig                       m_default_region_config;
+    MixedFilamentManager                    m_mixed_filament_mgr;
     PrintObjectPtrs                         m_objects;
     PrintRegionPtrs                         m_print_regions;
     
