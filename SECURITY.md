@@ -1,47 +1,27 @@
 # Security Policy
 
-At OrcaSlicer, we are committed to maintaining the security of our ecosystem. Our policy is to ensure that we do not introduce vulnerabilities and that any security issues are addressed promptly and responsibly. We appreciate your help in improving the security of OrcaSlicer and thank you for your responsible disclosure.
-Reporting Security Bugs
+PiggieSlicer is maintained as an open-source fork of OrcaSlicer. Security issues in PiggieSlicer-specific code should be reported through this repository.
 
-## To report a security bug, please follow these guidelines:
+## Reporting a Vulnerability
 
-  * Email Security Bugs:
-        Send an email to the lead maintainer at softfeverever@gmail.com.
-        Include the word "SECURITY" in the subject line of your email.
+Please report suspected security issues privately when possible.
 
-  * Response Times:
-        The lead maintainer will acknowledge receipt of your email within one week (7 days).
-        A detailed response will follow within 48 hours, outlining the next steps for handling your report.
-        After the initial reply, the security team will keep you informed about the progress toward a fix and any announcements.
+- Open a private security advisory on GitHub if the repository supports it.
+- If private advisories are unavailable, contact the maintainer through GitHub before posting exploit details publicly.
+- Include the affected version or commit, operating system, reproduction steps, expected impact, and any relevant logs.
 
-  * Information and Collaboration:
-        We may request additional information or guidance as we work on addressing the issue.
+## Scope
 
-  * Handling the Report:
-        OrcaSlicer will confirm the problem and determine the affected versions.
-        We will audit the code to find any similar issues and prepare fixes for all releases still under maintenance.
-        Fixes will be released as quickly as possible.
+PiggieSlicer-specific areas include:
 
-  * Third-Party Modules:
-        Report security issues in third-party modules to the respective maintainer of those modules.
+- Anycubic LAN discovery, upload, print, and device-control code.
+- ACE Pro material sync and material-editing logic.
+- PiggieSlicer UI, branding, mixed-filament, and Full Spectrum workflow changes.
 
-## Security Disclosure Guidelines
+For vulnerabilities in upstream OrcaSlicer code, bundled dependencies, printer firmware, or third-party services, please also report to the relevant upstream maintainer.
 
-When disclosing a vulnerability, please follow these steps to ensure your report is clear and actionable:
+## Response
 
-  * Provide Detailed Information:
-        Scope: Clearly define the scope of the vulnerability.
-        Potential Impact: Let us know who could be affected by this exploit.
-        Reproduction Steps: Document detailed steps to reproduce the vulnerability.
+The maintainer will triage reproducible reports, prepare fixes for affected PiggieSlicer builds, and credit reporters when appropriate.
 
-    Reference OWASP Guidelines:
-        Follow the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Cheat_Sheet.html">OWASP Vulnerability Disclosure Cheat Sheet</a> for best practices in vulnerability disclosure.
-
-## Security Recommendations
-
-To enhance security when using OrcaSlicer, we recommend following these steps:
-
-  * SEE SOMETHING: If you notice anything suspicious or have concerns, please report it.
-  * SAY SOMETHING: If you have any doubts or need assistance, do not hesitate to contact us.
-
-### Thank you for your commitment to the security of OrcaSlicer. Your efforts help us maintain a safe and reliable ecosystem.
+Please avoid publicly sharing working exploits until a fix is available.

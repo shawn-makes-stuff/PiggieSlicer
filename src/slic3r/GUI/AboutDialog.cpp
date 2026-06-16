@@ -11,15 +11,36 @@
 
 #include <wx/clipbrd.h>
 
+#include <algorithm>
+#include <cmath>
+
 namespace Slic3r {
 namespace GUI {
+
+static wxBitmap make_about_pig_logo(wxWindow* win, int logical_size)
+{
+    wxImage img(from_u8(Slic3r::var("splash_logo.png")), wxBITMAP_TYPE_PNG);
+    if (!img.IsOk())
+        return wxBitmap();
+
+    const int max_size = win ? win->FromDIP(logical_size) : logical_size;
+    const int src_w = img.GetWidth();
+    const int src_h = img.GetHeight();
+    if (src_w <= 0 || src_h <= 0)
+        return wxBitmap(img);
+
+    const double scale = std::min(double(max_size) / double(src_w), double(max_size) / double(src_h));
+    const int dst_w = std::max(1, int(std::lround(src_w * scale)));
+    const int dst_h = std::max(1, int(std::lround(src_h * scale)));
+    return wxBitmap(img.Scale(dst_w, dst_h, wxIMAGE_QUALITY_HIGH));
+}
 
 AboutDialogLogo::AboutDialogLogo(wxWindow* parent)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
 {
     this->SetBackgroundColour(*wxWHITE);
-    this->logo = ScalableBitmap(this, Slic3r::var("OrcaSlicer_192px.png"), wxBITMAP_TYPE_PNG);
-    this->SetMinSize(this->logo.GetBmpSize());
+    this->logo = make_about_pig_logo(this, 192);
+    this->SetMinSize(this->logo.IsOk() ? this->logo.GetSize() : wxSize(FromDIP(192), FromDIP(192)));
 
     this->Bind(wxEVT_PAINT, &AboutDialogLogo::onRepaint, this);
 }
@@ -30,9 +51,11 @@ void AboutDialogLogo::onRepaint(wxEvent &event)
     dc.SetBackgroundMode(wxTRANSPARENT);
 
     wxSize size = this->GetSize();
-    int logo_w = this->logo.GetBmpWidth();
-    int logo_h = this->logo.GetBmpHeight();
-    dc.DrawBitmap(this->logo.bmp(), (size.GetWidth() - logo_w)/2, (size.GetHeight() - logo_h)/2, true);
+    if (this->logo.IsOk()) {
+        int logo_w = this->logo.GetWidth();
+        int logo_h = this->logo.GetHeight();
+        dc.DrawBitmap(this->logo, (size.GetWidth() - logo_w)/2, (size.GetHeight() - logo_h)/2, true);
+    }
 
     event.Skip();
 }
@@ -147,9 +170,9 @@ wxString CopyrightsDialog::get_html_text()
                 "<font size=\"3\">",
          bgr_clr_str, text_clr_str, text_clr_str,
         _L("License"),
-        _L("Orca Slicer is licensed under "),
+        _L("PiggieSlicer is licensed under "),
         "https://www.gnu.org/licenses/agpl-3.0.html",_L("GNU Affero General Public License, version 3"),
-        _L("Orca Slicer is based on PrusaSlicer and BambuStudio"),
+        _L("PiggieSlicer is based on OrcaSlicer, PrusaSlicer, and BambuStudio"),
         _L("Libraries"),
         _L("This software uses open source components whose copyright and other proprietary rights belong to their respective owners"));
 
@@ -214,7 +237,7 @@ AboutDialog::AboutDialog()
     SetFont(wxGetApp().normal_font());
 	SetBackgroundColour(*wxWHITE);
 
-    wxPanel* m_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(FromDIP(560), FromDIP(125)), wxTAB_TRAVERSAL);
+    wxPanel* m_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(FromDIP(560), FromDIP(190)), wxTAB_TRAVERSAL);
 
     wxBoxSizer *panel_versizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *vesizer  = new wxBoxSizer(wxVERTICAL);
@@ -230,8 +253,9 @@ AboutDialog::AboutDialog()
 	bool is_dark = wxGetApp().app_config->get("dark_color_mode") == "1";
 
     // logo
-    m_logo_bitmap = ScalableBitmap(this, is_dark ? "OrcaSlicer_about_dark" : "OrcaSlicer_about", 125);
-    m_logo = new wxStaticBitmap(this, wxID_ANY, m_logo_bitmap.bmp(), wxDefaultPosition,wxDefaultSize, 0);
+    m_logo_bitmap = make_about_pig_logo(this, 170);
+    m_logo = new wxStaticBitmap(this, wxID_ANY, m_logo_bitmap, wxDefaultPosition,wxDefaultSize, 0);
+    m_logo->SetMinSize(m_logo_bitmap.IsOk() ? m_logo_bitmap.GetSize() : wxSize(FromDIP(170), FromDIP(170)));
     m_logo->SetSizer(vesizer);
 
     panel_versizer->Add(m_logo, 1, wxALL | wxEXPAND, 0);
@@ -243,7 +267,7 @@ AboutDialog::AboutDialog()
         // _build_string_font.SetStyle(wxFONTSTYLE_ITALIC);
 
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
-        auto          version_string = std::string(SoftFever_VERSION); // _L("Orca Slicer ") + " " + std::string(SoftFever_VERSION);
+        auto          version_string = std::string(SoftFever_VERSION); // _L("PiggieSlicer ") + " " + std::string(SoftFever_VERSION);
         wxStaticText* version = new wxStaticText(this, wxID_ANY, version_string.c_str(), wxDefaultPosition, wxDefaultSize);
         wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format("Build %s", std::string(GIT_COMMIT_HASH)), wxDefaultPosition, wxDefaultSize);
         credits_string->SetFont(_build_string_font);
@@ -267,8 +291,7 @@ AboutDialog::AboutDialog()
 
     std::vector<wxString> text_list;
     text_list.push_back(_L("Open-source slicing stands on a tradition of collaboration and attribution. Slic3r, created by Alessandro Ranellucci and the RepRap community, laid the foundation. PrusaSlicer by Prusa Research built on that work, Bambu Studio forked from PrusaSlicer, and SuperSlicer extended it with community-driven enhancements. Each project carried the work of its predecessors forward, crediting those who came before."));
-    text_list.push_back(_L("OrcaSlicer began in that same spirit, drawing from PrusaSlicer, BambuStudio, SuperSlicer, and CuraSlicer. But it has since grown far beyond its origins — introducing advanced calibration tools, precise wall and seam control and hundreds of other features."));
-    text_list.push_back(_L("Today, OrcaSlicer is the most widely used and actively developed open-source slicer in the 3D printing community. Many of its innovations have been adopted by other slicers, making it a driving force for the entire industry."));
+    text_list.push_back(_L("PiggieSlicer began in that same spirit, drawing from PrusaSlicer, BambuStudio, SuperSlicer, and CuraSlicer. It is a LAN-only Anycubic-focused fork, with a pink coat of paint and a native device panel for Kobra-series printers."));
 
     text_sizer->Add( 0, 0, 0, wxTOP, FromDIP(33));
     bool is_zh = wxGetApp().app_config->get("language") == "zh_CN";
@@ -311,7 +334,7 @@ AboutDialog::AboutDialog()
 
     copyright_hor_sizer->Add(copyright_ver_sizer, 0, wxLEFT, FromDIP(20));
 
-    wxStaticText *html_text = new wxStaticText(this, wxID_ANY, "Copyright(C) 2026 OrcaSlicer Pte Ltd All Rights Reserved", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *html_text = new wxStaticText(this, wxID_ANY, "Copyright(C) 2026 PiggieSlicer Pte Ltd All Rights Reserved", wxDefaultPosition, wxDefaultSize);
     html_text->SetForegroundColour(wxColour(107, 107, 107));
 
     copyright_ver_sizer->Add(html_text, 0, wxALL , 0);
@@ -360,8 +383,9 @@ AboutDialog::AboutDialog()
 
 void AboutDialog::on_dpi_changed(const wxRect &suggested_rect)
 {
-    m_logo_bitmap.msw_rescale();
-    m_logo->SetBitmap(m_logo_bitmap.bmp());
+    m_logo_bitmap = make_about_pig_logo(this, 170);
+    m_logo->SetBitmap(m_logo_bitmap);
+    m_logo->SetMinSize(m_logo_bitmap.IsOk() ? m_logo_bitmap.GetSize() : wxSize(FromDIP(170), FromDIP(170)));
 
     const wxFont& font = GetFont();
     const int fs = font.GetPointSize() - 1;

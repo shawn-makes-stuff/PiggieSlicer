@@ -17,7 +17,7 @@ public:
     AboutDialogLogo(wxWindow* parent);
     
 private:
-    ScalableBitmap logo;
+    wxBitmap logo;
     void onRepaint(wxEvent &event);
 };
 
@@ -56,7 +56,7 @@ private:
 
 class AboutDialog : public DPIDialog
 {
-    ScalableBitmap  m_logo_bitmap;
+    wxBitmap        m_logo_bitmap;
     wxHtmlWindow*   m_html;
     wxStaticBitmap* m_logo;
     int             m_copy_rights_btn_id { wxID_ANY };
