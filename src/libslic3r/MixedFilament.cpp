@@ -1421,7 +1421,7 @@ std::pair<int, int> mixed_filament_apparent_pair_percentages(const MixedFilament
 
 std::string compute_mixed_filament_display_color(const MixedFilament &entry, const MixedFilamentDisplayContext &context)
 {
-    constexpr const char *fallback = "#26A69A";
+    constexpr const char *fallback = "#F291BC";
     if (context.num_physical == 0 || context.physical_colors.empty())
         return fallback;
 

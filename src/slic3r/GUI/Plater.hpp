@@ -182,6 +182,7 @@ public:
     void persist_mixed_filaments();
     void sync_mixed_filaments_from_project();
     std::vector<std::string> mixed_filament_physical_colors() const;
+    void update_filaments_counter(bool force_layout = false);
     void msw_rescale();
     void sys_color_changed();
     void search();
@@ -215,7 +216,7 @@ public:
     void get_small_btn_sync_pos_size(wxPoint &pt, wxSize &size);
     // Orca
     static bool should_show_SEMM_buttons();
-    void show_SEMM_buttons(bool bshow);
+    void show_SEMM_buttons();
     void update_dynamic_filament_list();
 
     PlaterPresetComboBox *  printer_combox();
@@ -343,7 +344,8 @@ public:
 
     // SoftFever
     void calib_pa(const Calib_Params& params);
-    void calib_flowrate(bool is_linear, int pass);
+    //ORCA: Add pattern parameter to calib_flowrate
+    void calib_flowrate(bool is_linear, int pass, InfillPattern pattern = ipArchimedeanChords);
     void calib_temp(const Calib_Params& params);
     void calib_max_vol_speed(const Calib_Params& params);
     void calib_retraction(const Calib_Params& params);
@@ -532,7 +534,7 @@ public:
     /* -1: send current gcode if not specified
      * -2: send all gcode to target machine */
     int send_gcode(int plate_idx = -1, Export3mfProgressFn proFn = nullptr);
-    void send_gcode_legacy(int plate_idx = -1, Export3mfProgressFn proFn = nullptr, bool use_3mf = false);
+    void send_gcode_legacy(int plate_idx = -1, Export3mfProgressFn proFn = nullptr);
     int export_config_3mf(int plate_idx = -1, Export3mfProgressFn proFn = nullptr);
     //BBS jump to nonitor after print job finished
     void send_calibration_job_finished(wxCommandEvent &evt);
@@ -660,7 +662,8 @@ public:
     void drop_selection();
     void search(bool plater_is_active, Preset::Type  type, wxWindow *tag, TextInput *etag, wxWindow *stag);
     void mirror(Axis axis);
-    void split_object();
+    void split_object(bool auto_drop = true);
+    void split_object(int obj_idx, bool auto_drop = true);
     void split_volume();
     void optimize_rotation();
     // find all empty cells on the plate and won't overlap with exclusion areas
@@ -678,7 +681,7 @@ public:
     bool can_increase_instances() const;
     bool can_decrease_instances() const;
     bool can_set_instance_to_object() const;
-    bool can_fix_through_netfabb() const;
+    bool can_fix_through_cgal() const;
     bool can_simplify() const;
     bool can_smooth_mesh() const;
     bool can_split_to_objects() const;
