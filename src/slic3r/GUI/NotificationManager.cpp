@@ -38,6 +38,8 @@ static constexpr int   FADING_OUT_TIMEOUT = 100;
 namespace Slic3r {
 namespace GUI {
 
+static const ImVec4 PIGGIE_PINK = ImVec4(0.925f, 0.435f, 0.651f, 1.0f);
+
 wxDEFINE_EVENT(EVT_EJECT_DRIVE_NOTIFICAION_CLICKED, EjectDriveNotificationClickedEvent);
 wxDEFINE_EVENT(EVT_EXPORT_GCODE_NOTIFICAION_CLICKED, ExportGcodeNotificationClickedEvent);
 wxDEFINE_EVENT(EVT_PRESET_UPDATE_AVAILABLE_CLICKED, PresetUpdateAvailableClickedEvent);
@@ -217,6 +219,9 @@ void NotificationManager::PopNotification::use_bbl_theme()
             m_CurrentColor = m_NormalColor;
     }
 
+    if (m_data.type == NotificationType::BBLObjectInfo && !m_data.use_warn_color)
+        m_CurrentColor = PIGGIE_PINK;
+
 	//OldStyle.Colors[ImGuiCol_Border] = m_CurrentColor;
 
  //   OldStyle.Colors[ImGuiCol_WindowBg] = m_WindowBkgColor;
@@ -225,6 +230,8 @@ void NotificationManager::PopNotification::use_bbl_theme()
 	m_WindowBkgColor = m_is_dark ? ImVec4(45 / 255.f, 45 / 255.f, 49 / 255.f, 1.f) : ImVec4(1, 1, 1, 1);
 	m_TextColor = m_is_dark ? ImVec4(224 / 255.f, 224 / 255.f, 224 / 255.f, 1.f) : ImVec4(.2f, .2f, .2f, 1.0f);
 	m_HyperTextColor = m_is_dark ? ImVec4(0, 0.588, 0.533, 1) : ImVec4(0, 0.588, 0.533, 1);
+    if (m_data.type == NotificationType::BBLObjectInfo && !m_data.use_warn_color)
+        m_HyperTextColor = PIGGIE_PINK;
 	m_is_dark ? push_style_color(ImGuiCol_Border, {62 / 255.f, 62 / 255.f, 69 / 255.f, 1.f}, true, m_current_fade_opacity) : push_style_color(ImGuiCol_Border, m_CurrentColor, true, m_current_fade_opacity);
     push_style_color(ImGuiCol_WindowBg, m_WindowBkgColor, true, m_current_fade_opacity);
     push_style_color(ImGuiCol_Text, m_TextColor, true, m_current_fade_opacity);

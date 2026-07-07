@@ -85,11 +85,14 @@ const double BIG_ITEM_TRESHOLD = 0.02;
 void update_arrange_params(ArrangeParams& params, const DynamicPrintConfig* print_cfg, const ArrangePolygons& selected)
 {
     double                             skirt_distance = get_real_skirt_dist(*print_cfg);
+    double                             max_brim_width = 0.;
+    for (const ArrangePolygon& ap : selected)
+        max_brim_width = std::max(max_brim_width, ap.brim_width);
     // Note: skirt_distance is now defined between outermost brim and skirt, not the object and skirt.
-    // So we can't do max but do adding instead.
+    // Arrange uses model footprints, so the bed also has to be inset by the possible brim.
     params.brim_skirt_distance = skirt_distance;
-    params.bed_shrink_x += params.brim_skirt_distance;
-    params.bed_shrink_y += params.brim_skirt_distance;
+    params.bed_shrink_x += max_brim_width + params.brim_skirt_distance;
+    params.bed_shrink_y += max_brim_width + params.brim_skirt_distance;
     // for sequential print, we need to inflate the bed because clearance_radius is so large
     if (params.is_seq_print) {
         params.bed_shrink_x -= params.clearance_radius / 2;

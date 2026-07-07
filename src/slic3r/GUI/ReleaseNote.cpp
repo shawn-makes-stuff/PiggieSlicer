@@ -136,7 +136,7 @@ UpdatePluginDialog::UpdatePluginDialog(wxWindow* parent /*= nullptr*/)
     m_text_up_info->SetForegroundColour(wxColour(0x26, 0x2E, 0x30));
 
 
-    operation_tips = new ::Label(this, Label::Body_12, _L("Click OK to update the Network plug-in when Orca Slicer launches next time."), LB_AUTO_WRAP);
+    operation_tips = new ::Label(this, Label::Body_12, _L("Click OK to update the Network plug-in when PiggieSlicer launches next time."), LB_AUTO_WRAP);
     operation_tips->SetMinSize(wxSize(FromDIP(260), -1));
     operation_tips->SetMaxSize(wxSize(FromDIP(260), -1));
 
@@ -235,7 +235,7 @@ void UpdatePluginDialog::update_info(std::string json_path)
 }
 
 UpdateVersionDialog::UpdateVersionDialog(wxWindow *parent)
-    : DPIDialog(parent, wxID_ANY, _L("New version of Orca Slicer"), wxDefaultPosition, wxDefaultSize, wxCAPTION | wxCLOSE_BOX | wxRESIZE_BORDER)
+    : DPIDialog(parent, wxID_ANY, _L("New version of PiggieSlicer"), wxDefaultPosition, wxDefaultSize, wxCAPTION | wxCLOSE_BOX | wxRESIZE_BORDER)
 {
     SetBackgroundColour(*wxWHITE);
 
@@ -459,7 +459,7 @@ void UpdateVersionDialog::update_version_info(wxString release_note, wxString ve
     //bbs check whether the web display is used
     bool use_web_link = false;
     url_line          = "";
-    // Orca: not used in Orca Slicer
+    // Orca: not used in PiggieSlicer
     // auto split_array = splitWithStl(release_note.ToStdString(), "###");
     // if (split_array.size() >= 3) {
     //     for (auto i = 0; i < split_array.size(); i++) {
@@ -1335,7 +1335,7 @@ void ConfirmBeforeSendDialog::edit_cancel_button_txt(const wxString& txt, bool s
     if (switch_green)
     {
         StateColor btn_bg_green(std::pair<wxColour, int>(wxColour(0, 137, 123), StateColor::Pressed),
-                                std::pair<wxColour, int>(wxColour(38, 166, 154), StateColor::Hovered),
+                                std::pair<wxColour, int>(wxColour(242, 145, 188), StateColor::Hovered),
                                 std::pair<wxColour, int>(AMS_CONTROL_BRAND_COLOUR, StateColor::Normal));
         m_button_cancel->SetBackgroundColor(btn_bg_green);
         m_button_cancel->SetBorderColor(*wxWHITE);
@@ -1378,7 +1378,7 @@ InputIpAddressDialog::InputIpAddressDialog(wxWindow *parent)
     m_line_top->SetBackgroundColour(wxColour(166, 169, 170));
 
     comfirm_before_check_text = _L("Try the following methods to update the connection parameters and reconnect to the printer.");
-    comfirm_before_enter_text = _L("1. Please confirm Orca Slicer and your printer are in the same LAN.");
+    comfirm_before_enter_text = _L("1. Please confirm PiggieSlicer and your printer are in the same LAN.");
     comfirm_after_enter_text  = _L("2. If the IP and Access Code below are different from the actual values on your printer, please correct them.");
     comfirm_last_enter_text   = _L("3. Please obtain the device SN from the printer side; it is usually found in the device information on the printer screen.");
 
@@ -1505,7 +1505,7 @@ InputIpAddressDialog::InputIpAddressDialog(wxWindow *parent)
 
     /*other*/
     m_test_right_msg = new Label(this, Label::Body_13, wxEmptyString, LB_AUTO_WRAP);
-    m_test_right_msg->SetForegroundColour(wxColour(38, 166, 154));
+    m_test_right_msg->SetForegroundColour(wxColour(242, 145, 188));
     m_test_right_msg->Hide();
 
     m_test_wrong_msg = new Label(this, Label::Body_13, wxEmptyString, LB_AUTO_WRAP);

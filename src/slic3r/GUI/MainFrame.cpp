@@ -14,9 +14,11 @@
 #include <wx/debug.h>
 #include <wx/utils.h>
 
-#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/property_tree/ptree.hpp>
+
+#include <nlohmann/json.hpp>
 
 #include "libslic3r/Print.hpp"
 #include "libslic3r/Polygon.hpp"
@@ -51,6 +53,7 @@
 #include <string_view>
 
 #include "GUI_App.hpp"
+#include "MixedFilamentDialog.hpp"
 #include "UnsavedChangesDialog.hpp"
 #include "MsgDialog.hpp"
 #include "Notebook.hpp"
@@ -91,6 +94,54 @@ wxDEFINE_EVENT(EVT_SHOW_IP_DIALOG, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UPDATE_MACHINE_LIST, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UPDATE_PRESET_CB, SimpleEvent);
 
+
+namespace {
+
+static bool is_anycubic_printer_preset(const PresetBundle& preset_bundle)
+{
+    const auto& printers = preset_bundle.printers;
+    const auto& preset   = printers.get_edited_preset();
+    const auto  pwv      = printers.get_preset_with_vendor_profile(preset);
+    return pwv.vendor && pwv.vendor->name == "Anycubic";
+}
+
+static bool is_anycubic_lan_config(const DynamicPrintConfig& cfg)
+{
+    auto opt = cfg.opt<ConfigOptionEnum<PrintHostType>>("host_type");
+    return opt && opt->value == htAnycubicLan;
+}
+
+static std::string saved_anycubic_lan_host()
+{
+    auto* app_config = wxGetApp().app_config;
+    if (!app_config)
+        return {};
+
+    const std::string raw = app_config->get("piggie_lan_printers");
+    if (raw.empty())
+        return {};
+
+    try {
+        auto printers = nlohmann::json::parse(raw);
+        std::string host;
+        int host_count = 0;
+        if (printers.is_array()) {
+            for (const auto& printer : printers) {
+                std::string ip = printer.value("ip", "");
+                boost::trim(ip);
+                if (!ip.empty()) {
+                    host = ip;
+                    ++host_count;
+                }
+            }
+        }
+        return host_count == 1 ? host : std::string();
+    } catch (...) {
+        return {};
+    }
+}
+
+}
 
 
 // BBS: backup
@@ -212,10 +263,10 @@ private:
 #endif // __WXGTK__
 
 #ifdef __APPLE__
-class OrcaSlicerTaskBarIcon : public wxTaskBarIcon
+class PiggieSlicerTaskBarIcon : public wxTaskBarIcon
 {
 public:
-    OrcaSlicerTaskBarIcon(wxTaskBarIconType iconType = wxTBI_DEFAULT_TYPE) : wxTaskBarIcon(iconType) {}
+    PiggieSlicerTaskBarIcon(wxTaskBarIconType iconType = wxTBI_DEFAULT_TYPE) : wxTaskBarIcon(iconType) {}
     wxMenu *CreatePopupMenu() override {
         wxMenu *menu = new wxMenu;
         if (wxGetApp().app_config->get("single_instance") == "false") {
@@ -381,8 +432,8 @@ DPIFrame(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, BORDERLESS_FRAME_
     switch (wxGetApp().get_app_mode()) {
     default:
     case GUI_App::EAppMode::Editor:
-        m_taskbar_icon = std::make_unique<OrcaSlicerTaskBarIcon>(wxTBI_DOCK);
-        m_taskbar_icon->SetIcon(wxIcon(Slic3r::var("OrcaSlicer-mac_256px.ico"), wxBITMAP_TYPE_ICO), "OrcaSlicer");
+        m_taskbar_icon = std::make_unique<PiggieSlicerTaskBarIcon>(wxTBI_DOCK);
+        m_taskbar_icon->SetIcon(wxIcon(Slic3r::var("OrcaSlicer-mac_256px.ico"), wxBITMAP_TYPE_ICO), "PiggieSlicer");
         break;
     case GUI_App::EAppMode::GCodeViewer:
         break;
@@ -1328,7 +1379,12 @@ void MainFrame::init_tabpanel() {
 
     m_calibration = new CalibrationPanel(m_tabpanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     m_calibration->SetBackgroundColour(*wxWHITE);
-    m_tabpanel->AddPage(m_calibration, _L("Calibration"), std::string("tab_calibration_active"), std::string("tab_calibration_active"), false);
+    m_calibration->Hide();
+    // PiggieSlicer: Calibration tab hidden (not needed). Panel is still constructed so
+    // pointer-guarded references stay valid; it is simply never added as a notebook page.
+    // m_tabpanel->AddPage(m_calibration, _L("Calibration"), std::string("tab_calibration_active"), std::string("tab_calibration_active"), false);
+    // PiggieSlicer: the Anycubic LAN panel (m_anycubic_device) is created lazily and
+    // shown INSIDE the Device tab for Anycubic printers via show_device(); not a tab here.
 
     if (m_plater) {
         // load initial config
@@ -1347,6 +1403,37 @@ void MainFrame::init_tabpanel() {
 // SoftFever
 void MainFrame::show_device(bool bBBLPrinter) {
     auto idx = -1;
+
+    // PiggieSlicer: Anycubic-vendor printers get our native LAN control panel in the
+    // Device tab; every other printer type keeps Orca's own Device UI below.
+    {
+        auto* pb = wxGetApp().preset_bundle;
+        bool is_anycubic = false;
+        if (pb) {
+            // resolve vendor through inheritance (user-modified presets have a null vendor)
+            const auto pwv = pb->printers.get_preset_with_vendor_profile(pb->printers.get_edited_preset());
+            is_anycubic = pwv.vendor && pwv.vendor->name == "Anycubic";
+        }
+        if (is_anycubic) {
+            if (!m_anycubic_device) {
+                m_anycubic_device = new AnycubicDevicePanel(m_tabpanel);
+                m_anycubic_device->SetBackgroundColour(*wxWHITE);
+            }
+            if (m_tabpanel->FindPage(m_anycubic_device) != wxNOT_FOUND) { fit_tab_labels(); return; }
+            if ((idx = m_tabpanel->FindPage(m_printer_view)) != wxNOT_FOUND) { m_printer_view->Show(false); m_tabpanel->RemovePage(idx); }
+            if ((idx = m_tabpanel->FindPage(m_monitor))      != wxNOT_FOUND) { m_monitor->Show(false);      m_tabpanel->RemovePage(idx); }
+            m_anycubic_device->Show(false);
+            m_tabpanel->InsertPage(tpMonitor, m_anycubic_device, _L("Device"), std::string("tab_monitor_active"), std::string("tab_monitor_active"));
+            // PiggieSlicer: Calibration tab hidden (not re-added).
+            fit_tab_labels();
+            return;
+        }
+        if (m_anycubic_device && (idx = m_tabpanel->FindPage(m_anycubic_device)) != wxNOT_FOUND) {
+            m_anycubic_device->Show(false);
+            m_tabpanel->RemovePage(idx);
+        }
+    }
+
     if (bBBLPrinter) {
         if (m_tabpanel->FindPage(m_monitor) != wxNOT_FOUND) {
             fit_tab_labels(); // ORCA on printer change - same button layout
@@ -1376,15 +1463,7 @@ void MainFrame::show_device(bool bBBLPrinter) {
             m_tabpanel->InsertPage(tpMultiDevice, m_multi_machine, _L("Multi-device"), std::string("tab_multi_active"),
                                    std::string("tab_multi_active"), false);
         }
-        if (!m_calibration) {
-            m_calibration = new CalibrationPanel(m_tabpanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-            m_calibration->SetBackgroundColour(*wxWHITE);
-        }
-        m_calibration->Show(false);
-        // Calibration is always the last page, so don't use InsertPage here. Otherwise, if multi_machine page is not enabled,
-        // the calibration tab won't be properly added as well, due to the TabPosition::tpCalibration no longer matches the real tab position.
-        m_tabpanel->AddPage(m_calibration, _L("Calibration"), std::string("tab_calibration_active"),
-                               std::string("tab_calibration_active"), false);
+        // PiggieSlicer: Calibration tab hidden (not added).
 
 #ifdef _MSW_DARK_MODE
         wxGetApp().UpdateDarkUIWin(this);
@@ -1710,11 +1789,20 @@ bool MainFrame::can_send_gcode() const
 {
     if (m_plater && !m_plater->model().objects.empty())
     {
-        auto cfg = wxGetApp().preset_bundle->printers.get_edited_preset().config;
+        auto* preset_bundle = wxGetApp().preset_bundle;
+        if (!preset_bundle)
+            return false;
+
+        auto cfg = preset_bundle->printers.get_edited_preset().config;
 
         const auto *print_host_opt = cfg.option<ConfigOptionString>("print_host");
-        if (! print_host_opt) return false;
-        else return !print_host_opt->value.empty();
+        if (print_host_opt && !print_host_opt->value.empty())
+            return true;
+
+        if (is_anycubic_printer_preset(*preset_bundle) || is_anycubic_lan_config(cfg))
+            return !saved_anycubic_lan_host().empty();
+
+        return false;
     }
     return true;
 }
@@ -2005,7 +2093,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                 p->append_button(export_gcode_btn);
             }
             else {
-                //Orca Slicer Buttons
+                //PiggieSlicer Buttons
                 SideButton* print_plate_btn = new SideButton(p, _L("Print plate"), "");
                 print_plate_btn->SetCornerRadius(0);
 
@@ -2305,7 +2393,7 @@ void MainFrame::update_side_button_style()
     StateColor m_btn_bg_enable = StateColor(
         std::pair<wxColour, int>(wxColour(0, 137, 123), StateColor::Pressed),
         std::pair<wxColour, int>(wxColour(48, 221, 112), StateColor::Hovered),
-        std::pair<wxColour, int>(wxColour(0, 150, 136), StateColor::Normal)
+        std::pair<wxColour, int>(wxColour(236, 111, 166), StateColor::Normal)
     );
 
     // m_publish_btn->SetMinSize(wxSize(FromDIP(125), FromDIP(24)));
@@ -2527,7 +2615,7 @@ static wxMenu* generate_help_menu()
         });
 
     // Report a bug
-    //append_menu_item(helpMenu, wxID_ANY, _L("Report Bug(TODO)"), _L("Report a bug of OrcaSlicer"),
+    //append_menu_item(helpMenu, wxID_ANY, _L("Report Bug(TODO)"), _L("Report a bug of PiggieSlicer"),
     //    [](wxCommandEvent&) {
     //        //TODO
     //    });
@@ -3087,7 +3175,7 @@ void MainFrame::init_menubar_as_editor()
 #ifdef __APPLE__
     wxWindowID bambu_studio_id_base = wxWindow::NewControlId(int(2));
     wxMenu* parent_menu = m_menubar->OSXGetAppleMenu();
-    //auto preference_item = new wxMenuItem(parent_menu, OrcaSlicerMenuPreferences + bambu_studio_id_base, _L("Preferences") + "\t" + ctrl + ",", "");
+    //auto preference_item = new wxMenuItem(parent_menu, PiggieSlicerMenuPreferences + bambu_studio_id_base, _L("Preferences") + "\t" + ctrl + ",", "");
 #else
     wxMenu* parent_menu = m_topbar->GetTopMenu();
     auto preference_item = new wxMenuItem(parent_menu, ConfigMenuPreferences + config_id_base, _L("Preferences") + "\t" + ctrl + "P", "");
@@ -3162,13 +3250,13 @@ void MainFrame::init_menubar_as_editor()
 
 #ifdef __APPLE__
     wxString about_title = wxString::Format(_L("&About %s"), SLIC3R_APP_FULL_NAME);
-    //auto about_item = new wxMenuItem(parent_menu, OrcaSlicerMenuAbout + bambu_studio_id_base, about_title, "");
+    //auto about_item = new wxMenuItem(parent_menu, PiggieSlicerMenuAbout + bambu_studio_id_base, about_title, "");
         //parent_menu->Bind(wxEVT_MENU, [this, bambu_studio_id_base](wxEvent& event) {
         //    switch (event.GetId() - bambu_studio_id_base) {
-        //        case OrcaSlicerMenuAbout:
+        //        case PiggieSlicerMenuAbout:
         //            Slic3r::GUI::about();
         //            break;
-        //        case OrcaSlicerMenuPreferences:
+        //        case PiggieSlicerMenuPreferences:
         //            CallAfter([this] {
         //                PreferencesDialog dlg(this);
         //                dlg.ShowModal();
@@ -3213,6 +3301,15 @@ void MainFrame::init_menubar_as_editor()
         [this](wxCommandEvent &) {
             // Orca: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
             wxGetApp().open_preferences();
+        },
+        "", nullptr, []() { return true; }, this);
+
+    // PiggieSlicer / FullSpectrum: virtual mixed-filament (color blending) definitions
+    append_menu_item(
+        m_topbar->GetTopMenu(), wxID_ANY, _L("Mixed Filaments..."), _L("Create virtual mixed-color filaments by alternating layers between physical filaments"),
+        [this](wxCommandEvent &) {
+            MixedFilamentDialog dlg(this);
+            dlg.ShowModal();
         },
         "", nullptr, []() { return true; }, this);
     //m_topbar->AddDropDownMenuItem(preference_item);
@@ -3260,10 +3357,10 @@ void MainFrame::init_menubar_as_editor()
         [this](wxCommandEvent&) { if (m_plater) m_plater->calib_flowrate(false, 2); }, "", nullptr,
         [this]() {return m_plater->is_view3D_shown();; }, this);
     flowrate_menu->AppendSeparator();
-    append_menu_item(flowrate_menu, wxID_ANY, _L("YOLO (Recommended)"), _L("Orca YOLO flowratio calibration, 0.01 step"),
+    append_menu_item(flowrate_menu, wxID_ANY, _L("YOLO (Recommended)"), _L("PiggieSlicer YOLO flowratio calibration, 0.01 step"),
         [this](wxCommandEvent&) { if (m_plater) m_plater->calib_flowrate(true, 1); }, "", nullptr,
         [this]() {return m_plater->is_view3D_shown();; }, this);
-    append_menu_item(flowrate_menu, wxID_ANY, _L("YOLO (perfectionist version)"), _L("Orca YOLO flowratio calibration, 0.005 step"),
+    append_menu_item(flowrate_menu, wxID_ANY, _L("YOLO (perfectionist version)"), _L("PiggieSlicer YOLO flowratio calibration, 0.005 step"),
         [this](wxCommandEvent&) { if (m_plater) m_plater->calib_flowrate(true, 2); }, "", nullptr,
         [this]() {return m_plater->is_view3D_shown();; }, this);
     m_topbar->GetCalibMenu()->AppendSubMenu(flowrate_menu, _L("Flow ratio"));
@@ -3379,10 +3476,10 @@ void MainFrame::init_menubar_as_editor()
     append_submenu(calib_menu,flowrate_menu,wxID_ANY,_L("Flow ratio"),_L("Flow ratio"),"",
                    [this]() {return m_plater->is_view3D_shown();; });
     flowrate_menu->AppendSeparator();
-    append_menu_item(flowrate_menu, wxID_ANY, _L("YOLO (Recommended)"), _L("Orca YOLO flowratio calibration, 0.01 step"),
+    append_menu_item(flowrate_menu, wxID_ANY, _L("YOLO (Recommended)"), _L("PiggieSlicer YOLO flowratio calibration, 0.01 step"),
         [this](wxCommandEvent&) { if (m_plater) m_plater->calib_flowrate(true, 1); }, "", nullptr,
         [this]() {return m_plater->is_view3D_shown();; }, this);
-    append_menu_item(flowrate_menu, wxID_ANY, _L("YOLO (perfectionist version)"), _L("Orca YOLO flowratio calibration, 0.005 step"),
+    append_menu_item(flowrate_menu, wxID_ANY, _L("YOLO (perfectionist version)"), _L("PiggieSlicer YOLO flowratio calibration, 0.005 step"),
         [this](wxCommandEvent&) { if (m_plater) m_plater->calib_flowrate(true, 2); }, "", nullptr,
         [this]() {return m_plater->is_view3D_shown();; }, this);
 

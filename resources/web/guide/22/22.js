@@ -575,9 +575,18 @@ function ReturnPreviewPage()
 function GotoNetPluginPage()
 {
 	let bRet=ResponseFilamentResult();
-	
+
+	// PiggieSlicer: LAN-only build, skip the proprietary "Network Plugin" page (../5) and finish directly
 	if(bRet)
-		window.location.href="../4orca/index.html";
+	{
+		var tSend={};
+		tSend['sequence_id']=Math.round(new Date() / 1000);
+		tSend['command']="user_guide_finish";
+		tSend['data']={};
+		tSend['data']['action']="finish";
+
+		SendWXMessage( JSON.stringify(tSend) );
+	}
 }
 
 function FinishGuide()

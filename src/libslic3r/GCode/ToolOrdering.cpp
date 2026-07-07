@@ -656,8 +656,17 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
     std::vector<int> firstLayerExtruders;
     firstLayerExtruders.clear();
 
+    // PiggieSlicer / FullSpectrum: resolve virtual mixed-filament IDs to a physical
+    // extruder per layer (single-nozzle ACE alternates the tool = color change + purge).
+    const Print *mf_print = object.print();
+    const MixedFilamentManager &mf_mgr = mf_print->mixed_filament_manager();
+    const size_t mf_num_physical = mf_print->config().filament_diameter.size();
+
     // Collect the object extruders.
     for (auto layer : object.layers()) {
+        auto mf_resolve = [&](unsigned int fid) -> unsigned int {
+            return mf_mgr.resolve(fid, mf_num_physical, layerCount, float(layer->print_z), float(layer->height));
+        };
         LayerTools &layer_tools = this->tools_for_layer(layer->print_z);
 
         // Override extruder with the next
@@ -682,9 +691,11 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
                 }
 
                 if (something_nonoverriddable){
-               		layer_tools.extruders.emplace_back((extruder_override == 0) ? region.config().wall_filament.value : extruder_override);
+                    unsigned int wall_fid = (extruder_override == 0) ? region.config().wall_filament.value : (unsigned int) extruder_override;
+                    wall_fid = mf_resolve(wall_fid);
+               		layer_tools.extruders.emplace_back(wall_fid);
                     if (layerCount == 0) {
-                        firstLayerExtruders.emplace_back((extruder_override == 0) ? region.config().wall_filament.value : extruder_override);
+                        firstLayerExtruders.emplace_back((int) wall_fid);
                     }
                 }
 
@@ -712,9 +723,9 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
             if (something_nonoverriddable || !m_print_config_ptr) {
             	if (extruder_override == 0) {
 	                if (has_solid_infill)
-	                    layer_tools.extruders.emplace_back(region.config().solid_infill_filament);
+	                    layer_tools.extruders.emplace_back(mf_resolve((unsigned int) region.config().solid_infill_filament.value));
 	                if (has_infill)
-	                    layer_tools.extruders.emplace_back(region.config().sparse_infill_filament);
+	                    layer_tools.extruders.emplace_back(mf_resolve((unsigned int) region.config().sparse_infill_filament.value));
             	} else if (has_solid_infill || has_infill)
             		layer_tools.extruders.emplace_back(extruder_override);
             }

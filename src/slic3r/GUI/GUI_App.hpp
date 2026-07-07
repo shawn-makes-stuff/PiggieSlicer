@@ -128,9 +128,9 @@ enum ConfigMenuIDs {
     ConfigMenuCnt,
 };
 
-enum OrcaSlicerMenuIDs {
-  OrcaSlicerMenuAbout,
-  OrcaSlicerMenuPreferences,
+enum PiggieSlicerMenuIDs {
+  PiggieSlicerMenuAbout,
+  PiggieSlicerMenuPreferences,
 };
 
 enum CameraMenuIDs {

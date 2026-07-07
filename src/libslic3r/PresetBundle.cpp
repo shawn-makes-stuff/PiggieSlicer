@@ -47,6 +47,25 @@ static std::vector<std::string> s_project_options {
     "curr_bed_type",
     "flush_multiplier",
     "nozzle_volume_type",
+    // PiggieSlicer / FullSpectrum: mixed-filament (color blending) project settings
+    "mixed_filament_gradient_mode",
+    "mixed_filament_height_lower_bound",
+    "mixed_filament_height_upper_bound",
+    "mixed_filament_advanced_dithering",
+    "mixed_filament_component_bias_enabled",
+    "mixed_filament_surface_indentation",
+    "mixed_filament_region_collapse",
+    "mixed_filament_definitions",
+    "mixed_color_layer_height_a",
+    "mixed_color_layer_height_b",
+    "mixed_filament_pointillism_pixel_size",
+    "mixed_filament_pointillism_line_gap",
+    "dithering_z_step_size",
+    "dithering_local_z_mode",
+    "dithering_local_z_whole_objects",
+    "dithering_local_z_direct_multicolor",
+    "dithering_step_painted_zones_only",
+    "local_z_wipe_tower_purge_lines",
     "filament_map_mode",
     "filament_map"
 };
@@ -1867,7 +1886,7 @@ void PresetBundle::update_selections(AppConfig &config)
     if (!f_colors.empty()) {
         boost::algorithm::split(filament_colors, f_colors, boost::algorithm::is_any_of(","));
     }
-    filament_colors.resize(filament_presets.size(), "#26A69A");
+    filament_colors.resize(filament_presets.size(), "#EC6FA6");
     project_config.option<ConfigOptionStrings>("filament_colour")->values = filament_colors;
 
     std::vector<std::string> multi_filament_colors;
@@ -2000,7 +2019,7 @@ void PresetBundle::load_selections(AppConfig &config, const PresetPreferences& p
     if (!f_colors.empty()) {
         boost::algorithm::split(filament_colors, f_colors, boost::algorithm::is_any_of(","));
     }
-    filament_colors.resize(filament_presets.size(), "#26A69A");
+    filament_colors.resize(filament_presets.size(), "#EC6FA6");
     project_config.option<ConfigOptionStrings>("filament_colour")->values = filament_colors;
 
     std::vector<std::string> multi_filament_colors;
@@ -4035,7 +4054,11 @@ std::pair<PresetsConfigSubstitutions, size_t> PresetBundle::load_vendor_configs_
                 filament_id = filament_it->second;
             //check whether it inherits other preset or not
             auto it1 = key_values.find(BBL_JSON_KEY_INHERITS);
-            if (it1 != key_values.end()) {
+            // PiggieSlicer: treat an empty "inherits" ("") as "no parent" (use the type default).
+            // ASN-imported profiles set inherits to "" on top-level presets; without this guard the
+            // loader looks up "" in config_maps, fails, and throws ConfigurationError, which aborts
+            // the entire vendor (no machine presets load -> printers missing from the dropdown).
+            if (it1 != key_values.end() && !it1->second.empty()) {
                 inherits = it1->second;
                 auto it2 = config_maps.find(inherits);
                 default_config = nullptr;

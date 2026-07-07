@@ -61,6 +61,10 @@ set(SLIC3R_GUI_SOURCES
     GUI/Calibration.cpp
     GUI/Calibration.hpp
     GUI/CalibrationPanel.cpp
+    GUI/AnycubicDevicePanel.cpp
+    GUI/AnycubicDevicePanel.hpp
+    GUI/MixedFilamentDialog.cpp
+    GUI/MixedFilamentDialog.hpp
     GUI/CalibrationPanel.hpp
     GUI/CalibrationWizardCaliPage.cpp
     GUI/CalibrationWizardCaliPage.hpp
@@ -570,6 +574,10 @@ set(SLIC3R_GUI_SOURCES
     Utils/Duet.hpp
     Utils/ElegooLink.cpp
     Utils/ElegooLink.hpp
+    Utils/AcLan.cpp
+    Utils/AcLan.hpp
+    Utils/AnycubicHost.cpp
+    Utils/AnycubicHost.hpp
     Utils/EmbossStyleManager.cpp
     Utils/EmbossStyleManager.hpp
     Utils/ESP3D.cpp

@@ -2140,7 +2140,6 @@ arrangement::ArrangePolygon PartPlate::estimate_wipe_tower_polygon(const Dynamic
     const ConfigOptionBool * wrapping_opt = dynamic_cast<const ConfigOptionBool *>(config.option("enable_wrapping_detection"));
 	bool enable_wrapping = (wrapping_opt != nullptr) && wrapping_opt->value;
 	wt_size = estimate_wipe_tower_size(config, w, v, extruder_count, plate_extruder_size, use_global_objects, enable_wrapping);
-	int plate_width=m_width, plate_depth=m_depth;
 	float depth = wt_size(1);
 	float margin = WIPE_TOWER_MARGIN + tower_brim_width, wp_brim_width = 0.f;
 	const ConfigOption* wipe_tower_brim_width_opt = config.option("prime_tower_brim_width");
@@ -2150,8 +2149,17 @@ arrangement::ArrangePolygon PartPlate::estimate_wipe_tower_polygon(const Dynamic
 		BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format("arrange wipe_tower: wp_brim_width %1%") % wp_brim_width;
 	}
 
-	x = std::clamp(x, margin, (float)plate_width - w - margin - wp_brim_width);
-    y = std::clamp(y, margin, (float)plate_depth - depth - margin - wp_brim_width);
+    const BoundingBoxf3 &plate_bbox = m_bounding_box;
+    const float   local_min_x = static_cast<float>(plate_bbox.min(0) - m_origin(0));
+    const float   local_max_x = static_cast<float>(plate_bbox.max(0) - m_origin(0));
+    const float   local_min_y = static_cast<float>(plate_bbox.min(1) - m_origin(1));
+    const float   local_max_y = static_cast<float>(plate_bbox.max(1) - m_origin(1));
+    const float   min_x       = local_min_x + margin;
+    const float   max_x       = local_max_x - w - margin - wp_brim_width;
+    const float   min_y       = local_min_y + margin;
+    const float   max_y       = local_max_y - depth - margin - wp_brim_width;
+	x = max_x < min_x ? min_x : std::clamp(x, min_x, max_x);
+    y = max_y < min_y ? min_y : std::clamp(y, min_y, max_y);
     wt_pos(0) = x;
     wt_pos(1) = y;
     wt_pos(2) = 0.f;
@@ -2301,7 +2309,7 @@ void PartPlate::generate_plate_name_texture()
     auto l = Label::sysFont(size, true);
     wxFont* font = &l;
 
-	wxColour foreground(0xf2, 0x75, 0x4e, 0xff);
+	wxColour foreground(0xec, 0x6f, 0xa6, 0xff);
     if (!m_name_texture.generate_from_text_string(text.ToUTF8().data(), *font, *wxBLACK, foreground))
 		BOOST_LOG_TRIVIAL(error) << "PartPlate::generate_plate_name_texture(): generate_from_text_string() failed";
 
@@ -3031,15 +3039,43 @@ void PartPlate::generate_exclude_polygon(ExPolygon &exclude_polygon)
 	exclude_polygon.contour.make_counter_clockwise();
 }
 
+static Pointfs normalize_exclude_areas_for_shape(const Pointfs& shape, const Pointfs& exclude_areas)
+{
+    if (exclude_areas.size() < 4 || exclude_areas.size() % 4 != 0)
+        return {};
+
+    const BoundingBoxf bed_bb(shape);
+    Pointfs            normalized;
+    for (size_t i = 0; i + 3 < exclude_areas.size(); i += 4) {
+        BoundingBoxf exclude_bb;
+        for (size_t j = i; j < i + 4; ++j)
+            exclude_bb.merge(exclude_areas[j]);
+
+        if (!exclude_bb.defined)
+            continue;
+
+        const bool covers_bed = bed_bb.defined &&
+            exclude_bb.min.x() <= bed_bb.min.x() && exclude_bb.min.y() <= bed_bb.min.y() &&
+            exclude_bb.max.x() >= bed_bb.max.x() && exclude_bb.max.y() >= bed_bb.max.y();
+        if (covers_bed)
+            continue;
+
+        for (size_t j = i; j < i + 4; ++j)
+            normalized.emplace_back(exclude_areas[j]);
+    }
+    return normalized;
+}
+
 bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, const std::vector<Pointfs>& extruder_areas, const std::vector<double>& extruder_heights, Vec2d position, float height_to_lid, float height_to_rod)
 {
 	Pointfs new_shape, new_exclude_areas;
+	Pointfs normalized_exclude_areas = normalize_exclude_areas_for_shape(shape, exclude_areas);
 	m_extruder_heights = extruder_heights;
 	for (const Vec2d& p : shape) {
 		new_shape.push_back(Vec2d(p.x() + position.x(), p.y() + position.y()));
 	}
 
-	for (const Vec2d& p : exclude_areas) {
+	for (const Vec2d& p : normalized_exclude_areas) {
 		new_exclude_areas.push_back(Vec2d(p.x() + position.x(), p.y() + position.y()));
 	}
 
@@ -3995,7 +4031,7 @@ void PartPlateList::generate_icon_textures()
 			else
 				file_name = std::to_string(i+1);
 
-			wxColour foreground(0xf2, 0x75, 0x4e, 0xff);
+			wxColour foreground(0xec, 0x6f, 0xa6, 0xff);
 			if (!m_idx_textures[i].generate_from_text_string(file_name, *font, *wxBLACK, foreground)) {
 				BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << boost::format(":load file %1% failed") % file_name;
 			}
@@ -4083,6 +4119,7 @@ void PartPlateList::set_default_wipe_tower_pos_for_plate(int plate_idx, bool ini
 
     coordf_t plate_bbox_x_min_local_coord = plate_bbox_2d.min(0) - plate_origin(0);
     coordf_t plate_bbox_x_max_local_coord = plate_bbox_2d.max(0) - plate_origin(0);
+    coordf_t plate_bbox_y_min_local_coord = plate_bbox_2d.min(1) - plate_origin(1);
     coordf_t plate_bbox_y_max_local_coord = plate_bbox_2d.max(1) - plate_origin(1);
 
     std::vector<int> filament_maps = part_plate->get_real_filament_maps(proj_cfg);
@@ -4119,8 +4156,8 @@ void PartPlateList::set_default_wipe_tower_pos_for_plate(int plate_idx, bool ini
 
         if (y + margin + wipe_tower_size(1) > plate_bbox_y_max_local_coord) {
             y = plate_bbox_y_max_local_coord - wipe_tower_size(1) - margin;
-        } else if (y < margin) {
-            y = margin;
+        } else if (y < margin + plate_bbox_y_min_local_coord) {
+            y = margin + plate_bbox_y_min_local_coord;
         }
     }
 
@@ -5337,16 +5374,17 @@ bool PartPlateList::preprocess_exclude_areas(arrangement::ArrangePolygons &unsel
 	// excluded area
 	if (m_exclude_areas.size() > 0)
 	{
-		//has exclude areas
-		PartPlate *plate = m_plate_list[0];
-
-		for (int index = 0; index < plate->m_exclude_bounding_box.size(); index ++)
+		for (size_t index = 0; index + 3 < m_exclude_areas.size(); index += 4)
 		{
+            BoundingBoxf exclude_bb;
+            for (size_t pt_idx = index; pt_idx < index + 4; ++pt_idx)
+                exclude_bb.merge(m_exclude_areas[pt_idx]);
+
 			Polygon ap({
-				{scaled(plate->m_exclude_bounding_box[index].min.x()), scaled(plate->m_exclude_bounding_box[index].min.y())},
-				{scaled(plate->m_exclude_bounding_box[index].max.x()), scaled(plate->m_exclude_bounding_box[index].min.y())},
-				{scaled(plate->m_exclude_bounding_box[index].max.x()), scaled(plate->m_exclude_bounding_box[index].max.y())},
-				{scaled(plate->m_exclude_bounding_box[index].min.x()), scaled(plate->m_exclude_bounding_box[index].max.y())}
+				{scaled(exclude_bb.min.x()), scaled(exclude_bb.min.y())},
+				{scaled(exclude_bb.max.x()), scaled(exclude_bb.min.y())},
+				{scaled(exclude_bb.max.x()), scaled(exclude_bb.max.y())},
+				{scaled(exclude_bb.min.x()), scaled(exclude_bb.max.y())}
 				});
 
 			for (int j = 0; j < num_plates; j++)
@@ -5358,7 +5396,7 @@ bool PartPlateList::preprocess_exclude_areas(arrangement::ArrangePolygons &unsel
 				ret.is_virt_object = true;
 				ret.bed_idx      = j;
 				ret.height      = 1;
-				ret.name = "ExcludedRegion" + std::to_string(index);
+				ret.name = "ExcludedRegion" + std::to_string(index / 4);
 				ret.inflation = inflation;
 
 				unselected.emplace_back(std::move(ret));
@@ -5649,8 +5687,9 @@ bool PartPlateList::set_shapes(const Pointfs              &shape,
                                float                       height_to_rod)
 {
 	const std::lock_guard<std::mutex> local_lock(m_plates_mutex);
+	Pointfs normalized_exclude_areas = normalize_exclude_areas_for_shape(shape, exclude_areas);
 	m_shape = shape;
-	m_exclude_areas = exclude_areas;
+	m_exclude_areas = normalized_exclude_areas;
     m_wrapping_exclude_areas = wrapping_exclude_areas;
 	m_extruder_areas = extruder_areas;
 	m_extruder_heights = extruder_heights;
@@ -5667,7 +5706,7 @@ bool PartPlateList::set_shapes(const Pointfs              &shape,
 		Vec2d pos;
 
 		pos = compute_shape_position(i, m_plate_cols);
-		plate->set_shape(shape, exclude_areas, extruder_areas, extruder_heights, pos, height_to_lid, height_to_rod);
+		plate->set_shape(shape, normalized_exclude_areas, extruder_areas, extruder_heights, pos, height_to_lid, height_to_rod);
 	}
 	is_load_bedtype_textures = false; //reload textures
     is_load_extruder_only_area_textures = false; // reload textures

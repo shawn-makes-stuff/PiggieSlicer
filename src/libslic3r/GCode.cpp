@@ -4806,6 +4806,17 @@ LayerResult GCode::process_layer(
                         // This extrusion is part of certain Region, which tells us which extruder should be used for it:
                         int correct_extruder_id = layer_tools.extruder(*extrusions, region);
 
+                        // PiggieSlicer / FullSpectrum: if this region uses a virtual mixed filament,
+                        // resolve it to the physical extruder for THIS layer so it matches the per-layer
+                        // tool order produced by ToolOrdering (single-nozzle ACE alternates the tool).
+                        if (const Layer *mf_layer = layerm->layer())
+                            correct_extruder_id = (int) print.mixed_filament_manager().resolve(
+                                (unsigned int) correct_extruder_id,
+                                print.config().filament_diameter.size(),
+                                int(mf_layer->id()),
+                                float(mf_layer->print_z),
+                                float(mf_layer->height));
+
                         // Let's recover vector of extruder overrides:
                         const WipingExtrusions::ExtruderPerCopy *entity_overrides = nullptr;
                         if (! layer_tools.has_extruder(correct_extruder_id)) {

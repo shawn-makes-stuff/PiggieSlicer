@@ -31,7 +31,7 @@ static inline void show_notification_extruders_limit_exceeded()
 
 void GLGizmoMmuSegmentation::on_opening()
 {
-    if (wxGetApp().filaments_cnt() > int(GLGizmoMmuSegmentation::EXTRUDERS_LIMIT))
+    if (wxGetApp().plater()->get_filament_count_with_mixed() > GLGizmoMmuSegmentation::EXTRUDERS_LIMIT)
         show_notification_extruders_limit_exceeded();
 }
 
@@ -74,7 +74,9 @@ static std::vector<int> get_extruder_id_for_volumes(const ModelObject &model_obj
 
 void GLGizmoMmuSegmentation::init_extruders_data()
 {
-    m_extruders_colors      = wxGetApp().plater()->get_extruders_colors();
+    // PiggieSlicer / FullSpectrum: physical + virtual mixed-filament colours, so mixed colours
+    // are paintable here and render identically on the object outside the gizmo.
+    m_extruders_colors      = wxGetApp().plater()->get_extruders_colors_with_mixed();
     m_selected_extruder_idx = 0;
 
     // keep remap table consistent with current extruder count
@@ -172,15 +174,20 @@ void GLGizmoMmuSegmentation::data_changed(bool is_serializing)
 
     ModelObject* model_object = m_c->selection_info()->model_object();
     int prev_extruders_count = int(m_extruders_colors.size());
-    if (prev_extruders_count != wxGetApp().filaments_cnt()) {
+    // PiggieSlicer / FullSpectrum: the palette is physical filaments + enabled virtual mixed
+    // filaments, so compare against that expanded count/colour set (otherwise it would re-init
+    // every frame because the physical-only count never matches).
+    int expected_count = int(wxGetApp().plater()->get_filament_count_with_mixed());
+    std::vector<ColorRGBA> expected_colors = wxGetApp().plater()->get_extruders_colors_with_mixed();
+    if (prev_extruders_count != expected_count) {
         if (wxGetApp().filaments_cnt() > int(GLGizmoMmuSegmentation::EXTRUDERS_LIMIT))
             show_notification_extruders_limit_exceeded();
 
         this->init_extruders_data();
         // Reinitialize triangle selectors because of change of extruder count need also change the size of GLIndexedVertexArray
-        if (prev_extruders_count != wxGetApp().filaments_cnt())
+        if (prev_extruders_count != expected_count)
             this->init_model_triangle_selectors();
-    } else if (wxGetApp().plater()->get_extruders_colors() != m_extruders_colors) {
+    } else if (expected_colors != m_extruders_colors) {
         this->init_extruders_data();
         this->update_triangle_selectors_colors();
     }
@@ -470,9 +477,9 @@ void GLGizmoMmuSegmentation::on_render_input_window(float x, float y, float bott
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 0.f));                     // ORCA Removes button background on dark mode
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));                       // ORCA Fixes icon rendered without colors while using Light theme
         if (m_current_tool == tool_ids[i]) {
-            ImGui::PushStyleColor(ImGuiCol_Button,          ImVec4(0.f, 0.59f, 0.53f, 0.25f));  // ORCA use orca color for selected tool / brush
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   ImVec4(0.f, 0.59f, 0.53f, 0.25f));  // ORCA use orca color for selected tool / brush
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive,    ImVec4(0.f, 0.59f, 0.53f, 0.30f));  // ORCA use orca color for selected tool / brush
+            ImGui::PushStyleColor(ImGuiCol_Button,          ImVec4(0.925f, 0.435f, 0.651f, 0.25f));  // ORCA use orca color for selected tool / brush
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   ImVec4(0.925f, 0.435f, 0.651f, 0.25f));  // ORCA use orca color for selected tool / brush
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive,    ImVec4(0.925f, 0.435f, 0.651f, 0.30f));  // ORCA use orca color for selected tool / brush
             ImGui::PushStyleColor(ImGuiCol_Border,          ImGuiWrapper::COL_ORCA);            // ORCA use orca color for border on selected tool / brush
             ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0);
             ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 1.0);
@@ -860,8 +867,10 @@ void GLGizmoMmuSegmentation::update_from_model_object(bool first_update)
 
     // Extruder colors need to be reloaded before calling init_model_triangle_selectors to render painted triangles
     // using colors from loaded 3MF and not from printer profile in Slicer.
+    // PiggieSlicer / FullSpectrum: compare against physical + virtual mixed filament palette.
+    int mmu_expected_count = int(wxGetApp().plater()->get_filament_count_with_mixed());
     if (int prev_extruders_count = int(m_extruders_colors.size());
-        prev_extruders_count != wxGetApp().filaments_cnt() || wxGetApp().plater()->get_extruders_colors() != m_extruders_colors)
+        prev_extruders_count != mmu_expected_count || wxGetApp().plater()->get_extruders_colors_with_mixed() != m_extruders_colors)
         this->init_extruders_data();
 
     this->init_model_triangle_selectors();
@@ -916,7 +925,7 @@ wxString GLGizmoMmuSegmentation::handle_snapshot_action_name(bool shift_down, GL
     if (shift_down)
         action_name = _L("Remove painted color");
     else {
-        action_name        = GUI::format(_L("Painted using: Filament %1%"), m_selected_extruder_idx);
+        action_name        = GUI::format(_L("Painted using: Filament %1%"), m_selected_extruder_idx + 1);
     }
     return action_name;
 }

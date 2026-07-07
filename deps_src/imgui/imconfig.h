@@ -176,6 +176,7 @@ namespace ImGui
     const wchar_t GapFillIcon              = 0x0817;
     const wchar_t ConfirmIcon              = 0x0818;
     const wchar_t gCodeButtonIcon          = 0x0819; // ORCA
+    const wchar_t GradientButtonIcon       = 0x081A;
     const wchar_t VisibleIcon              = 0x0820; // ORCA
     const wchar_t HiddenIcon               = 0x0821; // ORCA
 
@@ -193,6 +194,7 @@ namespace ImGui
     const wchar_t SphereButtonDarkIcon     = 0x0826;
     const wchar_t GapFillDarkIcon          = 0x0827;
     const wchar_t ConfirmDarkIcon          = 0x0828;
+    const wchar_t GradientButtonDarkIcon   = 0x082A;
 
     const wchar_t TextSearchIcon           = 0x0828;
     const wchar_t TextSearchCloseIcon      = 0x0829;

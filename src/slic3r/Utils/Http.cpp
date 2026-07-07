@@ -119,6 +119,7 @@ struct Http::priv
 	// Using a deque here because unlike vector it doesn't ivalidate pointers on insertion
 	std::deque<form_file> form_files;
 	std::string postfields;
+	bool postfields_set;
 	std::string error_buffer;    // Used for CURLOPT_ERRORBUFFER
     std::string headers;
 	size_t limit;
@@ -175,6 +176,7 @@ Http::priv::priv(const std::string &url)
 	, headerlist(nullptr)
 	, url(url)
 	, method("GET")
+	, postfields_set(false)
 	, error_buffer(CURL_ERROR_SIZE + 1, '\0')
 	, limit(0)
 	, cancel(false)
@@ -275,6 +277,8 @@ int Http::priv::xfercb_legacy(void *userp, double dltotal, double dlnow, double 
 size_t Http::priv::form_file_read_cb(char *buffer, size_t size, size_t nitems, void *userp)
 {
     auto f = reinterpret_cast<form_file*>(userp);
+    if (f == nullptr || !f->ifs.is_open() || f->ifs.bad())
+        return CURL_READFUNC_ABORT;
 
 	try {
 	    size_t max_read_size = size * nitems;
@@ -282,7 +286,10 @@ size_t Http::priv::form_file_read_cb(char *buffer, size_t size, size_t nitems, v
 			// Unlimited
             f->ifs.read(buffer, max_read_size);
         } else {
-            unsigned long long read_size = f->ifs.tellg() - f->init_offset;
+            auto pos = f->ifs.tellg();
+            if (pos < f->init_offset)
+                return CURL_READFUNC_ABORT;
+            unsigned long long read_size = pos - f->init_offset;
             if (read_size >= f->content_length) {
                 return 0;
             }
@@ -382,11 +389,13 @@ void Http::priv::set_post_body(const fs::path &path)
 	std::ifstream file(path.string());
 	std::string file_content { std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
 	postfields = std::move(file_content);
+	postfields_set = true;
 }
 
 void Http::priv::set_post_body(const std::string &body)
 {
 	postfields = body;
+	postfields_set = true;
 }
 
 void Http::priv::set_put_body(const fs::path &path)
@@ -404,6 +413,7 @@ void Http::priv::set_put_body(const fs::path &path)
 void Http::priv::set_del_body(const std::string& body)
 {
 	postfields = body;
+	postfields_set = true;
 }
 
 void Http::priv::set_range(const std::string& range)
@@ -431,7 +441,8 @@ void Http::priv::http_perform()
 	::curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
 	::curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writecb);
 	::curl_easy_setopt(curl, CURLOPT_WRITEDATA, static_cast<void*>(this));
-	::curl_easy_setopt(curl, CURLOPT_READFUNCTION, form_file_read_cb);
+	if (form != nullptr || putFile)
+		::curl_easy_setopt(curl, CURLOPT_READFUNCTION, form_file_read_cb);
 	//BBS set header functions
 	::curl_easy_setopt(curl, CURLOPT_HEADERDATA, static_cast<void *>(this));
 	::curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, headers_cb);
@@ -462,7 +473,7 @@ void Http::priv::http_perform()
 		::curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime);
 	}
 
-	if (!postfields.empty()) {
+	if (postfields_set) {
 		::curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postfields.c_str());
 		::curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, postfields.size());
 	}

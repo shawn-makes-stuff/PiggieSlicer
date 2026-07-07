@@ -176,6 +176,18 @@ ArrangePolygon get_instance_arrange_poly(ModelInstance* instance, const Slic3r::
         ap.has_tree_support = true;
     }
 
+    if (auto brim_type_ptr = obj->get_config_value<ConfigOptionEnum<BrimType>>(config, "brim_type")) {
+        const BrimType brim_type = brim_type_ptr->value;
+        double configured_brim_width = 0.;
+        if (brim_type != btNoBrim) {
+            if (auto brim_width_ptr = obj->get_config_value<ConfigOptionFloat>(config, "brim_width"))
+                configured_brim_width = std::max(0., brim_width_ptr->value);
+            if (brim_type == btAutoBrim)
+                configured_brim_width = std::max(configured_brim_width, instance->get_auto_brim_width());
+        }
+        ap.brim_width = std::max(ap.brim_width, configured_brim_width);
+    }
+
     auto size = obj->instance_convex_hull_bounding_box(instance).size();
     ap.height = size.z();
     ap.name = obj->name;

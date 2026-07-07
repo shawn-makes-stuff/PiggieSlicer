@@ -471,7 +471,7 @@ void GLVolume::render()
         return;
 
     ModelObjectPtrs &model_objects = GUI::wxGetApp().model().objects;
-    std::vector<ColorRGBA> colors = GUI::wxGetApp().plater()->get_extruders_colors();
+    std::vector<ColorRGBA> colors = GUI::wxGetApp().plater()->get_extruders_colors_with_mixed();
 
     simple_render(shader, model_objects, colors);
 }
@@ -487,7 +487,7 @@ void GLVolume::render_with_outline(const GUI::Size& cnv_size)
         return;
 
     ModelObjectPtrs &model_objects = GUI::wxGetApp().model().objects;
-    std::vector<ColorRGBA> colors = GUI::wxGetApp().plater()->get_extruders_colors();
+    std::vector<ColorRGBA> colors = GUI::wxGetApp().plater()->get_extruders_colors_with_mixed();
 
     const GUI::OpenGLManager::EFramebufferType framebuffers_type = GUI::OpenGLManager::get_framebuffers_type();
     if (framebuffers_type == GUI::OpenGLManager::EFramebufferType::Unknown) {
