@@ -493,7 +493,10 @@ void MixedFilamentDialog::on_remove_custom(size_t mixed_index)
     if (m_add_btn)
         m_add_btn->SetLabel(_L("Add mixed color"));
     persist();
-    rebuild_rows();
+    // Defer the rebuild: it destroys the Remove button whose click event is
+    // still being dispatched, and wx touches the button again after this
+    // handler returns (use-after-free, crashes on the next dialog click).
+    CallAfter([this] { rebuild_rows(); });
 }
 
 void MixedFilamentDialog::on_edit(size_t mixed_index)
