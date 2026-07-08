@@ -304,6 +304,8 @@ set(lisbslic3r_sources
     MTUtils.hpp
     MultiMaterialSegmentation.cpp
     MultiMaterialSegmentation.hpp
+    FilamentColorMix.cpp
+    FilamentColorMix.hpp
     MixedFilament.cpp
     MixedFilament.hpp
     filament_mixer.cpp

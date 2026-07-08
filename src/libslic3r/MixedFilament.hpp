@@ -275,6 +275,13 @@ public:
 
     // ---- Accessors ------------------------------------------------------
 
+    // PiggieSlicer: purge scale for a toolchange between 0-based filament ids.
+    // 1.0 normally; strongly reduced when both ids are the two components of the
+    // same enabled mixed filament - that transition is meant to blend, so a full
+    // purge only wastes time and filament.
+    static constexpr float FLUSH_SCALE_BETWEEN_MIX_COMPONENTS = 0.3f;
+    float flush_scale(unsigned int from_id, unsigned int to_id) const;
+
     const std::vector<MixedFilament> &mixed_filaments() const { return m_mixed; }
     std::vector<MixedFilament>       &mixed_filaments()       { return m_mixed; }
 

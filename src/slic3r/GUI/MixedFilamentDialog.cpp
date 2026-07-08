@@ -1,11 +1,14 @@
 #include "MixedFilamentDialog.hpp"
+#include "libslic3r/FilamentColorMix.hpp"
 
 #include <algorithm>
+#include <cstdio>
 
 #include <wx/sizer.h>
 #include <wx/scrolwin.h>
 #include <wx/choice.h>
 #include <wx/slider.h>
+#include <wx/colordlg.h>
 #include <wx/stattext.h>
 
 #include "GUI_App.hpp"
@@ -152,8 +155,54 @@ MixedFilamentDialog::MixedFilamentDialog(wxWindow* parent)
     mixrow->Add(m_slider_mix, 1, wxALIGN_CENTER_VERTICAL);
     ac->Add(mixrow, 0, wxEXPAND | wxALL, FromDIP(14));
 
+    // PiggieSlicer: procedural layer patterns. "Blend" uses the mix %; the stripe/band
+    // presets alternate fixed runs of A and B layers for visible banding effects.
+    auto* patrow = new wxBoxSizer(wxHORIZONTAL);
+    auto* pat_lbl = new Label(add_card, Label::Body_12, _L("Pattern"));
+    pat_lbl->SetForegroundColour(INK);
+    pat_lbl->SetBackgroundColour(CARD_BG);
+    m_pattern = new wxChoice(add_card, wxID_ANY);
+    m_pattern->Append(_L("Blend (use mix %)"));
+    m_pattern->Append(_L("Fine stripes (1/1 layers)"));
+    m_pattern->Append(_L("Stripes (2/2 layers)"));
+    m_pattern->Append(_L("Bands (4/4 layers)"));
+    m_pattern->Append(_L("Wide bands (8/8 layers)"));
+    m_pattern->SetSelection(0);
+    patrow->Add(pat_lbl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(10));
+    patrow->Add(m_pattern, 0, wxALIGN_CENTER_VERTICAL);
+    ac->Add(patrow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, FromDIP(14));
+
     m_add_btn = make_btn(add_card, _L("Add mixed color"), true);
-    ac->Add(m_add_btn, 0, wxLEFT | wxRIGHT | wxBOTTOM, FromDIP(14));
+    auto* match_btn = make_btn(add_card, _L("Match a color..."), false);
+    auto* btnrow = new wxBoxSizer(wxHORIZONTAL);
+    btnrow->Add(m_add_btn, 0, wxRIGHT, FromDIP(8));
+    btnrow->Add(match_btn, 0);
+    ac->Add(btnrow, 0, wxLEFT | wxRIGHT | wxBOTTOM, FromDIP(14));
+
+    // PiggieSlicer: pick any target color and prefill the closest achievable
+    // two-filament recipe (calibrated ColorMix prediction + DeltaE2000 search).
+    match_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+        const std::vector<std::string> colors = physical_colors();
+        if (colors.size() < 1) return;
+        wxColourData cd;
+        cd.SetChooseFull(true);
+        wxColourDialog dlg(this, &cd);
+        dlg.SetTitle(_L("Pick a color to match"));
+        if (dlg.ShowModal() != wxID_OK) return;
+        const wxColour c = dlg.GetColourData().GetColour();
+        char hex[8];
+        std::snprintf(hex, sizeof(hex), "#%02X%02X%02X", c.Red(), c.Green(), c.Blue());
+        const ColorMix::Recipe recipe = ColorMix::best_two_filament_recipe(hex, colors);
+        if (recipe.delta_e >= 1e9) return;
+        m_choice_a->SetSelection(int(recipe.component_a));
+        m_choice_b->SetSelection(int(recipe.component_b == recipe.component_a && colors.size() > 1
+                                     ? (recipe.component_a + 1) % colors.size() : recipe.component_b));
+        m_slider_mix->SetValue(recipe.mix_b_percent);
+        on_preview_changed();
+        if (m_lbl_mix)
+            m_lbl_mix->SetLabel(wxString::Format(_L("Mix: %d%% A / %d%% B (closest match, dE %.1f)"),
+                                                 100 - recipe.mix_b_percent, recipe.mix_b_percent, recipe.delta_e));
+    });
     add_card->SetSizer(ac);
     root->Add(add_card, 0, wxEXPAND | wxALL, FromDIP(14));
 
@@ -212,6 +261,16 @@ void MixedFilamentDialog::on_preview_changed()
     if (sb) { sb->SetBackgroundColor(StateColor(hex_to_colour(blended))); sb->Refresh(); }
 }
 
+std::string MixedFilamentDialog::pattern_preset_string() const
+{
+    const int sel = m_pattern ? m_pattern->GetSelection() : 0;
+    const int runs[] = {0, 1, 2, 4, 8};
+    if (sel <= 0 || sel > 4)
+        return std::string();
+    const int n = runs[sel];
+    return std::string(size_t(n), 'A') + std::string(size_t(n), 'B');
+}
+
 void MixedFilamentDialog::on_add(wxCommandEvent&)
 {
     auto* pb = wxGetApp().preset_bundle;
@@ -228,7 +287,7 @@ void MixedFilamentDialog::on_add(wxCommandEvent&)
         mf.mix_b_percent = std::clamp(m_slider_mix->GetValue(), 0, 100);
         mf.enabled = true;
         mf.deleted = false;
-        mf.manual_pattern.clear();
+        mf.manual_pattern = pattern_preset_string();
         mf.gradient_component_ids.clear();
         mf.gradient_component_weights.clear();
         mf.pointillism_all_filaments = false;
@@ -242,6 +301,9 @@ void MixedFilamentDialog::on_add(wxCommandEvent&)
     } else {
         pb->mixed_filaments.add_custom_filament((unsigned int)(ia + 1), (unsigned int)(ib + 1),
                                                 m_slider_mix->GetValue(), colors);
+        auto& new_rows = pb->mixed_filaments.mixed_filaments();
+        if (!new_rows.empty())
+            new_rows.back().manual_pattern = pattern_preset_string();
     }
     persist();
     rebuild_rows();

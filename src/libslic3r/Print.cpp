@@ -3470,6 +3470,12 @@ void Print::_make_wipe_tower()
             for (unsigned int i = 0; i < number_of_extruders; ++i)
                 wipe_volumes.push_back(std::vector<float>(flush_matrix.begin() + i * number_of_extruders, flush_matrix.begin() + (i + 1) * number_of_extruders));
 
+            // PiggieSlicer / FullSpectrum: shrink planned purge between components of an
+            // enabled mixed filament (blending transition) so the wipe tower is sized for it.
+            for (unsigned int i = 0; i < number_of_extruders; ++i)
+                for (unsigned int j = 0; j < number_of_extruders; ++j)
+                    wipe_volumes[i][j] *= m_mixed_filament_mgr.flush_scale(i, j);
+
             multi_extruder_flush.emplace_back(wipe_volumes);
         }
 

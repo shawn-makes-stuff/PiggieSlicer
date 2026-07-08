@@ -1,4 +1,5 @@
 #include "MixedFilament.hpp"
+#include "FilamentColorMix.hpp"
 #include "filament_mixer.h"
 
 #include <algorithm>
@@ -2160,44 +2161,22 @@ std::string MixedFilamentManager::blend_color_multi(
     if (color_percents.size() == 1)
         return color_percents.front().first;
 
-    struct WeightedColor {
-        RGB color;
-        int pct;
-    };
-    std::vector<WeightedColor> colors;
-    colors.reserve(color_percents.size());
-
+    // PiggieSlicer: use the calibrated ColorMix model (Yule-Nielsen + FDM corrections)
+    // instead of a naive lerp, so predicted mix colors match real prints.
     int total_pct = 0;
-    for (const auto &[hex, pct] : color_percents) {
-        if (pct <= 0)
-            continue;
-        colors.push_back({parse_hex_color(hex), pct});
-        total_pct += pct;
-    }
-    if (colors.empty() || total_pct <= 0)
+    for (const auto &[hex, pct] : color_percents)
+        if (pct > 0)
+            total_pct += pct;
+    if (total_pct <= 0)
         return "#000000";
 
-    unsigned char r = static_cast<unsigned char>(colors.front().color.r);
-    unsigned char g = static_cast<unsigned char>(colors.front().color.g);
-    unsigned char b = static_cast<unsigned char>(colors.front().color.b);
-    int accumulated_pct = colors.front().pct;
+    std::vector<ColorMix::Component> components;
+    components.reserve(color_percents.size());
+    for (const auto &[hex, pct] : color_percents)
+        if (pct > 0)
+            components.push_back({hex, double(pct) / double(total_pct)});
 
-    for (size_t i = 1; i < colors.size(); ++i) {
-        const auto &next = colors[i];
-        const int new_total = accumulated_pct + next.pct;
-        if (new_total <= 0)
-            continue;
-        const float t = static_cast<float>(next.pct) / static_cast<float>(new_total);
-        filament_mixer_lerp(
-            r, g, b,
-            static_cast<unsigned char>(next.color.r),
-            static_cast<unsigned char>(next.color.g),
-            static_cast<unsigned char>(next.color.b),
-            t, &r, &g, &b);
-        accumulated_pct = new_total;
-    }
-
-    return rgb_to_hex({int(r), int(g), int(b)});
+    return ColorMix::predict_hex(components);
 }
 
 std::string MixedFilamentManager::blend_color(const std::string &color_a,
@@ -2209,21 +2188,12 @@ std::string MixedFilamentManager::blend_color(const std::string &color_a,
     const int total  = safe_a + safe_b;
     const float t    = (total > 0) ? (static_cast<float>(safe_b) / static_cast<float>(total)) : 0.5f;
 
-    const RGB rgb_a = parse_hex_color(color_a);
-    const RGB rgb_b = parse_hex_color(color_b);
-
-    unsigned char out_r = static_cast<unsigned char>(rgb_a.r);
-    unsigned char out_g = static_cast<unsigned char>(rgb_a.g);
-    unsigned char out_b = static_cast<unsigned char>(rgb_a.b);
-    filament_mixer_lerp(static_cast<unsigned char>(rgb_a.r),
-                        static_cast<unsigned char>(rgb_a.g),
-                        static_cast<unsigned char>(rgb_a.b),
-                        static_cast<unsigned char>(rgb_b.r),
-                        static_cast<unsigned char>(rgb_b.g),
-                        static_cast<unsigned char>(rgb_b.b),
-                        t, &out_r, &out_g, &out_b);
-
-    return rgb_to_hex({int(out_r), int(out_g), int(out_b)});
+    // PiggieSlicer: calibrated ColorMix model instead of naive lerp.
+    (void) t;
+    if (total <= 0)
+        return ColorMix::predict_hex({{color_a, 0.5}, {color_b, 0.5}});
+    return ColorMix::predict_hex({{color_a, double(safe_a) / double(total)},
+                                  {color_b, double(safe_b) / double(total)}});
 }
 
 float MixedFilamentManager::max_component_surface_offset_mm(float reference_width_mm)
@@ -2269,6 +2239,22 @@ int MixedFilamentManager::apparent_mix_b_percent(int   mix_b_percent,
                                                 -max_pair_bias_mm(reference_width_mm),
                                                 max_pair_bias_mm(reference_width_mm)) / safe_reference;
     return clamp_int(int(std::lround(float(clamp_int(mix_b_percent, 0, 100)) + shift_pct)), 0, 100);
+}
+
+float MixedFilamentManager::flush_scale(unsigned int from_id, unsigned int to_id) const
+{
+    if (from_id == to_id)
+        return 1.f;
+    for (const MixedFilament &mf : m_mixed) {
+        if (!mf.enabled || mf.deleted)
+            continue;
+        const unsigned int a = mf.component_a, b = mf.component_b;
+        if (a == 0 || b == 0 || a == b)
+            continue;
+        if ((from_id + 1 == a && to_id + 1 == b) || (from_id + 1 == b && to_id + 1 == a))
+            return FLUSH_SCALE_BETWEEN_MIX_COMPONENTS;
+    }
+    return 1.f;
 }
 
 void MixedFilamentManager::refresh_display_colors(const std::vector<std::string> &filament_colours)

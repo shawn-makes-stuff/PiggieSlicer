@@ -7848,6 +7848,11 @@ std::string GCode::set_extruder(unsigned int new_filament_id, double print_z, bo
             wipe_volume = flush_matrix[old_filament_id * number_of_extruders + new_filament_id];
             wipe_volume *= m_config.flush_multiplier.get_at(new_extruder_id);  // if is multi_extruder only use the fist extruder matrix
         }
+        // PiggieSlicer / FullSpectrum: transitions between the two components of an
+        // enabled mixed filament are meant to blend, so purge far less.
+        if (m_print != nullptr && old_filament_id >= 0)
+            wipe_volume *= m_print->mixed_filament_manager().flush_scale(
+                (unsigned int) old_filament_id, (unsigned int) new_filament_id);
         wipe_volume = std::max(0.f, wipe_volume-grab_purge_volume);
 
         old_filament_e_feedrate = (int) (60.0 * m_config.filament_max_volumetric_speed.get_at(old_filament_id) / filament_area);

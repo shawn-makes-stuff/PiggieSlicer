@@ -32,6 +32,7 @@ private:
     void rebuild_rows();                                     // redraw the mixed list
     void persist();                                          // serialize -> project_config + dirty
     void on_add(wxCommandEvent&);
+    std::string pattern_preset_string() const;
     void on_remove_custom(size_t mixed_index);
     void on_edit(size_t mixed_index);
     void on_preview_changed();                               // recompute the add-row preview swatch
@@ -42,6 +43,7 @@ private:
     wxChoice*         m_choice_a   = nullptr;
     wxChoice*         m_choice_b   = nullptr;
     wxSlider*         m_slider_mix = nullptr;
+    wxChoice*         m_pattern    = nullptr; // PiggieSlicer: layer-pattern preset
     wxStaticText*     m_lbl_mix    = nullptr;
     wxWindow*         m_preview_sw = nullptr;  // preview swatch (StaticBox)
     Button*           m_add_btn    = nullptr;
