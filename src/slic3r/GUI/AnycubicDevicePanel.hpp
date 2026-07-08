@@ -168,6 +168,10 @@ private:
     wxWebView*       m_camera_view = nullptr;
     std::string      m_camera_stream_ip;
     wxChoice*        m_cam_quality = nullptr;       // stream latency profile selector
+    wxChoice*        m_dry_preset  = nullptr;       // PiggieSlicer: material drying preset
+    bool             m_auto_dry_before_print = false; // PiggieSlicer: start ACE drying when a print starts
+    bool             m_was_active  = false;         // PiggieSlicer: previous poll print-active state
+    void             dry_preset_params(int& temp_c, int& minutes) const;
     int              m_cam_profile = 0;             // 0 low-latency, 1 balanced, 2 smooth
     // controls
     Button*          m_btn_light    = nullptr;       // toggle buttons (state in label)

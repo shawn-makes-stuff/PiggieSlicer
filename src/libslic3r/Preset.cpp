@@ -1008,6 +1008,7 @@ static std::vector<std::string> s_Preset_print_options{
     "wall_loops",
     "alternate_extra_wall",
     "slice_closing_radius",
+    "brick_layers",
     "spiral_mode",
     "spiral_mode_smooth",
     "spiral_mode_max_xy_smoothing",

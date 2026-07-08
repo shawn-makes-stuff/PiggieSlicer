@@ -6151,8 +6151,17 @@ std::string GCode::extrude_perimeters(const Print &print, const std::vector<Obje
                 : (m_config.is_infill_first == is_infill_first);
             if (!should_print) continue;
 
-            for (const ExtrusionEntity* ee : region.perimeters)
+            for (const ExtrusionEntity* ee : region.perimeters) {
+                // PiggieSlicer: brick layers - raise pure inner-wall loops by half a layer so
+                // wall beads interlock across layers. First layer stays flat (bed adhesion).
+                const bool brick_shift = m_config.brick_layers.value && !is_first_layer &&
+                                         m_layer != nullptr && ee->role() == erPerimeter;
+                if (brick_shift)
+                    gcode += m_writer.travel_to_z(m_nominal_z + 0.5 * m_layer->height, "brick layers: raise inner wall");
                 gcode += this->extrude_entity(*ee, "perimeter", -1., region.perimeters);
+                if (brick_shift)
+                    gcode += m_writer.travel_to_z(m_nominal_z, "brick layers: restore layer Z");
+            }
         }
     return gcode;
 }

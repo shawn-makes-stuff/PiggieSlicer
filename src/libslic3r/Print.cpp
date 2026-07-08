@@ -101,6 +101,7 @@ bool Print::invalidate_state_by_config_options(const ConfigOptionResolver & /* n
     // or they are only notes not influencing the generated G-code.
     static std::unordered_set<std::string> steps_gcode = {
         //BBS
+        "brick_layers", // PiggieSlicer: gcode-emission only
         "additional_cooling_fan_speed",
         "reduce_crossing_wall",
         "max_travel_detour_distance",

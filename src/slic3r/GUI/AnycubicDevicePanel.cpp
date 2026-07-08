@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <algorithm>
+#include <cstdlib>
 #include <cctype>
 #include <cmath>
 
@@ -736,8 +737,30 @@ void AnycubicDevicePanel::build_ui()
         m_btn_ace_dry = make_button(sec, _L("Drying: Off"), false);
         style_control_button(m_btn_ace_dry, wxSize(FromDIP(150), FromDIP(34)));
         m_btn_ace_dry->Bind(wxEVT_BUTTON, &AnycubicDevicePanel::on_toggle_ace_dry, this);
+
+        // PiggieSlicer: material-aware drying presets + auto-dry during prints.
+        m_dry_preset = new wxChoice(sec, wxID_ANY);
+        m_dry_preset->Append(_L("PLA 45C / 4h"));
+        m_dry_preset->Append(_L("PETG 55C / 6h"));
+        m_dry_preset->Append(_L("TPU 40C / 8h"));
+        m_dry_preset->Append(_L("PA/PC 65C / 8h"));
+        m_dry_preset->SetSelection(std::clamp(std::atoi(wxGetApp().app_config->get("piggie_ace_dry_preset").c_str()), 0, 3));
+        m_dry_preset->Bind(wxEVT_CHOICE, [this](wxCommandEvent&) {
+            wxGetApp().app_config->set("piggie_ace_dry_preset", std::to_string(m_dry_preset->GetSelection()));
+        });
+        auto* auto_dry_btn = make_button(sec, _L("Auto-dry in prints: Off"), false);
+        style_control_button(auto_dry_btn, wxSize(FromDIP(170), FromDIP(34)));
+        m_auto_dry_before_print = wxGetApp().app_config->get_bool("piggie_ace_auto_dry");
+        set_toggle_button(auto_dry_btn, _L("Auto-dry in prints"), m_auto_dry_before_print);
+        auto_dry_btn->Bind(wxEVT_BUTTON, [this, auto_dry_btn](wxCommandEvent&) {
+            m_auto_dry_before_print = !m_auto_dry_before_print;
+            wxGetApp().app_config->set_bool("piggie_ace_auto_dry", m_auto_dry_before_print);
+            set_toggle_button(auto_dry_btn, _L("Auto-dry in prints"), m_auto_dry_before_print);
+        });
         ace_row1->Add(m_btn_ace_refill, 0, wxRIGHT, FromDIP(8));
         ace_row1->Add(m_btn_ace_dry, 0);
+        ace_row1->Add(m_dry_preset, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, FromDIP(8));
+        ace_row1->Add(auto_dry_btn, 0, wxLEFT, FromDIP(8));
         body->Add(ace_row1, 0, wxEXPAND | wxBOTTOM, FromDIP(8));
 
         m_lbl_ace_dry_info = new Label(sec, Label::Body_12, _L("Drying temperature: 45C   Drying time: 4:00:00"));
@@ -1189,6 +1212,14 @@ void AnycubicDevicePanel::update_status_ui(const AcLan::Status& s)
         const bool paused  = sl.find("paus") != std::string::npos;
         const bool active  = sl.find("print") != std::string::npos || sl.find("run") != std::string::npos ||
                              sl.find("busy") != std::string::npos  || sl.find("heat") != std::string::npos;
+
+        // PiggieSlicer: auto-dry - when a print becomes active and the option is on,
+        // start an ACE dry cycle with the selected material preset (dries during the print).
+        if (active && !m_was_active && m_auto_dry_before_print && !m_ace_dry) {
+            wxCommandEvent evt;
+            on_toggle_ace_dry(evt);
+        }
+        m_was_active = active;
         const bool offline = sl.find("offline") != std::string::npos || sl.find("error") != std::string::npos;
         wxColour sc; wxString txt;
         if      (paused)  { sc = wxColour(225, 158, 40); txt = _L("Paused"); }
@@ -1341,7 +1372,15 @@ void AnycubicDevicePanel::update_status_ui(const AcLan::Status& s)
                     spool_sizer->Add(hole, 0, wxALIGN_CENTER);
                     spool_sizer->AddStretchSpacer();
                     spool->SetSizer(spool_sizer);
-                    spool->SetToolTip(from_u8(sl.material.empty() ? "empty" : sl.material));
+                    {
+                        // PiggieSlicer: show tracked spool budget in the tooltip.
+                        wxString tip = from_u8(sl.material.empty() ? "empty" : sl.material);
+                        const std::string grams = wxGetApp().app_config->get(
+                            "piggie_spool_g_" + m_creds.printer_id + "_" + std::to_string(box.id) + "_" + std::to_string(sl.index));
+                        if (!grams.empty())
+                            tip += wxString::Format(_L(" - %s g left"), from_u8(grams));
+                        spool->SetToolTip(tip);
+                    }
                     slot_col->Add(spool, 0, wxALIGN_CENTER | wxBOTTOM, FromDIP(8));
 
                     // material name + edit button
@@ -1555,17 +1594,28 @@ void AnycubicDevicePanel::on_toggle_ace_auto_feed(wxCommandEvent&)
             });
 }
 
+void AnycubicDevicePanel::dry_preset_params(int& temp_c, int& minutes) const
+{
+    static const int temps[] = {45, 55, 40, 65};
+    static const int mins[]  = {240, 360, 480, 480};
+    const int sel = m_dry_preset ? std::clamp(m_dry_preset->GetSelection(), 0, 3) : 0;
+    temp_c  = temps[sel];
+    minutes = mins[sel];
+}
+
 void AnycubicDevicePanel::on_toggle_ace_dry(wxCommandEvent&)
 {
     const bool on = !m_ace_dry;                   // toggle from last known state
     m_ace_dry = on;
     set_toggle_button(m_btn_ace_dry, _L("Drying"), on);
     const std::vector<AcLan::AceBox> boxes = m_status.boxes;
+    int preset_temp = 45, preset_min = 240;
+    dry_preset_params(preset_temp, preset_min);
     run_cmd(on ? _L("Drying enabled") : _L("Drying disabled"),
             on ? _L("ACE drying on") : _L("ACE drying off"),
-            [boxes, on](const AcLanCreds& c, std::string& e) {
-                const int target_temp = 45;
-                const int duration_min = 240;
+            [boxes, on, preset_temp, preset_min](const AcLanCreds& c, std::string& e) {
+                const int target_temp = preset_temp;
+                const int duration_min = preset_min;
                 if (boxes.empty())
                     return AcLan::ace_set_dry(c, 0, on, target_temp, duration_min, e);
                 for (const auto& box : boxes) {
@@ -1706,6 +1756,19 @@ void AnycubicDevicePanel::on_edit_slot(int box_id, int slot_index, const std::st
     if (col_dlg.ShowModal() != wxID_OK) return;
     wxColour chosen = col_dlg.GetColourData().GetColour();
     const int nr = chosen.Red(), ng = chosen.Green(), nb = chosen.Blue();
+
+    // PiggieSlicer: per-slot spool budget (grams remaining), persisted per printer+slot.
+    {
+        const std::string key = "piggie_spool_g_" + m_creds.printer_id + "_" +
+                                std::to_string(box_id) + "_" + std::to_string(slot_index);
+        const std::string cur = wxGetApp().app_config->get(key);
+        wxTextEntryDialog g_dlg(this, _L("Grams remaining on this spool (blank = untracked):"),
+                                _L("Spool budget"), from_u8(cur));
+        if (g_dlg.ShowModal() == wxID_OK) {
+            const std::string val = into_u8(g_dlg.GetValue().Strip(wxString::both));
+            wxGetApp().app_config->set(key, val);
+        }
+    }
 
     // Optimistically update the spool now so the change is visible immediately.
     std::vector<AcLan::AceSlot> updated_slots;

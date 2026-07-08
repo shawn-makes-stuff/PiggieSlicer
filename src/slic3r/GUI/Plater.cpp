@@ -7287,7 +7287,14 @@ std::vector<size_t> Plater::priv::load_files(const std::vector<fs::path>& input_
                 auto obj_color_fun = [this, &path](ObjDialogInOut &in_out) {
 
                     if (!boost::iends_with(path.string(), ".obj")) { return; }
-                    const std::vector<std::string> extruder_colours = wxGetApp().plater()->get_extruder_colors_from_plater_config();
+                    // PiggieSlicer: offer physical + enabled mixed filament colors, so imported
+                    // model colors can map onto FullSpectrum mixes too.
+                    std::vector<std::string> extruder_colours;
+                    for (const ColorRGBA &c : wxGetApp().plater()->get_extruders_colors_with_mixed()) {
+                        char buf[8];
+                        std::snprintf(buf, sizeof(buf), "#%02X%02X%02X", int(c.r() * 255.f + 0.5f), int(c.g() * 255.f + 0.5f), int(c.b() * 255.f + 0.5f));
+                        extruder_colours.emplace_back(buf);
+                    }
                     ObjColorDialog                 color_dlg(nullptr, in_out, extruder_colours);
                     if (color_dlg.ShowModal() != wxID_OK) {
                         in_out.filament_ids.clear();
@@ -9547,7 +9554,14 @@ void Plater::priv::reload_from_disk()
         const auto& path = input_paths[i].string();
         auto        obj_color_fun = [this, &path](ObjDialogInOut &in_out) {
             if (!boost::iends_with(path, ".obj")) { return; }
-            const std::vector<std::string> extruder_colours = wxGetApp().plater()->get_extruder_colors_from_plater_config();
+            // PiggieSlicer: offer physical + enabled mixed filament colors, so imported
+            // model colors can map onto FullSpectrum mixes too.
+            std::vector<std::string> extruder_colours;
+            for (const ColorRGBA &c : wxGetApp().plater()->get_extruders_colors_with_mixed()) {
+                char buf[8];
+                std::snprintf(buf, sizeof(buf), "#%02X%02X%02X", int(c.r() * 255.f + 0.5f), int(c.g() * 255.f + 0.5f), int(c.b() * 255.f + 0.5f));
+                extruder_colours.emplace_back(buf);
+            }
             ObjColorDialog                 color_dlg(nullptr, in_out, extruder_colours);
             if (color_dlg.ShowModal() != wxID_OK) {
                 in_out.filament_ids.clear();

@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cmath>
 
 #include <wx/sizer.h>
 #include <wx/scrolwin.h>
@@ -167,6 +168,8 @@ MixedFilamentDialog::MixedFilamentDialog(wxWindow* parent)
     m_pattern->Append(_L("Stripes (2/2 layers)"));
     m_pattern->Append(_L("Bands (4/4 layers)"));
     m_pattern->Append(_L("Wide bands (8/8 layers)"));
+    m_pattern->Append(_L("Wave (breathing bands)"));
+    m_pattern->Append(_L("Organic (noise bands)"));
     m_pattern->SetSelection(0);
     patrow->Add(pat_lbl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(10));
     patrow->Add(m_pattern, 0, wxALIGN_CENTER_VERTICAL);
@@ -264,11 +267,30 @@ void MixedFilamentDialog::on_preview_changed()
 std::string MixedFilamentDialog::pattern_preset_string() const
 {
     const int sel = m_pattern ? m_pattern->GetSelection() : 0;
-    const int runs[] = {0, 1, 2, 4, 8};
-    if (sel <= 0 || sel > 4)
+    if (sel <= 0)
         return std::string();
-    const int n = runs[sel];
-    return std::string(size_t(n), 'A') + std::string(size_t(n), 'B');
+    if (sel <= 4) {
+        const int runs[] = {0, 1, 2, 4, 8};
+        const int n = runs[sel];
+        return std::string(size_t(n), 'A') + std::string(size_t(n), 'B');
+    }
+    std::string pattern;
+    if (sel == 5) {
+        // Wave: band widths breathe sinusoidally 1..6 layers over one long period.
+        for (int i = 0; i < 12; ++i) {
+            const int n = 1 + int(std::lround(2.5 * (1.0 + std::sin(i * 3.14159265 / 6.0))));
+            pattern += std::string(size_t(n), (i % 2) ? 'B' : 'A');
+        }
+    } else {
+        // Organic: deterministic xorshift band widths 1..5 (same preset -> same pattern).
+        unsigned int h = 0x9E3779B9u;
+        for (int i = 0; i < 16; ++i) {
+            h ^= h << 13; h ^= h >> 17; h ^= h << 5;
+            const int n = 1 + int(h % 5u);
+            pattern += std::string(size_t(n), (i % 2) ? 'B' : 'A');
+        }
+    }
+    return pattern;
 }
 
 void MixedFilamentDialog::on_add(wxCommandEvent&)

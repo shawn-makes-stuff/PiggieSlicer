@@ -65,6 +65,8 @@ set(SLIC3R_GUI_SOURCES
     GUI/CalibrationPanel.cpp
     GUI/AnycubicDevicePanel.cpp
     GUI/AnycubicDevicePanel.hpp
+    GUI/SurfaceImageTool.cpp
+    GUI/SurfaceImageTool.hpp
     GUI/MixedFilamentDialog.cpp
     GUI/MixedFilamentDialog.hpp
     GUI/CalibrationPanel.hpp

@@ -6001,6 +6001,15 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(100));
 
+    def = this->add("brick_layers", coBool);
+    def->label = L("Brick layers (experimental)");
+    def->tooltip = L("Print inner walls raised by half a layer so wall beads interlock like "
+                     "bricks, significantly increasing part strength along Z. Outer walls are "
+                     "unaffected. Experimental: top surface may show a half-layer step on the "
+                     "innermost wall line.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
     def = this->add("spiral_mode", coBool);
     def->label = L("Spiral vase");
     def->tooltip = L("Spiralize smooths out the Z moves of the outer contour. "

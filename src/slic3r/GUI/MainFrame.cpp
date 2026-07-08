@@ -55,6 +55,7 @@
 
 #include "GUI_App.hpp"
 #include "MixedFilamentDialog.hpp"
+#include "SurfaceImageTool.hpp"
 #include "UnsavedChangesDialog.hpp"
 #include "MsgDialog.hpp"
 #include "Notebook.hpp"
@@ -3409,6 +3410,18 @@ void MainFrame::init_menubar_as_editor()
         m_topbar->GetTopMenu(), wxID_ANY, _L("Mixed Filaments..."), _L("Create virtual mixed-color filaments by alternating layers between physical filaments"),
         [this](wxCommandEvent &) {
             MixedFilamentDialog dlg(this);
+    append_menu_item(
+        m_topbar->GetTopMenu(), wxID_ANY, _L("Photo on Top Surface..."), _L("Paint an image onto the selected object's top surface using your filaments and mixed colors"),
+        [this](wxCommandEvent &) {
+            apply_photo_to_top_surface(this);
+        },
+        "", nullptr, []() { return true; }, this);
+    append_menu_item(
+        m_topbar->GetTopMenu(), wxID_ANY, _L("Color Lithophane..."), _L("Generate a HueForge-style relief plate from an image with automatic filament changes"),
+        [this](wxCommandEvent &) {
+            generate_hueforge_lithophane(this);
+        },
+        "", nullptr, []() { return true; }, this);
             dlg.ShowModal();
         },
         "", nullptr, []() { return true; }, this);
