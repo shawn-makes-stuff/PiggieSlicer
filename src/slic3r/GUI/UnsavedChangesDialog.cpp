@@ -799,8 +799,6 @@ UnsavedChangesDialog::UnsavedChangesDialog(const wxString &caption, const wxStri
     , m_app_config_key(app_config_key)
     , m_buttons(act_buttons)
 {
-    std::string icon_path = (boost::format("%1%/images/OrcaSlicerTitle.ico") % resources_dir()).str();
-    SetIcon(wxIcon(encode_path(icon_path.c_str()), wxBITMAP_TYPE_ICO));
     build(Preset::TYPE_INVALID, nullptr, "", header);
     this->CenterOnScreen();
     wxGetApp().UpdateDlgDarkUI(this);
@@ -815,8 +813,6 @@ UnsavedChangesDialog::UnsavedChangesDialog(Preset::Type type, PresetCollection *
                 wxDefaultSize,
                 wxCAPTION | wxCLOSE_BOX)
 {
-    std::string icon_path = (boost::format("%1%/images/OrcaSlicerTitle.ico") % resources_dir()).str();
-    SetIcon(wxIcon(encode_path(icon_path.c_str()), wxBITMAP_TYPE_ICO));
     if (new_selected_preset.empty() || no_transfer)
         m_buttons &= ~ActionButtons::TRANSFER;
     build(type, dependent_presets, new_selected_preset);

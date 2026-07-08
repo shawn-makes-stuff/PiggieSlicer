@@ -22,6 +22,7 @@
 class wxBoxSizer;
 class wxCheckBox;
 class wxStaticBitmap;
+class wxSizerItem;
 
 enum ButtonSizeType{
 	ButtonSizeNormal = 0,
@@ -91,6 +92,8 @@ protected:
 	wxBoxSizer *content_sizer;
 	wxBoxSizer *btn_sizer;
 	wxBoxSizer *m_dsa_sizer;
+	wxBoxSizer *m_icon_sizer;
+	wxSizerItem *m_button_icon_spacer;
 	wxStaticBitmap *logo;
     MsgButtonsHash  m_buttons;
 	CheckBox* m_checkbox_dsa{nullptr};

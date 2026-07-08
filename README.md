@@ -20,12 +20,14 @@ Print colors you don't own. Define **virtual mixed filaments** — blends of two
 - **Calibrated color prediction.** Mixed-color swatches use a print-calibrated model (the open-source [prusa-fdm-mixer](https://github.com/prusa3d/prusa-fdm-mixer) math, reimplemented; MIT) instead of naive color averaging — what you see is much closer to what prints.
 - **Match a color.** Pick any target color and PiggieSlicer searches every filament pair and ratio for the perceptually closest recipe (ΔE2000).
 - **Layer patterns.** Beyond smooth blends: fine stripes, 2/2, 4/4 and 8/8 bands, sinusoidal "wave" bands, and organic noise bands.
+- **One-click palettes.** Add a full dark-to-light **shade ramp** between two spools, or a **3-color set** for multi-component palette experiments, straight from the Mixed Filaments dialog.
 - **Mix-aware purge reduction.** Toolchanges between the two components of an active mix purge at 30% — the transition is supposed to blend, so most of the purge would be wasted time and filament.
 
 ### 🖼️ Image tools
 - **Photo on Top Surface** — pick an image and PiggieSlicer paints it onto the selected object's top surface, dithering across your physical spools *and* your virtual mixes.
 - **Color Lithophane** — HueForge-style relief plates: an image becomes a heightmap whose luminance shines through a dark-to-light filament stack, with filament changes placed automatically.
 - **Colored model import** — OBJ files with vertex colors map onto your full palette, including mixes, at import time.
+- **FullSpectrum Surface Shading** — pick a shadow filament, a highlight filament, and a simulated light direction; PiggieSlicer generates the intermediate mixes and paints the object's facets by light intensity for a shaded, sculptural look. Adjustable ramp steps and contrast (Soft/Normal/Hard).
 
 ### 🧱 Brick layers *(experimental)*
 An off-by-default Special Mode option that raises inner wall loops by half a layer so wall beads interlock like brickwork, substantially improving Z-direction strength.
@@ -44,7 +46,7 @@ The LAN protocol was independently reverse-engineered and lives in-tree (`src/sl
 ### 🔒 No phoning home
 - **No Bambu backend.** Bambu Cloud login is removed, the system-info telemetry endpoint is deleted outright, and no code path calls `api.bambulab.com`. (Bambu *printer* LAN support and BambuStudio 3MF compatibility are kept.)
 - **No Anycubic cloud.** Everything works over LAN; no account required.
-- **Stealth mode is the default.** Orca Cloud sync exists (from upstream 2.4.2) but is opt-in.
+- **Stealth mode is the default.** Profile syncing is local-only; use manual preset export/import when moving between machines.
 
 ### Everything from OrcaSlicer v2.4.2
 Tracked against upstream — calibration suite, precise walls, scarf seams, the full printer profile library, and the rest. Upstream merges are part of this fork's routine.

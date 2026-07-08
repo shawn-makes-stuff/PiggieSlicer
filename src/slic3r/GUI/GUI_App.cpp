@@ -282,7 +282,7 @@ public:
         // is shown. The previous 1500 ms auto-timeout closed the splash long
         // before init finished, leaving the user staring at a frozen blank
         // screen during the slow load_presets / new MainFrame phases.
-        : wxSplashScreen(wxBitmap(FromDIP(wxSize(480,480),nullptr)), wxSPLASH_CENTRE_ON_SCREEN, 0, nullptr, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+        : wxSplashScreen(wxBitmap(FromDIP(wxSize(620,380),nullptr)), wxSPLASH_CENTRE_ON_SCREEN, 0, nullptr, wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifdef __APPLE__
             wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP
 #else
@@ -293,14 +293,20 @@ public:
         this->SetPosition(pos);
         this->CenterOnScreen();
 
-        scale_font(m_font_version, 1.65f); // only scale this one since it hasnt a preloaded font like Label::Body_24;
+        scale_font(m_font_title, 1.05f);
+        scale_font(m_font_version, 0.95f);
+        scale_font(m_font_action, 0.9f);
 
-        m_bg_color = StateColor::darkModeColorFor(wxColour("#FFFFFF"));
-        m_fg_color = StateColor::darkModeColorFor(wxColour("#6B6A6A"));
-        bool dark_mode = m_fg_color != wxColour("#6B6A6A");
+        m_bg_color      = StateColor::darkModeColorFor(wxColour("#F7F5F2"));
+        m_card_color    = StateColor::darkModeColorFor(wxColour("#FFFFFF"));
+        m_title_color   = StateColor::darkModeColorFor(wxColour("#1F2528"));
+        m_fg_color      = StateColor::darkModeColorFor(wxColour("#6B6A6A"));
+        m_accent_color  = StateColor::darkModeColorFor(wxColour("#E65F48"));
+        m_track_color   = StateColor::darkModeColorFor(wxColour("#E8E0DB"));
+        bool dark_mode  = m_fg_color != wxColour("#6B6A6A");
         wxSize sz  = m_window->GetClientSize();
         BitmapCache bmp_cache;
-        m_logo_bmp = *bmp_cache.load_png(dark_mode ? "splash_logo_dark" : "splash_logo", int(sz.GetWidth() * 0.42), int(sz.GetWidth() * 0.42)); // PiggieSlicer: pig logo PNG, sized like the old splash
+        m_logo_bmp = *bmp_cache.load_png(dark_mode ? "splash_logo_dark" : "splash_logo", int(sz.GetHeight() * 0.42), int(sz.GetHeight() * 0.42));
 
         m_window->Bind(wxEVT_PAINT, &SplashScreen::OnPaint, this);
         m_window->Refresh();
@@ -314,27 +320,49 @@ public:
 
         dc.SetBackground(wxBrush(m_bg_color));
         dc.Clear();
-        if (m_logo_bmp.IsOk())
-            dc.DrawBitmap(m_logo_bmp, (c_sz.GetWidth() - m_logo_bmp.GetWidth()) / 2, int(c_sz.GetHeight() * 0.16), true); // PiggieSlicer: centered pig logo
+        dc.SetPen(*wxTRANSPARENT_PEN);
+        dc.SetBrush(wxBrush(m_card_color));
+        const wxRect card(int(c_sz.GetWidth() * 0.06), int(c_sz.GetHeight() * 0.10),
+                          int(c_sz.GetWidth() * 0.88), int(c_sz.GetHeight() * 0.80));
+        dc.DrawRoundedRectangle(card, 18);
 
-        wxRect rc = wxRect(0, 0, c_sz.GetWidth(), 0);
-        dc.SetTextForeground(m_fg_color);
+        const int logo_x = card.x + int(card.width * 0.13);
+        const int logo_y = card.y + (card.height - m_logo_bmp.GetHeight()) / 2 - int(card.height * 0.04);
+        if (m_logo_bmp.IsOk())
+            dc.DrawBitmap(m_logo_bmp, logo_x, logo_y, true);
+
+        const int text_x = card.x + int(card.width * 0.46);
+        const int text_w = card.GetRight() - text_x - int(card.width * 0.09);
+
+        dc.SetFont(m_font_title);
+        dc.SetTextForeground(m_title_color);
+        wxRect title_rc(text_x, card.y + int(card.height * 0.24), text_w, dc.GetTextExtent(m_text_title).GetHeight());
+        dc.DrawLabel(m_text_title, title_rc, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
         dc.SetFont(m_font_version);
-        rc.y      = c_sz.GetHeight() * 0.72;
-        rc.height = dc.GetTextExtent(m_text_version).GetHeight();
-        dc.DrawLabel(m_text_version, rc, wxALIGN_CENTER);
+        dc.SetTextForeground(m_fg_color);
+        wxString version = _L("Version ") + m_text_version;
+        wxRect version_rc(text_x, title_rc.GetBottom() + 8, text_w, dc.GetTextExtent(version).GetHeight());
+        dc.DrawLabel(version, version_rc, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
         dc.SetFont(m_font_action);
-        rc.y      = c_sz.GetHeight() * 0.88;
-        rc.height = dc.GetTextExtent(m_text_action).GetHeight();
-        dc.DrawLabel(m_text_action, rc, wxALIGN_CENTER);
+        wxRect status_rc(text_x, card.y + int(card.height * 0.62), text_w, dc.GetTextExtent(m_text_action).GetHeight());
+        dc.DrawLabel(m_text_action, status_rc, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+        const int track_y = status_rc.GetBottom() + 14;
+        const int track_h = 6;
+        dc.SetBrush(wxBrush(m_track_color));
+        dc.DrawRoundedRectangle(wxRect(text_x, track_y, text_w, track_h), 3);
+        dc.SetBrush(wxBrush(m_accent_color));
+        const int progress_w = std::max(text_w / 5, int(text_w * std::min(0.85f, 0.22f + 0.13f * float(m_status_step))));
+        dc.DrawRoundedRectangle(wxRect(text_x, track_y, std::min(progress_w, text_w), track_h), 3);
     }
 
     void SetText(const wxString& text)
     {
         if (!text.empty()) {
             m_text_action = text;
+            ++m_status_step;
             m_window->Refresh();
             m_window->Update();
 #ifdef __WXOSX__
@@ -376,10 +404,17 @@ private:
     wxBitmap m_logo_bmp;
     wxColour m_fg_color;
     wxColour m_bg_color;
+    wxColour m_card_color;
+    wxColour m_title_color;
+    wxColour m_accent_color;
+    wxColour m_track_color;
 
+    wxString m_text_title   = _L("PiggieSlicer");
     wxString m_text_version = GUI_App::format_display_version();
-    wxString m_text_action  = _L("Loading configuration") + dots;
+    wxString m_text_action  = _L("Starting up") + dots;
+    int      m_status_step  = 0;
 
+    wxFont m_font_title   = Label::Head_24;
     wxFont m_font_version = Label::Body_16;
     wxFont m_font_action  = Label::Body_16;
 };
@@ -940,33 +975,6 @@ void GUI_App::post_init()
               // this->check_privacy_version(0);
               request_user_handle(0, cloud_provider);
             }
-        });
-    }
-
-    // Orca: notify users upgrading from a pre-2.4.0 version that profile syncing
-    // moved from Bambu Cloud to Orca Cloud.
-    if (is_editor() && m_last_config_version && m_last_config_version->valid()
-        && *m_last_config_version < Semver(2, 4, 0)) {
-        CallAfter([] {
-            const wxString wiki_url = "https://www.orcaslicer.com/wiki/user_profiles/user_profiles.html#profiles-missing-after-updating-from-bambu-cloud";
-            MessageDialog dlg(nullptr,
-                _L("Since version 2.4.0, PiggieSlicer syncs user profiles through Orca Cloud instead of Bambu Cloud.\n\n"
-                   "To migrate your existing profiles, log in to Orca Cloud and they will be transferred automatically. "
-                   "To learn more about how OrcaSlicer stores and syncs your profiles, or to migrate your presets manually, check out our wiki.\n\n"
-                   "If you did not use Bambu Cloud to sync profiles, this change does not affect you and you can safely ignore this message."),
-                _L("Profile syncing change"),
-                wxOK,
-                "",
-                _L("Learn more"),
-                [wiki_url](const wxString &) { wxLaunchDefaultBrowser(wiki_url); });
-            // Hack: the "Learn more" link renders the message in a wxHtmlWindow whose
-            // height is underestimated for multi-paragraph text, leaving a scrollbar.
-            // The html sits in a proportion-1 sizer chain, so grow the dialog (never
-            // shrink it below its content width) to give the text enough room.
-            const wxSize sz = dlg.GetSize();
-            dlg.SetSize(std::max(sz.x, dlg.FromDIP(280)), std::max(sz.y, dlg.FromDIP(200)));
-            dlg.CenterOnParent();
-            dlg.ShowModal();
         });
     }
 
@@ -2880,7 +2888,7 @@ bool GUI_App::on_init_inner()
         //BBS use BBL splashScreen
         scrn = new SplashScreen(splashscreen_pos);
         wxYield();
-        scrn->SetText(_L("Loading configuration") + dots);
+        scrn->SetText(_L("Preparing workspace") + dots);
     }
 
     BOOST_LOG_TRIVIAL(info) << "loading systen presets...";
@@ -3058,7 +3066,7 @@ bool GUI_App::on_init_inner()
             // Enable all substitutions (in both user and system profiles), but log the substitutions in user profiles only.
             // If there are substitutions in system profiles, then a "reconfigure" event shall be triggered, which will force
             // installation of a compatible system preset, thus nullifying the system preset substitutions.
-            if (scrn) { scrn->SetText(_L("Loading printer & filament profiles") + dots); wxYield(); }
+            if (scrn) { scrn->SetText(_L("Loading printer and filament profiles") + dots); wxYield(); }
             init_params->preset_substitutions = preset_bundle->load_presets(*app_config, ForwardCompatibilitySubstitutionRule::EnableSystemSilent);
         }
         catch (const std::exception& ex) {
@@ -3088,7 +3096,7 @@ bool GUI_App::on_init_inner()
 #endif
 
     if (scrn) {
-        const auto scrn_txt = _L("Creating main window") + dots;
+        const auto scrn_txt = _L("Opening workspace") + dots;
         scrn->SetText(scrn_txt);
         wxYield();
     }
@@ -3117,7 +3125,7 @@ bool GUI_App::on_init_inner()
             plater_->set_printer_technology(ptFFF);
     }
     else {
-        if (scrn) { scrn->SetText(_L("Loading current preset") + dots); wxYield(); }
+    if (scrn) { scrn->SetText(_L("Applying current preset") + dots); wxYield(); }
         load_current_presets();
     }
 
@@ -3131,7 +3139,7 @@ bool GUI_App::on_init_inner()
 #ifdef __WINDOWS__
     mainframe->topbar()->SaveNormalRect();
 #endif
-    if (scrn) { scrn->SetText(_L("Showing main window") + dots); wxYield(); }
+    if (scrn) { scrn->SetText(_L("Almost ready") + dots); wxYield(); }
     mainframe->Show(true);
     // Close the splash now that the main UI is visible.
     if (scrn) { scrn->Destroy(); scrn = nullptr; }
@@ -3141,7 +3149,7 @@ bool GUI_App::on_init_inner()
     //BBS: set tp3DEditor firstly
     /*plater_->canvas3D()->enable_render(false);
     mainframe->select_tab(size_t(MainFrame::tp3DEditor));
-    scrn->SetText(_L("Loading Opengl resourses..."));
+    scrn->SetText(_L("Warming up preview") + dots);
     plater_->select_view_3D("3D");
     //BBS init the opengl resource here
     Size canvas_size = plater_->canvas3D()->get_canvas_size();
@@ -5828,18 +5836,7 @@ bool GUI_App::process_network_msg(std::string dev_id, std::string msg)
         }
         else if (msg == "unsigned_studio") {
             BOOST_LOG_TRIVIAL(info) << "process_network_msg, unsigned_studio";
-            MessageDialog
-                msg_dlg(nullptr,
-                        _L("To use PiggieSlicer with Bambu Lab printers, you need to enable LAN mode and Developer mode on your printer.\n\n"
-                           "Please go to your printer's settings and:\n"
-                           "1. Turn on LAN mode\n"
-                           "2. Enable Developer mode\n\n"
-                           "Developer mode allows the printer to work exclusively through local network access, "
-                           "enabling full functionality with PiggieSlicer."),
-                        _L("Network Plug-in Restriction"), wxAPPLY | wxOK);
-            m_show_error_msgdlg = true;
-            msg_dlg.ShowModal();
-            m_show_error_msgdlg = false;
+            BOOST_LOG_TRIVIAL(info) << "process_network_msg: suppressing LAN/developer-mode prompt";
             return true;
         }
     }

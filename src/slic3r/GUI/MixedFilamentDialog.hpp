@@ -32,6 +32,8 @@ private:
     void rebuild_rows();                                     // redraw the mixed list
     void persist();                                          // serialize -> project_config + dirty
     void on_add(wxCommandEvent&);
+    void on_add_ramp(wxCommandEvent&);
+    void on_add_triad(wxCommandEvent&);
     std::string pattern_preset_string() const;
     void on_remove_custom(size_t mixed_index);
     void on_edit(size_t mixed_index);

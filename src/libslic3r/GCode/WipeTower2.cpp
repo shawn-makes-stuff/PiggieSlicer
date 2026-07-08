@@ -8,6 +8,7 @@
 #include <memory>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 #include "ClipperUtils.hpp"
 #include "GCodeProcessor.hpp"
@@ -2104,6 +2105,9 @@ WipeTower::ToolChangeResult WipeTower2::finish_layer()
         // outer contour (always)
         bool infill_cone = first_layer && m_wipe_tower_width > 2 * spacing && m_wipe_tower_depth > 2 * spacing;
         poly = generate_support_cone_wall(writer, wt_box, feedrate, infill_cone, spacing);
+    } else if (m_wall_type == (int)wtwWave) {
+        WipeTower::box_coordinates wt_box(Vec2f(0.f, 0.f), m_wipe_tower_width, m_layer_info->depth + m_perimeter_width);
+        poly = generate_support_wave_wall(writer, wt_box, feedrate);
     } else {
         WipeTower::box_coordinates wt_box(Vec2f(0.f, 0.f), m_wipe_tower_width, m_layer_info->depth + m_perimeter_width);
         poly = generate_support_rib_wall(writer, wt_box, feedrate, first_layer, m_wall_type == (int)wtwRib, true, false);
@@ -2493,6 +2497,69 @@ Polygon WipeTower2::generate_rib_polygon(const WipeTower::box_coordinates& wt_bo
         std::cout << "error " << std::endl;*/
     return p_1_2.front();
 };
+
+Polygon WipeTower2::generate_wave_polygon(const WipeTower::box_coordinates& wt_box) const
+{
+    const float width = wt_box.rd.x() - wt_box.ld.x();
+    const float depth = wt_box.lu.y() - wt_box.ld.y();
+    if (width <= 0.f || depth <= 0.f)
+        return generate_rectange_polygon(wt_box.ld, wt_box.ru);
+
+    const float min_side = std::min(width, depth);
+    const float amplitude = std::clamp(min_side * 0.08f, 1.5f, 6.f);
+    const float twist_period = std::clamp(m_wipe_tower_height * 0.35f, 18.f, 55.f);
+    const float phase = twist_period > 0.f ? 2.f * PI * m_z_pos / twist_period : 0.f;
+
+    auto outward = [amplitude](float t, float phase_offset, int waves) {
+        const float envelope = std::sin(float(PI) * t);
+        const float wave = 0.5f + 0.5f * std::sin(2.f * PI * float(waves) * t + phase_offset);
+        return amplitude * envelope * wave;
+    };
+
+    auto edge_steps = [](float length) {
+        return std::max(6, std::min(24, int(std::ceil(length / 8.f))));
+    };
+
+    auto wave_count = [](float length) {
+        return std::max(2, std::min(6, int(std::round(length / 22.f))));
+    };
+
+    std::vector<Vec2f> points;
+    const int x_steps = edge_steps(width);
+    const int y_steps = edge_steps(depth);
+    const int x_waves = wave_count(width);
+    const int y_waves = wave_count(depth);
+
+    points.reserve(size_t(2 * (x_steps + y_steps)));
+    for (int i = 0; i <= x_steps; ++i) {
+        const float t = float(i) / float(x_steps);
+        points.emplace_back(wt_box.ld.x() + width * t, wt_box.ld.y() - outward(t, phase, x_waves));
+    }
+    for (int i = 1; i <= y_steps; ++i) {
+        const float t = float(i) / float(y_steps);
+        points.emplace_back(wt_box.rd.x() + outward(t, phase + 0.5f * PI, y_waves), wt_box.rd.y() + depth * t);
+    }
+    for (int i = 1; i <= x_steps; ++i) {
+        const float t = float(i) / float(x_steps);
+        points.emplace_back(wt_box.ru.x() - width * t, wt_box.ru.y() + outward(t, phase + PI, x_waves));
+    }
+    for (int i = 1; i < y_steps; ++i) {
+        const float t = float(i) / float(y_steps);
+        points.emplace_back(wt_box.lu.x() - outward(t, phase + 1.5f * PI, y_waves), wt_box.lu.y() - depth * t);
+    }
+
+    return scale_polygon(points);
+}
+
+Polygon WipeTower2::generate_support_wave_wall(WipeTowerWriter2& writer, const WipeTower::box_coordinates& wt_box, double feedrate)
+{
+    const float retract_length = m_filpar[m_current_tool].retract_length;
+    const float retract_speed = m_filpar[m_current_tool].retract_speed * 60.f;
+    Polygon wall_polygon = generate_wave_polygon(wt_box);
+
+    writer.generate_path(Polylines{to_polyline(wall_polygon)}, feedrate, retract_length, retract_speed, false);
+    return wall_polygon;
+}
 
 Polygon WipeTower2::generate_support_rib_wall(WipeTowerWriter2&                 writer,
                                               const WipeTower::box_coordinates& wt_box,

@@ -2217,6 +2217,7 @@ Vec3d PartPlate::estimate_wipe_tower_size(const DynamicPrintConfig & config, con
     double extra_spacing     = config.option("prime_tower_infill_gap")->getFloat() / 100.;
     const ConfigOptionEnum<WipeTowerWallType>* use_rib_wall_opt = config.option<ConfigOptionEnum<WipeTowerWallType>>("wipe_tower_wall_type");
     bool use_rib_wall = use_rib_wall_opt ? use_rib_wall_opt->value == WipeTowerWallType::wtwRib: false;
+    bool use_wave_wall = use_rib_wall_opt ? use_rib_wall_opt->value == WipeTowerWallType::wtwWave : false;
     double rib_width = config.option("wipe_tower_rib_width")->getFloat();
     double depth;
     double filament_change_volume=0.;
@@ -2253,6 +2254,11 @@ Vec3d PartPlate::estimate_wipe_tower_size(const DynamicPrintConfig & config, con
         }
         wipe_tower_size(0) = w;
         wipe_tower_size(1) = depth;
+        if (use_wave_wall) {
+            const double wave_margin = std::clamp(std::min(w, depth) * 0.08, 1.5, 6.0);
+            wipe_tower_size(0) += 2.0 * wave_margin;
+            wipe_tower_size(1) += 2.0 * wave_margin;
+        }
     }
 
     return wipe_tower_size;
@@ -2271,6 +2277,9 @@ arrangement::ArrangePolygon PartPlate::estimate_wipe_tower_polygon(const Dynamic
 	wt_size = estimate_wipe_tower_size(config, w, v, extruder_count, plate_extruder_size, use_global_objects, enable_wrapping);
 	float depth = wt_size(1);
 	float margin = WIPE_TOWER_MARGIN + tower_brim_width, wp_brim_width = 0.f;
+    const auto wall_type_opt = config.option<ConfigOptionEnum<WipeTowerWallType>>("wipe_tower_wall_type");
+    const bool use_wave_wall = wall_type_opt && wall_type_opt->value == WipeTowerWallType::wtwWave;
+    const float wave_margin = use_wave_wall ? std::max(0.f, (float(wt_size(0)) - w) * 0.5f) : 0.f;
 	const ConfigOption* wipe_tower_brim_width_opt = config.option("prime_tower_brim_width");
 	if (wipe_tower_brim_width_opt) {
 		wp_brim_width = wipe_tower_brim_width_opt->getFloat();
@@ -2283,10 +2292,10 @@ arrangement::ArrangePolygon PartPlate::estimate_wipe_tower_polygon(const Dynamic
     const float   local_max_x = static_cast<float>(plate_bbox.max(0) - m_origin(0));
     const float   local_min_y = static_cast<float>(plate_bbox.min(1) - m_origin(1));
     const float   local_max_y = static_cast<float>(plate_bbox.max(1) - m_origin(1));
-    const float   min_x       = local_min_x + margin;
-    const float   max_x       = local_max_x - w - margin - wp_brim_width;
-    const float   min_y       = local_min_y + margin;
-    const float   max_y       = local_max_y - depth - margin - wp_brim_width;
+    const float   min_x       = local_min_x + margin + wave_margin;
+    const float   max_x       = local_max_x - w - margin - wp_brim_width - wave_margin;
+    const float   min_y       = local_min_y + margin + wave_margin;
+    const float   max_y       = local_max_y - (depth - 2.f * wave_margin) - margin - wp_brim_width - wave_margin;
 	x = max_x < min_x ? min_x : std::clamp(x, min_x, max_x);
     y = max_y < min_y ? min_y : std::clamp(y, min_y, max_y);
     wt_pos(0) = x;
@@ -2295,10 +2304,10 @@ arrangement::ArrangePolygon PartPlate::estimate_wipe_tower_polygon(const Dynamic
 
 	arrangement::ArrangePolygon wipe_tower_ap;
 	Polygon ap({
-		{scaled(x - wp_brim_width), scaled(y - wp_brim_width)},
-		{scaled(x + w + wp_brim_width), scaled(y - wp_brim_width)},
-		{scaled(x + w + wp_brim_width), scaled(y + depth + wp_brim_width)},
-		{scaled(x - wp_brim_width), scaled(y + depth + wp_brim_width)}
+		{scaled(x - wave_margin - wp_brim_width), scaled(y - wave_margin - wp_brim_width)},
+		{scaled(x + w + wave_margin + wp_brim_width), scaled(y - wave_margin - wp_brim_width)},
+		{scaled(x + w + wave_margin + wp_brim_width), scaled(y + depth - wave_margin + wp_brim_width)},
+		{scaled(x - wave_margin - wp_brim_width), scaled(y + depth - wave_margin + wp_brim_width)}
 		});
 	wipe_tower_ap.bed_idx = plate_index;
 	wipe_tower_ap.setter = NULL; // do not move wipe tower

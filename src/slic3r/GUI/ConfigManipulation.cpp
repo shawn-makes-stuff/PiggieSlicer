@@ -463,10 +463,10 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
     }
 #endif
 
-    // BBL printers do not support cone wipe tower
+    // BBL printers use the legacy wipe tower path, which only supports rectangle/rib.
     if (config->opt_bool("enable_prime_tower") && is_BBL_Printer) {
         auto wipe_tower_wall_type = config->opt_enum<WipeTowerWallType>("wipe_tower_wall_type");
-        if (wipe_tower_wall_type == WipeTowerWallType::wtwCone) {
+        if (wipe_tower_wall_type == WipeTowerWallType::wtwCone || wipe_tower_wall_type == WipeTowerWallType::wtwWave) {
             DynamicPrintConfig new_conf = *config;
             new_conf.set_key_value("wipe_tower_wall_type", new ConfigOptionEnum<WipeTowerWallType>(WipeTowerWallType::wtwRectangle));
             apply(config, &new_conf);

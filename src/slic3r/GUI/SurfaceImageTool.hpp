@@ -13,6 +13,10 @@ namespace Slic3r { namespace GUI {
 // currently selected object. Shows message boxes on error.
 void apply_photo_to_top_surface(wxWindow *parent);
 
+// FullSpectrum surface shader: choose dark/light physical filaments, generate a
+// mixed shade ramp, then assign facets by simulated light direction.
+void apply_fullspectrum_surface_shading(wxWindow *parent);
+
 // HueForge-style color lithophane: image -> relief plate whose height maps
 // luminance through a dark-to-light filament stack, with automatic filament
 // changes at the layer transitions.

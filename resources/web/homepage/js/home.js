@@ -8,8 +8,6 @@ function OnInit()
 	//-----Official-----
     TranslatePage();
 
-	SendMsg_GetLoginInfo();
-	SendMsg_GetBambuLoginInfo();
 	SendMsg_GetRecentFile();
 	SendMsg_GetStaffPick();
 }
@@ -88,14 +86,9 @@ function HandleStudio( pVal )
 	
 	if (strCmd == "get_recent_projects") {
     ShowRecentFileList(pVal["response"]);
-  } else if (strCmd == "orca_userlogin") {
-    SetOrcaLoginInfo(pVal["data"]["avatar"], pVal["data"]["name"]);
-  } else if (strCmd == "orca_useroffline") {
-    SetOrcaUserOffline();
-  } else if (strCmd == "studio_bambu_userlogin") {
-    SetBambuLoginInfo(pVal["data"]["avatar"], pVal["data"]["name"]);
-  } else if (strCmd == "studio_bambu_useroffline") {
-    SetBambuUserOffline();
+  } else if (strCmd == "orca_userlogin" || strCmd == "orca_useroffline" ||
+             strCmd == "studio_bambu_userlogin" || strCmd == "studio_bambu_useroffline") {
+    return;
   } else if (strCmd == "studio_set_mallurl") {
     SetMallUrl(pVal["data"]["url"]);
   } else if (strCmd == "studio_clickmenu") {
@@ -103,36 +96,9 @@ function HandleStudio( pVal )
 
     GotoMenu(strName);
   } else if (strCmd == "cloud_providers_info") {
-    var providers = (pVal["data"] && pVal["data"]["providers"]) || [];
-
-    if (providers.indexOf("bbl") >= 0) {
-      $("#BambuCloudSection").show();
-    } else {
-      SetBambuUserOffline();
-      $("#BambuCloudSection").hide();
-    }
-
-    if (providers.indexOf("orca") >= 0) {
-      $("#LeftBoard").show();
-    } else {
-      $("#LeftBoard").hide();
-    }
+    $("#LeftBoard").show();
   } else if (strCmd == "network_plugin_installtip") {
-    let nShow = pVal["show"] * 1;
-
-    if (nShow == 1) {
-      // Auto-expand Bambu section to show the tip
-      if (!bambuSectionExpanded) ToggleBambuSection();
-      $("#BambuLogin1").hide();
-      $("#NoPluginTip").show();
-      $("#NoPluginTip").css("display", "flex");
-    } else {
-      $("#NoPluginTip").hide();
-      // Only restore login button if not already logged in
-      if ($("#BambuLogin2").is(":hidden")) {
-        $("#BambuLogin1").show();
-      }
-    }
+    return;
   } else if (strCmd == "modelmall_model_advise_get") {
     //alert('hot');
     if (m_HotModelList != null) {

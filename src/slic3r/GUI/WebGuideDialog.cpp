@@ -1130,6 +1130,9 @@ int GuideFrame::GetFilamentInfo( std::string VendorDirectory, json & pFilaList, 
 int GuideFrame::LoadProfileData()
 {
     try {
+        const bool load_filaments = m_page != BBL_MODELS_ONLY;
+        const bool load_processes = m_page != BBL_MODELS_ONLY && m_page != BBL_FILAMENT_ONLY;
+
         m_ProfileJson             = json::parse("{}");
         m_ProfileJson["model"]    = json::array();
         m_ProfileJson["machine"]  = json::object();
@@ -1151,15 +1154,17 @@ int GuideFrame::LoadProfileData()
             }
         }
 
-        // load the default filament library first
         std::set<std::string> loaded_vendors;
-        auto filament_library_name = boost::filesystem::path(PresetBundle::ORCA_FILAMENT_LIBRARY).replace_extension(".json");
-        if (boost::filesystem::exists(vendor_dir / filament_library_name)) {
-            m_OrcaFilaLibPath = (vendor_dir / PresetBundle::ORCA_FILAMENT_LIBRARY).string();
-            LoadProfileFamily(PresetBundle::ORCA_FILAMENT_LIBRARY, (vendor_dir / filament_library_name).string());
-        } else {
-            m_OrcaFilaLibPath = (rsrc_vendor_dir / PresetBundle::ORCA_FILAMENT_LIBRARY).string();
-            LoadProfileFamily(PresetBundle::ORCA_FILAMENT_LIBRARY, (rsrc_vendor_dir / filament_library_name).string());
+        if (load_filaments) {
+            auto filament_library_name = boost::filesystem::path(PresetBundle::ORCA_FILAMENT_LIBRARY).replace_extension(".json");
+            if (boost::filesystem::exists(vendor_dir / filament_library_name)) {
+                m_OrcaFilaLibPath = (vendor_dir / PresetBundle::ORCA_FILAMENT_LIBRARY).string();
+                LoadProfileFamily(PresetBundle::ORCA_FILAMENT_LIBRARY, (vendor_dir / filament_library_name).string(), true, false);
+            } else {
+                m_OrcaFilaLibPath = (rsrc_vendor_dir / PresetBundle::ORCA_FILAMENT_LIBRARY).string();
+                LoadProfileFamily(PresetBundle::ORCA_FILAMENT_LIBRARY, (rsrc_vendor_dir / filament_library_name).string(), true, false);
+            }
+            loaded_vendors.insert(PresetBundle::ORCA_FILAMENT_LIBRARY);
         }
         loaded_vendors.insert(PresetBundle::ORCA_FILAMENT_LIBRARY);
 
@@ -1175,7 +1180,7 @@ int GuideFrame::LoadProfileData()
                 if(strExtension.CmpNoCase("json") != 0 || loaded_vendors.find(w2s(strVendor)) != loaded_vendors.end())
                     continue;
 
-                LoadProfileFamily(w2s(strVendor), iter->path().string());
+                LoadProfileFamily(w2s(strVendor), iter->path().string(), load_filaments, load_processes);
                 loaded_vendors.insert(w2s(strVendor));
             }
             if (m_destroy)
@@ -1192,7 +1197,7 @@ int GuideFrame::LoadProfileData()
                 if (strExtension.CmpNoCase("json") != 0 || loaded_vendors.find(w2s(strVendor)) != loaded_vendors.end())
                     continue;
 
-                LoadProfileFamily(w2s(strVendor), iter->path().string());
+                LoadProfileFamily(w2s(strVendor), iter->path().string(), load_filaments, load_processes);
                 loaded_vendors.insert(w2s(strVendor));
             }
             if (m_destroy)
@@ -1204,10 +1209,12 @@ int GuideFrame::LoadProfileData()
                 //sync to appconfig first to populate current selections
                 SaveProfileData();
 
-                //sync to web after selections are populated
-                std::string strAll = m_ProfileJson.dump(-1, ' ', false, json::error_handler_t::ignore);
-
-                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ", finished, json contents: " << std::endl << strAll;
+                BOOST_LOG_TRIVIAL(info) << __FUNCTION__
+                                        << boost::format(", finished: models=%1%, machines=%2%, filaments=%3%, processes=%4%")
+                                               % m_ProfileJson["model"].size()
+                                               % m_ProfileJson["machine"].size()
+                                               % m_ProfileJson["filament"].size()
+                                               % m_ProfileJson["process"].size();
                 json m_Res           = json::object();
                 m_Res["command"]     = "userguide_profile_load_finish";
                 m_Res["sequence_id"] = "10001";
@@ -1317,7 +1324,7 @@ void StringReplace(string &strBase, string strSrc, string strDes)
 }
 
 
-int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath)
+int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath, bool load_filaments, bool load_processes)
 {
     // wxString strFolder = strFilePath.BeforeLast(boost::filesystem::path::preferred_separator);
     boost::filesystem::path file_path(strFilePath);
@@ -1408,6 +1415,7 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
             }
         }
 
+        if (load_filaments) {
         // BBS:Filament
         json pFilament = jLocal["filament_list"];
         json tFilaList = m_OrcaFilaList;
@@ -1420,12 +1428,8 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
             std::string s2    = OneFF["sub_path"];
 
             tFilaList[s1] = OneFF;
-            BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "Vendor: " << strVendor <<", tFilaList Add: " << s1;
         }
 
-        int nFalse  = 0;
-        int nModel  = 0;
-        int nFinish = 0;
         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(",  got %1% filaments") % nsize;
         for (int n = 0; n < nsize; n++) {
             json OneFF = pFilament.at(n);
@@ -1443,7 +1447,6 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
                 json pm = json::parse(contents);
 
                 std::string strInstant = pm["instantiation"];
-                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "Load Filament:" << s1 << ",Path:" << sub_file << ",instantiation?" << strInstant;
 
                 if (strInstant == "true") {
                     std::string sV;
@@ -1487,7 +1490,9 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
         }
         if(strVendor == PresetBundle::ORCA_FILAMENT_LIBRARY)
             m_OrcaFilaList = tFilaList;
+        }
 
+        if (load_processes) {
         // process
         json pProcess = jLocal["process_list"];
         nsize         = pProcess.size();
@@ -1506,6 +1511,7 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
 
             std::string bInstall = pm["instantiation"];
             if (bInstall == "true") { m_ProfileJson["process"].push_back(OneProcess); }
+        }
         }
 
     } catch (nlohmann::detail::parse_error &err) {

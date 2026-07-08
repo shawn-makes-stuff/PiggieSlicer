@@ -3410,6 +3410,9 @@ void MainFrame::init_menubar_as_editor()
         m_topbar->GetTopMenu(), wxID_ANY, _L("Mixed Filaments..."), _L("Create virtual mixed-color filaments by alternating layers between physical filaments"),
         [this](wxCommandEvent &) {
             MixedFilamentDialog dlg(this);
+            dlg.ShowModal();
+        },
+        "", nullptr, []() { return true; }, this);
     append_menu_item(
         m_topbar->GetTopMenu(), wxID_ANY, _L("Photo on Top Surface..."), _L("Paint an image onto the selected object's top surface using your filaments and mixed colors"),
         [this](wxCommandEvent &) {
@@ -3417,12 +3420,15 @@ void MainFrame::init_menubar_as_editor()
         },
         "", nullptr, []() { return true; }, this);
     append_menu_item(
+        m_topbar->GetTopMenu(), wxID_ANY, _L("FullSpectrum Surface Shading..."), _L("Paint the selected object with a dark-to-light FullSpectrum ramp from a simulated light source"),
+        [this](wxCommandEvent &) {
+            apply_fullspectrum_surface_shading(this);
+        },
+        "", nullptr, []() { return true; }, this);
+    append_menu_item(
         m_topbar->GetTopMenu(), wxID_ANY, _L("Color Lithophane..."), _L("Generate a HueForge-style relief plate from an image with automatic filament changes"),
         [this](wxCommandEvent &) {
             generate_hueforge_lithophane(this);
-        },
-        "", nullptr, []() { return true; }, this);
-            dlg.ShowModal();
         },
         "", nullptr, []() { return true; }, this);
     //m_topbar->AddDropDownMenuItem(preference_item);

@@ -1013,6 +1013,13 @@ static StringObjectException layered_print_cleareance_valid(const Print &print, 
 
     if (config.wipe_tower_wall_type.value == WipeTowerWallType::wtwRib)
         width = depth;
+    else if (config.wipe_tower_wall_type.value == WipeTowerWallType::wtwWave) {
+        const float wave_margin = std::clamp(std::min(width, depth) * 0.08f, 1.5f, 6.f);
+        x -= wave_margin;
+        y -= wave_margin;
+        width += 2.f * wave_margin;
+        depth += 2.f * wave_margin;
+    }
 
     Polygons convex_hulls_temp;
     if (print.has_wipe_tower()) {

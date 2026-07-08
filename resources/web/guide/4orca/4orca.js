@@ -2,8 +2,7 @@
 function OnInit()
 {
 	TranslatePage();
-	
-	SendStealthModeCheck();
+	FinishGuide();
 }
 
 
@@ -27,10 +26,7 @@ function SendStealthModeCheck()
 
 function GotoNetPluginPage()
 {
-	let bRet=SendStealthModeCheck();
-	
-	if(bRet)
-		window.location.href="../5/index.html";
+	FinishGuide();
 }
 
 

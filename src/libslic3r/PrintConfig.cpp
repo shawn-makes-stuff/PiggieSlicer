@@ -562,6 +562,7 @@ static const t_config_enum_values s_keys_map_WipeTowerWallType{
     {"rectangle", wtwRectangle},
     {"cone", wtwCone},
     {"rib", wtwRib},
+    {"wave", wtwWave},
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(WipeTowerWallType)
 
@@ -7111,14 +7112,17 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Wipe tower outer wall type.\n"
                     "1. Rectangle: The default wall type, a rectangle with fixed width and height.\n"
                     "2. Cone: A cone with a fillet at the bottom to help stabilize the wipe tower.\n"
-                    "3. Rib: Adds four ribs to the tower wall for enhanced stability.");
+                    "3. Rib: Adds four ribs to the tower wall for enhanced stability.\n"
+                    "4. Wave: Adds an animated scalloped outer wall around the purge rectangle.");
     def->enum_keys_map = &ConfigOptionEnum<WipeTowerWallType>::get_enum_values();
     def->enum_values.emplace_back("rectangle");
     def->enum_values.emplace_back("cone");
     def->enum_values.emplace_back("rib");
+    def->enum_values.emplace_back("wave");
     def->enum_labels.emplace_back(L("Rectangle"));
     def->enum_labels.emplace_back(L("Cone"));
     def->enum_labels.emplace_back(L("Rib"));
+    def->enum_labels.emplace_back(L("Wave"));
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<WipeTowerWallType>(wtwRib));
 

@@ -30,6 +30,7 @@ MsgDialog::MsgDialog(wxWindow *parent, const wxString &title, const wxString &he
 	, boldfont(wxGetApp().normal_font())
 	, content_sizer(new wxBoxSizer(wxVERTICAL))
     , btn_sizer(new wxBoxSizer(wxHORIZONTAL))
+    , m_button_icon_spacer(nullptr)
     , m_forward_str(forward_str)
 {
 	boldfont.SetWeight(wxFONTWEIGHT_BOLD);
@@ -41,6 +42,7 @@ MsgDialog::MsgDialog(wxWindow *parent, const wxString &title, const wxString &he
     auto *main_sizer = new wxBoxSizer(wxVERTICAL);
 	auto *topsizer = new wxBoxSizer(wxHORIZONTAL);
 	auto *rightsizer = new wxBoxSizer(wxVERTICAL);
+    m_icon_sizer = new wxBoxSizer(wxHORIZONTAL);
 
 	//auto *headtext = new wxStaticText(this, wxID_ANY, headline);
 	//headtext->SetFont(boldfont);
@@ -51,15 +53,16 @@ MsgDialog::MsgDialog(wxWindow *parent, const wxString &title, const wxString &he
 	rightsizer->Add(content_sizer, 1, wxEXPAND | wxRIGHT, FromDIP(10));
 
 	logo = new wxStaticBitmap(this, wxID_ANY, bitmap.IsOk() ? bitmap : wxNullBitmap);
-    topsizer->Add(LOGO_SPACING, 0, 0, wxEXPAND, 0);
-	topsizer->Add(logo, 0, wxTOP, BORDER);
-    topsizer->Add(LOGO_GAP, 0, 0, wxEXPAND, 0);
+    m_icon_sizer->Add(LOGO_SPACING, 0, 0, wxEXPAND, 0);
+	m_icon_sizer->Add(logo, 0, wxTOP, BORDER);
+    m_icon_sizer->Add(LOGO_GAP, 0, 0, wxEXPAND, 0);
+    topsizer->Add(m_icon_sizer, 0, wxEXPAND, 0);
 	topsizer->Add(rightsizer, 1, wxTOP | wxEXPAND, BORDER);
 
     main_sizer->Add(topsizer, 1, wxEXPAND);
 
     m_dsa_sizer = new wxBoxSizer(wxHORIZONTAL);
-    btn_sizer->Add(0, 0, 0, wxLEFT, FromDIP(LOGO_SPACING + 64 + LOGO_GAP));
+    m_button_icon_spacer = btn_sizer->Add(0, 0, 0, wxLEFT, FromDIP(LOGO_SPACING + 64 + LOGO_GAP));
     btn_sizer->Add(m_dsa_sizer, 0, wxEXPAND);
     btn_sizer->AddStretchSpacer();
     main_sizer->Add(btn_sizer, 0, wxBOTTOM | wxRIGHT | wxEXPAND | wxTOP, FromDIP(10));
@@ -213,10 +216,22 @@ void MsgDialog::apply_style(long style)
     if (style & wxNO)       add_button(wxID_NO, false,_L("No"));
     if (style & wxCANCEL)   add_button(wxID_CANCEL, false, _L("Cancel"));
 
-    logo->SetBitmap( create_scaled_bitmap(style & wxAPPLY        ? "completed" :
-                                          style & wxICON_WARNING        ? "exclamation" : // ORCA "exclamation" used for dialogs "obj_warning" used for 16x16 areas
-                                          style & wxICON_INFORMATION    ? "info"        :
-                                          style & wxICON_QUESTION       ? "question"    : "splash_logo", this, 64, style & wxICON_ERROR));
+    const char* icon_name = style & wxAPPLY             ? "completed" :
+                            style & wxICON_WARNING      ? "exclamation" : // ORCA "exclamation" used for dialogs "obj_warning" used for 16x16 areas
+                            style & wxICON_INFORMATION  ? "info"        :
+                            style & wxICON_QUESTION     ? "question"    : nullptr;
+    if (icon_name != nullptr) {
+        logo->SetBitmap(create_scaled_bitmap(icon_name, this, 64, style & wxICON_ERROR));
+        if (m_icon_sizer)
+            m_icon_sizer->Show(true);
+        if (m_button_icon_spacer)
+            m_button_icon_spacer->Show(true);
+    } else if (m_icon_sizer) {
+        logo->SetBitmap(wxNullBitmap);
+        m_icon_sizer->Show(false);
+        if (m_button_icon_spacer)
+            m_button_icon_spacer->Show(false);
+    }
 }
 
 void MsgDialog::finalize()
@@ -692,22 +707,6 @@ NetworkErrorDialog::NetworkErrorDialog(wxWindow* parent)
     sizer_link->Add(m_link_server_state, 0, wxALL, 0);
 
 
-    wxBoxSizer* sizer_help = new wxBoxSizer(wxVERTICAL);
-
-    m_text_proposal = new Label(this, _L("If the server is in a fault state, you can temporarily use offline printing or local network printing."));
-    m_text_proposal->SetMinSize(wxSize(FromDIP(470), -1));
-    m_text_proposal->SetMaxSize(wxSize(FromDIP(470), -1));
-    m_text_proposal->Wrap(FromDIP(470));
-    m_text_proposal->SetFont(::Label::Body_14);
-    m_text_proposal->SetForegroundColour(0x323A3C);
-
-    // ORCA standardized HyperLink
-    m_text_wiki = new HyperLink(this, _L("How to use LAN only mode"), wxGetApp().link_to_lan_only_wiki());
-    m_text_wiki->SetFont(::Label::Body_13);
-
-    sizer_help->Add(m_text_proposal, 0, wxEXPAND, 0);
-    sizer_help->Add(m_text_wiki, 0, wxALL, 0);
-
     wxBoxSizer* sizer_button = new wxBoxSizer(wxHORIZONTAL);
 
     /*dont show again*/
@@ -739,8 +738,6 @@ NetworkErrorDialog::NetworkErrorDialog(wxWindow* parent)
     sizer_main->Add(sizer_bacis_text, 0, wxEXPAND | wxLEFT | wxRIGHT, 15);
     sizer_main->Add(0, 0, 0, wxTOP, 6);
     sizer_main->Add(sizer_link, 0, wxLEFT | wxRIGHT, 15);
-    sizer_main->Add(0, 0, 0, wxEXPAND | wxTOP, FromDIP(20));
-    sizer_main->Add(sizer_help, 1, wxLEFT | wxRIGHT, 15);
     sizer_main->Add(0, 0, 0, wxEXPAND | wxTOP, FromDIP(20));
     sizer_main->Add(sizer_button, 1, wxEXPAND | wxLEFT | wxRIGHT, 15);
     sizer_main->Add(0, 0, 0, wxTOP, 18);

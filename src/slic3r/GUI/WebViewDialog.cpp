@@ -517,23 +517,10 @@ void WebViewPanel::ShowNetpluginTip()
 
 void WebViewPanel::SendCloudProvidersInfo()
 {
-    auto* app_config = wxGetApp().app_config;
-    if (!app_config)
-        return;
-
     json j;
     j["command"] = "cloud_providers_info";
     json data;
-    json provider_array = json::array();
-
-    if (!app_config->get_hide_login_side_panel()) {
-        auto providers = app_config->get_cloud_providers();
-        for (const auto& p : providers) {
-            provider_array.push_back(p);
-        }
-    }
-
-    data["providers"] = provider_array;
+    data["providers"] = json::array();
     j["data"] = data;
 
     wxString strJS = wxString::Format("window.postMessage(%s)", j.dump());

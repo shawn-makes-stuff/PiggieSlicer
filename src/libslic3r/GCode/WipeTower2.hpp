@@ -372,6 +372,8 @@ private:
 		float spacing);
 
     Polygon generate_rib_polygon(const WipeTower::box_coordinates& wt_box);
+    Polygon generate_wave_polygon(const WipeTower::box_coordinates& wt_box) const;
+    Polygon generate_support_wave_wall(WipeTowerWriter2& writer, const WipeTower::box_coordinates& wt_box, double feedrate);
 };
 
 

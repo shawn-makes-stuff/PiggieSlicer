@@ -77,7 +77,7 @@ public:
     //Model - Machine - Filaments
     int LoadProfileData();
     int SaveProfileData();
-    int LoadProfileFamily(std::string strVendor, std::string strFilePath);
+    int LoadProfileFamily(std::string strVendor, std::string strFilePath, bool load_filaments = true, bool load_processes = true);
     int SaveProfile();
     int GetFilamentInfo( std::string VendorDirectory,json & pFilaList, std::string filepath, std::string &sVendor, std::string &sType);
 

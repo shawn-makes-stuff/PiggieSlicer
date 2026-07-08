@@ -2871,10 +2871,7 @@ void GLCanvas3D::reload_scene(bool refresh_immediately, bool force_full_scene_re
                 DynamicPrintConfig& proj_cfg = wxGetApp().preset_bundle->project_config;
                 float x = dynamic_cast<const ConfigOptionFloats*>(proj_cfg.option("wipe_tower_x"))->get_at(plate_id);
                 float y = dynamic_cast<const ConfigOptionFloats*>(proj_cfg.option("wipe_tower_y"))->get_at(plate_id);
-                float w = dynamic_cast<const ConfigOptionFloat*>(m_config->option("prime_tower_width"))->value;
                 float a = dynamic_cast<const ConfigOptionFloat*>(proj_cfg.option("wipe_tower_rotation_angle"))->value;
-                // BBS
-                float v = dynamic_cast<const ConfigOptionFloat*>(m_config->option("prime_volume"))->value;
                 Vec3d plate_origin = ppl.get_plate(plate_id)->get_origin();
 
                 const Print* print = m_process->fff_print();
@@ -2883,9 +2880,18 @@ void GLCanvas3D::reload_scene(bool refresh_immediately, bool force_full_scene_re
                 if (part_plate->get_objects_on_this_plate().empty()) continue;
 
                 float brim_width = print->wipe_tower_data(filaments_count).brim_width;
-                const DynamicPrintConfig &print_cfg   = wxGetApp().preset_bundle->prints.get_edited_preset().config;
+                const DynamicPrintConfig &print_cfg   = wxGetApp().preset_bundle->full_config();
                 int nozzle_nums = wxGetApp().preset_bundle->get_printer_extruder_count();
-                Vec3d wipe_tower_size = ppl.get_plate(plate_id)->estimate_wipe_tower_size(print_cfg, w, v, nozzle_nums, 0, false, dynamic_cast<const ConfigOptionBool*>(dconfig.option("enable_wrapping_detection"))->value);
+                Vec3d wipe_tower_size;
+                Vec3d wipe_tower_pos;
+                const int plate_extruder_size = int(part_plate->get_extruders(true).size());
+                part_plate->estimate_wipe_tower_polygon(print_cfg, plate_id, wipe_tower_pos, wipe_tower_size, nozzle_nums, plate_extruder_size, false);
+                x = float(wipe_tower_pos.x());
+                y = float(wipe_tower_pos.y());
+                ConfigOptionFloat wipe_tower_x_opt(x);
+                ConfigOptionFloat wipe_tower_y_opt(y);
+                proj_cfg.option<ConfigOptionFloats>("wipe_tower_x", true)->set_at(&wipe_tower_x_opt, plate_id, 0);
+                proj_cfg.option<ConfigOptionFloats>("wipe_tower_y", true)->set_at(&wipe_tower_y_opt, plate_id, 0);
 
                 {
                     const float                 margin     = WIPE_TOWER_MARGIN + brim_width;

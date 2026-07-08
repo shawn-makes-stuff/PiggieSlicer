@@ -2862,7 +2862,7 @@ void TabPrint::toggle_options()
     if (auto choice = dynamic_cast<Choice*>(field)) {
         auto def = print_config_def.get("wipe_tower_wall_type");
         std::vector<int> enum_set_bbl      = {wtwRectangle, wtwRib};
-        std::vector<int> enum_set_none_bbl = {wtwRectangle, wtwCone, wtwRib};
+        std::vector<int> enum_set_none_bbl = {wtwRectangle, wtwCone, wtwRib, wtwWave};
         auto&            set               = m_config_manipulation.get_is_BBL_Printer() ? enum_set_bbl : enum_set_none_bbl;
         auto&            opt               = const_cast<ConfigOptionDef&>(field->m_opt);
         auto             cb                = dynamic_cast<ComboBox*>(choice->window);

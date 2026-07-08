@@ -405,7 +405,8 @@ enum CounterboreHoleBridgingOption {
  enum WipeTowerWallType {
      wtwRectangle = 0,
      wtwCone,
-     wtwRib
+     wtwRib,
+     wtwWave
  };
 
 // BBS

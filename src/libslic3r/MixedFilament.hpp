@@ -176,6 +176,9 @@ public:
 
     // Add a custom mixed filament.
     void add_custom_filament(unsigned int component_a, unsigned int component_b, int mix_b_percent, const std::vector<std::string> &filament_colours);
+    bool add_custom_gradient_filament(const std::vector<unsigned int> &component_ids,
+                                      const std::vector<int>          &component_weights,
+                                      const std::vector<std::string>  &filament_colours);
 
     // Remove all custom rows, keep auto-generated ones.
     void clear_custom_entries();

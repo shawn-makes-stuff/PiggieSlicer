@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cstdio>
 #include <cmath>
+#include <cstdlib>
+#include <sstream>
 
 #include <wx/sizer.h>
 #include <wx/scrolwin.h>
@@ -79,6 +81,61 @@ static wxWindow* make_swatch(wxWindow* parent, const wxColour& c, int dip)
     sw->SetBackgroundColour(CARD_BG);
     sw->SetBackgroundColor(StateColor(c));
     return sw;
+}
+
+static std::vector<unsigned int> decode_compact_component_ids(const std::string& ids, size_t num_physical)
+{
+    std::vector<unsigned int> out;
+    bool seen[10] = { false };
+    for (char c : ids) {
+        if (c < '1' || c > '9')
+            continue;
+        const unsigned int id = unsigned(c - '0');
+        if (id > num_physical || seen[id])
+            continue;
+        seen[id] = true;
+        out.emplace_back(id);
+    }
+    return out;
+}
+
+static std::vector<int> parse_weight_tokens(const std::string& weights)
+{
+    std::vector<int> out;
+    std::string token;
+    for (char c : weights) {
+        if (c >= '0' && c <= '9') {
+            token.push_back(c);
+            continue;
+        }
+        if (!token.empty()) {
+            out.emplace_back(std::max(0, std::atoi(token.c_str())));
+            token.clear();
+        }
+    }
+    if (!token.empty())
+        out.emplace_back(std::max(0, std::atoi(token.c_str())));
+    return out;
+}
+
+static wxString format_gradient_label(const std::vector<unsigned int>& ids, const std::vector<int>& weights)
+{
+    wxString label = _L("FullSpectrum mix ");
+    for (size_t i = 0; i < ids.size(); ++i) {
+        if (i > 0)
+            label += "/";
+        label += wxString::Format("%u", ids[i]);
+    }
+    if (weights.size() == ids.size()) {
+        label += "   (";
+        for (size_t i = 0; i < weights.size(); ++i) {
+            if (i > 0)
+                label += "/";
+            label += wxString::Format("%d", weights[i]);
+        }
+        label += "%)";
+    }
+    return label;
 }
 
 MixedFilamentDialog::MixedFilamentDialog(wxWindow* parent)
@@ -176,9 +233,13 @@ MixedFilamentDialog::MixedFilamentDialog(wxWindow* parent)
     ac->Add(patrow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, FromDIP(14));
 
     m_add_btn = make_btn(add_card, _L("Add mixed color"), true);
+    auto* ramp_btn = make_btn(add_card, _L("Add shade ramp"), false);
+    auto* triad_btn = make_btn(add_card, _L("Add 3-color set"), false);
     auto* match_btn = make_btn(add_card, _L("Match a color..."), false);
     auto* btnrow = new wxBoxSizer(wxHORIZONTAL);
     btnrow->Add(m_add_btn, 0, wxRIGHT, FromDIP(8));
+    btnrow->Add(ramp_btn, 0, wxRIGHT, FromDIP(8));
+    btnrow->Add(triad_btn, 0, wxRIGHT, FromDIP(8));
     btnrow->Add(match_btn, 0);
     ac->Add(btnrow, 0, wxLEFT | wxRIGHT | wxBOTTOM, FromDIP(14));
 
@@ -222,6 +283,8 @@ MixedFilamentDialog::MixedFilamentDialog(wxWindow* parent)
     m_choice_b->Bind(wxEVT_CHOICE, [this](wxCommandEvent&) { on_preview_changed(); });
     m_slider_mix->Bind(wxEVT_SLIDER, [this](wxCommandEvent&) { on_preview_changed(); });
     m_add_btn->Bind(wxEVT_BUTTON, &MixedFilamentDialog::on_add, this);
+    ramp_btn->Bind(wxEVT_BUTTON, &MixedFilamentDialog::on_add_ramp, this);
+    triad_btn->Bind(wxEVT_BUTTON, &MixedFilamentDialog::on_add_triad, this);
     close->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { EndModal(wxID_OK); });
 
     // PiggieSlicer: the rounded StaticBox cards custom-paint their background, so the
@@ -331,6 +394,89 @@ void MixedFilamentDialog::on_add(wxCommandEvent&)
     rebuild_rows();
 }
 
+void MixedFilamentDialog::on_add_ramp(wxCommandEvent&)
+{
+    auto* pb = wxGetApp().preset_bundle;
+    if (!pb) return;
+    const std::vector<std::string> colors = physical_colors();
+    const int ia = m_choice_a ? m_choice_a->GetSelection() : -1;
+    const int ib = m_choice_b ? m_choice_b->GetSelection() : -1;
+    if (ia < 0 || ib < 0 || ia == ib || ia >= int(colors.size()) || ib >= int(colors.size()))
+        return;
+
+    auto& rows = pb->mixed_filaments.mixed_filaments();
+    auto has_mix = [&](int mix_b_percent) {
+        const unsigned int a = unsigned(ia + 1);
+        const unsigned int b = unsigned(ib + 1);
+        for (const MixedFilament& mf : rows) {
+            if (mf.deleted)
+                continue;
+            if (mf.component_a == a && mf.component_b == b && mf.mix_b_percent == mix_b_percent)
+                return true;
+            if (mf.component_a == b && mf.component_b == a && mf.mix_b_percent == 100 - mix_b_percent)
+                return true;
+        }
+        return false;
+    };
+
+    int added = 0;
+    const int ramp_steps[] = {20, 40, 60, 80};
+    for (int mix_b_percent : ramp_steps) {
+        if (has_mix(mix_b_percent))
+            continue;
+        pb->mixed_filaments.add_custom_filament(unsigned(ia + 1), unsigned(ib + 1), mix_b_percent, colors);
+        ++added;
+    }
+
+    if (added > 0) {
+        persist();
+        rebuild_rows();
+    }
+}
+
+void MixedFilamentDialog::on_add_triad(wxCommandEvent&)
+{
+    auto* pb = wxGetApp().preset_bundle;
+    if (!pb) return;
+    const std::vector<std::string> colors = physical_colors();
+    const int ia = m_choice_a ? m_choice_a->GetSelection() : -1;
+    const int ib = m_choice_b ? m_choice_b->GetSelection() : -1;
+    if (colors.size() < 3 || ia < 0 || ib < 0 || ia == ib || ia >= int(colors.size()) || ib >= int(colors.size()))
+        return;
+
+    int ic = -1;
+    for (int i = 0; i < int(colors.size()); ++i) {
+        if (i != ia && i != ib) {
+            ic = i;
+            break;
+        }
+    }
+    if (ic < 0)
+        return;
+
+    const std::vector<unsigned int> ids = { unsigned(ia + 1), unsigned(ib + 1), unsigned(ic + 1) };
+    const std::vector<std::vector<int>> recipes = {
+        {60, 20, 20},
+        {20, 60, 20},
+        {20, 20, 60},
+        {45, 45, 10},
+        {45, 10, 45},
+        {10, 45, 45},
+        {34, 33, 33}
+    };
+
+    int added = 0;
+    for (const std::vector<int>& weights : recipes) {
+        if (pb->mixed_filaments.add_custom_gradient_filament(ids, weights, colors))
+            ++added;
+    }
+
+    if (added > 0) {
+        persist();
+        rebuild_rows();
+    }
+}
+
 void MixedFilamentDialog::on_remove_custom(size_t mixed_index)
 {
     auto* pb = wxGetApp().preset_bundle;
@@ -412,23 +558,45 @@ void MixedFilamentDialog::rebuild_rows()
         wxColour blended = mf.display_color.empty() ? wxColour(200, 200, 200) : hex_to_colour(mf.display_color);
         hs->Add(make_swatch(card, blended, 26), 0, wxALIGN_CENTER_VERTICAL | wxALL, FromDIP(8));
 
-        wxColour ca = (mf.component_a >= 1 && mf.component_a <= colors.size()) ? hex_to_colour(colors[mf.component_a - 1]) : wxColour(180,180,180);
-        wxColour cb = (mf.component_b >= 1 && mf.component_b <= colors.size()) ? hex_to_colour(colors[mf.component_b - 1]) : wxColour(180,180,180);
-        hs->Add(make_swatch(card, ca, 16), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(3));
-        auto* plus = new Label(card, Label::Body_12, "+");
-        plus->SetForegroundColour(INK_SOFT); plus->SetBackgroundColour(CARD_BG);
-        hs->Add(plus, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(3));
-        hs->Add(make_swatch(card, cb, 16), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(10));
+        const std::vector<unsigned int> gradient_ids = decode_compact_component_ids(mf.gradient_component_ids, colors.size());
+        const std::vector<int> gradient_weights = parse_weight_tokens(mf.gradient_component_weights);
+        const bool gradient_row = gradient_ids.size() >= 3 && mf.distribution_mode != int(MixedFilament::Simple);
+        if (gradient_row) {
+            for (size_t swatch_i = 0; swatch_i < gradient_ids.size(); ++swatch_i) {
+                const unsigned int id = gradient_ids[swatch_i];
+                wxColour c = (id >= 1 && id <= colors.size()) ? hex_to_colour(colors[id - 1]) : wxColour(180,180,180);
+                hs->Add(make_swatch(card, c, 16), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(3));
+                if (swatch_i + 1 < gradient_ids.size()) {
+                    auto* plus = new Label(card, Label::Body_12, "+");
+                    plus->SetForegroundColour(INK_SOFT); plus->SetBackgroundColour(CARD_BG);
+                    hs->Add(plus, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(3));
+                }
+            }
+            hs->AddSpacer(FromDIP(7));
+        } else {
+            wxColour ca = (mf.component_a >= 1 && mf.component_a <= colors.size()) ? hex_to_colour(colors[mf.component_a - 1]) : wxColour(180,180,180);
+            wxColour cb = (mf.component_b >= 1 && mf.component_b <= colors.size()) ? hex_to_colour(colors[mf.component_b - 1]) : wxColour(180,180,180);
+            hs->Add(make_swatch(card, ca, 16), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(3));
+            auto* plus = new Label(card, Label::Body_12, "+");
+            plus->SetForegroundColour(INK_SOFT); plus->SetBackgroundColour(CARD_BG);
+            hs->Add(plus, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(3));
+            hs->Add(make_swatch(card, cb, 16), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(10));
+        }
 
         auto* lbl = new Label(card, Label::Body_13,
-            wxString::Format(_L("Filament %d + Filament %d   (%d%% B)"),
-                             int(mf.component_a), int(mf.component_b), int(mf.mix_b_percent)));
+            gradient_row ? format_gradient_label(gradient_ids, gradient_weights) :
+                           wxString::Format(_L("Filament %d + Filament %d   (%d%% B)"),
+                                            int(mf.component_a), int(mf.component_b), int(mf.mix_b_percent)));
         lbl->SetForegroundColour(INK); lbl->SetBackgroundColour(CARD_BG);
         hs->Add(lbl, 1, wxALIGN_CENTER_VERTICAL);
 
-        auto* edit = make_btn(card, _L("Edit"), false);
-        edit->Bind(wxEVT_BUTTON, [this, i](wxCommandEvent&) { on_edit(i); });
-        hs->Add(edit, 0, wxALIGN_CENTER_VERTICAL | wxALL, FromDIP(6));
+        if (!gradient_row) {
+            auto* edit = make_btn(card, _L("Edit"), false);
+            edit->Bind(wxEVT_BUTTON, [this, i](wxCommandEvent&) { on_edit(i); });
+            hs->Add(edit, 0, wxALIGN_CENTER_VERTICAL | wxALL, FromDIP(6));
+        } else {
+            hs->AddSpacer(FromDIP(6));
+        }
 
         auto* rm = make_btn(card, _L("Remove"), false);
         rm->Bind(wxEVT_BUTTON, [this, i](wxCommandEvent&) { on_remove_custom(i); });

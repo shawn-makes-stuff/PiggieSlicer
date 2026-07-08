@@ -1530,6 +1530,8 @@ void MixedFilamentManager::auto_generate(const std::vector<std::string> &filamen
         }
         if (prev.component_a == 0 || prev.component_b == 0 || prev.component_a > n || prev.component_b > n || prev.component_a == prev.component_b)
             continue;
+        if (!prev.gradient_component_ids.empty() && decode_gradient_component_ids(prev.gradient_component_ids, n).size() < 3)
+            continue;
         MixedFilament custom = prev;
         custom.stable_id = normalize_stable_id(custom.stable_id);
         custom_rows.push_back(std::move(custom));
@@ -1587,6 +1589,33 @@ void MixedFilamentManager::remove_physical_filament(unsigned int deleted_filamen
         if (mf.component_a == deleted_filament_id || mf.component_b == deleted_filament_id)
             continue;
 
+        const std::vector<unsigned int> gradient_ids = decode_gradient_component_ids(mf.gradient_component_ids, 9);
+        if (!gradient_ids.empty()) {
+            if (std::find(gradient_ids.begin(), gradient_ids.end(), deleted_filament_id) != gradient_ids.end())
+                continue;
+
+            const std::vector<int> weights = decode_gradient_component_weights(mf.gradient_component_weights, gradient_ids.size());
+            std::string remapped_ids;
+            remapped_ids.reserve(gradient_ids.size());
+            for (unsigned int id : gradient_ids) {
+                if (id > deleted_filament_id)
+                    --id;
+                if (id >= 1 && id <= 9)
+                    remapped_ids.push_back(char('0' + id));
+            }
+            mf.gradient_component_ids = normalize_gradient_component_ids(remapped_ids);
+            if (!weights.empty()) {
+                std::ostringstream ss;
+                for (size_t i = 0; i < weights.size(); ++i) {
+                    if (i > 0)
+                        ss << '/';
+                    ss << weights[i];
+                }
+                mf.gradient_component_weights = normalize_gradient_component_weights(ss.str(), mf.gradient_component_ids.size());
+            } else
+                mf.gradient_component_weights.clear();
+        }
+
         if (mf.component_a > deleted_filament_id)
             --mf.component_a;
         if (mf.component_b > deleted_filament_id)
@@ -1633,6 +1662,76 @@ void MixedFilamentManager::add_custom_filament(unsigned int component_a,
     mf.origin_auto = false;
     m_mixed.push_back(std::move(mf));
     refresh_display_colors(filament_colours);
+}
+
+bool MixedFilamentManager::add_custom_gradient_filament(const std::vector<unsigned int> &component_ids,
+                                                        const std::vector<int>          &component_weights,
+                                                        const std::vector<std::string>  &filament_colours)
+{
+    const size_t n = filament_colours.size();
+    if (n < 3 || component_ids.size() < 3 || component_ids.size() != component_weights.size())
+        return false;
+
+    std::string ids_string;
+    ids_string.reserve(component_ids.size());
+    std::vector<int> weights;
+    weights.reserve(component_ids.size());
+    bool seen[10] = { false };
+    for (size_t i = 0; i < component_ids.size(); ++i) {
+        const unsigned int id = component_ids[i];
+        if (id < 1 || id > n || id > 9 || seen[id])
+            return false;
+        seen[id] = true;
+        ids_string.push_back(char('0' + id));
+        weights.emplace_back(std::max(0, component_weights[i]));
+    }
+
+    const std::string normalized_ids = normalize_gradient_component_ids(ids_string);
+    if (normalized_ids.size() < 3)
+        return false;
+
+    std::ostringstream weight_ss;
+    for (size_t i = 0; i < weights.size(); ++i) {
+        if (i > 0)
+            weight_ss << '/';
+        weight_ss << weights[i];
+    }
+    const std::string normalized_weights = normalize_gradient_component_weights(weight_ss.str(), normalized_ids.size());
+    if (normalized_weights.empty())
+        return false;
+
+    for (const MixedFilament &existing : m_mixed) {
+        if (existing.deleted)
+            continue;
+        if (normalize_gradient_component_ids(existing.gradient_component_ids) == normalized_ids &&
+            normalize_gradient_component_weights(existing.gradient_component_weights, normalized_ids.size()) == normalized_weights) {
+            return false;
+        }
+    }
+
+    const std::vector<int> normalized_weight_values = decode_gradient_component_weights(normalized_weights, normalized_ids.size());
+    MixedFilament mf;
+    mf.component_a = component_ids[0];
+    mf.component_b = component_ids[1];
+    mf.stable_id = allocate_stable_id();
+    mf.mix_b_percent = normalized_weight_values.size() > 1 ? clamp_int(normalized_weight_values[1], 0, 100) : 50;
+    mf.ratio_a = 1;
+    mf.ratio_b = 1;
+    mf.manual_pattern.clear();
+    mf.gradient_component_ids = normalized_ids;
+    mf.gradient_component_weights = normalized_weights;
+    mf.pointillism_all_filaments = false;
+    mf.distribution_mode = int(MixedFilament::LayerCycle);
+    mf.local_z_max_sublayers = 0;
+    mf.component_a_surface_offset = 0.f;
+    mf.component_b_surface_offset = 0.f;
+    mf.enabled = true;
+    mf.deleted = false;
+    mf.custom = true;
+    mf.origin_auto = false;
+    m_mixed.push_back(std::move(mf));
+    refresh_display_colors(filament_colours);
+    return true;
 }
 
 void MixedFilamentManager::clear_custom_entries()
