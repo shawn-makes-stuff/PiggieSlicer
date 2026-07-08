@@ -1000,7 +1000,6 @@ wxBoxSizer *PreferencesDialog::create_item_checkbox(wxString title, wxString too
             bool enabled = app_config->get_stealth_mode();
             if (enabled) wxGetApp().on_stealth_mode_enter();
             if (m_sync_user_preset_checkbox) m_sync_user_preset_checkbox->Enable(!enabled);
-            if (m_bambu_cloud_checkbox)      m_bambu_cloud_checkbox->Enable(!enabled);
         }
         else if (param == "hide_login_side_panel") {
             if (wxGetApp().mainframe && wxGetApp().mainframe->m_webview) {
@@ -1173,35 +1172,6 @@ wxBoxSizer* PreferencesDialog::create_item_downloads(wxString title, wxString to
 
     return m_sizer;
 }
-
-wxBoxSizer *PreferencesDialog::create_item_bambu_cloud(wxString title, wxString tooltip)
-{
-    wxBoxSizer *m_sizer = create_item_label(title, tooltip);
-
-    auto cb = new ::CheckBox(m_parent);
-    m_bambu_cloud_checkbox = cb;
-    cb->SetValue(app_config->has_cloud_provider(BBL_CLOUD_PROVIDER));
-    cb->SetToolTip(tooltip);
-
-    cb->Bind(wxEVT_TOGGLEBUTTON, [this, cb](wxCommandEvent &e) {
-        e.Skip(); // let CheckBox::update() refresh the bitmap
-        if (cb->GetValue()) {
-            app_config->add_cloud_provider(BBL_CLOUD_PROVIDER);
-        } else {
-            app_config->remove_cloud_provider(BBL_CLOUD_PROVIDER);
-        }
-        app_config->save();
-
-        // Update homepage visibility immediately
-        auto *mainframe = wxGetApp().mainframe;
-        if (mainframe && mainframe->m_webview)
-            mainframe->m_webview->SendCloudProvidersInfo();
-    });
-
-    m_sizer->Add(cb, 0, wxALIGN_CENTER);
-
-    return m_sizer;
-};
 
 wxBoxSizer *PreferencesDialog::create_item_network_plugin_version(wxString title, wxString tooltip)
 {
@@ -1856,12 +1826,6 @@ void PreferencesDialog::create_items()
     });
     g_sizer->Add(item_network_test);
 
-    //// ONLINE > Cloud Providers
-    g_sizer->Add(create_item_title(_L("Cloud Providers")), 1, wxEXPAND);
-
-    auto item_bambu_cloud     = create_item_bambu_cloud(_L("Enable Bambu Cloud"), _L("Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."));
-    g_sizer->Add(item_bambu_cloud);
-
     //// ONLINE > Update & sync
     g_sizer->Add(create_item_title(_L("Update & sync")), 1, wxEXPAND);
 
@@ -1872,7 +1836,6 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_user_sync);
 
     if (app_config->get_stealth_mode()) {
-        if (m_bambu_cloud_checkbox)      m_bambu_cloud_checkbox->Enable(false);
         if (m_sync_user_preset_checkbox) m_sync_user_preset_checkbox->Enable(false);
     }
 

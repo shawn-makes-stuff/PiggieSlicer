@@ -832,6 +832,8 @@ bool PresetUpdater::priv::get_cached_plugins_version(std::string& cached_version
 
 void PresetUpdater::priv::sync_plugins(std::string http_url, std::string plugin_version)
 {
+    if (http_url.empty())
+        return; // PiggieSlicer: no Bambu backend
     if (plugin_version == "00.00.00.00") {
         BOOST_LOG_TRIVIAL(info) << "non need to sync plugins for there is no plugins currently.";
         return;
@@ -978,6 +980,8 @@ void PresetUpdater::priv::sync_plugins(std::string http_url, std::string plugin_
 
 void PresetUpdater::priv::sync_printer_config(std::string http_url)
 {
+    if (http_url.empty())
+        return; // PiggieSlicer: no Bambu backend
     std::string curr_version  = SLIC3R_VERSION;
     std::string using_version = curr_version.substr(0, 6) + "00.00";
 

@@ -112,7 +112,6 @@
 #include "PrintHostDialogs.hpp"
 #include "NetworkPluginDialog.hpp"
 #include "DesktopIntegrationDialog.hpp"
-#include "SendSystemInfoDialog.hpp"
 #include "ParamsDialog.hpp"
 #include "KBShortcutsDialog.hpp"
 #include "DownloadProgressDialog.hpp"
@@ -216,12 +215,6 @@ void start_ping_test()
         output_i = output[i].To8BitData();
         output_temp = output_i.ToStdString(wxConvUTF8);
         BOOST_LOG_TRIVIAL(info) << "ping www.apple.com:" << output_temp;
-    }
-    wxExecute("ping www.bambulab.com", output, wxEXEC_NODISABLE);
-    for (int i = 0; i < output.size(); i++) {
-        output_i = output[i].To8BitData();
-        output_temp = output_i.ToStdString(wxConvUTF8);
-        BOOST_LOG_TRIVIAL(info) << "ping bambulab:" << output_temp;
     }
     //Get GateWay IP
     wxExecute("ping 192.168.0.1", output, wxEXEC_NODISABLE);
@@ -933,7 +926,8 @@ void GUI_App::post_init()
             bool cw_showed = this->config_wizard_startup();
 
             if (!app_config->get_stealth_mode()) {
-                std::string http_url = get_http_url(app_config->get_country_code());
+                // PiggieSlicer: no Bambu backend - empty url skips plugin/printer-config sync from Bambu API.
+                std::string http_url;
                 std::string language = GUI::into_u8(current_language_code());
                 std::string network_ver = Slic3r::NetworkAgent::get_version();
                 bool        sys_preset  = app_config->get("sync_system_preset") == "true";
@@ -5960,10 +5954,9 @@ void GUI_App::on_check_privacy_update(wxCommandEvent& evt)
 
 void GUI_App::check_privacy_version(int online_login, const std::string& provider)
 {
-    if (app_config->get_stealth_mode()) {
-        request_user_handle(online_login);
-        return;
-    }
+    // PiggieSlicer: never fetch the privacy policy from the Bambu API - no Bambu backend.
+    request_user_handle(online_login);
+    return;
 
     std::string query_params = "?policy/privacy=00.00.00.00";
     std::string url = get_http_url(app_config->get_country_code()) + query_params;

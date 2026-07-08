@@ -69,7 +69,6 @@ public:
     ::CheckBox * m_internal_developer_mode_ckeckbox = {nullptr};
     ::CheckBox * m_dark_mode_ckeckbox        = {nullptr};
     ::CheckBox * m_sync_user_preset_checkbox = {nullptr};
-    ::CheckBox * m_bambu_cloud_checkbox      = {nullptr};
     ::TextInput *m_backup_interval_textinput = {nullptr};
     ::ComboBox * m_network_version_combo     = {nullptr};
     std::vector<NetworkLibraryVersionInfo> m_available_versions;
@@ -98,7 +97,6 @@ public:
     wxBoxSizer *create_camera_orbit_mult_input(wxString title, wxString tooltip);
     wxBoxSizer *create_item_backup(wxString title, wxString tooltip);
     wxBoxSizer *create_item_auto_reslice(wxString title, wxString checkbox_tooltip, wxString delay_tooltip);
-    wxBoxSizer *create_item_bambu_cloud(wxString title, wxString tooltip);
     wxBoxSizer *create_item_network_plugin_version(wxString title, wxString tooltip);
 #ifdef WIN32
     wxBoxSizer *create_item_link_association(wxString url_prefix, wxString website_name);

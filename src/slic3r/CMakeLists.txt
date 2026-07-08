@@ -444,8 +444,6 @@ set(SLIC3R_GUI_SOURCES
     GUI/SelectMachinePop.hpp
     GUI/SendMultiMachinePage.cpp
     GUI/SendMultiMachinePage.hpp
-    GUI/SendSystemInfoDialog.cpp
-    GUI/SendSystemInfoDialog.hpp
     GUI/SendToPrinter.cpp
     GUI/SendToPrinter.hpp
     GUI/SingleChoiceDialog.cpp

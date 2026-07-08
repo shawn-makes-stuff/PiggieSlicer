@@ -1688,12 +1688,18 @@ void AppConfig::set_cloud_providers(const std::vector<std::string>& providers)
 
 bool AppConfig::has_cloud_provider(const std::string& provider) const
 {
+    // PiggieSlicer: Bambu cloud is permanently disabled - no Bambu backend.
+    if (provider == "bbl")
+        return false;
     auto providers = get_cloud_providers();
     return std::find(providers.begin(), providers.end(), provider) != providers.end();
 }
 
 void AppConfig::add_cloud_provider(const std::string& provider)
 {
+    // PiggieSlicer: Bambu cloud is permanently disabled - no Bambu backend.
+    if (provider == "bbl")
+        return;
     auto providers = get_cloud_providers();
     if (std::find(providers.begin(), providers.end(), provider) == providers.end()) {
         providers.push_back(provider);
