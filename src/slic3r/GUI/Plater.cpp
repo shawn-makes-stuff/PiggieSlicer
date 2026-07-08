@@ -11575,7 +11575,7 @@ void Plater::priv::update_title_dirty_status()
     wxGetApp().mainframe->SetTitle(title);
     wxGetApp().mainframe->update_title_colour_after_set_title();
 #else
-    wxGetApp().mainframe->SetTitle(title + " - OrcaSlicer");
+    wxGetApp().mainframe->SetTitle(title + " - PiggieSlicer");
     wxGetApp().mainframe->topbar()->SetTitle(title);
 #endif    
 }
