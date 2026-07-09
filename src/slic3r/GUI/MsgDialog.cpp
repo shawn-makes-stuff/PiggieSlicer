@@ -59,13 +59,15 @@ MsgDialog::MsgDialog(wxWindow *parent, const wxString &title, const wxString &he
     topsizer->Add(m_icon_sizer, 0, wxEXPAND, 0);
 	topsizer->Add(rightsizer, 1, wxTOP | wxEXPAND, BORDER);
 
-    main_sizer->Add(topsizer, 1, wxEXPAND);
+    // Outer breathing room so content/buttons never hug the window edge, even for
+    // icon-less dialogs where the icon column (which used to supply the left margin) is hidden.
+    main_sizer->Add(topsizer, 1, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(16));
 
     m_dsa_sizer = new wxBoxSizer(wxHORIZONTAL);
     m_button_icon_spacer = btn_sizer->Add(0, 0, 0, wxLEFT, FromDIP(LOGO_SPACING + 64 + LOGO_GAP));
     btn_sizer->Add(m_dsa_sizer, 0, wxEXPAND);
     btn_sizer->AddStretchSpacer();
-    main_sizer->Add(btn_sizer, 0, wxBOTTOM | wxRIGHT | wxEXPAND | wxTOP, FromDIP(10));
+    main_sizer->Add(btn_sizer, 0, wxBOTTOM | wxLEFT | wxRIGHT | wxEXPAND | wxTOP, FromDIP(16));
 
     apply_style(style);
 	SetSizerAndFit(main_sizer);

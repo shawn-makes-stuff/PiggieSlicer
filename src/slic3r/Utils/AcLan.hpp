@@ -129,8 +129,6 @@ public:
         int dry_remain = 0;       // remaining seconds
         std::vector<AceSlot> slots;
     };
-    static bool ace_set_slots(const AcLanCreds& creds, int box_id,
-                              const std::vector<AceSlot>& slots, std::string& err);
     struct Status {
         bool ok = false;
         std::string state;          // free / busy / printing / preheating / ...

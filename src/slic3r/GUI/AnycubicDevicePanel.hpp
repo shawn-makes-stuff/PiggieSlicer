@@ -168,7 +168,8 @@ private:
     wxWebView*       m_camera_view = nullptr;
     std::string      m_camera_stream_ip;
     wxChoice*        m_cam_quality = nullptr;       // stream latency profile selector
-    wxChoice*        m_dry_preset  = nullptr;       // PiggieSlicer: material drying preset
+    wxSpinCtrl*      m_dry_temp    = nullptr;       // PiggieSlicer: manual drying temperature (C)
+    wxSpinCtrl*      m_dry_minutes = nullptr;       // PiggieSlicer: manual drying time (minutes)
     bool             m_auto_dry_before_print = false; // PiggieSlicer: start ACE drying when a print starts
     bool             m_was_active  = false;         // PiggieSlicer: previous poll print-active state
     void             dry_preset_params(int& temp_c, int& minutes) const;
@@ -184,7 +185,7 @@ private:
     // live toggle state (mirrors telemetry; drives the toggle buttons)
     bool             m_light_on = false;
     bool             m_cam_light_on = false;
-    bool             m_camera_enabled = true;
+    bool             m_camera_enabled = false;   // PiggieSlicer: camera is opt-in (off until enabled)
     bool             m_ace_auto_feed = false;
     bool             m_ace_dry = false;
     std::string      m_ace_sig;                       // only rebuild ACE chips when this changes

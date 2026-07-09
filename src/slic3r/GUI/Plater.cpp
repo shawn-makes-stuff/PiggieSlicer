@@ -10635,10 +10635,13 @@ bool Plater::priv::warnings_dialog()
         else
             text += it.first.message;
     }
-    //text += "\n\nDo you still wish to export?";
-    MessageDialog msg_window(this->q, from_u8(text), _L("warnings"), wxOK);
-    const auto    res = msg_window.ShowModal();
-    return res == wxID_OK;
+    text += "\n";
+    // Warnings are advisory: offer an explicit "Ignore" so acceptable issues never block the
+    // print. wxICON_WARNING also restores the left margin (icon column) so text isn't edge-to-edge.
+    MessageDialog msg_window(this->q, from_u8(text), _L("Warnings"), wxOK | wxICON_WARNING);
+    msg_window.SetButtonLabel(wxID_OK, _L("Ignore"));
+    msg_window.ShowModal();
+    return true;
 
 }
 

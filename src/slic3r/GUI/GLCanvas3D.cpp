@@ -2847,6 +2847,14 @@ void GLCanvas3D::reload_scene(bool refresh_immediately, bool force_full_scene_re
         // Should the wipe tower be visualized ?
         unsigned int filaments_count = (unsigned int)dynamic_cast<const ConfigOptionStrings*>(m_config->option("filament_colour"))->values.size();
 
+        // PiggieSlicer: a full-spectrum "mixed" filament is a single virtual tool on the plate but
+        // expands to >=2 physical filaments at slice time, so a plate can report just one extruder
+        // while still needing a purge tower. filament_colour holds the physical filaments only;
+        // mixed virtual IDs are numbered *above* it (num_physical + 1 ...). So a used filament id
+        // greater than the physical count means a mixed tool is in play -> show the tower placeholder.
+        const size_t enabled_mixed = wxGetApp().preset_bundle->mixed_filaments.enabled_count();
+        const int    num_physical  = int(filaments_count);
+
         bool wt = dynamic_cast<const ConfigOptionBool*>(m_config->option("enable_prime_tower"))->value;
         auto co = dynamic_cast<const ConfigOptionEnum<PrintSequence>*>(m_config->option<ConfigOptionEnum<PrintSequence>>("print_sequence"));
 
@@ -2876,7 +2884,14 @@ void GLCanvas3D::reload_scene(bool refresh_immediately, bool force_full_scene_re
 
                 const Print* print = m_process->fff_print();
                 const Print* current_print = part_plate->fff_print();
-                if (!need_wipe_tower && part_plate->get_extruders(true).size() < 2) continue;
+                // Does this plate use a mixed (full-spectrum) filament? If so it needs a tower even
+                // though it may report a single virtual extruder.
+                const std::vector<int> plate_exts = part_plate->get_extruders(true);
+                bool plate_uses_mixed = false;
+                if (enabled_mixed > 0)
+                    for (int fid : plate_exts)
+                        if (fid > num_physical) { plate_uses_mixed = true; break; }
+                if (!need_wipe_tower && !plate_uses_mixed && plate_exts.size() < 2) continue;
                 if (part_plate->get_objects_on_this_plate().empty()) continue;
 
                 float brim_width = print->wipe_tower_data(filaments_count).brim_width;
@@ -2884,7 +2899,7 @@ void GLCanvas3D::reload_scene(bool refresh_immediately, bool force_full_scene_re
                 int nozzle_nums = wxGetApp().preset_bundle->get_printer_extruder_count();
                 Vec3d wipe_tower_size;
                 Vec3d wipe_tower_pos;
-                const int plate_extruder_size = int(part_plate->get_extruders(true).size());
+                const int plate_extruder_size = std::max<int>(int(plate_exts.size()), plate_uses_mixed ? 2 : 0);
                 part_plate->estimate_wipe_tower_polygon(print_cfg, plate_id, wipe_tower_pos, wipe_tower_size, nozzle_nums, plate_extruder_size, false);
                 x = float(wipe_tower_pos.x());
                 y = float(wipe_tower_pos.y());

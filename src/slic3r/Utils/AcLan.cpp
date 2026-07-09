@@ -374,6 +374,72 @@ bool mqtt_send_one(const AcLanCreds& creds, const std::string& topic,
     } catch (const std::exception& e) { err = std::string("MQTT error: ") + e.what(); return false; }
 }
 
+// Publish one or more messages, then listen on public/# and collect raw (topic, body)
+// reply frames for up to timeout_ms. Returns false only on a connection failure (err set);
+// a clean publish with no replies returns true with an empty `replies`. This is the shared
+// engine behind status polling and any command that wants to read the printer's answer.
+bool mqtt_exchange(const AcLanCreds& creds,
+                   const std::vector<std::pair<std::string, std::string>>& publishes,
+                   int timeout_ms, std::vector<std::pair<std::string, std::string>>& replies,
+                   std::string& err) {
+    try {
+        asio::io_context io;
+        asio::ssl::context ctx(asio::ssl::context::tls_client);
+        ctx.set_verify_mode(asio::ssl::verify_none);
+        SslStream ssl(io, ctx);
+        if (!mqtt_open(creds, ssl, err)) return false;
+
+        std::string filter = "anycubic/anycubicCloud/v1/printer/public/" + creds.model_id + "/" + creds.printer_id + "/#";
+        std::string svh; svh.push_back((char)0x00); svh.push_back((char)0x01); // packet id 1
+        std::string sp; mqtt_str(sp, filter); sp.push_back((char)0x00);        // QoS 0
+        std::string sub; sub.push_back((char)0x82); mqtt_remlen(sub, svh.size() + sp.size());
+        sub += svh; sub += sp;
+        asio::write(ssl, asio::buffer(sub));
+
+        for (const auto& p : publishes)
+            mqtt_publish(ssl, p.first, p.second);
+
+        std::string buf;
+        std::array<char, 4096> rb{};
+        std::function<void()> do_read = [&]() {
+            ssl.async_read_some(asio::buffer(rb), [&](const boost::system::error_code& e, std::size_t n) {
+                if (e) return;
+                buf.append(rb.data(), n);
+                size_t pos = 0;
+                while (pos + 2 <= buf.size()) {
+                    uint8_t type = (uint8_t)buf[pos];
+                    size_t mult = 1, rl = 0, i = pos + 1; bool ok = false;
+                    for (; i < buf.size() && i < pos + 5; ++i) {
+                        uint8_t b = (uint8_t)buf[i]; rl += (b & 0x7F) * mult; mult *= 128;
+                        if (!(b & 0x80)) { ok = true; ++i; break; }
+                    }
+                    if (!ok) break;
+                    if (i + rl > buf.size()) break;          // wait for more
+                    if ((type & 0xF0) == 0x30) {             // PUBLISH
+                        size_t p = i;
+                        uint16_t tl = ((uint8_t)buf[p] << 8) | (uint8_t)buf[p + 1]; p += 2;
+                        std::string topic = buf.substr(p, tl); p += tl;
+                        if (type & 0x06) p += 2;             // QoS>0 packet id
+                        replies.emplace_back(topic, buf.substr(p, (i + rl) - p));
+                    }
+                    pos = i + rl;
+                }
+                if (pos) buf.erase(0, pos);
+                do_read();
+            });
+        };
+        do_read();
+        asio::steady_timer timer(io);
+        timer.expires_after(std::chrono::milliseconds(timeout_ms));
+        timer.async_wait([&](const boost::system::error_code&) {
+            boost::system::error_code ec; ssl.next_layer().cancel(ec); io.stop();
+        });
+        io.run();
+        boost::system::error_code ec; ssl.shutdown(ec);
+        return true;
+    } catch (const std::exception& e) { err = std::string("MQTT error: ") + e.what(); return false; }
+}
+
 std::string web_topic(const AcLanCreds& c, const std::string& sub) {
     return "anycubic/anycubicCloud/v1/web/printer/" + c.model_id + "/" + c.printer_id + "/" + sub;
 }
@@ -384,6 +450,9 @@ std::string envelope(const std::string& type, const std::string& action, const n
 }
 } // namespace
 
+// Parse one printer report body into the running status snapshot (defined further below).
+static void apply_report(AcLan::Status& st, const std::string& topic, const std::string& body);
+
 bool AcLan::send_print(const AcLanCreds& creds, const std::string& filename,
                        const std::string& md5, std::string& err)
 {
@@ -391,7 +460,53 @@ bool AcLan::send_print(const AcLanCreds& creds, const std::string& filename,
                   {"filename", filename}, {"md5", md5}, {"filepath", nullptr}, {"filetype", 1}};
     std::string topic = "anycubic/anycubicCloud/v1/slicer/printer/" + creds.model_id +
                         "/" + creds.printer_id + "/print";
-    return mqtt_send_one(creds, topic, envelope("print", "start", data), err);
+
+    // Send the start command, then also ask for info/print state so we can tell whether the
+    // printer actually began the job instead of blindly reporting success on a fire-and-forget publish.
+    std::vector<std::pair<std::string, std::string>> pubs = {
+        { topic, envelope("print", "start", data) },
+        { web_topic(creds, "info"),  envelope("info",  "query", nullptr) },
+        { web_topic(creds, "print"), envelope("print", "query", nullptr) },
+    };
+    std::vector<std::pair<std::string, std::string>> replies;
+    if (!mqtt_exchange(creds, pubs, 3000, replies, err))
+        return false; // connection failure; err already set
+
+    AcLan::Status probe;
+    std::string explicit_error;
+    for (const auto& r : replies) {
+        apply_report(probe, r.first, r.second);
+        njson j; try { j = njson::parse(r.second); } catch (...) { continue; }
+        // Only an error object attached to a reply is an unambiguous rejection of *this* command;
+        // a bare "state" field can just be the printer echoing its last (idle/failed) job state.
+        if (j.contains("data") && j["data"].is_object()) {
+            const njson& d = j["data"];
+            if (d.contains("errcode") && d["errcode"].is_number() && d["errcode"].get<int>() != 0)
+                explicit_error = "printer error code " + std::to_string(d["errcode"].get<int>());
+            if (d.contains("error") && d["error"].is_string() && !d["error"].get<std::string>().empty())
+                explicit_error = "printer error: " + d["error"].get<std::string>();
+        }
+    }
+    if (!explicit_error.empty()) { err = explicit_error; return false; }
+
+    const std::string st = boost::to_lower_copy(probe.state);
+    const bool printing = st.find("print") != std::string::npos || st.find("heat") != std::string::npos ||
+                          st.find("prepar") != std::string::npos || st.find("work") != std::string::npos ||
+                          st.find("busy") != std::string::npos || st.find("run") != std::string::npos;
+    if (printing)
+        return true;
+    // Not printing and the printer is parked in an error/failed/offline state: a new job won't
+    // start until it's cleared. (A plain idle/free state is treated as "sent" — it may still be
+    // spinning up.) This is the common cause of "uploads then nothing happens".
+    const bool blocked = st.find("fail") != std::string::npos || st.find("error") != std::string::npos ||
+                         st.find("cancel") != std::string::npos || st.find("offline") != std::string::npos;
+    if (blocked) {
+        err = "printer did not start the job - it is in state '" + probe.state + "'. "
+              "Clear the error/finished job on the printer screen, then upload again.";
+        return false;
+    }
+    // Idle/unknown: the publish went out; treat as sent.
+    return true;
 }
 
 bool AcLan::print_action(const AcLanCreds& creds, const std::string& action, std::string& err,
@@ -479,47 +594,62 @@ bool AcLan::ace_feed(const AcLanCreds& creds, int box_id, int slot_index, const 
 bool AcLan::ace_set_slot(const AcLanCreds& creds, int box_id, int slot_index,
                          const std::string& type, int r, int g, int b, std::string& err)
 {
-    // web .../multiColorBox setInfo: preserve the richer slot shape expected by ACE firmware.
+    // web .../multiColorBox setInfo. The firmware only accepts the minimal slot shape
+    // {color,index,type} for a single slot; extra fields (sku/color_group/status) or
+    // pushing the whole box get the whole setInfo dropped, so the edit "reverts".
     njson slot = {
-        {"index", slot_index},
-        {"type", type},
-        {"sku", ""},
         {"color", njson::array({ r, g, b })},
-        {"color_group", njson::array({ njson::array({ r, g, b, 255 }) })}
+        {"index", slot_index},
+        {"type", type}
     };
     njson data = {{"multi_color_box", njson::array({ {{"id", box_id}, {"slots", njson::array({ slot })}} })}};
-    return mqtt_send_one(creds, web_topic(creds, "multiColorBox"), envelope("multiColorBox", "setInfo", data), err);
-}
 
-bool AcLan::ace_set_slots(const AcLanCreds& creds, int box_id, const std::vector<AceSlot>& slots, std::string& err)
-{
-    njson slot_array = njson::array();
-    for (const AceSlot& s : slots) {
-        if (s.index < 0)
-            continue;
-        njson color_group = njson::array();
-        for (const auto& c : s.color_group)
-            color_group.push_back(njson::array({ c[0], c[1], c[2], c[3] }));
-        if (color_group.empty())
-            color_group.push_back(njson::array({ s.r, s.g, s.b, 255 }));
+    // Send setInfo, then a getInfo, and read the replies so we can confirm the ACE actually
+    // took the change (and report the printer's reason when it doesn't) instead of guessing.
+    std::vector<std::pair<std::string, std::string>> pubs = {
+        { web_topic(creds, "multiColorBox"), envelope("multiColorBox", "setInfo", data) },
+        { web_topic(creds, "multiColorBox"), envelope("multiColorBox", "getInfo", nullptr) },
+    };
+    std::vector<std::pair<std::string, std::string>> replies;
+    if (!mqtt_exchange(creds, pubs, 2500, replies, err))
+        return false; // connection failure; err already set
 
-        njson slot = {
-            {"index", s.index},
-            {"type", s.material},
-            {"sku", s.sku},
-            {"color", njson::array({ s.r, s.g, s.b })},
-            {"color_group", color_group}
-        };
-        if (s.status != 0)
-            slot["status"] = s.status;
-        slot_array.push_back(std::move(slot));
+    bool ack_ok = false; std::string ack_fail, last_report;
+    AcLan::Status probe;
+    for (const auto& rep : replies) {
+        apply_report(probe, rep.first, rep.second);
+        try {   // null-tolerant: a present-but-null field would make value() throw
+            njson j = njson::parse(rep.second);
+            if (j.value("type", std::string()) != "multiColorBox") continue;
+            last_report = rep.second;
+            if (j.value("action", std::string()) == "setInfo") {
+                const std::string state = boost::to_lower_copy(j.value("state", std::string()));
+                if (state == "success" || state == "succeed" || state == "ok" || state == "done")
+                    ack_ok = true;
+                else if (!state.empty()) {
+                    ack_fail = "printer rejected setInfo (state: " + j.value("state", std::string()) + ")";
+                    if (j.contains("msg") && j["msg"].is_string() && !j["msg"].get<std::string>().empty())
+                        ack_fail += " - " + j["msg"].get<std::string>();
+                }
+            }
+        } catch (...) { continue; }
     }
-    if (slot_array.empty()) {
-        err = "no ACE slots to update";
-        return false;
-    }
-    njson data = {{"multi_color_box", njson::array({ {{"id", box_id}, {"slots", slot_array}} })}};
-    return mqtt_send_one(creds, web_topic(creds, "multiColorBox"), envelope("multiColorBox", "setInfo", data), err);
+    // Did a fresh report actually come back with our material + colour on the slot?
+    bool reflected = false;
+    for (const auto& box : probe.boxes)
+        if (box.id == box_id)
+            for (const auto& sl : box.slots)
+                if (sl.index == slot_index && boost::iequals(sl.material, type) &&
+                    sl.r == r && sl.g == g && sl.b == b)
+                    reflected = true;
+
+    if (ack_ok || reflected)
+        return true;
+    if (!ack_fail.empty()) { err = ack_fail; return false; }
+    err = "printer did not confirm the change (no setInfo acknowledgement). "
+          "The ACE may need the slot loaded/idle, or reject this material name.";
+    if (!last_report.empty()) err += " Last ACE report: " + last_report;
+    return false;
 }
 
 // ---------- status query (collect reports for a window) ----------
@@ -605,6 +735,9 @@ static void apply_report(AcLan::Status& st, const std::string& topic, const std:
 {
     njson j;
     try { j = njson::parse(body); } catch (...) { return; }
+    // Null-tolerant from here: a present-but-null field (e.g. filename/state when idle) makes
+    // nlohmann value() throw type_error.302, which would otherwise abort the caller mid-command.
+    try {
     std::string type = j.value("type", "");
 
     // Capture for the console telemetry view (skip bare {"msgid":..} acks). The leaf is
@@ -774,78 +907,26 @@ static void apply_report(AcLan::Status& st, const std::string& topic, const std:
             }
         }
     }
+    } catch (...) {}
 }
 
 AcLan::Status AcLan::query_status(const AcLanCreds& creds, int timeout_ms)
 {
     Status st;
-    try {
-        asio::io_context io;
-        asio::ssl::context ctx(asio::ssl::context::tls_client);
-        ctx.set_verify_mode(asio::ssl::verify_none);
-        SslStream ssl(io, ctx);
-        std::string err;
-        if (!mqtt_open(creds, ssl, err)) { st.raw_error = err; return st; }
+    // Ask for the main subsystems, then fold every reply into the snapshot.
+    const std::pair<std::string, std::string> queries[] = {
+        {"info", "query"}, {"status", "query"}, {"tempature", "query"}, {"fan", "query"},
+        {"light", "query"}, {"peripherie", "query"}, {"multiColorBox", "getInfo"} };
+    std::vector<std::pair<std::string, std::string>> pubs;
+    for (const auto& q : queries)
+        pubs.emplace_back(web_topic(creds, q.first), envelope(q.first, q.second, nullptr));
 
-        // SUBSCRIBE to public/<model>/<printer>/#
-        std::string filter = "anycubic/anycubicCloud/v1/printer/public/" + creds.model_id + "/" + creds.printer_id + "/#";
-        std::string svh; svh.push_back((char)0x00); svh.push_back((char)0x01); // packet id 1
-        std::string sp; mqtt_str(sp, filter); sp.push_back((char)0x00);        // QoS 0
-        std::string sub; sub.push_back((char)0x82); mqtt_remlen(sub, svh.size() + sp.size());
-        sub += svh; sub += sp;
-        asio::write(ssl, asio::buffer(sub));
-
-        // ask for the main subsystems
-        const std::pair<std::string, std::string> queries[] = {
-            {"info", "query"}, {"status", "query"}, {"tempature", "query"}, {"fan", "query"},
-            {"light", "query"}, {"peripherie", "query"}, {"multiColorBox", "getInfo"} };
-        for (const auto& q : queries)
-            mqtt_publish(ssl, web_topic(creds, q.first), envelope(q.first, q.second, nullptr));
-
-        // collect for timeout_ms
-        std::string buf;
-        std::array<char, 4096> rb{};
-        std::function<void()> do_read = [&]() {
-            ssl.async_read_some(asio::buffer(rb), [&](const boost::system::error_code& e, std::size_t n) {
-                if (e) return;
-                buf.append(rb.data(), n);
-                // frame MQTT packets
-                size_t pos = 0;
-                while (pos + 2 <= buf.size()) {
-                    uint8_t type = (uint8_t)buf[pos];
-                    size_t mult = 1, rl = 0, i = pos + 1; bool ok = false;
-                    for (; i < buf.size() && i < pos + 5; ++i) {
-                        uint8_t b = (uint8_t)buf[i]; rl += (b & 0x7F) * mult; mult *= 128;
-                        if (!(b & 0x80)) { ok = true; ++i; break; }
-                    }
-                    if (!ok) break;
-                    if (i + rl > buf.size()) break;          // wait for more
-                    if ((type & 0xF0) == 0x30) {             // PUBLISH
-                        size_t p = i;
-                        uint16_t tl = ((uint8_t)buf[p] << 8) | (uint8_t)buf[p + 1]; p += 2;
-                        std::string topic = buf.substr(p, tl); p += tl;
-                        if (type & 0x06) p += 2;             // QoS>0 packet id
-                        std::string msg = buf.substr(p, (i + rl) - p);
-                        apply_report(st, topic, msg);
-                    }
-                    pos = i + rl;
-                }
-                if (pos) buf.erase(0, pos);
-                do_read();
-            });
-        };
-        do_read();
-        asio::steady_timer timer(io);
-        timer.expires_after(std::chrono::milliseconds(timeout_ms));
-        timer.async_wait([&](const boost::system::error_code&) {
-            boost::system::error_code ec; ssl.next_layer().cancel(ec); io.stop();
-        });
-        io.run();
-        boost::system::error_code ec; ssl.shutdown(ec);
-        st.ok = true;
-    } catch (const std::exception& e) {
-        st.raw_error = std::string("MQTT error: ") + e.what();
-    }
+    std::vector<std::pair<std::string, std::string>> replies;
+    std::string err;
+    if (!mqtt_exchange(creds, pubs, timeout_ms, replies, err)) { st.raw_error = err; return st; }
+    for (const auto& r : replies)
+        apply_report(st, r.first, r.second);
+    st.ok = true;
     return st;
 }
 

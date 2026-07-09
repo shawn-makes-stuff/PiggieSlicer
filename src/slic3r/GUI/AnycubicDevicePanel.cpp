@@ -22,6 +22,7 @@
 #include <wx/scrolwin.h>
 #include <wx/textdlg.h>
 #include <wx/textctrl.h>
+#include <wx/dialog.h>
 #include <wx/filedlg.h>
 #include <wx/colordlg.h>
 #include <wx/choicdlg.h>
@@ -730,26 +731,51 @@ void AnycubicDevicePanel::build_ui()
         m_lbl_ace_env->SetBackgroundColour(CARD_BG);
         body->Add(m_lbl_ace_env, 0, wxBOTTOM, FromDIP(12));
 
+        // Row 1: the two live state toggles, matched width.
+        const wxSize ace_toggle_sz(FromDIP(156), FromDIP(34));
         auto* ace_row1 = new wxBoxSizer(wxHORIZONTAL);
         m_btn_ace_refill = make_button(sec, _L("Auto Refill: Off"), false);
-        style_control_button(m_btn_ace_refill, wxSize(FromDIP(150), FromDIP(34)));
+        style_control_button(m_btn_ace_refill, ace_toggle_sz);
         m_btn_ace_refill->Bind(wxEVT_BUTTON, &AnycubicDevicePanel::on_toggle_ace_auto_feed, this);
         m_btn_ace_dry = make_button(sec, _L("Drying: Off"), false);
-        style_control_button(m_btn_ace_dry, wxSize(FromDIP(150), FromDIP(34)));
+        style_control_button(m_btn_ace_dry, ace_toggle_sz);
         m_btn_ace_dry->Bind(wxEVT_BUTTON, &AnycubicDevicePanel::on_toggle_ace_dry, this);
+        ace_row1->Add(m_btn_ace_refill, 1, wxRIGHT, FromDIP(8));
+        ace_row1->Add(m_btn_ace_dry, 1);
+        body->Add(ace_row1, 0, wxEXPAND | wxBOTTOM, FromDIP(8));
 
-        // PiggieSlicer: material-aware drying presets + auto-dry during prints.
-        m_dry_preset = new wxChoice(sec, wxID_ANY);
-        m_dry_preset->Append(_L("PLA 45C / 4h"));
-        m_dry_preset->Append(_L("PETG 55C / 6h"));
-        m_dry_preset->Append(_L("TPU 40C / 8h"));
-        m_dry_preset->Append(_L("PA/PC 65C / 8h"));
-        m_dry_preset->SetSelection(std::clamp(std::atoi(wxGetApp().app_config->get("piggie_ace_dry_preset").c_str()), 0, 3));
-        m_dry_preset->Bind(wxEVT_CHOICE, [this](wxCommandEvent&) {
-            wxGetApp().app_config->set("piggie_ace_dry_preset", std::to_string(m_dry_preset->GetSelection()));
-        });
+        // Row 2: manual drying setpoint (temp °C + time minutes) + auto-dry-in-prints toggle.
+        // PiggieSlicer: the "Drying" toggle above dries using exactly these two fields.
+        auto cfg_int = [](const char* key, int def, int lo, int hi) {
+            const std::string v = wxGetApp().app_config->get(key);
+            return v.empty() ? def : std::clamp(std::atoi(v.c_str()), lo, hi);
+        };
+        auto* ace_row2 = new wxBoxSizer(wxHORIZONTAL);
+        auto* temp_lbl = new Label(sec, Label::Body_13, _L("Dry temp"));
+        temp_lbl->SetForegroundColour(INK_SOFT);
+        temp_lbl->SetBackgroundColour(CARD_BG);
+        m_dry_temp = new wxSpinCtrl(sec, wxID_ANY, "", wxDefaultPosition, wxSize(FromDIP(66), FromDIP(30)));
+        m_dry_temp->SetRange(20, 70);
+        m_dry_temp->SetValue(cfg_int("piggie_ace_dry_temp", 45, 20, 70));
+        auto* tempc_lbl = new Label(sec, Label::Body_12, wxString::FromUTF8("\xC2\xB0""C"));
+        tempc_lbl->SetForegroundColour(INK_SOFT);
+        tempc_lbl->SetBackgroundColour(CARD_BG);
+        auto* time_lbl = new Label(sec, Label::Body_13, _L("Time"));
+        time_lbl->SetForegroundColour(INK_SOFT);
+        time_lbl->SetBackgroundColour(CARD_BG);
+        m_dry_minutes = new wxSpinCtrl(sec, wxID_ANY, "", wxDefaultPosition, wxSize(FromDIP(78), FromDIP(30)));
+        m_dry_minutes->SetRange(10, 1440);
+        m_dry_minutes->SetValue(cfg_int("piggie_ace_dry_min", 240, 10, 1440));
+        auto* min_lbl = new Label(sec, Label::Body_12, _L("min"));
+        min_lbl->SetForegroundColour(INK_SOFT);
+        min_lbl->SetBackgroundColour(CARD_BG);
+        m_dry_temp->Bind(wxEVT_SPINCTRL, [this](wxCommandEvent&) {
+            wxGetApp().app_config->set("piggie_ace_dry_temp", std::to_string(m_dry_temp->GetValue())); });
+        m_dry_minutes->Bind(wxEVT_SPINCTRL, [this](wxCommandEvent&) {
+            wxGetApp().app_config->set("piggie_ace_dry_min", std::to_string(m_dry_minutes->GetValue())); });
+
         auto* auto_dry_btn = make_button(sec, _L("Auto-dry in prints: Off"), false);
-        style_control_button(auto_dry_btn, wxSize(FromDIP(170), FromDIP(34)));
+        style_control_button(auto_dry_btn, wxSize(FromDIP(180), FromDIP(34)));
         m_auto_dry_before_print = wxGetApp().app_config->get_bool("piggie_ace_auto_dry");
         set_toggle_button(auto_dry_btn, _L("Auto-dry in prints"), m_auto_dry_before_print);
         auto_dry_btn->Bind(wxEVT_BUTTON, [this, auto_dry_btn](wxCommandEvent&) {
@@ -757,11 +783,37 @@ void AnycubicDevicePanel::build_ui()
             wxGetApp().app_config->set_bool("piggie_ace_auto_dry", m_auto_dry_before_print);
             set_toggle_button(auto_dry_btn, _L("Auto-dry in prints"), m_auto_dry_before_print);
         });
-        ace_row1->Add(m_btn_ace_refill, 0, wxRIGHT, FromDIP(8));
-        ace_row1->Add(m_btn_ace_dry, 0);
-        ace_row1->Add(m_dry_preset, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, FromDIP(8));
-        ace_row1->Add(auto_dry_btn, 0, wxLEFT, FromDIP(8));
-        body->Add(ace_row1, 0, wxEXPAND | wxBOTTOM, FromDIP(8));
+        ace_row2->Add(temp_lbl,      0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
+        ace_row2->Add(m_dry_temp,    0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(3));
+        ace_row2->Add(tempc_lbl,     0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(14));
+        ace_row2->Add(time_lbl,      0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
+        ace_row2->Add(m_dry_minutes, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(3));
+        ace_row2->Add(min_lbl,       0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(14));
+        ace_row2->Add(auto_dry_btn,  0, wxALIGN_CENTER_VERTICAL);
+        body->Add(ace_row2, 0, wxEXPAND | wxBOTTOM, FromDIP(8));
+
+        // Row 3: quick-fill presets for common filaments (they just populate the fields above).
+        auto set_dry = [this](int t, int m) {
+            m_dry_temp->SetValue(t); m_dry_minutes->SetValue(m);
+            wxGetApp().app_config->set("piggie_ace_dry_temp", std::to_string(t));
+            wxGetApp().app_config->set("piggie_ace_dry_min", std::to_string(m));
+        };
+        auto* ace_row3 = new wxBoxSizer(wxHORIZONTAL);
+        auto* quick_lbl = new Label(sec, Label::Body_13, _L("Quick dry"));
+        quick_lbl->SetForegroundColour(INK_SOFT);
+        quick_lbl->SetBackgroundColour(CARD_BG);
+        ace_row3->Add(quick_lbl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(8));
+        const struct { const char* label; int t, m; } dry_quick[] = {
+            { "PLA",   45, 240 }, { "PETG", 55, 360 }, { "TPU", 40, 480 }, { "PA/PC", 65, 480 } };
+        for (const auto& q : dry_quick) {
+            auto* b = make_button(sec, from_u8(q.label), false);
+            style_control_button(b, wxSize(FromDIP(74), FromDIP(30)));
+            b->SetToolTip(wxString::Format(_L("Set %d\xC2\xB0""C for %d min"), q.t, q.m));
+            const int t = q.t, m = q.m;
+            b->Bind(wxEVT_BUTTON, [set_dry, t, m](wxCommandEvent&) { set_dry(t, m); });
+            ace_row3->Add(b, 0, wxRIGHT, FromDIP(6));
+        }
+        body->Add(ace_row3, 0, wxEXPAND | wxBOTTOM, FromDIP(8));
 
         m_lbl_ace_dry_info = new Label(sec, Label::Body_12, _L("Drying temperature: 45C   Drying time: 4:00:00"));
         m_lbl_ace_dry_info->SetForegroundColour(INK_SOFT);
@@ -809,7 +861,7 @@ void AnycubicDevicePanel::build_ui()
         m_btn_cam_light = make_button(sec, _L("Cam Light: Off"), false);
         style_control_button(m_btn_cam_light, wxSize(FromDIP(150), FromDIP(34)));
         m_btn_cam_light->Bind(wxEVT_BUTTON, &AnycubicDevicePanel::on_toggle_cam_light, this);
-        m_btn_camera_capture = make_button(sec, _L("Camera: On"), false);
+        m_btn_camera_capture = make_button(sec, _L("Camera: Off"), false);
         style_control_button(m_btn_camera_capture, wxSize(FromDIP(130), FromDIP(34)));
         m_btn_camera_capture->Bind(wxEVT_BUTTON, &AnycubicDevicePanel::on_toggle_camera, this);
         toolbar->Add(m_btn_light, 0, wxRIGHT, FromDIP(8));
@@ -1100,10 +1152,10 @@ void AnycubicDevicePanel::on_remove(wxCommandEvent&)
     }
     m_ace_sig.clear();
     m_light_on = m_cam_light_on = m_ace_auto_feed = m_ace_dry = false;
-    m_camera_enabled = true;
+    m_camera_enabled = false;
     set_toggle_button(m_btn_light, _L("Head Light"), false);
     set_toggle_button(m_btn_cam_light, _L("Cam Light"), false);
-    if (m_btn_camera_capture) m_btn_camera_capture->SetLabel(_L("Camera: On"));
+    if (m_btn_camera_capture) m_btn_camera_capture->SetLabel(_L("Camera: Off"));
     set_toggle_button(m_btn_ace_refill, _L("Auto Refill"), false);
     set_toggle_button(m_btn_ace_dry, _L("Drying"), false);
     m_status = AcLan::Status();
@@ -1145,10 +1197,10 @@ void AnycubicDevicePanel::connect_selected()
     m_ace_sig.clear();
     m_status = AcLan::Status();
     m_light_on = m_cam_light_on = m_ace_auto_feed = m_ace_dry = false;
-    m_camera_enabled = true;
+    m_camera_enabled = false;
     set_toggle_button(m_btn_light, _L("Head Light"), false);
     set_toggle_button(m_btn_cam_light, _L("Cam Light"), false);
-    if (m_btn_camera_capture) m_btn_camera_capture->SetLabel(_L("Camera: On"));
+    if (m_btn_camera_capture) m_btn_camera_capture->SetLabel(_L("Camera: Off"));
     set_toggle_button(m_btn_ace_refill, _L("Auto Refill"), false);
     set_toggle_button(m_btn_ace_dry, _L("Drying"), false);
     set_camera_placeholder(wxEmptyString);
@@ -1596,11 +1648,9 @@ void AnycubicDevicePanel::on_toggle_ace_auto_feed(wxCommandEvent&)
 
 void AnycubicDevicePanel::dry_preset_params(int& temp_c, int& minutes) const
 {
-    static const int temps[] = {45, 55, 40, 65};
-    static const int mins[]  = {240, 360, 480, 480};
-    const int sel = m_dry_preset ? std::clamp(m_dry_preset->GetSelection(), 0, 3) : 0;
-    temp_c  = temps[sel];
-    minutes = mins[sel];
+    // Manual setpoint from the ACE panel's temp/time fields (quick-dry buttons pre-fill them).
+    temp_c  = m_dry_temp    ? m_dry_temp->GetValue()    : 45;
+    minutes = m_dry_minutes ? m_dry_minutes->GetValue() : 240;
 }
 
 void AnycubicDevicePanel::on_toggle_ace_dry(wxCommandEvent&)
@@ -1609,18 +1659,16 @@ void AnycubicDevicePanel::on_toggle_ace_dry(wxCommandEvent&)
     m_ace_dry = on;
     set_toggle_button(m_btn_ace_dry, _L("Drying"), on);
     const std::vector<AcLan::AceBox> boxes = m_status.boxes;
-    int preset_temp = 45, preset_min = 240;
-    dry_preset_params(preset_temp, preset_min);
-    run_cmd(on ? _L("Drying enabled") : _L("Drying disabled"),
+    int target_temp = 45, duration_min = 240;
+    dry_preset_params(target_temp, duration_min);   // manual temp/time from the panel fields
+    run_cmd(on ? wxString::Format(_L("Drying at %d\xC2\xB0""C for %d min"), target_temp, duration_min)
+               : _L("Drying disabled"),
             on ? _L("ACE drying on") : _L("ACE drying off"),
-            [boxes, on, preset_temp, preset_min](const AcLanCreds& c, std::string& e) {
-                const int target_temp = preset_temp;
-                const int duration_min = preset_min;
+            [boxes, on, target_temp, duration_min](const AcLanCreds& c, std::string& e) {
                 if (boxes.empty())
                     return AcLan::ace_set_dry(c, 0, on, target_temp, duration_min, e);
                 for (const auto& box : boxes) {
-                    if (!AcLan::ace_set_dry(c, box.id, on, box.dry_target > 0 ? box.dry_target : target_temp,
-                                            box.dry_duration > 0 ? box.dry_duration / 60 : duration_min, e))
+                    if (!AcLan::ace_set_dry(c, box.id, on, target_temp, duration_min, e))
                         return false;
                 }
                 return true;
@@ -1733,58 +1781,146 @@ void AnycubicDevicePanel::on_console_send(wxCommandEvent&)
     set_msg(_L("Unsupported console command."));
 }
 
-// Edit a slot's material type (dropdown) + color (picker) -> multiColorBox setInfo.
+// A single dedicated popout for editing one ACE slot: material dropdown, colour
+// swatch (opens the OS colour picker), and spool grams — all in one themed window.
+class MaterialEditDialog : public wxDialog
+{
+public:
+    MaterialEditDialog(wxWindow* parent, int slot_index, const wxString& cur_type,
+                       wxColour cur_color, const wxString& cur_grams)
+        : wxDialog(parent, wxID_ANY, wxString::Format(_L("Edit slot %d"), slot_index + 1),
+                   wxDefaultPosition, wxDefaultSize)
+        , m_color(cur_color.IsOk() ? cur_color : wxColour(236, 236, 240))
+    {
+        SetBackgroundColour(CARD_BG);
+        auto* root = new wxBoxSizer(wxVERTICAL);
+
+        auto add_label = [&](const wxString& text) {
+            auto* l = new Label(this, Label::Body_13, text);
+            l->SetForegroundColour(INK_SOFT);
+            l->SetBackgroundColour(CARD_BG);
+            root->Add(l, 0, wxLEFT | wxRIGHT | wxTOP, FromDIP(18));
+        };
+
+        // Material
+        add_label(_L("Material"));
+        m_mat = new wxChoice(this, wxID_ANY);
+        for (const char* m : { "PLA", "PLA+", "PLA-CF", "PETG", "PETG-CF", "ABS", "ASA", "TPU",
+                               "PA (Nylon)", "PA-CF", "PC", "HIPS", "PVA" })
+            m_mat->Append(m);
+        int sel = m_mat->FindString(cur_type, false);
+        if (sel == wxNOT_FOUND && !cur_type.empty()) { m_mat->Insert(cur_type, 0); sel = 0; }
+        m_mat->SetSelection(sel == wxNOT_FOUND ? 0 : sel);
+        root->Add(m_mat, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, FromDIP(18));
+
+        // Colour swatch (opens the OS colour dialog)
+        add_label(_L("Colour"));
+        m_swatch = new Button(this, "");
+        m_swatch->SetCornerRadius(FromDIP(8));
+        m_swatch->SetPaddingSize(wxSize(FromDIP(12), FromDIP(10)));
+        m_swatch->SetBorderWidth(1);
+        m_swatch->SetBorderColor(StateColor(CARD_BORDER));
+        m_swatch->SetMinSize(wxSize(FromDIP(240), FromDIP(40)));
+        m_swatch->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+            wxColourData cd; cd.SetColour(m_color);
+            wxColourDialog dlg(this, &cd);
+            dlg.SetTitle(_L("Pick filament colour"));
+            if (dlg.ShowModal() == wxID_OK) { m_color = dlg.GetColourData().GetColour(); update_swatch(); }
+        });
+        root->Add(m_swatch, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, FromDIP(18));
+        update_swatch();
+
+        // Spool grams
+        add_label(_L("Spool amount (grams left, blank = untracked)"));
+        m_grams = new wxTextCtrl(this, wxID_ANY, cur_grams);
+        root->Add(m_grams, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, FromDIP(18));
+
+        // Buttons
+        auto* btns = new wxBoxSizer(wxHORIZONTAL);
+        auto* cancel = new Button(this, _L("Cancel"));
+        style_control_button(cancel, wxSize(FromDIP(110), FromDIP(36)));
+        cancel->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { EndModal(wxID_CANCEL); });
+        auto* save = new Button(this, _L("Save"));
+        style_control_button(save, wxSize(FromDIP(110), FromDIP(36)), true);
+        save->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { EndModal(wxID_OK); });
+        btns->AddStretchSpacer();
+        btns->Add(cancel, 0, wxRIGHT, FromDIP(8));
+        btns->Add(save, 0);
+        root->Add(btns, 0, wxEXPAND | wxALL, FromDIP(18));
+
+        SetSizerAndFit(root);
+        CentreOnParent();
+    }
+
+    wxString material() const { return m_mat->GetStringSelection(); }
+    wxColour color()    const { return m_color; }
+    wxString grams()    const { return m_grams->GetValue().Strip(wxString::both); }
+
+private:
+    void update_swatch()
+    {
+        m_swatch->SetBackgroundColor(StateColor(m_color));
+        // pick readable text colour against the swatch fill
+        const bool dark = (m_color.Red() * 299 + m_color.Green() * 587 + m_color.Blue() * 114) / 1000 < 140;
+        m_swatch->SetTextColor(StateColor(dark ? *wxWHITE : INK));
+        m_swatch->SetLabel(wxString::Format("#%02X%02X%02X", m_color.Red(), m_color.Green(), m_color.Blue()));
+    }
+
+    wxChoice*   m_mat    = nullptr;
+    Button*     m_swatch = nullptr;
+    wxColour    m_color;
+    wxTextCtrl* m_grams  = nullptr;
+};
+
+// Edit a slot's material type + colour + spool grams -> multiColorBox setInfo.
 void AnycubicDevicePanel::on_edit_slot(int box_id, int slot_index, const std::string& cur_type, int r, int g, int b)
 {
     if (!m_connected || !m_creds.ok) { set_msg(_L("Not connected.")); return; }
 
-    wxArrayString mats;
-    for (const char* m : { "PLA", "PLA+", "PLA-CF", "PETG", "PETG-CF", "ABS", "ASA", "TPU",
-                           "PA (Nylon)", "PA-CF", "PC", "HIPS", "PVA" })
-        mats.Add(m);
-    int sel = mats.Index(from_u8(cur_type), false);
-    if (sel == wxNOT_FOUND) { if (!cur_type.empty()) { mats.Insert(from_u8(cur_type), 0); sel = 0; } else sel = 0; }
-    wxSingleChoiceDialog mat_dlg(this, _L("Material type:"), _L("Edit material"), mats);
-    mat_dlg.SetSelection(sel);
-    if (mat_dlg.ShowModal() != wxID_OK) return;
-    std::string type = into_u8(mat_dlg.GetStringSelection());
-    if (type.empty()) return;
-
-    wxColourData cd; cd.SetColour(wxColour(r, g, b));
-    wxColourDialog col_dlg(this, &cd);
-    col_dlg.SetTitle(_L("Pick filament color"));
-    if (col_dlg.ShowModal() != wxID_OK) return;
-    wxColour chosen = col_dlg.GetColourData().GetColour();
-    const int nr = chosen.Red(), ng = chosen.Green(), nb = chosen.Blue();
-
-    // PiggieSlicer: per-slot spool budget (grams remaining), persisted per printer+slot.
+    // The ACE firmware refuses setInfo while a job is running or unfinished (error 10011709);
+    // filament can only be edited when the printer is idle. Catch that up front with a clear
+    // message instead of firing a doomed command.
     {
-        const std::string key = "piggie_spool_g_" + m_creds.printer_id + "_" +
-                                std::to_string(box_id) + "_" + std::to_string(slot_index);
-        const std::string cur = wxGetApp().app_config->get(key);
-        wxTextEntryDialog g_dlg(this, _L("Grams remaining on this spool (blank = untracked):"),
-                                _L("Spool budget"), from_u8(cur));
-        if (g_dlg.ShowModal() == wxID_OK) {
-            const std::string val = into_u8(g_dlg.GetValue().Strip(wxString::both));
-            wxGetApp().app_config->set(key, val);
+        const std::string sl = boost::to_lower_copy(m_status.state);
+        const bool job_busy = sl.find("print") != std::string::npos || sl.find("run") != std::string::npos ||
+                              sl.find("busy")  != std::string::npos || sl.find("heat") != std::string::npos ||
+                              sl.find("paus")  != std::string::npos || sl.find("prepar") != std::string::npos ||
+                              sl.find("fail")  != std::string::npos || sl.find("error") != std::string::npos;
+        if (job_busy) {
+            const wxString m = wxString::Format(
+                _L("Can't edit filament while the printer is busy (state: %s). "
+                   "Finish or clear the job so the printer is idle, then edit."),
+                from_u8(m_status.state));
+            append_console_line(m, CONSOLE_ERR);
+            set_msg(m);
+            return;
         }
     }
 
+    const std::string gkey = "piggie_spool_g_" + m_creds.printer_id + "_" +
+                             std::to_string(box_id) + "_" + std::to_string(slot_index);
+    const wxString cur_grams = from_u8(wxGetApp().app_config->get(gkey));
+
+    MaterialEditDialog dlg(this, slot_index, from_u8(cur_type), wxColour(r, g, b), cur_grams);
+    if (dlg.ShowModal() != wxID_OK) return;
+
+    const std::string type = into_u8(dlg.material());
+    if (type.empty()) return;
+    const wxColour chosen = dlg.color();
+    const int nr = chosen.Red(), ng = chosen.Green(), nb = chosen.Blue();
+
+    // PiggieSlicer: persist per-slot spool budget (grams remaining).
+    wxGetApp().app_config->set(gkey, into_u8(dlg.grams()));
+
     // Optimistically update the spool now so the change is visible immediately.
-    std::vector<AcLan::AceSlot> updated_slots;
     for (auto& box : m_status.boxes)
-        if (box.id == box_id) {
+        if (box.id == box_id)
             for (auto& sl : box.slots)
                 if (sl.index == slot_index) {
                     sl.material = type;
-                    sl.r = nr;
-                    sl.g = ng;
-                    sl.b = nb;
-                    sl.color_group.clear();
-                    sl.color_group.push_back({ nr, ng, nb, 255 });
+                    sl.r = nr; sl.g = ng; sl.b = nb;
+                    sl.color_group.assign(1, { nr, ng, nb, 255 });
                 }
-            updated_slots = box.slots;
-        }
     m_ace_sig.clear();
     auto alive = m_alive;
     wxGetApp().CallAfter([this, alive]() {
@@ -1795,9 +1931,7 @@ void AnycubicDevicePanel::on_edit_slot(int box_id, int slot_index, const std::st
     });
 
     run_cmd(_L("Material updated"), wxString::Format(_L("set slot %d -> %s"), slot_index + 1, from_u8(type)),
-            [box_id, slot_index, type, nr, ng, nb, updated_slots](const AcLanCreds& c, std::string& e){
-                if (!updated_slots.empty())
-                    return AcLan::ace_set_slots(c, box_id, updated_slots, e);
+            [box_id, slot_index, type, nr, ng, nb](const AcLanCreds& c, std::string& e){
                 return AcLan::ace_set_slot(c, box_id, slot_index, type, nr, ng, nb, e);
             });
 }
