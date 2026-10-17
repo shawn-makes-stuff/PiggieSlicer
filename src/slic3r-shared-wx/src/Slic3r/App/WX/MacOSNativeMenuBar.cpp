@@ -260,16 +260,6 @@ void MacOSNativeMenuBar::update_menu_states()
     }
 }
 
-void MacOSNativeMenuBar::on_user_account_id_success(bool, const std::string&)
-{
-    update_menu_states();
-}
-
-void MacOSNativeMenuBar::on_user_account_logged_out()
-{
-    update_menu_states();
-}
-
 void MacOSNativeMenuBar::on_selected_bed_instances_changed(
     Domain::SelectionId,
     const Biz::Scene::BedSelection&

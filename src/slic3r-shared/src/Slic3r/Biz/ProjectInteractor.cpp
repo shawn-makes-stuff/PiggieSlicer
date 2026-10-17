@@ -11,7 +11,6 @@
 #include "Slic3r/Biz/ISelectedProjectChangedListener.hpp"
 #include "Slic3r/Biz/IProjectsChangedListener.hpp"
 #include "Slic3r/Biz/IMessageDialogProvider.hpp"
-#include "Slic3r/Biz/UserAccount/ConnectUtils.hpp"
 #include "Slic3r/Biz/Platform/JobManager/JobManager.hpp"
 #include "Slic3r/Biz/FileLoadingLogic.hpp"
 #include "Slic3r/Biz/Scene/BedFactory.hpp"
@@ -976,91 +975,6 @@ void ProjectInteractor::do_result_upload(
     };
     data.post_action = post_action;
     do_result_export_inner(id, std::move(config), std::move(data));
-}
-
-void ProjectInteractor::do_result_upload_connect(
-    const Domain::SlicingId id,
-    const std::string& connect_msg,
-    const std::string& filename_override /* = std::string()*/
-)
-{
-    PhysicalPrinter::PhysicalPrinterConfig config;
-    config.host = Network::ServiceConfig::instance().connect_url();
-    PhysicalPrinter::ConnectUpload auth;
-    auth.access_token = m_user_account_interactor.access_token();
-    config.payload = std::move(auth);
-
-    std::string filename;
-    std::string body_json;
-    if (!UserAccount::ConnectUtils::config_from_json(connect_msg, config, filename, body_json)) {
-        SPDLOG_ERROR("Upload to Connect has failed - failed to read Connect message.");
-        return;
-    }
-
-    if (!filename_override.empty()) {
-        filename = filename_override;
-    }
-
-    m_physical_printer_interactor.remember_used_destination(std::string(PhysicalPrinter::PRUSA_CONNECT_UUID));
-    set_output_extension(id.project_id, boost::filesystem::path(filename).extension().string());
-    PrintHost::PrintHostJobData data{
-        std::monostate{},
-        filename,
-        PrintHost::get_export_format_from_extension(boost::filesystem::path(filename).extension().string())
-    };
-    data.request_body_json = std::move(body_json);
-    do_result_export_inner(id, std::move(config), std::move(data));
-}
-
-void ProjectInteractor::on_download_models(const std::vector<std::string>& message)
-{
-    if (m_raise_app_fn) {
-        m_raise_app_fn();
-    }
-    m_file_downloader_interactor.download_files_prusaslicer_url(
-        message,
-        selected_project_is_empty()
-    );
-}
-
-void ProjectInteractor::download_model_from_printables_tab(FileDownloader::FileDownloaderMultiTicket data)
-{
-    m_file_downloader_interactor.init_multi_job(std::move(data));
-}
-
-void ProjectInteractor::open_downloaded_file(const boost::filesystem::path& path, bool in_new_project)
-{
-    if (in_new_project) {
-        // file path could have locale dependent characters, do not use tolower
-        const std::string ext = path.extension().string();
-        const bool is_3mf     = ext == ".3mf" || ext == ".3MF";
-        // A single 3MF opened as a new project loads its full content (geometry + print,
-        // filament and printer settings). Other files start an empty project and add geometry.
-        if (is_3mf) {
-            load_project(path);
-            return;
-        }
-        new_project();
-    }
-    load_models_to_project({path});
-}
-
-void ProjectInteractor::on_model_downloaded(const std::vector<boost::filesystem::path>& paths, bool in_new_project)
-{
-    ASSERT(!paths.empty());
-    boost::filesystem::path file_path = paths.front();
-    std::string ext_str = file_path.extension().string();
-    // file path could have locale dependent characters, do not use tolower
-    bool load_as_single_project = paths.size() ==1 && (ext_str == ".3mf" || ext_str == ".3MF");
-    if (in_new_project && load_as_single_project) {
-        load_project(paths.front(), EmptyProjectAction::Replace);
-        return;
-    }
-
-    if (in_new_project && !selected_project_is_empty()) {
-        new_project();
-    }
-    load_models_to_project(paths);
 }
 
 std::string ProjectInteractor::get_project_name(Domain::SelectionId project_id) const

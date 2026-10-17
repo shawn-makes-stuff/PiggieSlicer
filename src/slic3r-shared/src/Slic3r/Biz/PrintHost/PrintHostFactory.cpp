@@ -4,7 +4,6 @@
 #include "Slic3r/Biz/PrintHost/PrintHostOctoPrint.hpp"
 #include "Slic3r/Biz/PrintHost/PrintHostPrusaLink.hpp"
 #include "Slic3r/Biz/PrintHost/PrintHostPrusaLinkStorage.hpp"
-#include "Slic3r/Biz/PrintHost/PrintHostPrusaConnect.hpp"
 #include "Slic3r/Biz/PrintHost/PrintHostSL1Host.hpp"
 #include "Slic3r/Biz/PrintHost/PrintHostMoonraker.hpp"
 #include "Slic3r/Biz/PrintHost/PrintHostDuet.hpp"
@@ -50,8 +49,6 @@ create_print_host(PhysicalPrinter::PhysicalPrinterConfig config, PrintHostJobDat
                 ASSERT(false);
                 return nullptr;
             }
-        } else if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::ConnectUpload>) {
-            return std::make_unique<PrintHostPrusaConnect>(std::move(config), std::move(data));
         } else if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::FileSystemExport>) {
             return std::make_unique<PrintHostLocal>(std::move(config), std::move(data));
         }

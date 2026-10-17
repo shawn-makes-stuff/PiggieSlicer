@@ -39,11 +39,11 @@ float get_display_scale_factor(const wxPoint& pos)
 static wxBitmap make_bitmap(bool is_editor, double scale)
 {
     // 1. Load the base 1x resolution bitmap from the JPEG file.
-    wxBitmap bmp_1x = wxBitmap(WX::from_u8(var(is_editor ? "splashscreen.jpg" : "splashscreen-gcodepreview.jpg")), wxBITMAP_TYPE_JPEG);
+    wxBitmap bmp_1x = wxBitmap(WX::from_u8(var("splashscreen.jpg")), wxBITMAP_TYPE_JPEG);
 
     if (!bmp_1x.IsOk()) {
         // Fallback to a bundled bitmap if the JPEG fails to load.
-        wxBitmapBundle* bmp_bndl = WX::get_bmp_bundle("PrusaSlicer", 400);
+        wxBitmapBundle* bmp_bndl = WX::get_bmp_bundle("PiggieSlicer", 400);
         bmp_1x = bmp_bndl->GetBitmap(bmp_bndl->GetPreferredBitmapSizeAtScale(1.0));
         // It's critical to have a valid bitmap here.
         if (!bmp_1x.IsOk()) return wxBitmap();
@@ -71,8 +71,8 @@ static wxBitmap make_bitmap(bool is_editor, double scale)
     wxRect rc(final_scaled_size);
     final_image.SetRGB(rc, 100, 100, 100);
     rc.Deflate(border);
-    // 4.2 Fill the entire image with the dark grey background color.
-    final_image.SetRGB(rc, 26, 26, 26);
+    // 4.2 Fill the entire image with the banner background color.
+    final_image.SetRGB(rc, 41, 41, 41); // piggie black
 
     // 5. Rescale the original JPEG image part to the target resolution.
     wxImage image_part_scaled = bmp_1x.ConvertToImage().Rescale(lround(image_part_logical_size.GetWidth() * scale),
@@ -112,7 +112,7 @@ SplashScreen::SplashScreen(bool is_editor, wxPoint pos) :
     wxNO_BORDER | wxFRAME_NO_TASKBAR),
     m_is_editor(is_editor),
     m_text_color(wxColour(255, 255, 255)),
-    m_highlighted_text_color(wxColour(237, 107, 33)),
+    m_highlighted_text_color(wxColour(208, 118, 130)),
     m_scale(get_display_scale_factor(pos)) // Initialize member variable for scale factor.
 {
 #ifndef __WXMSW__
@@ -188,7 +188,7 @@ void SplashScreen::Decorate(wxBitmap& bmp)
     // load bitmap for logo
     WX::BitmapCache bmp_cache;
     int logo_size = lround(width * 0.25);
-    wxBitmap* logo_bmp_ptr = bmp_cache.load_svg(m_is_editor ? "PrusaSlicer" : "PrusaSlicer-gcodeviewer", logo_size, logo_size);
+    wxBitmap* logo_bmp_ptr = bmp_cache.load_svg("PiggieSlicer", logo_size, logo_size);
     if (logo_bmp_ptr == nullptr)
         return;
 
@@ -204,7 +204,7 @@ void SplashScreen::Decorate(wxBitmap& bmp)
     wxRect banner_rect(wxPoint(0, logo_size + margin), wxPoint(width, bmp.GetLogicalHeight()));
     banner_rect.Deflate(margin, 2 * margin);
 
-    wxString strPrusa  = WX::from_u8("Prusa");
+    wxString strPrusa  = WX::from_u8("Piggie");
     wxString strSlicer = WX::from_u8("Slicer");
 
     memDc.SetFont(m_constant_text.title_font);

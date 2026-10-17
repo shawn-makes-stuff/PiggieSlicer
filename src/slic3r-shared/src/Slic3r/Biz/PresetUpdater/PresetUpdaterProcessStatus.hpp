@@ -106,16 +106,6 @@ public:
         return m_retry_policy;
     }
 
-    void set_access_token(const std::string& token)
-    {
-        m_access_token = token;
-    }
-
-    std::string access_token() const
-    {
-        return m_access_token;
-    }
-
     bool on_attempt(int attempt, unsigned delay);
 
     void set_warning_target(const std::string& repo, const std::string& vendor = {})
@@ -157,7 +147,6 @@ private:
     std::string m_warning_target_vendor;
     std::string m_download_target;
     Network::HttpRetryOpt m_retry_policy;
-    std::string m_access_token;
     StatusChangedFn m_dispatch_status_fn;
 
     JThread::StopToken m_stop_token;

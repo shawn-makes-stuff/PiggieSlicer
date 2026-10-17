@@ -132,7 +132,7 @@ CrashedProjectsDialog::CrashedProjectsDialog(
     panel->set_warning(
         Biz::_u8L("Restore project files"),
         Biz::_u8L(
-            "PrusaSlicer was closed incorrectly and unsaved projects were found.\n"
+            "PiggieSlicer was closed incorrectly and unsaved projects were found.\n"
             "Select if you want to attempt a recovery or you want to discard them."
         )
     );

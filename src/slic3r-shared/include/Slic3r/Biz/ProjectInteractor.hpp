@@ -19,17 +19,13 @@
 #include "Slic3r/Biz/ISelectedBedInstanceChangedListener.hpp"
 #include "Slic3r/Biz/Slicing/SlicingInteractor.hpp"
 #include "Slic3r/Biz/ResultExport/ResultExportInteractor.hpp"
-#include "Slic3r/Biz/UserAccount/UserAccountInteractor.hpp"
-#include "Slic3r/Biz/UserAccount/IUserAccountListener.hpp"
 #include "Slic3r/Biz/Platform/IAppInstanceMessageContentListener.hpp"
 #include "Slic3r/Biz/ObservableProjectList.hpp"
 #include "Slic3r/Biz/Format/3mf.hpp"
 #include "Slic3r/Biz/PresetUpdater/PresetUpdaterInteractor.hpp"
 #include "Slic3r/Biz/RemovableDrive/RemovableDriveService.hpp"
-#include "Slic3r/Biz/FileDownloader/FileDownloaderInteractor.hpp"
 #include "Slic3r/Biz/PhysicalPrinter/PhysicalPrinterInteractor.hpp"
 #include "Slic3r/Biz/IUndoProvider.hpp"
-#include "Slic3r/Biz/Connect/ConnectMessageHandler.hpp"
 #include "Slic3r/Biz/BackupStore.hpp"
 
 namespace Slic3r::Domain {
@@ -83,9 +79,7 @@ class ProjectInteractor final :
     public ISlicingInputChangedListener,
     public IColorsChangedListener,
     public IVirtualExtrudersChangedListener,
-    public UserAccount::IUserAccountListener,
     public Platform::IAppInstanceMessageContentListener,
-    public FileDownloader::IFileDownloaderListener,
     public WithListeners<ISelectedProjectChangedListener, IProjectsChangedListener, ISelectedConfigContainerChangedListener>
 {
 public:
@@ -100,12 +94,9 @@ public:
         m_virtual_extruder_interactor(workbench),
         m_slicing_interactor(dispatcher, thumbnail_image_generator),
         m_result_export_interactor(dispatcher),
-        m_user_account_interactor(dispatcher),
-        m_preset_updater_interactor(dispatcher, m_user_account_interactor),
+        m_preset_updater_interactor(dispatcher),
         m_removable_drive_service(dispatcher),
-        m_file_downloader_interactor(dispatcher),
-        m_physical_printer_interactor(dispatcher, m_preset_interactor, m_user_account_interactor, m_removable_drive_service),
-        m_connect_message_handler(dispatcher, m_preset_interactor, m_user_account_interactor, m_physical_printer_interactor),
+        m_physical_printer_interactor(dispatcher, m_preset_interactor, m_removable_drive_service),
         m_project_list(*this),
         m_undo_provider(std::make_unique<NoopUndoProvider>())
     {
@@ -133,11 +124,9 @@ public:
         m_slicing_interactor.add_listener<Slicing::IStatusListener>(&m_status_cache);
         m_slicing_interactor.add_listener<Slicing::IWipeTowerGeometryListener>(&m_scene_interactor);
         m_slicing_interactor.add_listener<Slicing::IExtruderCandidatesListener>(&m_scene_interactor);
-        m_user_account_interactor.add_listener<UserAccount::IUserAccountListener>(this);
         Platform::PlatformServices::instance()
             .app_instance_message_handler()
             .add_listener<Platform::IAppInstanceMessageContentListener>(this);
-        m_file_downloader_interactor.add_listener<FileDownloader::IFileDownloaderListener>(this);
         add_listener<ISelectedConfigContainerChangedListener>(
             &m_preset_interactor.object_settings_interactor()
         );
@@ -467,49 +456,6 @@ public:
         const PhysicalPrinter::PhysicalPrinterConfig& print_host_config
     );
 
-    /**
-     * @brief Same as do_result_upload, but does parse connect_msg first.
-     * Uploads to PrintHostType::PrusaConnect.
-     * @param filename_override is used f.e. when bgcode is not allowed in profiles, but user still writes .bgcode to filename and then agrees to change it back to .gcode
-     */
-    void do_result_upload_connect(
-        const Domain::SlicingId id,
-        const std::string& connect_msg,
-        const std::string& filename_override = std::string()
-    );
-
-    /**
-     * @brief Called on every successful login to user account and token renewal.
-     * Notifies all other running apps to read token store.
-     */
-    void on_user_account_id_success(bool is_refresh, const std::string& username) override
-    {
-        Platform::PlatformServices::instance().app_instance_message_handler().multicast_message(
-            "STORE_READ",
-            {}
-        );
-
-        if (!is_refresh)
-        {
-            m_physical_printer_interactor.select_connect_upload_if_default();
-        }
-    }
-
-    /**
-     * @brief Called on performed log out that originated locally.
-     * Notifies all other running apps to read token store.
-     * Dispatched separately from on_user_account_logged_out (only when notify_owner is true) so that a
-     * logout caused by an accepted STORE_READ from another instance does not echo another STORE_READ
-     * back, which would make the instances notify each other in an infinite loop.
-     */
-    void on_user_account_logged_out_notify_instances() override
-    {
-        Platform::PlatformServices::instance().app_instance_message_handler().multicast_message(
-            "STORE_READ",
-            {}
-        );
-    }
-
     void load_models_to_project(std::vector<boost::filesystem::path> paths);
 
     /**
@@ -518,44 +464,6 @@ public:
     void on_open_models(const std::vector<boost::filesystem::path>& paths) override
     {
         load_models_to_project(paths);
-    }
-
-    /**
-     * @brief Callback from AppInstanceMessageHandler.
-     */
-    void on_download_models(const std::vector<std::string>& message) override;
-
-    void download_model_from_printables_tab(FileDownloader::FileDownloaderMultiTicket data);
-
-    /**
-     * @brief Callback from FileDownloader.
-     */
-    void on_model_downloaded(const std::vector<boost::filesystem::path>& paths, bool in_new_project) override;
-
-    void open_downloaded_file(const boost::filesystem::path& path, bool in_new_project);
-
-    /**
-     * @brief Callback from AppInstanceMessageHandler.
-     */
-    void on_read_token_store_message() override
-    {
-        m_user_account_interactor.on_read_token_store_message();
-    }
-
-    /**
-     * @brief Callback from AppInstanceMessageHandler.
-     */
-    void on_login_data(const std::string& message) override
-    {
-        m_user_account_interactor.on_log_in_code_response(message);
-    }
-
-    /**
-     * @brief Getter for user account.
-     */
-    UserAccount::UserAccountInteractor& user_account_interactor()
-    {
-        return m_user_account_interactor;
     }
 
     /**
@@ -616,27 +524,9 @@ public:
 
     void set_dialog_provider(IMessageDialogProvider* dialog_provider);
 
-    /*
-     * @brief Sets callback to mainframe to bring application forward.
-     */
-    void set_raise_app_fn(std::function<void(void)> fn)
-    {
-        m_raise_app_fn = fn;
-    }
-
-    const std::function<void(void)>& raise_app_fn() const
-    {
-        return m_raise_app_fn;
-    }
-
     PhysicalPrinter::PhysicalPrinterInteractor& physical_printer_interactor()
     {
         return m_physical_printer_interactor;
-    }
-
-    Connect::ConnectMessageHandler& connect_message_handler()
-    {
-        return m_connect_message_handler;
     }
 
 private:
@@ -705,22 +595,13 @@ private:
     GeneratedSupportPointsCache m_generated_support_points_cache;
     StatusCache m_status_cache;
     ResultExport::ResultExportInteractor m_result_export_interactor;
-    UserAccount::UserAccountInteractor m_user_account_interactor;
     PresetUpdater::PresetUpdaterInteractor m_preset_updater_interactor;
     RemovableDrive::RemovableDriveService m_removable_drive_service;
-    FileDownloader::FileDownloaderInteractor m_file_downloader_interactor;
     PhysicalPrinter::PhysicalPrinterInteractor m_physical_printer_interactor;
-    Connect::ConnectMessageHandler m_connect_message_handler;
 
     ObservableProjectList m_project_list;
     IMessageDialogProvider* m_dialog_provider{ nullptr };
     std::unique_ptr<IUndoProvider> m_undo_provider;
-
-
-    /*
-     * @brief Callback to mainframe to bring application forward.
-     */
-    std::function<void(void)> m_raise_app_fn;
 };
 
 } // namespace Slic3r::Biz

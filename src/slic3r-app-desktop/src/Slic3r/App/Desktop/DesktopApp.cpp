@@ -27,7 +27,6 @@
 #include <Slic3r/App/WX/StringConversions.hpp>
 #include <Slic3r/App/WX/DialogManager.hpp>
 #include <Slic3r/App/WX/WindowMetrics.hpp>
-#include <Slic3r/App/WX/UrlProtocolRegistration.hpp>
 #include <Slic3r/App/ProjectSaver.hpp>
 
 #include <Slic3r/Directories.hpp>
@@ -38,10 +37,7 @@
 #include <Slic3r/Biz/Platform/Termination.hpp>
 #include <Slic3r/Biz/Slicing/SlicingInteractor.hpp>
 #include <Slic3r/Biz/ResultExport/ResultExportInteractor.hpp>
-#include <Slic3r/Biz/UserAccount/UserAccountInteractor.hpp>
-#include <Slic3r/Biz/UserAccount/UserAccountTokenStore.hpp>
 #include <Slic3r/Biz/AppInstance/AppInstanceMessageHandlerFactory.hpp>
-#include <Slic3r/Biz/AppInstance/AppInstanceUtils.hpp>
 #include "Slic3r/Biz/WX/FontManager.hpp"
 
 #include "Slic3r/Biz/Scene/BedGeometry.hpp"
@@ -80,7 +76,7 @@ void register_win32_device_notification_event()
             if (copy_data_structure->dwData == 1) {
                 LPCWSTR arguments = (LPCWSTR) copy_data_structure->lpData;
                 std::string args  = WX::into_u8(arguments);
-                SPDLOG_INFO("MSG {}", Biz::AppInstance::redact_app_urls(args));
+                SPDLOG_INFO("MSG {}", args);
                 app_instance->handle_app_instance_message(args);
             }
             return true;
@@ -291,15 +287,10 @@ bool DesktopApp::OnInit()
 
     auto& platform_services{PlatformServices::instance()};
     init_translations();
-    WX::register_prusaslicer_url();
 
     platform_services.set_main_thread_dispatcher(std::make_unique<WXMainThreadDispatcher>());
 
     platform_services.set_secret_store(SecretStoreFactory::create_secret_store());
-    // Reset Token store if Account not allowed in app_config
-    if (!app_services.app_config().is_prusa_account_enabled()) {
-        Biz::UserAccount::TokenStore::reset();
-    }
     platform_services.set_job_manager(
         std::make_unique<JobManager>(platform_services.main_thread_dispatcher())
     );
@@ -345,18 +336,10 @@ bool DesktopApp::OnInit()
         .add_listener<Biz::Platform::JobManager::IJobManagerStatusChangedListener>(
             &app_services.pop_notification_center()
         );
-    m_project_interactor->user_account_interactor()
-        .add_listener<Biz::UserAccount::IUserAccountListener>(
-            &app_services.pop_notification_center()
-        );
-    m_project_interactor->connect_message_handler()
-        .add_listener<Biz::Connect::IConnectHandlerListener>(
-            &app_services.pop_notification_center()
-        );
     PresetUpdater::ControllerEnvironment preset_updater_environment;
     preset_updater_environment.timer_queue = &platform_services.timer_queue();
-    preset_updater_environment.online_allowed =
-        []() { return AppServices::instance().app_config().get<bool>("enable_preset_update"); };
+    // PiggieSlicer: never contact Prusa's preset server; bundled and local sources still install.
+    preset_updater_environment.online_allowed = []() { return false; };
     preset_updater_environment.request_render = []()
     {
         Biz::Platform::PlatformServices::instance().render_request_handler().request_render();
@@ -531,11 +514,6 @@ void DesktopApp::finish_init()
         m_navigator.callbacks().render_module_switched();
     }
 
-    m_project_interactor->user_account_interactor()
-        .add_listener<Biz::UserAccount::IUserAccountListener>(m_main_frame);
-
-    m_project_interactor->user_account_interactor().init(app_services.app_config().is_prusa_account_enabled());
-
     m_prusalink_storage_listener =
         std::make_unique<PrintHost::PrusaLinkStorageListener>(*m_project_interactor.get());
     platform_services.job_manager()
@@ -543,14 +521,6 @@ void DesktopApp::finish_init()
             m_prusalink_storage_listener.get()
         );
 
-    app_services.pop_notification_center().set_switch_left_tab_fn(
-        std::bind(
-            &MainFrame::switch_left_tab,
-            m_main_frame,
-            std::placeholders::_1,
-            std::placeholders::_2
-        )
-    );
     app_services.pop_notification_center().set_open_invalid_data_dialog_fn(
         std::bind(&Navigator::open_invalid_data_dialog, &m_navigator)
     );
@@ -577,13 +547,6 @@ void DesktopApp::finish_init()
 
     m_project_interactor->backup_store().start_crash_detection();
 
-    for (int i = 0; i < m_init_params.argc; ++i) {
-        std::string arg(m_init_params.argv[i]);
-        if (boost::starts_with(arg, "prusaslicer://open")) {
-            m_project_interactor->on_download_models({std::move(arg)});
-        }
-    }
-
     // Last: the application is up, so the check can report what it finds without being in the way.
     app_services.preset_updater_controller().start_background_check();
 }
@@ -607,12 +570,12 @@ void DesktopApp::init_translations()
     std::string language             = app_config.get<std::string>("translation_language");
     std::string language_description = localization().language_description(language);
     if (!language.empty())
-        SPDLOG_TRACE("translation_language provided by PrusaSlicer.ini: {}", language_description);
+        SPDLOG_TRACE("translation_language provided by the app config: {}", language_description);
 
     if (!localization().set_language(language)) {
         // Loading the language dictionary failed.
         wxString message =
-            WX::format_wxstr("Switching PrusaSlicer to language %1% failed.", language_description);
+            WX::format_wxstr("Switching PiggieSlicer to language %1% failed.", language_description);
 #if !defined(_WIN32) && !defined(__APPLE__)
         // likely some linux system
         message +=
@@ -628,7 +591,7 @@ void DesktopApp::init_translations()
         message += WX::from_u8("\n\nApplication will close.");
         wxMessageBox(
             message,
-            WX::from_u8("PrusaSlicer - Switching language failed"),
+            WX::from_u8("PiggieSlicer - Switching language failed"),
             wxOK | wxICON_ERROR
         );
 
@@ -636,7 +599,7 @@ void DesktopApp::init_translations()
     } else if (!language.empty() && language != localization().active_language()) {
         // Loading the language dictionary failed.
         wxString message =
-            WX::format_wxstr("Switching PrusaSlicer to language %1% failed.", language_description);
+            WX::format_wxstr("Switching PiggieSlicer to language %1% failed.", language_description);
         message += WX::from_u8("\n\n")
             + WX::format_wxstr(
                        localization().is_alternative_language() ?
@@ -646,7 +609,7 @@ void DesktopApp::init_translations()
             );
         wxMessageBox(
             message,
-            WX::from_u8("PrusaSlicer - Switching language"),
+            WX::from_u8("PiggieSlicer - Switching language"),
             wxOK | wxICON_WARNING
         );
         app_config.set(
@@ -670,7 +633,7 @@ void DesktopApp::handle_previous_crash_recovery(AppConfig& app_config)
         const std::string msg = fmt::format(
             fmt::runtime(
                 Biz::_u8L(
-                    "PrusaSlicer crashed last time when attempting to set window position or size.\n"
+                    "PiggieSlicer crashed last time when attempting to set window position or size.\n"
                     "We are sorry for the inconvenience, it unfortunately happens with certain multiple-monitor setups.\n"
                     "More precise reason for the crash: \"{0}\".\n"
                     "For more information see our GitHub issue tracker: \"{1}\" and \"{2}\"\n\n"
@@ -686,7 +649,7 @@ void DesktopApp::handle_previous_crash_recovery(AppConfig& app_config)
 
         AppServices::instance().dialog_manager().show_info_dialog(
             msg,
-            Biz::_u8L("PrusaSlicer started after a crash"),
+            Biz::_u8L("PiggieSlicer started after a crash"),
             true
         );
 
@@ -715,19 +678,5 @@ void DesktopApp::handle_volumes_changed_event()
 {
     m_project_interactor->handle_volumes_changed_event();
 }
-
-#ifdef __APPLE__
-void DesktopApp::MacOpenURL(const wxString& url)
-{
-    std::string narrow_url = WX::into_u8(url);
-    if (boost::starts_with(narrow_url, "prusaslicer://login")) {
-        m_project_interactor->user_account_interactor().on_log_in_code_response(narrow_url);
-    } else if (boost::starts_with(narrow_url, "prusaslicer://open")) {
-        m_project_interactor->on_download_models({std::move(narrow_url)});
-    } else {
-        SPDLOG_ERROR("MacOpenURL recieved improper URL: {}", narrow_url);
-    }
-}
-#endif /* __APPLE__ */
 
 } // namespace Slic3r::App::Desktop

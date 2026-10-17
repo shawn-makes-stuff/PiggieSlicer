@@ -50,10 +50,6 @@ public:
     void handle_HID_device_attached_event(const std::string& message);
     void handle_volumes_changed_event();
 
-#ifdef __APPLE__
-    void MacOpenURL(const wxString& url) override;
-#endif /* __APPLE */
-
 private:
     void init_translations();
     void handle_previous_crash_recovery(AppConfig& app_config);

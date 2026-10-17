@@ -431,21 +431,6 @@ set(SLIC3R_SHARED_FILES
         include/Slic3r/App/Browser/BrowserLogicCommand.hpp
         include/Slic3r/App/Browser/AbstractBrowserLogicCommandHandler.hpp
         include/Slic3r/App/Browser/AbstractBrowserLogic.hpp
-        include/Slic3r/App/Browser/AbstractUploadBrowserLogic.hpp
-        include/Slic3r/App/Browser/BrowserLogicLogIn.hpp
-        src/Slic3r/App/Browser/BrowserLogicLogIn.cpp
-        include/Slic3r/App/Browser/BrowserLogicConnectSelect.hpp
-        src/Slic3r/App/Browser/BrowserLogicConnectSelect.cpp
-        include/Slic3r/App/Browser/AbstractConnectRequestHandler.hpp
-        src/Slic3r/App/Browser/AbstractConnectRequestHandler.cpp
-        include/Slic3r/App/Browser/BrowserLogicConnectPage.hpp
-        src/Slic3r/App/Browser/BrowserLogicConnectPage.cpp
-        include/Slic3r/App/Browser/BrowserLogicPrintables.hpp
-        src/Slic3r/App/Browser/BrowserLogicPrintables.cpp
-        include/Slic3r/App/Browser/BrowserLogicLogInRedirect.hpp
-        src/Slic3r/App/Browser/BrowserLogicLogInRedirect.cpp
-        include/Slic3r/App/Browser/BrowserLogicPrintablesToConnect.hpp
-        src/Slic3r/App/Browser/BrowserLogicPrintablesToConnect.cpp
         include/Slic3r/App/Browser/BrowserLogicPhysicalPrinter.hpp
         src/Slic3r/App/Browser/BrowserLogicPhysicalPrinter.cpp
 
@@ -963,7 +948,6 @@ set(SLIC3R_SHARED_FILES
         include/Slic3r/Biz/PrintHost/PrintHostOctoPrint.hpp
         include/Slic3r/Biz/PrintHost/PrintHostPrusaLink.hpp
         include/Slic3r/Biz/PrintHost/PrintHostPrusaLinkStorage.hpp
-        include/Slic3r/Biz/PrintHost/PrintHostPrusaConnect.hpp
         include/Slic3r/Biz/PrintHost/PrintHostSL1Host.hpp
         include/Slic3r/Biz/PrintHost/PrintHostMoonraker.hpp
         include/Slic3r/Biz/PrintHost/PrintHostDuet.hpp
@@ -979,7 +963,6 @@ set(SLIC3R_SHARED_FILES
         src/Slic3r/Biz/PrintHost/PrintHostOctoPrint.cpp
         src/Slic3r/Biz/PrintHost/PrintHostPrusaLink.cpp
         src/Slic3r/Biz/PrintHost/PrintHostPrusaLinkStorage.cpp
-        src/Slic3r/Biz/PrintHost/PrintHostPrusaConnect.cpp
         src/Slic3r/Biz/PrintHost/PrintHostSL1Host.cpp
         src/Slic3r/Biz/PrintHost/PrintHostMoonraker.cpp
         src/Slic3r/Biz/PrintHost/PrintHostDuet.cpp
@@ -1030,37 +1013,6 @@ set(SLIC3R_SHARED_FILES
         src/Slic3r/Biz/SLAResultCache.cpp
         include/Slic3r/Biz/SLAObjectCache.hpp
         src/Slic3r/Biz/SLAObjectCache.cpp
-
-        include/Slic3r/Biz/UserAccount/IUserAccountListener.hpp
-        include/Slic3r/Biz/UserAccount/IUserAccountSessionListener.hpp
-        include/Slic3r/Biz/UserAccount/IUserAccountActionCallbacks.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountInteractor.hpp
-        include/Slic3r/Biz/UserAccount/IUserAccountCommunication.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountCommunication.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountCommunicationDummy.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountSession.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountSessionDispatchBase.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountAction.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountActionStore.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountActionData.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountCommunicationTokenBase.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountTokenStore.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountTokenLog.hpp
-        include/Slic3r/Biz/UserAccount/UserAccountCodeChallengeGenerator.hpp
-        include/Slic3r/Biz/UserAccount/ConnectUtils.hpp
-        src/Slic3r/Biz/UserAccount/UserAccountInteractor.cpp
-        src/Slic3r/Biz/UserAccount/UserAccountCommunication.cpp
-        src/Slic3r/Biz/UserAccount/UserAccountSession.cpp
-        src/Slic3r/Biz/UserAccount/UserAccountSessionDispatchBase.cpp
-        src/Slic3r/Biz/UserAccount/UserAccountAction.cpp
-        src/Slic3r/Biz/UserAccount/UserAccountCommunicationTokenBase.cpp
-        src/Slic3r/Biz/UserAccount/UserAccountTokenStore.cpp
-        src/Slic3r/Biz/UserAccount/UserAccountCodeChallengeGenerator.cpp
-        src/Slic3r/Biz/UserAccount/ConnectUtils.cpp
-
-        include/Slic3r/Biz/Connect/IConnectHandlerListener.hpp
-        include/Slic3r/Biz/Connect/ConnectMessageHandler.hpp
-        src/Slic3r/Biz/Connect/ConnectMessageHandler.cpp
 
         include/Slic3r/Biz/SHA256.hpp
 
@@ -1202,12 +1154,6 @@ set(SLIC3R_SHARED_FILES
         include/Slic3r/App/PrusaLinkStorageListener.hpp
         src/Slic3r/App/PrusaLinkStorageListener.cpp
 
-        include/Slic3r/Biz/FileDownloader/FileDownloaderInteractor.hpp
-        src/Slic3r/Biz/FileDownloader/FileDownloaderInteractor.cpp
-        include/Slic3r/Biz/FileDownloader/FileDownloaderJob.hpp
-        src/Slic3r/Biz/FileDownloader/FileDownloaderJob.cpp
-        include/Slic3r/Biz/FileDownloader/IFileDownloaderListener.hpp
-        include/Slic3r/Biz/FileDownloader/FileDownloaderJobData.hpp
         include/Slic3r/App/AppConfigProvider.hpp
         src/Slic3r/App/AppConfigProvider.cpp
 
@@ -1475,7 +1421,7 @@ endif()
 if (NOT WIN32)
     if (SLIC3R_FHS)
         #CMAKE_INSTALL_FULL_DATAROOTDIR : read - only architecture - independent data root(share)
-        set(SLIC3R_FHS_RESOURCES "${CMAKE_INSTALL_FULL_DATAROOTDIR}/PrusaSlicer")
+        set(SLIC3R_FHS_RESOURCES "${CMAKE_INSTALL_FULL_DATAROOTDIR}/PiggieSlicer")
         install(DIRECTORY ${SLIC3R_RESOURCES_DIR}/ DESTINATION ${SLIC3R_FHS_RESOURCES})
         target_compile_definitions(slic3r-shared PUBLIC SLIC3R_FHS SLIC3R_FHS_RESOURCES="${SLIC3R_FHS_RESOURCES}")
     else ()
@@ -1626,8 +1572,6 @@ if(SLIC3R_BUILD_TESTS)
             test/Slic3r/Biz/Format/STEPTests.cpp
 
             test/Slic3r/Biz/BundleCacheTests.cpp
-
-        test/Slic3r/Biz/UserAccount/UserAccountSessionTests.cpp
 
         test/Slic3r/App/CustomGCodeMigrationTests.cpp
     )

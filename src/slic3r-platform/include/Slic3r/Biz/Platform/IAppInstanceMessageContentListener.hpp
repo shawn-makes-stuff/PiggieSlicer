@@ -13,12 +13,6 @@ public:
 
     virtual void on_open_models(const std::vector<boost::filesystem::path>& message) {}
 
-    virtual void on_download_models(const std::vector<std::string>& message) {}
-
-    virtual void on_read_token_store_message() {}
-
-    virtual void on_login_data(const std::string& message) {}
-
     virtual void on_app_go_front() {}
 
     virtual void on_backup_id_requested() {}

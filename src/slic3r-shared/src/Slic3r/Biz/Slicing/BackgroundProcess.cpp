@@ -46,7 +46,7 @@ Domain::GCodeMetadata build_gcode_metadata(
     Domain::GCodeMetadata metadata{
         .general =
             {
-                .producer         = SLIC3R_APP_NAME,
+                .producer         = SLIC3R_COMPAT_APP_KEY,
                 .producer_version = SLIC3R_VERSION,
                 .time             = Utils::iso_ext_utc_timestamp(),
             },

@@ -12,8 +12,6 @@ std::string physical_printer_type_to_string(const PhysicalPrinterConfig& data)
             using T = std::remove_cvref_t<decltype(auth)>;
             if constexpr (std::is_same_v<T, PrinterUpload>) {
                 return print_host_type_to_string(auth.type);
-            } else if constexpr (std::is_same_v<T, ConnectUpload>) {
-                return {};
             } else {
                 return {};
             }
@@ -42,19 +40,9 @@ PhysicalPrinterConfig filesystem_export_removable()
     };
 }
 
-PhysicalPrinterConfig connect_upload_generic()
-{
-    return {
-        ConnectUpload{},
-        {},
-        _u8L("Prusa Connect"),
-        std::string(PRUSA_CONNECT_UUID),
-    };
-}
-
 bool is_reserved_uuid(const std::string& uuid)
 {
-    return uuid == LOCAL_DRIVE_UUID || uuid == REMOVABLE_DRIVE_UUID || uuid == PRUSA_CONNECT_UUID;
+    return uuid == LOCAL_DRIVE_UUID || uuid == REMOVABLE_DRIVE_UUID;
 }
 
 bool is_physical_printer_compatible(

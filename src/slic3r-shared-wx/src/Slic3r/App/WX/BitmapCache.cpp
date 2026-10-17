@@ -422,7 +422,7 @@ wxBitmapBundle* BitmapCache::from_svg(const std::string& bitmap_name, unsigned t
     if (dark_mode)
         replaces["#808080"] = "#FFFFFF";
     if (!new_color.empty()) {
-        replaces["#ED6B21"] = new_color;
+        replaces["#D07682"] = new_color;
         replaces["#808080"] = new_color;
     }
 
@@ -515,7 +515,7 @@ wxBitmap* BitmapCache::load_svg(const std::string &bitmap_name, unsigned target_
     if (dark_mode)
         replaces["#808080"] = "#FFFFFF";
     if (!new_color.empty())
-        replaces["#ED6B21"] = new_color;
+        replaces["#D07682"] = new_color;
 
     NSVGimage *image =  nsvgParseFromFileWithReplace(var(bitmap_name + ".svg").c_str(), "px", 96.0f, replaces);
     if (image == nullptr)

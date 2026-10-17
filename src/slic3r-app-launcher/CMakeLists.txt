@@ -11,6 +11,7 @@ add_executable(slic3r-app-launcher
     src/Slic3r/App/Launcher/SentryScope.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/slic3r-app-launcher.rc
 )
+set_target_properties(slic3r-app-launcher PROPERTIES OUTPUT_NAME piggie-slicer)
 
 if (MSVC AND SLIC3R_RELEASE_DEBUG_SYMBOLS)
     target_link_options(slic3r-app-launcher PRIVATE "$<$<CONFIG:RELEASE>:/DEBUG>")
@@ -66,7 +67,7 @@ if (SLIC3R_GUI)
 endif()
 
 if (MSVC)
-    # Manifest is provided through PrusaSlicer.rc, don't generate your own.
+    # Manifest is provided through slic3r-app-launcher.rc, don't generate your own.
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
 endif ()
 

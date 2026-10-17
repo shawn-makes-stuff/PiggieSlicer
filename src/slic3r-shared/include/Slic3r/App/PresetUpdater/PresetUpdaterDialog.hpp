@@ -72,7 +72,6 @@ private:
     Yoga::Text* m_offline_note{nullptr};
 
     Yoga::LayoutButton* m_add_zip_button{nullptr};
-    Yoga::LayoutButton* m_repo_link_button{nullptr};
     Yoga::LayoutButton* m_update_everything_button{nullptr};
     Yoga::LayoutButton* m_footer_close_button{nullptr};
     Yoga::LayoutButton* m_exit_app_button{nullptr};

@@ -19,9 +19,9 @@
 
 -(void)add_observer:(NSString *)version_hash
 {
-    NSString *nsver = [NSString stringWithFormat: @"%@%@", @"OtherPrusaSlicerInstanceMessage", version_hash];
+    NSString *nsver = [NSString stringWithFormat: @"%@%@", @"OtherPiggieSlicerInstanceMessage", version_hash];
     [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(message_update:) name:nsver object:nil suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];
-    NSString *nsnover = [NSString stringWithFormat: @"%@", @"OtherPrusaSlicerMulticastMessage"];
+    NSString *nsnover = [NSString stringWithFormat: @"%@", @"OtherPiggieSlicerMulticastMessage"];
     [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(message_multicast_update:) name:nsnover object:nil suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];
 }
 
@@ -71,7 +71,7 @@ void AppInstanceMessageSenderMac::multicast_message(const std::string& message_t
     std::string msg = compose_message_json(message_type, message_data);
     NSString *nsmsg = [NSString stringWithCString:msg.c_str() encoding:[NSString defaultCStringEncoding]];
     //NSLog(@"multicast_message %@", nsmsg);
-    NSString *notifname = [NSString stringWithFormat: @"%@", @"OtherPrusaSlicerMulticastMessage"];
+    NSString *notifname = [NSString stringWithFormat: @"%@", @"OtherPiggieSlicerMulticastMessage"];
     [[NSDistributedNotificationCenter defaultCenter] postNotificationName:notifname object:nil userInfo:[NSDictionary dictionaryWithObject:nsmsg forKey:@"data"] deliverImmediately:YES]; 
 }
 
@@ -82,7 +82,7 @@ void AppInstanceMessageSenderMac::broadcast_message(const std::string& message_t
     NSString *nsmsg = [NSString stringWithCString:msg.c_str() encoding:[NSString defaultCStringEncoding]];
     //NSLog(@"broadcast_message %@", nsmsg);
     NSString *nsver = [NSString stringWithCString:version.c_str() encoding:[NSString defaultCStringEncoding]];
-    NSString *notifname = [NSString stringWithFormat: @"%@%@", @"OtherPrusaSlicerInstanceMessage", nsver];
+    NSString *notifname = [NSString stringWithFormat: @"%@%@", @"OtherPiggieSlicerInstanceMessage", nsver];
     [[NSDistributedNotificationCenter defaultCenter] postNotificationName:notifname object:nil userInfo:[NSDictionary dictionaryWithObject:nsmsg forKey:@"data"] deliverImmediately:YES];
 }
 

@@ -93,7 +93,6 @@ struct CommandName
     static constexpr const char* ImportGeometry = "import-geometry";
 
     static constexpr const char* ExportGcode        = "export-gcode";
-    static constexpr const char* SendGcode          = "send-gcode";
     static constexpr const char* ExportGcodeToFlash = "export-gcode-to-flash";
 
     static constexpr const char* OnlinePresetUpdate = "online-preset-update";

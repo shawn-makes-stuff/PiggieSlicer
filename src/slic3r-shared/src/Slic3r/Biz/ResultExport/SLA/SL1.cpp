@@ -159,7 +159,7 @@ void fill_iniconf(ConfMap &m, const Domain::ConfigView &cfg, const Domain::SLA::
     //m["printerProfile"] = cfg.get<std::string>("printer_settings_id");
     //m["printProfile"]   = cfg.get<std::string>("sla_print_settings_id");
     m["fileCreationTimestamp"] = Utils::utc_timestamp();
-    m["prusaSlicerVersion"]    = SLIC3R_BUILD_ID;
+    m["prusaSlicerVersion"]    = SLIC3R_COMPAT_BUILD_ID;
 
     // Set statistics values to the printer
     double used_material = (stats.objects_used_material +

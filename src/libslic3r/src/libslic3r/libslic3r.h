@@ -9,8 +9,8 @@
 #include "Slic3r/Utils.hpp"
 #include "Slic3r/Math.hpp"
 
-#define GCODEVIEWER_APP_NAME "PrusaSlicer G-code Viewer"
-#define GCODEVIEWER_APP_KEY  "PrusaSlicerGcodeViewer"
+#define GCODEVIEWER_APP_NAME "PiggieSlicer G-code Viewer"
+#define GCODEVIEWER_APP_KEY  "PiggieSlicerGcodeViewer"
 
 // this needs to be included early for MSVC (listing it in Build.PL is not enough)
 #include <memory>

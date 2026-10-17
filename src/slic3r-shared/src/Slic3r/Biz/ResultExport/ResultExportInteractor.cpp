@@ -1,7 +1,6 @@
 #include "Slic3r/Biz/ResultExport/ResultExportInteractor.hpp"
 
 #include "Slic3r/Log.hpp"
-#include "Slic3r/Biz/Network/ServiceConfig.hpp"
 
 #include "Slic3r/LegacyFormat.hpp"
 

@@ -196,10 +196,6 @@ static bool process_input_files(
 )
 {
     for (const std::string& input_file : init_params.input.input_files) {
-        if (boost::starts_with(input_file, "prusaslicer://")) {
-            continue;
-        }
-
         if (!boost::filesystem::exists(input_file)) {
             boost::nowide::cerr << "No such file: " << input_file << std::endl;
             return false;

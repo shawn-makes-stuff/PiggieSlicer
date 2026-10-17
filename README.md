@@ -1,48 +1,41 @@
-![PrusaSlicer logo](/resources/icons/PrusaSlicer_128px.png)
+![PiggieSlicer logo](/resources/icons/PiggieSlicer_128px.png)
 
-# PrusaSlicer
+# PiggieSlicer
 
-PrusaSlicer enables you to take your 3D models, generate 3D printing instructions and send them to your 3D printer. It supports both FDM 3D printers and mSLA 3D printers. It is developed by [Prusa Research](https://www.prusa3d.com/) and apart from Prusa printers it supports machines from a wide variety of manufacturers.
+PiggieSlicer turns your 3D models into printing instructions and sends them to your 3D printer. It supports FDM and mSLA printers.
 
-PrusaSlicer is originally based on [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community.
+PiggieSlicer is a fork of [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) 3.0 by [Prusa Research](https://www.prusa3d.com/). PrusaSlicer is in turn based on [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community. PiggieSlicer is currently an **early preview** built on the PrusaSlicer 3.0.0 alpha, so expect rough edges.
 
-## Installation
+## How it differs from PrusaSlicer
 
-The **recommended installation method** is to go to the [PrusaSlicer project page](https://www.prusa3d.com/prusaslicer/) and download and install the software by following the instructions there.
+* **Offline by design.** There is no Prusa Account, Prusa Connect or Printables integration, and no online profile updates. Printer profiles are installed from the files that ship with the application, from ZIP files and from local sources.
+* **Local network printing is fully supported.** Send prints straight to OctoPrint, PrusaLink, Moonraker (Klipper), Duet, Repetier, FlashAir, AstroBox, MKS and SL1 hosts, or export to a folder or removable drive.
+* **Runs alongside PrusaSlicer.** PiggieSlicer keeps its own settings, presets and logs, and never touches an installed PrusaSlicer.
+* **Compatible files.** Projects (3MF) and G-code are written in PrusaSlicer's formats, so they open in PrusaSlicer and work with printer hosts that expect them.
 
-**Alternatively**, for Windows and macOS, you can download the software directly from the [GitHub releases page](https://github.com/prusa3d/PrusaSlicer/releases). For Linux, PrusaSlicer is currently distributed exclusively through [Flathub](https://flathub.org/en/apps/com.prusa3d.PrusaSlicer).
+## Main features
 
-If you prefer, you can always build PrusaSlicer yourself from source. See the [documentation](doc/Build.md) to learn how to do it.
-
-### Main features
-
-* Set the **printing parameters** with precision - from settings affecting the **whole print** down to **single-layer adjustments**.
-* Modify your objects before printing to best suit your needs, you can **paint**, **cut**, **arrange** and do **many more** directly in PrusaSlicer.
-* Open **multiple projects** at once, each containing **multiple beds** (each with potentially **different settings**).
-* Make full use of **multi-material printing**
-* Use your **preferred method to send your prints to the printer**, PrusaSlicer supports a wide range of possibilities.
+* Set the **printing parameters** precisely, from settings for the **whole print** down to **single-layer adjustments**.
+* Modify objects before printing: **paint**, **cut**, **arrange** and **much more**.
+* Open **multiple projects** at once, each with **multiple beds** that can have **different settings**.
+* Make full use of **multi-material printing**.
 * **View the generated print instructions** in an advanced **3D preview**.
-* You can make use of the **command-line interface** to use **PrusaSlicer without GUI** in your automation setups.
-* If you want, you **can make use of the integration** with [PrusaConnect](https://connect.prusa3d.com/) and [Printables](https://www.printables.com) to greatly simplify your workflow.
+* Use the **command-line interface** (`piggie-slicer`) to run PiggieSlicer **without a GUI** in automation setups.
 
-### Reporting a bug
+## Building
 
-Did you find a bug? Bugs can be reported in our [GitHub issue tracker](https://github.com/prusa3d/PrusaSlicer/issues), but **first make sure your report complies with the [Issue tracker policy](https://github.com/prusa3d/PrusaSlicer?tab=contributing-ov-file#issue-tracker-policy)**. **Are you not sure?** Get in touch in our [GitHub Discussions](https://www.github.com/prusa3d/discussions), before filing a bug report in the issue tracker. You can always file a bug report later, once you have more confidence.
+PiggieSlicer is built from source. See the [build documentation](doc/Build.md). The first build compiles all dependencies, which can take a few hours.
 
-### How to get in touch
+## Technical stack
 
-We maintain a [GitHub Discussions](https://www.github.com/prusa3d/discussions) page in this repository to be used for **general discussions**, **questions** and **feature requests**. Furthermore, there is an announcements category, which we use to communicate with you directly.
+PiggieSlicer is written in C++ (C++20) and uses CMake as its build system.
 
-### Pull requests
+The slicing backend relies heavily on [Clipper](https://www.angusj.com/clipper2) by Angus Johnson for polygon boolean operations, offsets and similar work. [Eigen](https://libeigen.gitlab.io/) provides the basic types and the linear algebra.
 
-Read our [contribution guide](.github/CONTRIBUTING.md) to get more information.
+[wxWidgets](https://wxwidgets.org) handles GUI windows and events across platforms. Most of the UI is a custom OpenGL-based toolkit built on the [Yoga layout engine](https://github.com/facebook/yoga) and [Dear ImGui](https://github.com/ocornut/imgui).
 
-### Technical stack
+The application uses many other libraries; see [deps/](deps/) and [bundled_deps/](bundled_deps/) for the complete list. We are grateful to their authors and maintainers for open-sourcing their work.
 
-All of PrusaSlicer is written in C++, using CMake as the build system. The code assumes that the compiler supports C++20.
+## License
 
-The slicing backend heavily relies on [Clipper](https://www.angusj.com/clipper2) by Angus Johnson, which handles polygon boolean operations, offsets and similar. [Eigen](https://libeigen.gitlab.io/) library is used for basic types and linear algebra calculations.
-
-[wxWidgets](https://wxwidgets.org) library is used to handle GUI windows and events across platforms. Most of the UI is implemented using a custom OpenGL-based UI toolkit based on the [Yoga layout engine](https://github.com/facebook/yoga) and [Dear ImGui](https://github.com/ocornut/imgui), which makes it platform-independent.
-
-The application uses many other libraries. You can see the [deps/](deps/) and [bundled_deps/](bundled_deps/) folders in the source tree to see the complete list. We are grateful to the authors and maintainers for open-sourcing their work.
+PiggieSlicer is licensed under the [GNU Affero General Public License, version 3](LICENSE), like PrusaSlicer and Slic3r. Copyright © Prusa Research and © Alessandro Ranellucci and the Slic3r contributors. PiggieSlicer changes © their respective authors.

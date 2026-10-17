@@ -136,7 +136,7 @@ public:
             ))};
             if (repairable) {
                 info->set_text(Biz::_u8L(
-                    "This may be caused by loading a 3mf saved from a different version of PrusaSlicer. "
+                    "This may be caused by loading a 3mf saved from a different version of PiggieSlicer. "
                     "If that is the case, the easiest solution is to choose a system provided printer in the right panel. "
                     "Other features loaded from the 3mf, such as multi material painting, will remain unchanged. "
                     "Alternativelly, if you want keep using the loaded printer profile, "

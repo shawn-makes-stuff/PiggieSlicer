@@ -1,7 +1,6 @@
 #include "Slic3r/App/Preview/SidebarPreviewActionButtons.hpp"
 
 #include "Slic3r/App/AppConfig.hpp"
-#include "Slic3r/App/Browser/BrowserLogicLogInRedirect.hpp"
 #include "Slic3r/Biz/ProjectInteractor.hpp"
 #include "Slic3r/App/Yoga/LayoutButton.hpp"
 #include "Slic3r/App/ResultExport/ExportActions.hpp"
@@ -149,10 +148,6 @@ void SidebarPreviewActionButtons::update_buttons()
             m_primary_button->callbacks().action = payload->prefer_removable ? 
                 ExportActions::export_gcode_to_flash(*m_project_interactor) :
                 ExportActions::export_gcode(*m_project_interactor);
-        } else if (m_project_interactor->physical_printer_interactor().is_connect_upload_selected()) {
-            m_primary_button->set_label(Biz::_u8L("Send to Connect"));
-            m_primary_button->set_tooltip("Send to Connect");
-            m_primary_button->callbacks().action = ExportActions::send_gcode_to_connect(*m_project_interactor);
         } else if (m_project_interactor->physical_printer_interactor().is_printer_upload_selected()) {
             m_primary_button->set_label(Biz::_u8L("Send to Printer"));
             m_primary_button->set_tooltip(Biz::_u8L("Send to Printer"));

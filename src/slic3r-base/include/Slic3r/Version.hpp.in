@@ -5,6 +5,11 @@
 #define SLIC3R_VERSION "@SLIC3R_VERSION@"
 #define SLIC3R_BUILD_ID "@SLIC3R_BUILD_ID@"
 
+// File-format identity. Projects, G-code and SLA archives we write keep saying PrusaSlicer:
+// PrusaSlicer, printer hosts and our own loaders recognise them by the "PrusaSlicer-" prefix.
+#define SLIC3R_COMPAT_APP_KEY "PrusaSlicer"
+#define SLIC3R_COMPAT_BUILD_ID SLIC3R_COMPAT_APP_KEY "-" SLIC3R_VERSION
+
 namespace Slic3r {
     constexpr const char* APP_NAME = SLIC3R_APP_NAME;
     constexpr const char* APP_KEY = SLIC3R_APP_KEY;

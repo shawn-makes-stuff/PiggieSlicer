@@ -1,7 +1,6 @@
 #include "Slic3r/App/PopNotification/PopNotificationCenter.hpp"
 #include "Slic3r/App/AppServices.hpp"
 #include "Slic3r/App/Platform/IFileExplorerHandler.hpp"
-#include "Slic3r/Biz/FileDownloader/FileDownloaderJob.hpp"
 #include "Slic3r/App/DisplayStrings.hpp"
 
 #include "Slic3r/Biz/I18N/I18N.hpp"
@@ -17,7 +16,6 @@ using SlicingStatusCode = Slic3r::Biz::Slicing::StatusCode;
 using Slic3r::Biz::PrintHost::PrintHostJobProgressPayload;
 using Slic3r::Biz::PrintHost::PrintHostJobProgressState;
 using Slic3r::Biz::PrintHost::PrintHostJobInfoTag;
-using Slic3r::Biz::FileDownloader::FileDownloaderJobProgressPayload;
 using Slic3r::Domain::SlicingId;
 
 using namespace Slic3r::Biz;
@@ -149,8 +147,6 @@ void PopNotificationCenter::on_job_manager_status_changed(const JobManagerStatus
 
         if (job_name.starts_with("printhost")) {
             on_job_print_host(job_name, progress);
-        } else if (job_name.starts_with("file_download")) {
-            on_download_job_status_changed(job_name, progress);
         } else if (job_name.starts_with("arrange")) {
             on_arrange_job_progress(job_name, progress);
         } else if (const JobNotificationSpec* spec{find_job_spec(job_name)}) {
@@ -287,158 +283,6 @@ void PopNotificationCenter::on_job_print_host(const std::string& job_key, const 
         break;
     }
     
-}
-
-const auto download_job_matcher{cmp<DownloadProgressNotificationData>( //
-    [](const DownloadProgressNotificationData& a, const DownloadProgressNotificationData& b)
-    { return a.download_id == b.download_id; }
-)};
-
-PopNotificationLayout PopNotificationCenter::download_finished_layout(
-    const std::string& body,
-    const boost::filesystem::path& dest_path,
-    const std::string& printables_url,
-    bool is_loaded
-)
-{
-    // TRN Header of a finished file download notification.
-    const std::string header{_u8L("Download Finished")};
-
-    // The file has not been loaded into the scene yet: let the user pick where to open it.
-    if (!is_loaded) {
-        return PopNotificationLayoutHeaderTextButtons{
-            header,
-            body,
-            // TRN Button on a finished download notification: load the file into the current project.
-            {{_u8L("Load"),
-              [this, dest_path]()
-              {
-                  m_project_interactor.open_downloaded_file(dest_path, false);
-                  return true;
-              }},
-             // TRN Button on a finished download notification: load the file into a new project.
-             {_u8L("Load as New Project"),
-              [this, dest_path]()
-              {
-                  m_project_interactor.open_downloaded_file(dest_path, true);
-                  return true;
-              }}},
-            Render::Icon::Printables
-        };
-    }
-
-    // The file was already loaded: offer follow-up actions instead.
-    std::vector<PopNotificationButtonData> buttons;
-    if (!printables_url.empty()) {
-        buttons.emplace_back(PopNotificationButtonData{
-            // TRN Button on a finished download notification: open the Printables tab.
-            _u8L("Printables"),
-            [this, printables_url]()
-            {
-                if (m_switch_left_tab_fn) {
-                    m_switch_left_tab_fn(LeftBarTabs::Printables, printables_url);
-                }
-                return true;
-            }
-        });
-    }
-    if (!dest_path.empty()) {
-        buttons.emplace_back(PopNotificationButtonData{
-            // TRN Button on a finished download notification: open the download folder.
-            _u8L("Open Folder"),
-            [dest_path]()
-            {
-                ASSERT(!dest_path.empty() && dest_path.has_parent_path());
-                AppServices::instance().file_explorer_handler().open_folder(
-                    dest_path.parent_path().string()
-                );
-                return true;
-            }
-        });
-    }
-
-    if (buttons.empty()) {
-        return PopNotificationLayoutHeaderText{header, body, Render::Icon::Printables};
-    }
-    return PopNotificationLayoutHeaderTextButtons{
-        header, body, std::move(buttons), Render::Icon::Printables
-    };
-}
-
-void PopNotificationCenter::on_download_job_status_changed(
-    const std::string& job_key,
-    const Biz::Platform::JobManager::Progress& progress
-)
-{
-    const auto* payload =
-        std::any_cast<FileDownloaderJobProgressPayload>(&progress.progress_detail.payload);
-    if (payload == nullptr) {
-        // Ignore progress without payload
-        return;
-    }
-    const size_t download_id{payload->download_id};
-    const boost::filesystem::path dest_path{payload->final_path};
-    const std::string printables_url{payload->project_url};
-    const bool is_loaded{payload->load_count > 0};
-    const size_t total_files{payload->total_files};
-
-    // While downloading, the payload always describes a single file. The aggregated "N files"
-    // wording is only meaningful once a multi-file download has finished.
-    const bool single_file = total_files <= 1
-        || progress.status == JobStatus::Started
-        || progress.status == JobStatus::None;
-    const std::string body = single_file ?
-        payload->filename :
-        // TRN Body of a multi-file download notification, {} is number of files (2 or more).
-        fmt::format(fmt::runtime(_u8L("{} files")), total_files);
-
-    PopNotificationLayout layout;
-    PopNotificationLevel level;
-    std::chrono::seconds timeout;
-
-    switch (progress.status) {
-    case JobStatus::Finished:
-        layout  = download_finished_layout(body, dest_path, printables_url, is_loaded);
-        level   = PopNotificationLevel::ProgressWithClose;
-        timeout = 20s;
-        timeout = is_loaded ? 20s : 0s;
-        break;
-    case JobStatus::Failed:
-        // TRN Header of a failed file download notification.
-        layout  = PopNotificationLayoutHeaderText{_u8L("Download Failed"), body};
-        level   = PopNotificationLevel::Error;
-        timeout = 20s;
-        break;
-    case JobStatus::Started:
-    case JobStatus::None:
-    default: {
-        // TRN Header of an in-progress file download notification.
-        const std::string header{_u8L("Downloading...")};
-        if (progress.percent) {
-            const int perc = (int) (progress.percent.value().value * 100);
-            layout = PopNotificationLayoutHeaderTextProgress{
-                header, body, perc, Render::Icon::Printables
-            };
-            level  = PopNotificationLevel::ProgressNoClose;
-        } else {
-            layout = PopNotificationLayoutHeaderText{header, body, Render::Icon::Printables};
-            level  = PopNotificationLevel::ProgressWithClose;
-        }
-        timeout = 0s;
-        break;
-    }
-    }
-
-    m_notification_list.upsert_notification(
-        PopNotificationData{
-            PopNotificationType::DownloadProgress,
-            level,
-            timeout,
-            std::move(layout),
-            DownloadProgressNotificationData(download_id)
-        },
-        download_job_matcher
-    );
 }
 
 namespace {
@@ -1080,134 +924,6 @@ void PopNotificationCenter::on_removable_drive_status_changed(
     );
 }
 
-const auto user_account_login_matcher{cmp<UserAccountLoginNotificationData>( //
-    [](const UserAccountLoginNotificationData&, const UserAccountLoginNotificationData&)
-    { return true; }
-)};
-
-void PopNotificationCenter::on_user_account_id_success(bool is_refresh, const std::string& username)
-{
-    if (is_refresh) {
-        return;
-    }
-    m_notification_list.close_notifications_of_type(PopNotificationType::UserAccountLogin);
-
-    const boost::filesystem::path avatar{m_project_interactor.user_account_interactor().avatar()};
-    const std::string image_path{boost::filesystem::exists(avatar) ? avatar.string() : std::string{}};
-
-    m_notification_list.upsert_notification(
-        PopNotificationData{
-            PopNotificationType::UserAccountLogin,
-            PopNotificationLevel::Regular,
-            10s,
-            PopNotificationLayoutImageHeader(image_path,
-                // TRN User account login notification, {} is the user name.
-                fmt::format(fmt::runtime(_u8L("Signed in as {}")), username)),
-            UserAccountLoginNotificationData{}
-        },
-        user_account_login_matcher
-    );
-}
-
-void PopNotificationCenter::on_avatar_downloaded()
-{
-    auto& user_account = m_project_interactor.user_account_interactor();
-    if (!user_account.is_logged_in()) {
-        return;
-    }
-    // Only update an already shown login notification; avoid popping a new one when the
-    // avatar is re-downloaded outside of a fresh login (e.g. during a token refresh).
-    std::function<bool(const UserAccountLoginNotificationData&)> any =
-        [](const UserAccountLoginNotificationData&) { return true; };
-    if (!m_notification_list.get_notification_payload<UserAccountLoginNotificationData>(any)) {
-        return;
-    }
-
-    const boost::filesystem::path avatar{user_account.avatar()};
-    if (!boost::filesystem::exists(avatar)) {
-        return;
-    }
-
-    m_notification_list.upsert_notification(
-        PopNotificationData{
-            PopNotificationType::UserAccountLogin,
-            PopNotificationLevel::Regular,
-            10s,
-            PopNotificationLayoutImageHeader(avatar.string(),
-                // TRN User account login notification, {} is the user name.
-                fmt::format(fmt::runtime(_u8L("Signed in as {}")), user_account.username())),
-            UserAccountLoginNotificationData{}
-        },
-        user_account_login_matcher
-    );
-}
-
-void PopNotificationCenter::on_user_account_logged_out()
-{
-    m_notification_list.close_notifications_of_type(PopNotificationType::UserAccountLogin);
-    m_notification_list.close_notifications_of_type(PopNotificationType::UserAccountTransientError);
-
-    const boost::filesystem::path avatar{m_project_interactor.user_account_interactor().avatar()};
-    const std::string image_path{boost::filesystem::exists(avatar) ? avatar.string() : std::string{}};
-
-    m_notification_list.upsert_notification(
-        PopNotificationData{
-            PopNotificationType::UserAccountLogin,
-            PopNotificationLevel::Regular,
-            10s,
-            // TRN User account logout notification.
-            PopNotificationLayoutImageHeader(image_path, _u8L("Successfully signed out")),
-            UserAccountLoginNotificationData{}
-        },
-        never_equal_matcher
-    );
-}
-
-void PopNotificationCenter::on_user_account_will_refresh()
-{ /*unused*/
-}
-
-void PopNotificationCenter::on_user_account_action_retry(
-    const Biz::Network::IHttp::Retry& retry,
-    std::function<void(void)> cancel_callback
-)
-{
-    ASSERT(cancel_callback);
-    m_notification_list.close_notifications_of_type(PopNotificationType::UserAccountLogin);
-    m_notification_list.close_notifications_of_type(PopNotificationType::UserAccountTransientError);
-
-    std::string text = fmt::format(
-        // TRN Prusa Account notification shown while a request is being retried. {} is the number of the current attempt.
-        fmt::runtime(_u8L("Communication is taking longer than expected. Retrying. Attempt {}.")),
-        std::to_string(retry.attempt)
-    );
-    m_notification_list.upsert_notification(
-        PopNotificationData{
-            PopNotificationType::UserAccountTransientError,
-            PopNotificationLevel::Warning,
-            0s,
-            PopNotificationLayoutHeaderTextButtons(
-                // TRN Header of the Prusa Account retry notification.
-                _u8L("Prusa Account"),
-                text,
-                // TRN Button on the Prusa Account retry notification. Cancels the retried request.
-                {{_u8L("Cancel"),
-                  [cancel_callback]()
-                  {
-                      cancel_callback();
-                      return true;
-                  }}}
-            )
-        },
-        never_equal_matcher
-    );
-}
-
-void PopNotificationCenter::on_user_account_action_retry_finished()
-{
-    m_notification_list.close_notifications_of_type(PopNotificationType::UserAccountTransientError);
-}
-
 void PopNotificationCenter::on_project_load_failed(const std::string& error)
 {
     upsert_notification(
@@ -1355,22 +1071,6 @@ void PopNotificationCenter::on_fatal_arrange_error(
             }
             return *a_event_type == *b_event_type;
         }
-    );
-}
-
-void PopNotificationCenter::on_connect_handler_error(const std::string& msg)
-{
-    // TRN Header of the Prusa Connect error notification.
-    const std::string header{_u8L("Prusa Connect Error")};
-
-    upsert_notification(
-        PopNotificationData{
-            PopNotificationType::ConnectError,
-            PopNotificationLevel::Error,
-            300s,
-            PopNotificationLayoutHeaderText{header, msg}
-        },
-        never_equal_matcher
     );
 }
 

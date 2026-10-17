@@ -271,7 +271,7 @@ build_square_handle(const BuilderContext& builder_context, const Domain::Vec2d& 
     const Render::Material cube_material{
         Render::Material{}
             .set_shader(builder_context.device.context().shader_manager().shader("gouraud_light"))
-            .set_uniform("uniform_color", Domain::ColorRGBA::ORANGE())
+            .set_uniform("uniform_color", Domain::ColorRGBA::PIGGIE_PINK())
     };
     const Render::Material line_material{
         Render::Material{}

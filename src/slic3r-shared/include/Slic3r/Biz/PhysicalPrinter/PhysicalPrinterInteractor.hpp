@@ -24,10 +24,6 @@ namespace Slic3r::Biz::Preset {
 class PresetInteractor;
 } // namespace Slic3r::Biz::Preset
 
-namespace Slic3r::Biz::UserAccount {
-class UserAccountInteractor;
-} // namespace Slic3r::Biz::UserAccount
-
 namespace Slic3r::Biz::RemovableDrive {
 class RemovableDriveService;
 } // namespace Slic3r::Biz::RemovableDrive
@@ -51,7 +47,6 @@ public:
     PhysicalPrinterInteractor(
         Platform::IMainThreadDispatcher& dispatcher,
         Preset::PresetInteractor& preset_interactor,
-        UserAccount::UserAccountInteractor& user_account_interactor,
         RemovableDrive::RemovableDriveService& removable_drive_service
     );
     ~PhysicalPrinterInteractor();
@@ -60,7 +55,7 @@ public:
 
     const ObservableList<PhysicalPrinterConfig>& observable_list() const;
 
-    /// True if the destination may be selected (Connect needs a login, Removable Drive needs a drive).
+    /// True if the destination may be selected (Removable Drive needs a drive).
     bool can_be_selected(const std::string& uuid) const;
 
     /// Explicit user selection for this session.
@@ -68,12 +63,6 @@ public:
 
     /// Automatic fallback to the first entry.
     void select_default();
-
-    /// Explicit selection of Prusa Connect.
-    void select_connect_upload();
-
-    /// Switches to Prusa Connect unless the current selection is the user's explicit choice.
-    void select_connect_upload_if_default();
 
     /// Persists the destination restored on the next start.
     void remember_used_destination(const std::string& uuid);
@@ -87,7 +76,6 @@ public:
 
     bool is_filesystem_export_selected() const;
     bool is_printer_upload_selected() const;
-    bool is_connect_upload_selected() const;
 
     const PhysicalPrinterConfig& selected_physical_printer_data();
 
@@ -152,7 +140,6 @@ private:
 private:
     Platform::IMainThreadDispatcher& m_dispatcher;
     Preset::PresetInteractor& m_preset_interactor;
-    UserAccount::UserAccountInteractor& m_user_account_interactor;
     RemovableDrive::RemovableDriveService& m_removable_drive_service;
     PhysicalPrinterStorage m_storage;
     ObservableList<PhysicalPrinterConfig> m_observable_list;

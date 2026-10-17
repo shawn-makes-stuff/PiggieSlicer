@@ -1,14 +1,10 @@
 #include "Slic3r/App/ResultExport/ExportActions.hpp"
 #include "Slic3r/App/ResultExport/ExportPathSelect.hpp"
-#include "Slic3r/App/Browser/BrowserLogicConnectSelect.hpp"
-#include "Slic3r/App/AppServices.hpp"
-#include "Slic3r/App/IDialogManager.hpp"
 
 #include <Slic3r/Biz/Platform/PlatformServices.hpp>
 #include "Slic3r/Biz/PhysicalPrinter/PhysicalPrinterInteractor.hpp"
 #include "Slic3r/Biz/PrintHost/PrintHostJobData.hpp"
 #include "Slic3r/Biz/ProjectInteractor.hpp"
-#include "Slic3r/Biz/UserAccount/ConnectUtils.hpp"
 
 #include <memory>
 #include <variant>
@@ -70,51 +66,6 @@ std::function<void()> export_gcode(Biz::ProjectInteractor& project_interactor)
 std::function<void()> export_gcode_to_flash(Biz::ProjectInteractor& project_interactor)
 {
     return make_export(project_interactor, true);
-}
-
-std::function<void()> send_gcode_to_connect(Biz::ProjectInteractor& project_interactor)
-{
-    auto send_to_connect{
-        [pi_raw = &project_interactor]()
-        {
-            bool bgcode_allowed = true;
-            const auto& cbox = pi_raw->preset_interactor().selected_printer_preset().printer.config_box();
-            if (const auto* item = cbox.find("binary_gcode").item; item) {
-                bgcode_allowed = item->get<bool>();
-            }
-
-            auto wrapped_callback = [pi_raw, bgcode_allowed](bool result, const std::string& data) {
-                if (!result || data.empty()) {
-                    return;
-                }
-                std::string filename = Biz::UserAccount::ConnectUtils::filename_from_json(data);
-                ExportPathSelect::validate_bgcode_extension(
-                    boost::filesystem::path(filename),
-                    bgcode_allowed,
-                    [pi_raw, data](const boost::filesystem::path& safe_path) {
-                        pi_raw->do_result_upload_connect(pi_raw->selected_bed_slicing_id(), data, safe_path.string());
-                    },
-                    [pi_raw]() {
-                        // Re-trigger the dialog on retry
-                        send_gcode_to_connect(*pi_raw)(); 
-                    }
-                );
-            };
-
-            AppServices::instance().dialog_manager().show_upload_webview_dialog(
-                std::make_unique<Browser::BrowserLogicConnectSelect>(*pi_raw),
-                pi_raw,
-                wrapped_callback
-            );
-        }
-    };
-    return [=]()
-    {
-        IMainThreadDispatcher& dispatcher{PlatformServices::instance().main_thread_dispatcher()};
-        if (!dispatcher.dispatch_on_main_thread_after(send_to_connect)) {
-            SPDLOG_INFO("Send to connect not dispatched!");
-        }
-    };
 }
 
 std::function<void()> upload_gcode_to_print_host(Biz::ProjectInteractor& project_interactor)

@@ -3,7 +3,6 @@
 #include "WebViewPlatformUtils.hpp"
 
 #include "Slic3r/App/WX/WebView/WebView.hpp"
-#include "Slic3r/App/WX/UrlProtocolRegistration.hpp"
 #include "Slic3r/App/WX/StringConversions.hpp"
 #include "Slic3r/App/WX/I18N.hpp"
 #include "Slic3r/Biz/Network/ServiceConfig.hpp"
@@ -158,36 +157,6 @@ void WebViewPanel::late_create()
 #ifdef DEBUG_URL_PANEL
     setup_webview_devtools(m_web_view);
 #endif
-}
-
-void WebViewPanel::on_user_account_id_success(bool is_refresh, const std::string& username)
-{
-    if (!m_web_view)
-        return;
-    [[maybe_unused]] bool b = process_logic_command_vector(m_logic->on_user_account_id_success(is_refresh, into_u8(m_web_view->GetCurrentURL())));
-    DEBUG_ASSERT(b, "False return value signals Veto which cannot be done here.");
-}
-
-void WebViewPanel::on_user_account_logged_out()
-{
-    if (!m_web_view)
-        return;
-    [[maybe_unused]] bool b = process_logic_command_vector(m_logic->on_user_account_logged_out(into_u8(m_web_view->GetCurrentURL())));
-    DEBUG_ASSERT(b, "False return value signals Veto which cannot be done here.");
-}
-
-void WebViewPanel::on_user_account_will_refresh()
-{
-    if (!m_web_view)
-        return;
-    [[maybe_unused]] bool b = process_logic_command_vector(m_logic->on_user_account_will_refresh());
-    DEBUG_ASSERT(b, "False return value signals Veto which cannot be done here.");
-}
-
-void WebViewPanel::on_printables_secret_token(const std::string& body) 
-{
-    [[maybe_unused]] bool b = process_logic_command_vector(m_logic->on_printables_secret_token(body));
-    DEBUG_ASSERT(b, "False return value signals Veto which cannot be done here.");
 }
 
 void WebViewPanel::load_url(const wxString& url)
@@ -604,12 +573,6 @@ bool WebViewPanel::handle_logic_command_LoadResourcesPage(const std::string& dat
         data,
         w_config()->dark_mode() ? "_dark" : ""
     ));
-    return true;
-}
-
-bool WebViewPanel::handle_logic_command_RegisterPrusaSlicerURL(const std::string& data)
-{
-    register_prusaslicer_url();
     return true;
 }
 

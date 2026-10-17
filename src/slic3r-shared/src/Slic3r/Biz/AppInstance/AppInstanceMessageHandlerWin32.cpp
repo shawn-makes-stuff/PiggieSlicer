@@ -15,7 +15,7 @@ namespace Slic3r::Biz::AppInstance {
 constexpr wchar_t Instance_Hash_Major[] = L"Instance_Hash_Major";
 constexpr wchar_t Instance_Hash_Minor[] = L"Instance_Hash_Minor";
 constexpr wchar_t Instance_Is_Maximized[] = L"Instance_Is_Maximized";
-constexpr wchar_t Is_Prusa_Slicer[] = L"Is_Prusa_Slicer";
+constexpr wchar_t Is_Prusa_Slicer[] = L"Is_Piggie_Slicer";
 
 namespace {
 void init_windows_properties(HWND window_handle, size_t instance_hash, bool maximized)
@@ -97,7 +97,7 @@ BOOL AppInstanceMessageSenderWin32::enum_windows_process_multicast(_In_ HWND hwn
     std::wstring classNameString(className);
     std::wstring wndTextString(wndText);
 
-    // Multicast reaches all PrusaSlicer instances regardless of version, like on Linux/macOS.
+    // Multicast reaches all PiggieSlicer instances regardless of version, like on Linux/macOS.
     if (wndTextString.find(boost::nowide::widen(Slic3r::APP_NAME).c_str()) != std::wstring::npos && classNameString == L"wxWindowNR")
     {
         // Send the multicast message.

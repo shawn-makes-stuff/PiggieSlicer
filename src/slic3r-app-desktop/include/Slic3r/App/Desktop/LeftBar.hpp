@@ -38,11 +38,6 @@ public:
         return lb;
     }
 
-    void ShowUserAccount(bool show)
-    {
-        GetLeftBarCtrl()->ShowUserAccount(show);
-    }
-
     void set_compact_mode(bool compact_mode)
     {
         GetLeftBarCtrl()->set_compact_mode(compact_mode);

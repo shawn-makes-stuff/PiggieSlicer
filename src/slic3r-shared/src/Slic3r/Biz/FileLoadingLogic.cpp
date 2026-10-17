@@ -211,7 +211,7 @@ static void process_mesh(
                     fmt::vformat(
                         _u8L(
                             "The dimensions of the object from file {} seem to be defined in meters.\n"
-                            "The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate the dimensions of the object?"
+                            "The internal unit of PiggieSlicer is a millimeter. Do you want to recalculate the dimensions of the object?"
                         ),
                         fmt::make_format_args(input_file)
                     ) + "\n",
@@ -243,7 +243,7 @@ static void process_mesh(
                     fmt::vformat(
                         _u8L(
                             "The dimensions of the object from file {} seem to be defined in inches.\n"
-                            "The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate the dimensions of the object?"
+                            "The internal unit of PiggieSlicer is a millimeter. Do you want to recalculate the dimensions of the object?"
                         ),
                         fmt::make_format_args(input_file)
                     ) + "\n",

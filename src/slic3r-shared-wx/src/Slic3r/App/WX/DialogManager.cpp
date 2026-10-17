@@ -115,19 +115,7 @@ DialogManager::show_file_dialog(FileDialogType dialog_type, const std::string& d
 void DialogManager::show_webview_dialog(std::unique_ptr<App::Browser::AbstractBrowserLogic>&& logic, Biz::ProjectInteractor* project_interactor)
 {
     std::unique_ptr<WebView::AbstractWebViewDialog> dlg = WebView::new_web_view_dialog(std::move(logic));
-    project_interactor->user_account_interactor().add_listener<Biz::UserAccount::IUserAccountListener>(dlg.get());
     dlg->ShowModal();
-    project_interactor->user_account_interactor().remove_listener<Biz::UserAccount::IUserAccountListener>(dlg.get());
-}
-
-void DialogManager::show_upload_webview_dialog(std::unique_ptr<App::Browser::AbstractUploadBrowserLogic>&& logic, Biz::ProjectInteractor* project_interactor, const UploadCallback& callback)
-{
-    App::Browser::AbstractUploadBrowserLogic* logic_ptr = logic.get();
-    std::unique_ptr<WebView::AbstractWebViewDialog> dlg = WebView::new_web_view_dialog(std::move(logic));
-    project_interactor->user_account_interactor().add_listener<Biz::UserAccount::IUserAccountListener>(dlg.get());
-    dlg->ShowModal();
-    project_interactor->user_account_interactor().remove_listener<Biz::UserAccount::IUserAccountListener>(dlg.get());
-    callback(logic_ptr->success(), logic_ptr->result_data());
 }
 
 

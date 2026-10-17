@@ -9,8 +9,8 @@
 namespace Slic3r::Biz::PhysicalPrinter {
 
 // Serialization of a persisted physical printer. Only host-upload printers
-// (PrinterUpload payload) are ever stored on disk; the synthetic filesystem /
-// connect entries are recreated at runtime.
+// (PrinterUpload payload) are ever stored on disk; the synthetic filesystem
+// entries are recreated at runtime.
 //
 // The on-disk key names match the legacy ConfigBox schema
 // (physical_printer_*), so files written by the previous implementation load

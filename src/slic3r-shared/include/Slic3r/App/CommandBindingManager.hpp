@@ -20,7 +20,6 @@ class GizmoCommandRegistry;
 class UIItemCommand;
 
 class CommandBindingManager :
-    public Biz::UserAccount::IUserAccountListener,
     public Biz::IStatusCacheChangedListener,
     public Biz::ISelectedBedInstancesChangedListener,
     public Biz::RemovableDrive::IRemovableDriveStatusListener,
@@ -54,9 +53,6 @@ public:
 
     const Platform::ICommand& command(const char* command_name) const;
     bool has_command(const char* command_name) const;
-
-    void on_user_account_id_success(bool, const std::string&) override;
-    void on_user_account_logged_out() override;
 
     void on_selected_bed_instances_changed(
         Domain::SelectionId project_id,

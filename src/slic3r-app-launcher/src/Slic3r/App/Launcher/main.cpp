@@ -54,7 +54,7 @@ constexpr bool has_gui_support =
     false;
 #endif
 
-const std::string app_name = "prusa-slicer-launcher";
+const std::string app_name = "piggie-slicer";
 
 std::string app_description()
 {
@@ -68,7 +68,7 @@ std::string app_description()
     }
 
     description << std::endl;
-    description << "https://github.com/prusa3d/PrusaSlicer";
+    description << "https://github.com/shawn-makes-stuff/PiggieSlicer";
 
     return description.str();
 }
@@ -143,7 +143,7 @@ int main(int argc, char** argv)
 #endif
             return Slic3r::App::Desktop::run(init_params, app_services);
         } else {
-            SPDLOG_ERROR("PrusaSlicer was built without GUI support. Quitting.");
+            SPDLOG_ERROR("PiggieSlicer was built without GUI support. Quitting.");
             return EXIT_FAILURE;
         }
     }

@@ -95,10 +95,7 @@ static const std::unordered_map<Icon, const char*> ICON_FILENAMES = {
     {Icon::KeyBackspace, "key_backspace"},
 
     {Icon::ClippyMarker, "notification_clippy"},
-    {Icon::PrusaSlicerIcon, "PrusaSlicer"},
-    {Icon::Printables, "printables"},
-    {Icon::Connect, "connect"},
-    {Icon::Cloud, "cloud"},
+    {Icon::PrusaSlicerIcon, "PiggieSlicer"},
     // toolbar icons
     {Icon::ToolbarObjects, "toolbar_objects"},
     {Icon::ToolbarHistory, "toolbar_history"},
@@ -158,7 +155,6 @@ static const std::unordered_map<Icon, const char*> ICON_FILENAMES = {
 
     // Physical printer
     {Icon::ExportToSD, "export_to_sd"},    
-    {Icon::ConnectUpload, "connect_gcode"},
     {Icon::ExportToLocal, "save"},
 
     // Gizmo Emboss

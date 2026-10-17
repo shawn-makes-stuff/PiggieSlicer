@@ -296,8 +296,7 @@ ArrangeDialog::ArrangeDialog(
 
     m_arrange_button->set_flex_grow(1);
 
-    constexpr ImColor color_primary{223, 93, 45};
-    m_arrange_button->set_background_color(color_primary);
+    m_arrange_button->set_background_color(Platform::Color::AccentPrimary);
     m_arrange_button->set_label_font_type(Render::ImguiFontType::Bold);
 }
 

@@ -27,7 +27,6 @@ PhysicalPrinterSettingsDialog::PhysicalPrinterSettingsDialog(
     Dialog({"Destination"}, "PhysicalPrinterSettingsDialog"),
     m_physical_printer_changed_listener_scope(project_interactor.physical_printer_interactor(), *this),
     m_preset_changed_listener_scope(project_interactor.preset_interactor(), *this),
-    m_user_account_listener_scope(project_interactor.user_account_interactor(), *this),
     m_project_interactor(project_interactor),
     m_physical_printer_interactor(project_interactor.physical_printer_interactor()),
     m_navigator(navigator),
@@ -56,17 +55,10 @@ PhysicalPrinterSettingsDialog::PhysicalPrinterSettingsDialog(
             true;
     };
 
-    auto eval_connect = [this]() -> bool 
-    { 
-        return m_project_interactor.user_account_interactor().is_logged_in(); 
-    };
-
-    m_filtered_printers.set_filter_fn([eval_printer, eval_fs, eval_connect](const PhysicalPrinterConfig& item) {
+    m_filtered_printers.set_filter_fn([eval_printer, eval_fs](const PhysicalPrinterConfig& item) {
         return std::visit([&](const auto& arg) {
             using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::ConnectUpload>) {
-                return eval_connect();
-            } else if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::PrinterUpload>) {
+            if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::PrinterUpload>) {
                 return eval_printer(item); 
             } else if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::FileSystemExport>) {
                 return eval_fs(arg);
@@ -280,19 +272,6 @@ void PhysicalPrinterSettingsDialog::filter_printer_buttons(DisplayModes mode)
     }
 
     m_physical_printer_interactor.select_default();
-}
-
-void PhysicalPrinterSettingsDialog::on_user_account_id_success(
-    bool is_refresh,
-    const std::string& username
-)
-{
-    filter_printer_buttons(m_selected_mode);
-}
-
-void PhysicalPrinterSettingsDialog::on_user_account_logged_out()
-{
-    filter_printer_buttons(m_selected_mode);
 }
 
 void PhysicalPrinterSettingsDialog::on_removable_drive_status_changed(

@@ -5,7 +5,6 @@
 #include "Slic3r/Biz/Preset/PresetInteractor.hpp"
 #include "Slic3r/Biz/ProjectInteractor.hpp"
 #include "Slic3r/Biz/Platform/ListenerScope.hpp"
-#include "Slic3r/Biz/UserAccount/IUserAccountListener.hpp"
 
 #include "Slic3r/App/Platform/WX/WXRenderCanvas.hpp"
 #include "Slic3r/App/ILanguageChangedListener.hpp"
@@ -17,7 +16,6 @@
 #include "Slic3r/App/LeftBarTabs.hpp"
 #include "Slic3r/App/IAppConfigChangedListener.hpp"
 #include "Slic3r/App/IMenuUpdatedListener.hpp"
-#include "Slic3r/Biz/UserAccount/IUserAccountListener.hpp"
 #include "Slic3r/Biz/PhysicalPrinter/IPhysicalPrinterChangedListener.hpp"
 
 #include <wx/wx.h>
@@ -54,7 +52,6 @@ class MainFrame :
     public ILanguageChangedListener,
     public IAppConfigChangedListener,
     public Biz::IProjectsChangedListener,
-    public Biz::UserAccount::IUserAccountListener,
     public Biz::PhysicalPrinter::IPhysicalPrinterChangedListener,
     public IMenuUpdatedListener
 {
@@ -86,7 +83,6 @@ public:
 
     void switch_left_tab(LeftBarTabs id, const std::string& data);
 
-    void on_user_account_enabled_state_changed(bool is_enabled) override;
     void on_project_loaded(Domain::SelectionId project_id) override;
     void on_project_saved(Domain::SelectionId project_id) override;
 
@@ -96,15 +92,12 @@ public:
     void on_menu_updated() override;
 private:
     void init_left_bar(Biz::ProjectInteractor& project_interactor);
-    void init_printers_page(Biz::ProjectInteractor& project_interactor);
     void init_physical_printer_page(Biz::ProjectInteractor& project_interactor);
     void init_slicing_page();
-    void init_printables_page(Biz::ProjectInteractor& project_interactor);
     void init_preferences_button();
     void complete_and_bind_left_bar();
     void remove_left_bar_page(LeftBarTabs page_id);
     void ensure_slicing_page_selected();
-    void update_printables_left_bar(bool printables_enabled);
 
     void on_language_changed() override;
     void on_app_config_changed(const std::string& key) override;
@@ -155,8 +148,6 @@ private:
     uint32_t m_ulSHChangeNotifyRegister{0};
 #endif // WIN32
 
-    bool m_printables_page_added {false};
-    bool m_printers_page_added {false};
     bool m_physical_printer_page_added {false};
 
 #ifdef USE_NATIVE_MENU

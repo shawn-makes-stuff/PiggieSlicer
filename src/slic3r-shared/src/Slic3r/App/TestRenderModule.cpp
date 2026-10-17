@@ -115,9 +115,8 @@ void TestRenderModule::init_render()
     opts.force_power_of_two = true;
     opts.flip_y = true;
     m_tex = Render::Context::instance().texture_manager().get_or_create_image(
-        //        "icons/PrusaSlicer-gcodeviewer-mac_128px.png",
         //         "icons/funnel.svg",
-        "icons/PrusaSlicer-gcodeviewer.svg", opts
+        "icons/PiggieSlicer.svg", opts
     );
     //    m_tex = Render::Context::instance().texture_manager()
     //                .create_empty("white", Render::PixelFormat::RGBA8, 16, 16);

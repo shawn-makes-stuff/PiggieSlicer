@@ -1911,7 +1911,7 @@ CT_Metadata_Model &update(CT_Metadata_Model &metadata, const Slic3r::Domain::Mod
     metadata.push_back(ModelMetadata{ModelMetadataNames::ModificationDate, date});
     if (used.find(to_name(ModelMetadataNames::CreationDate)) == used.end())
         metadata.push_back(ModelMetadata{ModelMetadataNames::CreationDate, date, true});
-    metadata.push_back(ModelMetadata{ModelMetadataNames::Application, std::string(SLIC3R_BUILD_ID)});
+    metadata.push_back(ModelMetadata{ModelMetadataNames::Application, std::string(SLIC3R_COMPAT_BUILD_ID)});
 
     // Sort to write in stable order
     std::sort(metadata.begin(), metadata.end());

@@ -3,7 +3,6 @@
 #include "WebViewPlatformUtils.hpp"
 
 #include "Slic3r/App/WX/WebView/WebView.hpp"
-#include "Slic3r/App/WX/UrlProtocolRegistration.hpp"
 #include "Slic3r/App/WX/StringConversions.hpp"
 #include "Slic3r/App/WX/I18N.hpp"
 #include "Slic3r/Biz/Network/ServiceConfig.hpp"
@@ -473,24 +472,6 @@ void WebViewDialog::do_reload()
     m_web_view->LoadURL(from_u8(m_logic->url()));
 }
 
-void WebViewDialog::on_user_account_id_success(bool is_refresh, const std::string& username)
-{
-    [[maybe_unused]] bool r = process_logic_command_vector(m_logic->on_user_account_id_success(is_refresh, into_u8(m_web_view->GetCurrentURL())));
-    DEBUG_ASSERT(r, "False return value signals Veto which cannot be done here.");
-}
-
-void WebViewDialog::on_user_account_logged_out()
-{
-    [[maybe_unused]] bool r = process_logic_command_vector(m_logic->on_user_account_logged_out(into_u8(m_web_view->GetCurrentURL())));
-    DEBUG_ASSERT(r, "False return value signals Veto which cannot be done here.");
-}
-
-void WebViewDialog::on_user_account_will_refresh()
-{
-    [[maybe_unused]] bool r = process_logic_command_vector(m_logic->on_user_account_will_refresh());
-    DEBUG_ASSERT(r, "False return value signals Veto which cannot be done here.");
-}
-
 bool WebViewDialog::handle_logic_command_LoadURL(const std::string& data)
 {
     m_web_view->LoadURL(from_u8(data));
@@ -562,12 +543,6 @@ bool WebViewDialog::handle_logic_command_LoadResourcesPage(const std::string& da
         data,
         w_config()->dark_mode() ? "_dark" : ""
     ));
-    return true;
-}
-
-bool WebViewDialog::handle_logic_command_RegisterPrusaSlicerURL(const std::string& data)
-{
-    register_prusaslicer_url();
     return true;
 }
 

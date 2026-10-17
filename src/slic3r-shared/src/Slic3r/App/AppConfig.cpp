@@ -89,7 +89,7 @@ void appconfig_config_init_fn(Domain::ConfigDefinitions& defs)
         {
             {int(MouseNavigationScheme::PrusaSlicer),
              "prusaslicer",
-             def->L_CONTEXT("PrusaSlicer", "Mouse navigation scheme")},
+             def->L_CONTEXT("PiggieSlicer", "Mouse navigation scheme")},
             {int(MouseNavigationScheme::Tinkercad),
              "tinkercad",
              def->L_CONTEXT("Tinkercad", "Mouse navigation scheme")},
@@ -173,32 +173,12 @@ void appconfig_config_init_fn(Domain::ConfigDefinitions& defs)
     def->max = 18;
     def->init_fn = []() { return Domain::ConfigValue{11}; };
 
-#ifdef SLIC3R_HAS_WEBKIT
-    def = defs.add("enable_prusa_account", typeid(bool));
-    def->location = Domain::AppConfigLocation{};
-    def->gui_type = GUIType::checkbox;
-    def->label = L("Enable Prusa Account");
-    def->tooltip = L("Enable logging to Prusa Account, Connect tab and uploading files to Connect.");
-    def->category = Domain::ConfigItemDef::Category::AppConfig_Services;
-    def->option_group = Domain::ConfigItemDef::OptionGroup::AppConfig_Services_ServicesSetup;
-    def->init_fn = []() { return Domain::ConfigValue(false); };
-
-    def = defs.add("enable_printables", typeid(bool));
-    def->location = Domain::AppConfigLocation{};
-    def->gui_type = GUIType::checkbox;
-    def->label = L("Enable Printables");
-    def->tooltip = L("Enable Printables tab.");
-    def->category = Domain::ConfigItemDef::Category::AppConfig_Services;
-    def->option_group = Domain::ConfigItemDef::OptionGroup::AppConfig_Services_ServicesSetup;
-    def->init_fn = []() { return Domain::ConfigValue(false); };
-#endif
-
     def = defs.add("enable_preset_update", typeid(bool));
     def->location = Domain::AppConfigLocation{};
     def->gui_type = GUIType::checkbox;
     def->label = L("Update presets over the internet");
     def->tooltip = L("Let the preset updater contact online sources. When off, presets are still installed from the files that come with the application and from local sources.");
-    def->category = Domain::ConfigItemDef::Category::AppConfig_Services;
+    def->category = Domain::ConfigItemDef::Category::Hidden; // PiggieSlicer: the online source is Prusa's server
     def->option_group = Domain::ConfigItemDef::OptionGroup::AppConfig_Services_General;
     def->init_fn = []() { return Domain::ConfigValue(false); }; // off by default, so it does not fire before wizard on the first run!
 
@@ -226,17 +206,6 @@ void appconfig_config_init_fn(Domain::ConfigDefinitions& defs)
     def->location = Domain::AppConfigLocation{};
     def->category = Domain::ConfigItemDef::Category::Hidden;
     def->init_fn = []() { return Domain::ConfigValue(std::string()); };
-
-    // TODO: This option needs check after changed field in Preferences.
-    def = defs.add("downloads_directory", typeid(std::string));
-    def->location = Domain::AppConfigLocation{};
-    def->gui_type = GUIType::textfield;
-    def->label = L("Downloads directory");
-    def->tooltip = L("Sets directory for downloads such as objects from Printables service or app updates. Must be valid path.");
-    def->category = Domain::ConfigItemDef::Category::AppConfig_Services;
-    def->full_width = true;
-    def->option_group = Domain::ConfigItemDef::OptionGroup::AppConfig_Services_ServicesSetup;
-    def->init_fn = []() { return Domain::ConfigValue(system_downloads_dir().string()); };
 
     // Settings for LayersDoubleSlider
     def = defs.add("show_estimated_times_in_dbl_slider", typeid(bool));
@@ -290,7 +259,7 @@ void appconfig_config_init_fn(Domain::ConfigDefinitions& defs)
     // TRN Label of a Preferences combobox choosing what happens when a hyperlink is clicked.
     def->label        = L("Open hyperlinks in web browser");
     // TRN Tooltip of the "Open hyperlinks in web browser" Preferences combobox.
-    def->tooltip      = L("Choose what happens when you click a link in PrusaSlicer: "
+    def->tooltip      = L("Choose what happens when you click a link in PiggieSlicer: "
                           "ask for confirmation, open it in your default web browser right away, or do nothing.");
     def->init_fn      = Domain::init_with(
         HyperlinkPolicy::Ask,
@@ -408,7 +377,7 @@ AppConfig::AppConfig() :
 std::unique_ptr<AppConfig> AppConfig::create_app_config()
 {
     std::unique_ptr<AppConfig> app_config;
-    const boost::filesystem::path appconfig_filename = boost::filesystem::path(Slic3r::data_dir()) / "shared_runtime" / "PrusaSlicer.json";
+    const boost::filesystem::path appconfig_filename = boost::filesystem::path(Slic3r::data_dir()) / "shared_runtime" / "PiggieSlicer.json";
     if (auto apc = AppConfig::load_appconfig(appconfig_filename.string()); apc)
          app_config = std::move(apc.value());
     else {
@@ -451,23 +420,6 @@ bool AppConfig::is_webkit_available() const {
 #else
     return false;
 #endif
-}
-
-bool AppConfig::is_printables_enabled() const
-{
-    if (!is_webkit_available()) {
-        return false;
-    }
-    return get<bool>("enable_printables");
-}
-
-bool AppConfig::is_prusa_account_enabled() const
-{
-    if (!is_webkit_available()) {
-        return false;
-    }
-
-    return get<bool>("enable_prusa_account");
 }
 
 bool AppConfig::is_sentry_enabled() const

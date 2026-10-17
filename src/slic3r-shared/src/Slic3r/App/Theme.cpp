@@ -10,8 +10,11 @@
 
 namespace Slic3r::App {
 
-// Prusa brand orange - used as accent in light mode
-static constexpr ImVec4 k_prusa_orange{0.874f, 0.365f, 0.176f, 1.00f};
+// PiggieSlicer brand colours, sampled from piggie_logo.jpg
+static constexpr ImVec4 k_piggie_pink{208 / 255.f, 118 / 255.f, 130 / 255.f, 1.00f};  // #D07682
+static constexpr ImVec4 k_piggie_black{41 / 255.f, 41 / 255.f, 41 / 255.f, 1.00f};    // #292929
+
+static constexpr ImVec4 with_alpha(const ImVec4& c, float a) { return {c.x, c.y, c.z, a}; }
 
 Theme::Theme(Style style)
 {
@@ -43,11 +46,11 @@ void Theme::set_style(Style style)
 
     if (m_style == Style::Light) {
         Yoga::Icon::set_replace_strings(
-            {{"#FFFFFF", "#0B0B0B"},
-             {"#ffffff", "#0B0B0B"},
-             {"white", "#0B0B0B"},
-             {"#F7F7F7", "#0B0B0B"},
-             {"#f7f7f7", "#0B0B0B"}}
+            {{"#FFFFFF", "#292929"},
+             {"#ffffff", "#292929"},
+             {"white", "#292929"},
+             {"#F7F7F7", "#292929"},
+             {"#f7f7f7", "#292929"}}
         );
     }
 }
@@ -74,7 +77,7 @@ void Theme::initialize_dark_colors()
         std::make_unique<ImColor>(0.51f, 0.51f, 0.51f, 1.00f)
     };
 
-    m_colors[Platform::Color::NavCursor] = ColorEntry{{0.26f, 0.59f, 0.98f, 1.00f}};
+    m_colors[Platform::Color::NavCursor] = ColorEntry{k_piggie_pink};
 
     m_colors[Platform::Color::Button] = ColorEntry{
         m_colors[Platform::Color::WindowBgAlternate].color_default,
@@ -84,7 +87,7 @@ void Theme::initialize_dark_colors()
         std::make_unique<ImColor>(
             Theme::color_imgui(Platform::Color::WindowBgAlternate, Platform::ColorGroup::Hovered)
         ),
-        std::make_unique<ImColor>(54, 73, 117),
+        std::make_unique<ImColor>(99, 68, 72), // active - pink over piggie black
         std::make_unique<ImColor>(Theme::color_imgui(
             Platform::Color::WindowBgAlternate,
             Platform::ColorGroup::ActiveDisabled
@@ -107,7 +110,7 @@ void Theme::initialize_dark_colors()
         std::make_unique<ImColor>(
             Theme::color_imgui(Platform::Color::WindowBgAlternate, Platform::ColorGroup::Hovered)
         ),
-        std::make_unique<ImColor>(78, 128, 248),
+        std::make_unique<ImColor>(k_piggie_pink),
         std::make_unique<ImColor>(
             Imgui::adjust_brightness(Theme::color_imgui(Platform::Color::WindowBgAlternate), 1.9f)
         )
@@ -121,16 +124,16 @@ void Theme::initialize_dark_colors()
         std::make_unique<ImColor>(
             Theme::color_imgui(Platform::Color::WindowBgAlternate, Platform::ColorGroup::Hovered)
         ),
-        std::make_unique<ImColor>(54, 73, 117),
+        std::make_unique<ImColor>(99, 68, 72), // active - pink over piggie black
         std::make_unique<ImColor>(Theme::color_imgui(
             Platform::Color::WindowBgAlternate,
             Platform::ColorGroup::ActiveDisabled
         ))
     };
 
-    m_colors[Platform::Color::AccentPrimary] = auto_entry({223, 93, 45});
+    m_colors[Platform::Color::AccentPrimary] = auto_entry(k_piggie_pink);
     m_colors[Platform::Color::AccentPrimary].color_disabled =
-        std::make_unique<ImColor>(200, 150, 130);
+        std::make_unique<ImColor>(150, 120, 124);
     m_colors[Platform::Color::AccentSecondary]  = ColorEntry{{0.32f, 0.48f, 0.84f, 1.0f}};
     m_colors[Platform::Color::AccentTertiary]   = ColorEntry{{175, 119, 255}};
     m_colors[Platform::Color::Error]            = ColorEntry{{0.79f, 0.18f, 0.14f, 1.0f}};
@@ -149,7 +152,7 @@ void Theme::initialize_light_colors()
     m_colors[Platform::Color::Transparent] = ColorEntry{0, 0, 0, 0};
 
     m_colors[Platform::Color::Text] = ColorEntry{
-        {0.1f, 0.1f, 0.1f, 1.00f},
+        k_piggie_black,
         std::make_unique<ImColor>(0.45f, 0.45f, 0.45f, 1.00f) // disabled
     };
     // Keep conventional blue for links; orange links are non-standard
@@ -168,7 +171,7 @@ void Theme::initialize_light_colors()
         std::make_unique<ImColor>(0.33f, 0.33f, 0.33f, 1.00f) // active - darkest
     };
 
-    m_colors[Platform::Color::NavCursor] = ColorEntry{{0.26f, 0.59f, 0.98f, 1.00f}};
+    m_colors[Platform::Color::NavCursor] = ColorEntry{k_piggie_pink};
 
     m_colors[Platform::Color::Button] = ColorEntry{
         m_colors[Platform::Color::WindowBgAlternate].color_default,
@@ -178,7 +181,7 @@ void Theme::initialize_light_colors()
         std::make_unique<ImColor>(
             Theme::color_imgui(Platform::Color::WindowBgAlternate, Platform::ColorGroup::Hovered)
         ),
-        std::make_unique<ImColor>(120, 159, 250), // active - cool blue-grey
+        std::make_unique<ImColor>(215, 174, 180), // active - pale piggie pink
         std::make_unique<ImColor>(Theme::color_imgui(
             Platform::Color::WindowBgAlternate,
             Platform::ColorGroup::ActiveDisabled
@@ -193,7 +196,7 @@ void Theme::initialize_light_colors()
         std::make_unique<ImColor>(
             Theme::color_imgui(Platform::Color::WindowBgAlternate, Platform::ColorGroup::Hovered)
         ),
-        std::make_unique<ImColor>(120, 159, 250),
+        std::make_unique<ImColor>(215, 174, 180),
         std::make_unique<ImColor>(Theme::color_imgui(
             Platform::Color::WindowBgAlternate,
             Platform::ColorGroup::ActiveDisabled
@@ -216,14 +219,14 @@ void Theme::initialize_light_colors()
         std::make_unique<ImColor>(
             Theme::color_imgui(Platform::Color::WindowBgAlternate, Platform::ColorGroup::Hovered)
         ),
-        std::make_unique<ImColor>(120, 159, 250),
+        std::make_unique<ImColor>(k_piggie_pink),
         std::make_unique<ImColor>(
             Imgui::adjust_brightness(Theme::color_imgui(Platform::Color::WindowBgAlternate), 1.9f)
         )
     };
 
-    // Keep Prusa orange as the primary accent; it pops well on white/light grey
-    m_colors[Platform::Color::AccentPrimary]    = ColorEntry{k_prusa_orange};
+    // Piggie pink is the primary accent
+    m_colors[Platform::Color::AccentPrimary]    = ColorEntry{k_piggie_pink};
     m_colors[Platform::Color::AccentSecondary]  = ColorEntry{{0.32f, 0.48f, 0.84f, 1.0f}};
     m_colors[Platform::Color::AccentTertiary]   = ColorEntry{{175, 119, 255}};
     m_colors[Platform::Color::Error]            = ColorEntry{{0.79f, 0.18f, 0.14f, 1.0f}};
@@ -263,11 +266,11 @@ void Theme::initialize_imgui_dark_style()
     colors[ImGuiCol_PopupBg]          = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
     colors[ImGuiCol_Border]           = colors[ImGuiCol_WindowBg];
     colors[ImGuiCol_BorderShadow]     = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_FrameBg]          = ImVec4(0.16f, 0.29f, 0.48f, 0.54f);
-    colors[ImGuiCol_FrameBgHovered]   = ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
-    colors[ImGuiCol_FrameBgActive]    = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+    colors[ImGuiCol_FrameBg]          = with_alpha(k_piggie_pink, 0.20f);
+    colors[ImGuiCol_FrameBgHovered]   = with_alpha(k_piggie_pink, 0.35f);
+    colors[ImGuiCol_FrameBgActive]    = with_alpha(k_piggie_pink, 0.55f);
     colors[ImGuiCol_TitleBg]          = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
-    colors[ImGuiCol_TitleBgActive]    = ImVec4(0.16f, 0.29f, 0.48f, 1.00f);
+    colors[ImGuiCol_TitleBgActive]    = color_imgui(Platform::Color::WindowBgAlternate);
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
     colors[ImGuiCol_MenuBarBg]        = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
     colors[ImGuiCol_ScrollbarBg]      = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
@@ -276,23 +279,23 @@ void Theme::initialize_imgui_dark_style()
         color_imgui(Platform::Color::Scrollbar, Platform::ColorGroup::Hovered);
     colors[ImGuiCol_ScrollbarGrabActive] =
         color_imgui(Platform::Color::Scrollbar, Platform::ColorGroup::Active);
-    colors[ImGuiCol_CheckMark]        = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-    colors[ImGuiCol_SliderGrab]       = ImVec4(0.24f, 0.52f, 0.88f, 1.00f);
-    colors[ImGuiCol_SliderGrabActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    colors[ImGuiCol_CheckMark]        = k_piggie_pink;
+    colors[ImGuiCol_SliderGrab]       = with_alpha(k_piggie_pink, 0.85f);
+    colors[ImGuiCol_SliderGrabActive] = k_piggie_pink;
     colors[ImGuiCol_Button]           = color_imgui(Platform::Color::Transparent);
     colors[ImGuiCol_ButtonHovered] =
         color_imgui(Platform::Color::Button, Platform::ColorGroup::Hovered);
     colors[ImGuiCol_ButtonActive] =
         color_imgui(Platform::Color::Button, Platform::ColorGroup::Active);
-    colors[ImGuiCol_Header]            = ImVec4(0.21f, 0.29f, 0.46f, 0.31f);
+    colors[ImGuiCol_Header]            = with_alpha(k_piggie_pink, 0.25f);
     colors[ImGuiCol_HeaderHovered]     = ImVec4(1.00f, 1.00f, 1.00f, 0.10f);
-    colors[ImGuiCol_HeaderActive]      = ImVec4(0.21f, 0.29f, 0.46f, 1.00f);
+    colors[ImGuiCol_HeaderActive]      = color_imgui(Platform::Color::Button, Platform::ColorGroup::Active);
     colors[ImGuiCol_Separator]         = colors[ImGuiCol_Border];
-    colors[ImGuiCol_SeparatorHovered]  = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
-    colors[ImGuiCol_SeparatorActive]   = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
-    colors[ImGuiCol_ResizeGrip]        = ImVec4(0.26f, 0.59f, 0.98f, 0.20f);
-    colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
-    colors[ImGuiCol_ResizeGripActive]  = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+    colors[ImGuiCol_SeparatorHovered]  = with_alpha(k_piggie_pink, 0.78f);
+    colors[ImGuiCol_SeparatorActive]   = k_piggie_pink;
+    colors[ImGuiCol_ResizeGrip]        = with_alpha(k_piggie_pink, 0.20f);
+    colors[ImGuiCol_ResizeGripHovered] = with_alpha(k_piggie_pink, 0.67f);
+    colors[ImGuiCol_ResizeGripActive]  = with_alpha(k_piggie_pink, 0.95f);
     colors[ImGuiCol_TabHovered]        = colors[ImGuiCol_HeaderHovered];
     colors[ImGuiCol_Tab] = ImLerp(colors[ImGuiCol_Header], colors[ImGuiCol_TitleBgActive], 0.80f);
     colors[ImGuiCol_TabSelected] =
@@ -314,7 +317,7 @@ void Theme::initialize_imgui_dark_style()
     colors[ImGuiCol_TableRowBg]            = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     colors[ImGuiCol_TableRowBgAlt]         = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
     colors[ImGuiCol_TextLink]              = color_imgui(Platform::Color::TextLink);
-    colors[ImGuiCol_TextSelectedBg]        = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+    colors[ImGuiCol_TextSelectedBg]        = with_alpha(k_piggie_pink, 0.35f);
     colors[ImGuiCol_DragDropTarget]        = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
     colors[ImGuiCol_NavCursor]             = color_imgui(Platform::Color::NavCursor);
     colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
@@ -338,12 +341,12 @@ void Theme::initialize_imgui_light_style()
     colors[ImGuiCol_PopupBg]      = ImVec4(0.97f, 0.97f, 0.97f, 0.97f);
     colors[ImGuiCol_Border]       = colors[ImGuiCol_WindowBg];
     colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    // Input fields: slightly darker than window, with orange on interaction
+    // Input fields: slightly darker than window, with pink on interaction
     colors[ImGuiCol_FrameBg] = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
     colors[ImGuiCol_FrameBgHovered] =
-        ImVec4(k_prusa_orange.x, k_prusa_orange.y, k_prusa_orange.z, 0.25f);
+        ImVec4(k_piggie_pink.x, k_piggie_pink.y, k_piggie_pink.z, 0.25f);
     colors[ImGuiCol_FrameBgActive] =
-        ImVec4(k_prusa_orange.x, k_prusa_orange.y, k_prusa_orange.z, 0.50f);
+        ImVec4(k_piggie_pink.x, k_piggie_pink.y, k_piggie_pink.z, 0.50f);
     colors[ImGuiCol_TitleBg]          = color_imgui(Platform::Color::WindowBg);
     colors[ImGuiCol_TitleBgActive]    = color_imgui(Platform::Color::WindowBgAlternate);
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.96f, 0.96f, 0.96f, 0.51f);
@@ -354,11 +357,11 @@ void Theme::initialize_imgui_light_style()
         color_imgui(Platform::Color::Scrollbar, Platform::ColorGroup::Hovered);
     colors[ImGuiCol_ScrollbarGrabActive] =
         color_imgui(Platform::Color::Scrollbar, Platform::ColorGroup::Active);
-    // Orange checkmarks, sliders, and other interactive controls
-    colors[ImGuiCol_CheckMark] = k_prusa_orange;
+    // Pink checkmarks, sliders, and other interactive controls
+    colors[ImGuiCol_CheckMark] = k_piggie_pink;
     colors[ImGuiCol_SliderGrab] =
-        ImVec4(k_prusa_orange.x, k_prusa_orange.y, k_prusa_orange.z, 0.85f);
-    colors[ImGuiCol_SliderGrabActive] = k_prusa_orange;
+        ImVec4(k_piggie_pink.x, k_piggie_pink.y, k_piggie_pink.z, 0.85f);
+    colors[ImGuiCol_SliderGrabActive] = k_piggie_pink;
     colors[ImGuiCol_Button]           = color_imgui(Platform::Color::Transparent);
     colors[ImGuiCol_ButtonHovered] =
         color_imgui(Platform::Color::Button, Platform::ColorGroup::Hovered);
@@ -370,11 +373,11 @@ void Theme::initialize_imgui_light_style()
     colors[ImGuiCol_Separator]     = colors[ImGuiCol_Border];
     colors[ImGuiCol_SeparatorHovered] =
         ImVec4(active.Value.x, active.Value.y, active.Value.z, 0.78f);
-    colors[ImGuiCol_SeparatorActive] = k_prusa_orange;
+    colors[ImGuiCol_SeparatorActive] = k_piggie_pink;
     colors[ImGuiCol_ResizeGrip] = ImVec4(active.Value.x, active.Value.y, active.Value.z, 0.20f);
     colors[ImGuiCol_ResizeGripHovered] =
         ImVec4(active.Value.x, active.Value.y, active.Value.z, 0.67f);
-    colors[ImGuiCol_ResizeGripActive] = k_prusa_orange;
+    colors[ImGuiCol_ResizeGripActive] = k_piggie_pink;
     colors[ImGuiCol_TabHovered]       = colors[ImGuiCol_HeaderHovered];
     colors[ImGuiCol_Tab] = ImLerp(colors[ImGuiCol_Header], colors[ImGuiCol_TitleBgActive], 0.80f);
     colors[ImGuiCol_TabSelected] =

@@ -664,15 +664,6 @@ std::string PresetUpdaterRepositoryDatabase::get_next_uuid()
 
 namespace {
 
-bool add_authorization_header(Network::IHttp& http, PresetUpdaterProcessStatus* process_status)
-{
-    const std::string access_token = process_status->access_token();
-    if (!access_token.empty()) {
-        http.header("Authorization", "Bearer " + access_token);
-    }
-    return true;
-}
-
 bool sync_inner(std::string& manifest, PresetUpdaterProcessStatus* process_status)
 {
     bool res        = false;
@@ -686,10 +677,6 @@ bool sync_inner(std::string& manifest, PresetUpdaterProcessStatus* process_statu
         url,
         retry_fn
     );
-    const std::string access_token = process_status->access_token();
-    if (!access_token.empty()) {
-        http->header("Authorization", "Bearer " + access_token);
-    }
     http->timeout_total(30)
         .on_error([&](std::string body, std::string error, unsigned http_status) {
         SPDLOG_ERROR(

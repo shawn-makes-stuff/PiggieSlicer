@@ -9,7 +9,6 @@ namespace Slic3r::Biz::Platform {
 class IAppConfigProvider {
 public:
   virtual ~IAppConfigProvider() = default;
-  virtual boost::filesystem::path download_dir() const = 0;
 
   virtual std::string last_used_physical_printer() const = 0;
   virtual void set_last_used_physical_printer(const std::string& uuid) = 0;

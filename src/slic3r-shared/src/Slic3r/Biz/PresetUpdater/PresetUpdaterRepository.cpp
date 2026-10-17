@@ -185,10 +185,6 @@ bool OnlinePresetUpdaterRepository::get_file_inner(
         url,
         retry_fn
     );
-    const std::string access_token = process_status->access_token();
-    if (!access_token.empty()) {
-        http->header("Authorization", "Bearer " + access_token);
-    }
     http->timeout_total(30)
         .size_limit(1024 * 1024 * 100) // How large is the largest bundle?
         .on_progress([process_status](Network::IHttp::Progress, bool& cancel)

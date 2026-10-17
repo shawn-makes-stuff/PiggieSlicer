@@ -1830,63 +1830,7 @@ void MenuCommandRegistrar::register_main_menu_config_commands()
 void MenuCommandRegistrar::register_main_menu_help_commands()
 {
     m_menu_manager
-        // Menu -> Help -> Prusa Website
-        .register_menu_item(
-            {MenuItemName::MainMenu, MenuItemName::Help, MenuItemName::PSWebsite},
-            std::make_unique<UIItemCommand>(
-                CommandName::PSWebsite,
-                [this]()
-                {
-                    open_browser(
-                        OpenBrowserParams{
-                            .url              = "https://www.prusa3d.com/slicerweb",
-                            .is_localized_url = true
-                        }
-                    );
-                },
-                UIItemCommandExtraOpts{
-                    .enabled = hyperlinks_allowed
-                }
-            )
-        )
-        // Menu -> Help -> Samples
-        .register_menu_item(
-            {MenuItemName::MainMenu, MenuItemName::Help, MenuItemName::Samples},
-            std::make_unique<UIItemCommand>(
-                CommandName::Samples,
-                [this]()
-                {
-                    open_browser(
-                        OpenBrowserParams{
-                            .url = "https://help.prusa3d.com/article/sample-g-codes_529630"
-                        }
-                    );
-                },
-                UIItemCommandExtraOpts{
-                    .enabled = hyperlinks_allowed
-                }
-            )
-        )
-        // Menu -> Help -> Releases
-        .register_menu_item(
-            {MenuItemName::MainMenu, MenuItemName::Help, MenuItemName::Releases},
-            std::make_unique<UIItemCommand>(
-                CommandName::Releases,
-                [this]()
-                {
-                    open_browser(
-                        OpenBrowserParams{
-                            .url = "https://github.com/prusa3d/PrusaSlicer/releases"
-                        }
-                    );
-                },
-                UIItemCommandExtraOpts{
-                    .enabled = hyperlinks_allowed
-                }
-            )
-        )
-        // Menu -> Help -> Separator
-        .register_menu_separator_item({MenuItemName::MainMenu, MenuItemName::Help})
+        // PiggieSlicer: Prusa website/samples/releases/issue links removed (docs/branding/CLEANUP.md)
 #ifdef SHOW_NOT_IMPLEMENTED_ITEMS
         // Menu -> Help -> System Info
         .register_menu_item(
@@ -1908,24 +1852,6 @@ void MenuCommandRegistrar::register_main_menu_help_commands()
                 []()
                 {
                     AppServices::instance().file_explorer_handler().open_datadir_folder();
-                }
-            )
-        )
-        // Menu -> Help -> Report An Issue
-        .register_menu_item(
-            {MenuItemName::MainMenu, MenuItemName::Help, MenuItemName::ReportAnIssue},
-            std::make_unique<UIItemCommand>(
-                CommandName::ReportAnIssue,
-                [this]()
-                {
-                    open_browser(
-                        OpenBrowserParams{
-                            .url = "https://github.com/prusa3d/slic3r/issues/new/choose"
-                        }
-                    );
-                },
-                UIItemCommandExtraOpts{
-                    .enabled = hyperlinks_allowed
                 }
             )
         )
@@ -2135,27 +2061,7 @@ void MenuCommandRegistrar::register_file_menu_export_commands()
                 }
             )
         )
-        // File -> Export -> Send G-code
-        .register_menu_item(
-            {MenuItemName::FileMenu, MenuItemName::Export, MenuItemName::SendGcode},
-            std::make_unique<UIItemCommand>(
-                CommandName::SendGcode,
-                ExportActions::send_gcode_to_connect(m_project_interactor),
-                UIItemCommandExtraOpts{
-                    .keyboard_shortcuts = Platform::KeyboardShortcuts{Platform::KeyboardShortcut{
-                        Platform::KeyModifiers(Platform::KeyModifier::Ctrl)
-                            | Platform::KeyModifiers(Platform::KeyModifier::Shift),
-                        Platform::KeyCode::G
-                    }},
-                    .enabled =
-                        [this]()
-                    {
-                        return ExportActions::can_export(m_project_interactor)
-                            && m_project_interactor.user_account_interactor().is_logged_in();
-                    }
-                }
-            )
-        )
+        // PiggieSlicer: File -> Export -> Send G-code (Prusa Connect upload) removed
         // File -> Export -> Export G-code to SD Card / Flash Drive
         .register_menu_item(
             {MenuItemName::FileMenu, MenuItemName::Export, MenuItemName::ExportGcodeToFlash},

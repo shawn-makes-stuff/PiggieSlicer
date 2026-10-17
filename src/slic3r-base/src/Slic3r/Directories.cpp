@@ -259,7 +259,7 @@ static fs::path get_xdg_cache_home() {
 
 std::string get_default_cachedir() {
     const fs::path cache_path{get_xdg_cache_home()};
-    return (cache_path / "prusa-slicer").string();
+    return (cache_path / "piggie-slicer").string();
 }
 #elif defined(__APPLE__)
 std::string get_default_cachedir() {

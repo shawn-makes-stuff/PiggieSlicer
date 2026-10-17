@@ -42,10 +42,6 @@ public:
     virtual std::vector<BrowserLogicCommand> on_webview_created() {return {};}
     virtual std::vector<BrowserLogicCommand> on_load_default_url() { return {{BrowserLogicCommandType::LoadURL, m_url}};}
     virtual std::vector<BrowserLogicCommand> on_loaded_webview_event(const std::string& url) {return {};}
-    virtual std::vector<BrowserLogicCommand> on_user_account_id_success(bool is_refresh, const std::string& current_url) {return {};}
-    virtual std::vector<BrowserLogicCommand> on_user_account_logged_out(const std::string& current_url) {return {};}
-    virtual std::vector<BrowserLogicCommand> on_user_account_will_refresh() {return {};}
-    virtual std::vector<BrowserLogicCommand> on_printables_secret_token(const std::string& body) {return {};}
 
     void set_next_show_url(std::string url) {m_next_show_url = url;}
     void set_title(const std::string& title) { m_component_title = title; }

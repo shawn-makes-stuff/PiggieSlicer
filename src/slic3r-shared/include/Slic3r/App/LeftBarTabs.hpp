@@ -6,8 +6,6 @@ namespace Slic3r::App {
 enum class LeftBarTabs {
     Slicing = 1000,
     //Projects,
-    Printers,
-    Printables,
     PhysicalPrinter
 };
 }

@@ -80,7 +80,7 @@ std::string ModelNode::grey()
 
 std::string ModelNode::orange()
 {
-    return "#ed6b21";
+    return "#D07682";
 }
 
 wxBitmapOrIcon ModelNode::get_bitmap(const std::string& color)

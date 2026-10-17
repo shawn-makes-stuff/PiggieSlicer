@@ -149,7 +149,7 @@ std::string compose_message_json(const std::string& type, const std::string& dat
 void AppInstanceMessageSenderLinux::multicast_message(const std::string& message_type, const std::string& message_data, size_t instance_hash, void* window_handle)
 {
     std::string message_text = compose_message_json(message_type, message_data);
-    std::string pattern = R"(com\.prusa3d\.prusaslicer\.MulticastListener\.Object\d+)";
+    std::string pattern = R"(io\.github\.shawn_makes_stuff\.piggieslicer\.MulticastListener\.Object\d+)";
     std::vector<std::string> instances;
     std::string my_pid = std::to_string(get_current_pid());
 
@@ -177,9 +177,9 @@ void AppInstanceMessageSenderLinux::broadcast_message(const std::string& message
     DBusError       err;
     dbus_uint32_t   serial = 0;
     const char* sigval = message_text.c_str();
-    std::string     interface_name = "com.prusa3d.prusaslicer.BroadcastListener.Object" + version;
+    std::string     interface_name = "io.github.shawn_makes_stuff.piggieslicer.BroadcastListener.Object" + version;
     std::string     method_name = "Message";
-    std::string     object_name = "/com/prusa3d/prusaslicer/BroadcastListener/Object" + version;
+    std::string     object_name = "/io/github/shawn_makes_stuff/piggieslicer/BroadcastListener/Object" + version;
 
     // initialise the error value
     dbus_error_init(&err);
@@ -305,8 +305,8 @@ void AppInstanceMessageHandlerLinux::listen_broadcast(JThread::StopToken stop_to
     int                  name_req_val;
     DBusObjectPathVTable vtable;
     std::string          instance_hash  = std::to_string(Biz::Platform::PlatformServices::instance().app_hash());
-    std::string          interface_name = "com.prusa3d.prusaslicer.BroadcastListener.Object" + instance_hash;
-    std::string          object_name    = "/com/prusa3d/prusaslicer/BroadcastListener/Object" + instance_hash;
+    std::string          interface_name = "io.github.shawn_makes_stuff.piggieslicer.BroadcastListener.Object" + instance_hash;
+    std::string          object_name    = "/io/github/shawn_makes_stuff/piggieslicer/BroadcastListener/Object" + instance_hash;
 
     dbus_error_init(&err);
 
@@ -333,7 +333,7 @@ void AppInstanceMessageHandlerLinux::listen_broadcast(JThread::StopToken stop_to
         return;
     }
     if (DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER != name_req_val) {
-        SPDLOG_ERROR("Not primary owner of DBus name - probably another PrusaSlicer instance is running.");
+        SPDLOG_ERROR("Not primary owner of DBus name - probably another PiggieSlicer instance is running.");
         SPDLOG_ERROR("Dbus Messages listening terminating.");
         dbus_connection_unref(conn);
         return;
@@ -380,7 +380,7 @@ DBusHandlerResult AppInstanceMessageHandlerLinux::broadcast_listener_handle_dbus
 {
     const char* interface_name = dbus_message_get_interface(message);
     const char* member_name    = dbus_message_get_member(message);
-    std::string our_interface  = "com.prusa3d.prusaslicer.BroadcastListener.Object" + std::to_string(Biz::Platform::PlatformServices::instance().app_hash());
+    std::string our_interface  = "io.github.shawn_makes_stuff.piggieslicer.BroadcastListener.Object" + std::to_string(Biz::Platform::PlatformServices::instance().app_hash());
     SPDLOG_INFO("DBus message received: interface: {}, member: {}", interface_name, member_name);
     if (0 == strcmp("org.freedesktop.DBus.Introspectable", interface_name) && 0 == strcmp("Introspect", member_name)) {     
         broadcast_listener_respond_to_introspect(connection, message);
@@ -409,7 +409,7 @@ void AppInstanceMessageHandlerLinux::broadcast_listener_respond_to_introspect(DB
         "       <arg name=\"data\" direction=\"out\" type=\"s\" />"
         "     </method>"
         "   </interface>"
-        "   <interface name=\"com.prusa3d.prusaslicer.BroadcastListener\">"
+        "   <interface name=\"io.github.shawn_makes_stuff.piggieslicer.BroadcastListener\">"
         "     <method name=\"Message\">"
         "       <arg name=\"data\" direction=\"in\" type=\"s\" />"
         "     </method>"
@@ -460,8 +460,8 @@ void AppInstanceMessageHandlerLinux::listen_multicast(JThread::StopToken stop_to
     int                  name_req_val;
     DBusObjectPathVTable vtable;
     std::string          pid  = std::to_string(get_current_pid());
-    std::string          interface_name = "com.prusa3d.prusaslicer.MulticastListener.Object" + pid;
-    std::string          object_name    = "/com/prusa3d/prusaslicer/MulticastListener/Object" + pid;
+    std::string          interface_name = "io.github.shawn_makes_stuff.piggieslicer.MulticastListener.Object" + pid;
+    std::string          object_name    = "/io/github/shawn_makes_stuff/piggieslicer/MulticastListener/Object" + pid;
 
     dbus_error_init(&err);
 
@@ -488,7 +488,7 @@ void AppInstanceMessageHandlerLinux::listen_multicast(JThread::StopToken stop_to
         return;
     }
     if (DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER != name_req_val) {
-        SPDLOG_ERROR("listen_multicast: Not primary owner of DBus name - probably another PrusaSlicer instance is running.");
+        SPDLOG_ERROR("listen_multicast: Not primary owner of DBus name - probably another PiggieSlicer instance is running.");
         SPDLOG_ERROR("listen_multicast: Dbus Messages listening terminating.");
         dbus_connection_unref(conn);
         return;
@@ -543,7 +543,7 @@ void AppInstanceMessageHandlerLinux::multicast_listener_respond_to_introspect(DB
         "       <arg name=\"data\" direction=\"out\" type=\"s\" />"
         "     </method>"
         "   </interface>"
-        "   <interface name=\"com.prusa3d.prusaslicer.MulticastListener\">"
+        "   <interface name=\"io.github.shawn_makes_stuff.piggieslicer.MulticastListener\">"
         "     <method name=\"Message\">"
         "       <arg name=\"data\" direction=\"in\" type=\"s\" />"
         "     </method>"
@@ -578,7 +578,7 @@ DBusHandlerResult AppInstanceMessageHandlerLinux::multicast_listener_handle_dbus
 {
     const char* interface_name = dbus_message_get_interface(message);
     const char* member_name    = dbus_message_get_member(message);
-    std::string our_interface  = "com.prusa3d.prusaslicer.MulticastListener.Object" + std::to_string(get_current_pid());
+    std::string our_interface  = "io.github.shawn_makes_stuff.piggieslicer.MulticastListener.Object" + std::to_string(get_current_pid());
     SPDLOG_INFO("DBus message received: interface: {}, member: {}", interface_name, member_name);
     if (0 == strcmp("org.freedesktop.DBus.Introspectable", interface_name) && 0 == strcmp("Introspect", member_name)) {     
         multicast_listener_respond_to_introspect(connection, message);

@@ -67,25 +67,6 @@ private:
     void handle_message_type_cli(const std::string& data);
 
     /**
-     * @brief Handles the message type "LOGIN" - a login callback forwarded from another
-     * instance. Only dispatches the login data to listeners; it never re-forwards, which
-     * is what prevents an infinite multicast loop between instances (see handle_message_type_cli).
-     * On linux, this is called from the worker thread!
-     */
-    void handle_message_type_login(const std::string& data);
-
-    /**
-     * @brief Dispatches a single prusaslicer://login url to the listeners on the main thread.
-     */
-    void dispatch_login(const std::string& url);
-
-    /**
-     * @brief Handles the message type "STORE_READ" and calls the appropriate listener method.
-     * On linux, this is called from the worker thread!
-     */
-    void handle_message_type_store_read(const std::string& data);
-
-    /**
      * @brief Handles the message type "OTHER_CLOSED" by trying to acquire lockfile (on mac only).
      * On linux, this is called from the worker thread!
      */

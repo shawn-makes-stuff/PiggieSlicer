@@ -82,13 +82,7 @@ void PhysicalPrinterSettingsButton::update()
         [this](const auto& arg)
         {
             using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::ConnectUpload>) {
-                set_preset_name({});
-                m_preset_name->set_visible(false);
-                set_icon(Render::Icon::ConnectUpload);
-                set_visible_cog(false);
-                set_visible_bin(false);
-            } else if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::PrinterUpload>) {
+            if constexpr (std::is_same_v<T, Slic3r::Biz::PhysicalPrinter::PrinterUpload>) {
                 // Reuse the picture of the linked logical printer; fall back to the generic icon.
                 if (m_state->hw_config.visual.thumbnail.has_value()) {
                     set_image(

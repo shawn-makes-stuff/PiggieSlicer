@@ -98,16 +98,6 @@ void CommandBindingManager::bind(const char* command_name, Yoga::AbstractButton*
     m_ui_item_to_command[ui_item] = command_name;
 }
 
-void CommandBindingManager::on_user_account_id_success(bool, const std::string&)
-{
-    update_ui_items();
-}
-
-void CommandBindingManager::on_user_account_logged_out()
-{
-    update_ui_items();
-}
-
 void CommandBindingManager::on_selected_bed_instances_changed(
     Domain::SelectionId,
     const Biz::Scene::BedSelection&

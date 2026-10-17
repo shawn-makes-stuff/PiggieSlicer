@@ -118,9 +118,9 @@ void WidgetsConfig::init_ui_colours()
 
     m_color_label_default           = m_is_dark ? wxColour(250, 250, 250) : wxColour(12, 12, 12);
     m_color_highlight_label_default = m_is_dark ? wxColour(230, 230, 230) : wxColour(12, 12, 12);
-    m_color_highlight_default       = m_is_dark ? wxColour(78, 78, 78) : wxColour(190, 200, 215);
-    m_color_hovered_btn_label       = m_is_dark ? wxColour(253, 111, 40) : wxColour(252, 77, 1);
-    m_color_default_btn_label       = m_is_dark ? wxColour(255, 181, 100) : wxColour(203, 61, 0);
+    m_color_highlight_default       = m_is_dark ? wxColour(78, 78, 78) : wxColour(225, 205, 208);
+    m_color_hovered_btn_label       = m_is_dark ? wxColour(224, 138, 150) : wxColour(208, 118, 130);
+    m_color_default_btn_label       = m_is_dark ? wxColour(240, 184, 192) : wxColour(163, 75, 88);
     m_color_hovered_btn_bg =
         to_wx(theme.color(Platform::Color::Button, Platform::ColorGroup::Hovered));
     m_color_selected_btn_bg =
@@ -157,7 +157,7 @@ const wxColour WidgetsConfig::get_label_default_clr_system()
 
 const wxColour WidgetsConfig::get_label_default_clr_modified()
 {
-    return m_is_dark ? wxColour(253, 111, 40) : wxColour(252, 77, 1);
+    return m_is_dark ? wxColour(224, 138, 150) : wxColour(163, 75, 88);
 }
 
 const std::vector<std::string> WidgetsConfig::get_mode_default_palette()

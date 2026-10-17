@@ -32,11 +32,6 @@ struct SlicingWarningNotificationData
     Domain::SlicingId slicing_id;
 };
 
-struct DownloadProgressNotificationData
-{
-    size_t download_id;
-};
-
 enum class PrintHostJobStatus
 {
     None,
@@ -70,8 +65,6 @@ enum class ArrangeEventType {
     FatalError
 };
 
-struct UserAccountLoginNotificationData {};
-
 // Define the variant type alias.
 using PopNotificationPayload = std::variant<
     std::monostate,
@@ -81,9 +74,7 @@ using PopNotificationPayload = std::variant<
     SlicingWarningNotificationData,
     PrintHostProgressNotificationData,
     EjectNotificationData,
-    DownloadProgressNotificationData,
-    ArrangeEventType,
-    UserAccountLoginNotificationData
+    ArrangeEventType
 >;
 
 } // namespace Slic3r::App::PopNotification

@@ -1,5 +1,6 @@
 #include "Slic3r/Biz/Network/MockHttp.hpp"
 #include "Slic3r/Biz/Network/MockHttpFactory.hpp"
+#include "Slic3r/Biz/Network/ServiceConfig.hpp"
 
 #include "Slic3r/App/Platform/StdMainThreadDispatcher.hpp"
 #include "Slic3r/Biz/Platform/PlatformServices.hpp"

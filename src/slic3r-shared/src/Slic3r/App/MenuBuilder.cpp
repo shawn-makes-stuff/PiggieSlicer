@@ -134,7 +134,7 @@ std::string MenuBuilder::item_name_translated(UniversalMenuItemName menu_item_na
                 case MenuItemName::ReportAnIssue:
                     return Biz::_u8L("Report PrusaSlicer Issue");
                 case MenuItemName::About:
-                    return Biz::_u8L("About PrusaSlicer");
+                    return Biz::_u8L("About PiggieSlicer");
                 case MenuItemName::TipOfTheDay:
                     return Biz::_u8L("Show Tip of the Day");
                 case MenuItemName::KeyboardShortcutsDialog:
@@ -147,8 +147,6 @@ std::string MenuBuilder::item_name_translated(UniversalMenuItemName menu_item_na
                     return Biz::_u8L("Export");
                 case MenuItemName::ExportGcode:
                     return Biz::_u8L("Export G-code");
-                case MenuItemName::SendGcode:
-                    return Biz::_u8L("Send G-code");
                 case MenuItemName::ExportGcodeToFlash:
                     return Biz::_u8L("Export G-code to SD Card / Flash Drive");
                 case MenuItemName::OnlinePresetUpdate:

@@ -37,9 +37,6 @@ enum class Icon : wchar_t
     LegendShells,
     LegendToolMarker,
     PrusaSlicerIcon,
-    Printables,
-    Connect,
-    Cloud,
     Lock,
     Unlock,
     LightLockClosed,
@@ -139,7 +136,6 @@ enum class Icon : wchar_t
 
     // Physical printer
     ExportToSD,
-    ConnectUpload,
     ExportToLocal,
 
     Layers,

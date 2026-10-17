@@ -28,7 +28,6 @@ protected:
     virtual bool handle_logic_command_DoReload(const std::string& data) = 0;
     virtual bool handle_logic_command_AddUserScript(const std::string& data) = 0;
     virtual bool handle_logic_command_LoadResourcesPage(const std::string& data) = 0;
-    virtual bool handle_logic_command_RegisterPrusaSlicerURL(const std::string& data) = 0;
     virtual bool handle_logic_command_SetLoadDefaultURLOnErrorTrue(const std::string& data) = 0;
     virtual bool handle_logic_command_SetLoadDefaultURLOnErrorFalse(const std::string& data) = 0;
     virtual bool handle_logic_command_SwitchToSlicing(const std::string& data) = 0;
@@ -66,7 +65,6 @@ protected:
         case BrowserLogicCommandType::OpenExternalBrowserForced:
             open_browser({.url = command.data, .skip_confirmation = true});
             return true;
-        case BrowserLogicCommandType::RegisterPrusaSlicerURL:        return handle_logic_command_RegisterPrusaSlicerURL(command.data);
         case BrowserLogicCommandType::SetLoadDefaultURLOnErrorTrue:  return handle_logic_command_SetLoadDefaultURLOnErrorTrue(command.data);
         case BrowserLogicCommandType::SetLoadDefaultURLOnErrorFalse: return handle_logic_command_SetLoadDefaultURLOnErrorFalse(command.data);
         case BrowserLogicCommandType::SwitchToSlicing:               return handle_logic_command_SwitchToSlicing(command.data);

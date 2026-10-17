@@ -13,7 +13,6 @@
 #include "Slic3r/Biz/RemovableDrive/IRemovableDriveStatusListener.hpp"
 #include "Slic3r/Biz/StatusCache.hpp"
 #include "Slic3r/Biz/ISelectedBedInstanceChangedListener.hpp"
-#include "Slic3r/Biz/UserAccount/IUserAccountListener.hpp"
 #include "Slic3r/App/IMenuUpdatedListener.hpp"
 
 namespace Slic3r::App {
@@ -43,7 +42,6 @@ namespace Slic3r::App::WX {
  * 4. Call setup_apple_menu() after SetMenuBar() to configure About/Quit
  */
 class MacOSNativeMenuBar :
-    public Biz::UserAccount::IUserAccountListener,
     public Biz::IStatusCacheChangedListener,
     public Biz::ISelectedBedInstancesChangedListener,
     public Biz::RemovableDrive::IRemovableDriveStatusListener,
@@ -98,9 +96,6 @@ public:
      * states with Binding manager.
      */
     void update_menu_states();
-
-    void on_user_account_id_success(bool, const std::string&) override;
-    void on_user_account_logged_out() override;
 
     void on_selected_bed_instances_changed(
         Domain::SelectionId project_id,

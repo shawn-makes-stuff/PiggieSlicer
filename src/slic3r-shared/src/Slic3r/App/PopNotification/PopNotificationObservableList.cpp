@@ -63,9 +63,6 @@ const T* PopNotificationObservableList::get_notification_payload(
 template const PrintHostProgressNotificationData* PopNotificationObservableList::get_notification_payload(
     std::function<bool(const PrintHostProgressNotificationData&)> matcher
 );
-template const UserAccountLoginNotificationData* PopNotificationObservableList::get_notification_payload(
-    std::function<bool(const UserAccountLoginNotificationData&)> matcher
-);
 
 void PopNotificationObservableList::erase_notification(const PopNotificationData* to_erase)
 {

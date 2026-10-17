@@ -56,6 +56,7 @@ public:
 	static const ColorRGB LIGHT_GRAY()  { return { 0.75f, 0.75f, 0.75f }; }
 	static const ColorRGB MAGENTA()     { return { 1.0f, 0.0f, 1.0f }; }
 	static const ColorRGB ORANGE()      { return { 0.92f, 0.50f, 0.26f }; }
+	static const ColorRGB PIGGIE_PINK() { return { 0.816f, 0.463f, 0.510f }; } // #D07682 brand accent
 	static const ColorRGB RED()         { return { 1.0f, 0.0f, 0.0f }; }
 	static const ColorRGB REDISH()      { return { 1.0f, 0.5f, 0.5f }; }
 	static const ColorRGB YELLOW()      { return { 1.0f, 1.0f, 0.0f }; }
@@ -173,6 +174,11 @@ public:
     static constexpr ColorRGBA ORANGE()
 	{
 	    return {0.923f, 0.504f, 0.264f, 1.0f};
+	}
+
+    static constexpr ColorRGBA PIGGIE_PINK() // #D07682 brand accent
+	{
+	    return {0.816f, 0.463f, 0.510f, 1.0f};
 	}
 
     static constexpr ColorRGBA RED()

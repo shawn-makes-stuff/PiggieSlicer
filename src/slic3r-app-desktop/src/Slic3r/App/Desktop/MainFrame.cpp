@@ -22,9 +22,6 @@
 #include <Slic3r/App/Localization.hpp>
 #include "Slic3r/App/Navigator.hpp"
 #include "Slic3r/App/MenuManager.hpp"
-#include "Slic3r/App/Browser/BrowserLogicPrintables.hpp"
-#include "Slic3r/App/Browser/BrowserLogicConnectPage.hpp"
-#include "Slic3r/App/Browser/BrowserLogicLogInRedirect.hpp"
 #include "Slic3r/App/Browser/BrowserLogicPhysicalPrinter.hpp"
 
 #include "Slic3r/App/Platform/AbstractRenderModule.hpp"
@@ -75,7 +72,7 @@ static wxIconBundle main_frame_icon_bundle()
 // Load the icon from the ico file.
 static wxIcon main_frame_icon()
 {
-    return wxIcon(WX::from_u8(var("PrusaSlicer_128px.png")), wxBITMAP_TYPE_PNG);
+    return wxIcon(WX::from_u8(var("PiggieSlicer_128px.png")), wxBITMAP_TYPE_PNG);
 }
 #endif // _WIN32
 
@@ -94,9 +91,9 @@ MainFrame::MainFrame(
     m_project_saver(project_saver),
     m_projects_changed_listener_scope(m_project_interactor, *this)
 {
-    // AppInstanceCheck on Windows expects "PrusaSlicer" in the title
+    // AppInstanceCheck on Windows expects the app name in the title
     // (in AppInstanceMessageHandlerWin32.cpp). Better check it.
-    ASSERT(into_u8(this->GetTitle()).find("PrusaSlicer") != std::string::npos);
+    ASSERT(into_u8(this->GetTitle()).find(::Slic3r::APP_NAME) != std::string::npos);
 
     // Load the icon either from the exe, or from the ico file.
 #if _WIN32
@@ -129,57 +126,6 @@ MainFrame::MainFrame(
 
     init_left_bar(project_interactor);
     complete_and_bind_left_bar();
-
-    m_tabs_bar_menus.set_account_menu_callbacks(
-        [this, &project_interactor]()
-        {
-            if (!project_interactor.user_account_interactor().is_logged_in()) {
-                AppServices::instance().dialog_manager().show_webview_dialog(
-                    std::make_unique<Browser::BrowserLogicLogInRedirect>(project_interactor.user_account_interactor()),
-                    &project_interactor
-                );
-                if (project_interactor.raise_app_fn()) {
-                    project_interactor.raise_app_fn()();
-                }
-
-            } else {
-                project_interactor.user_account_interactor().do_log_out();
-            }
-        },
-        [&project_interactor]()
-        {
-            return TabsBarMenus::UserAccountInfo{
-                project_interactor.user_account_interactor().is_logged_in(),
-                project_interactor.user_account_interactor().username(),
-                project_interactor.user_account_interactor().avatar()
-            };
-        }
-    );
-
-    project_interactor.user_account_interactor().set_update_menu_callback(
-        [this](bool avatar)
-        {
-            m_tabs_bar_menus.UpdateAccountMenu();
-            m_left_bar->GetLeftBarCtrl()->UpdateAccountButton(avatar);
-        }
-    );
-
-    project_interactor.set_raise_app_fn(
-        [this]()
-        {
-            bool was_maximized = IsMaximized();
-            this->Show(true);
-            CallAfter([this, was_maximized]() {
-                this->Restore();
-                this->Raise();
-                this->SetFocus();
-                // Maximize call fixes 2 issues.
-                // - On windows the window did de-maximize without reason.
-                // - On linux the windows did not come forward at all.
-                this->Maximize(was_maximized);
-            });
-        }
-    );
 
     this->Bind(
         wxEVT_SYS_COLOUR_CHANGED,
@@ -288,7 +234,6 @@ MainFrame::MainFrame(
         m_left_bar->GetLeftBarCtrl()->preferences_btn()->Enable(
             dialog == ModalDialog::Preferences || dialog == ModalDialog::None
         );
-        m_left_bar->GetLeftBarCtrl()->account_btn()->Enable(dialog == ModalDialog::None);
         m_left_bar->GetTabsBarCtrl()->enable_buttons(dialog == ModalDialog::None);
 
         m_left_bar->GetLeftBarCtrl()->preferences_btn()->set_selected(
@@ -341,22 +286,6 @@ void MainFrame::on_app_config_changed(const std::string& key)
     }
 #endif
 
-    if (key == "enable_printables") {
-        if (bool printables_enabled = AppServices::instance().app_config().is_printables_enabled();
-            m_printables_page_added != printables_enabled)
-        {
-            update_printables_left_bar(printables_enabled);
-        }
-    }
-
-    if (key == "enable_prusa_account") {
-        if (bool acc_enabled = AppServices::instance().app_config().is_prusa_account_enabled();
-            acc_enabled != m_project_interactor.user_account_interactor().is_enabled())
-        {
-            m_project_interactor.user_account_interactor().init(acc_enabled);
-        }
-    }
-
     if (key == "graphics_quality") {
         update_graphics_settings();
     }
@@ -376,14 +305,14 @@ void MainFrame::on_app_config_changed(const std::string& key)
                 localization().language_description(new_language)
             );
             // Show info dialog
-            dialog_manager.show_info_dialog(message, Biz::_u8L("PrusaSlicer - Switching language"));
+            dialog_manager.show_info_dialog(message, Biz::_u8L("PiggieSlicer - Switching language"));
         }
     } else if (key == "theme") {
         AppServices::instance().dialog_manager().show_info_dialog(
             Biz::_u8L(
                 "The selected theme has been saved and will be applied the next time the application starts."
             ),
-            Biz::_u8L("PrusaSlicer - Switching theme")
+            Biz::_u8L("PiggieSlicer - Switching theme")
         );
     } else if (key == "sentry") {
         if (app_config.get<bool>("initialized")) {
@@ -400,7 +329,7 @@ void MainFrame::on_app_config_changed(const std::string& key)
                     // TRN {} is message
                     fmt::format(fmt::runtime(Biz::_u8L("Crash reporting is now disabled. {}")),
                                 message),
-                Biz::_u8L("PrusaSlicer - Enable crash reporting"));
+                Biz::_u8L("PiggieSlicer - Enable crash reporting"));
         }
     }
 }
@@ -568,8 +497,6 @@ void MainFrame::init_left_bar(Biz::ProjectInteractor& project_interactor)
     m_left_bar->set_compact_mode(true);
 
     init_slicing_page();
-    init_printers_page(project_interactor);
-    init_printables_page(project_interactor);
     if (project_interactor.physical_printer_interactor().is_printer_upload_selected()) {
         init_physical_printer_page(project_interactor);
     }
@@ -615,38 +542,10 @@ static size_t get_tab_insert_index(LeftBar* left_bar, LeftBarTabs page_id)
     return left_bar->GetPageCount();
 }
 
-void MainFrame::init_printers_page(Biz::ProjectInteractor& project_interactor)
-{
-    if (!AppServices::instance().app_config().is_prusa_account_enabled()) {
-        return;
-    }
-    assert(!m_printers_page_added);
-    std::unique_ptr<App::Browser::BrowserLogicConnectPage> logic = std::make_unique<App::Browser::BrowserLogicConnectPage>(project_interactor);
-    WX::WebView::AbstractWebViewPanel* webview_panel = WebView::new_web_view_panel(m_left_bar, static_cast<int>(LeftBarTabs::Printers), std::move(logic), false);
-    project_interactor.user_account_interactor().add_listener<Biz::UserAccount::IUserAccountListener>(webview_panel);
-    m_left_bar->InsertNewPage(get_tab_insert_index(m_left_bar, LeftBarTabs::Printers), webview_panel, WX::_L("Connect"), "lb_printers");
-    webview_panel->set_switch_left_tab_fn(std::bind(&MainFrame::switch_left_tab, this, std::placeholders::_1, std::placeholders::_2));
-    m_printers_page_added = true;
-}
-
 void MainFrame::init_slicing_page()
 {
     m_canvas = std::make_unique<Platform::WX::WXRenderCanvas>(m_left_bar,  static_cast<int>(LeftBarTabs::Slicing));
     m_left_bar->AddNewPage(m_canvas.get(), WX::_L("Slicing"), "lb_slicing");
-}
-
-void MainFrame::init_printables_page(Biz::ProjectInteractor& project_interactor)
-{
-    if (!AppServices::instance().app_config().is_printables_enabled()) {
-        return;
-    }
-    assert(!m_printables_page_added);
-    std::unique_ptr<App::Browser::BrowserLogicPrintables> logic = std::make_unique<App::Browser::BrowserLogicPrintables>(project_interactor);
-    WX::WebView::AbstractWebViewPanel* webview_panel = WebView::new_web_view_panel(m_left_bar, static_cast<int>(LeftBarTabs::Printables), std::move(logic), false);
-    project_interactor.user_account_interactor().add_listener<Biz::UserAccount::IUserAccountListener>(webview_panel);
-    m_left_bar->InsertNewPage(get_tab_insert_index(m_left_bar, LeftBarTabs::Printables), webview_panel, WX::_L("Printables"), "lb_printables");
-    webview_panel->set_switch_left_tab_fn(std::bind(&MainFrame::switch_left_tab, this, std::placeholders::_1, std::placeholders::_2));
-    m_printables_page_added = true;
 }
 
 static std::string build_physical_printer_url(const std::string& host)
@@ -707,36 +606,6 @@ void MainFrame::ensure_slicing_page_selected()
     {
         switch_left_tab(LeftBarTabs::Slicing, std::string());
     }
-}
-
-void MainFrame::update_printables_left_bar(bool printables_enabled)
-{
-    ASSERT(m_left_bar);
-
-    if (!printables_enabled) {
-        remove_left_bar_page(LeftBarTabs::Printables);
-        m_printables_page_added = false;
-    } else if (printables_enabled) {
-        init_printables_page(m_project_interactor);
-    }
-
-    ensure_slicing_page_selected();
-}
-
-void MainFrame::on_user_account_enabled_state_changed(bool is_enabled)
-{
-    ASSERT(m_left_bar);
-
-    if (m_printers_page_added && !is_enabled) {
-        remove_left_bar_page(LeftBarTabs::Printers);
-        m_printers_page_added = false;
-    } else if (!m_printers_page_added && is_enabled) {
-        init_printers_page(m_project_interactor);
-    }
-
-    m_left_bar->ShowUserAccount(is_enabled);
-
-    ensure_slicing_page_selected();
 }
 
 void MainFrame::on_selected_physical_printer_changed() 
@@ -810,15 +679,9 @@ void MainFrame::switch_left_tab(LeftBarTabs id, const std::string& data)
 
     size_t page_index = get_tab_index_by_id(m_left_bar, id);
     if (page_index == size_t(-1) || page_index >= m_left_bar->GetPageCount()) {
-        // This could happen. F.e. notification trying to switch to disabled Printables.
         return;
     }
 
-    if (id == LeftBarTabs::Printables) {
-        WebView::AbstractWebViewPanel* webview_panel =
-            dynamic_cast<WebView::AbstractWebViewPanel*>(m_left_bar->GetPage(page_index));
-        webview_panel->set_next_show_url(data);
-    }
     m_left_bar->SetSelection(page_index);
 }
 
@@ -893,12 +756,12 @@ bool MainFrame::select_language()
         // If something was failed during the set new language:
 
         wxString message = WX::
-            format_wxstr(_L("Switching PrusaSlicer to language %1% failed."), language_infos[index].canonical_name);
+            format_wxstr(_L("Switching PiggieSlicer to language %1% failed."), language_infos[index].canonical_name);
 #if !defined(_WIN32) && !defined(__APPLE__)
         // likely some linux system
         message += "\n" + WX::format_wxstr(_L("You may need to reconfigure the missing locales, likely by running the %1% and %2% commands.\n"), "\"locale-gen\"", "\"dpkg-reconfigure locales\"");
 #endif
-        MessageDialog(this, message, _L("PrusaSlicer - Switching language failed"), wxOK | wxICON_ERROR);
+        MessageDialog(this, message, _L("PiggieSlicer - Switching language failed"), wxOK | wxICON_ERROR);
     }
     return false;
 }
@@ -1101,8 +964,6 @@ void MainFrame::setup_macos_native_menu_bar()
     m_project_interactor.status_cache().add_listener<Biz::IStatusCacheChangedListener>(
         m_native_menu_bar.get()
     );
-    m_project_interactor.user_account_interactor()
-        .add_listener<Biz::UserAccount::IUserAccountListener>(m_native_menu_bar.get());
     m_project_interactor.scene_interactor().add_listener<Biz::ISelectedBedInstancesChangedListener>(
         m_native_menu_bar.get()
     );

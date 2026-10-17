@@ -31,10 +31,10 @@ static const ColorRGB PLATE_TEXTURED_LIGHT_ERROR   = { 0.750f, 0.000f, 0.000f };
 static const ColorRGBA GRID_REGULAR  = { 0.75f, 0.75f, 0.75f, 0.75f };
 static const ColorRGBA GRID_DISABLED = { 0.65f, 0.65f, 0.65f, 0.75f };
 
-static const ColorRGBA CONTOUR_REGULAR  = Domain::ColorRGBA::ORANGE();
+static const ColorRGBA CONTOUR_REGULAR  = Domain::ColorRGBA::PIGGIE_PINK();
 static const ColorRGBA CONTOUR_DISABLED = { 0.75f, 0.75f, 0.75f, 1.0f };
 
-static const ColorRGBA PRINT_VOLUME_REGULAR  = Domain::ColorRGBA::ORANGE();
+static const ColorRGBA PRINT_VOLUME_REGULAR  = Domain::ColorRGBA::PIGGIE_PINK();
 static const ColorRGBA PRINT_VOLUME_DISABLED = { 0.75f, 0.75f, 0.75f, 1.0f };
 
 static const ColorRGBA MODEL_REGULAR        = { 0.235f, 0.235f, 0.235f, 1.0f };
@@ -42,11 +42,11 @@ static const ColorRGBA MODEL_DISABLED       = { 0.525f, 0.525f, 0.525f, 1.0f };
 static const ColorRGBA MODEL_ERROR          = { 0.550f, 0.000f, 0.000f, 1.0f };
 static const ColorRGBA MODEL_DISABLED_ERROR = { 1.000f, 0.000f, 0.000f, 1.0f };
 
-static const ColorRGB LABEL_REGULAR             = Domain::ColorRGB::ORANGE();
+static const ColorRGB LABEL_REGULAR             = Domain::ColorRGB::PIGGIE_PINK();
 static const ColorRGB LABEL_DISABLED            = { 0.8f, 0.8f, 0.8f };
 static const ColorRGB LABEL_SECONDARY_SELECTION = { 0.6f, 0.6f, 0.6f };
 
-static const ColorRGBA CC_SELECTION_BORDER = Domain::ColorRGBA::ORANGE();
+static const ColorRGBA CC_SELECTION_BORDER = Domain::ColorRGBA::PIGGIE_PINK();
 
 static const ColorRGBA X_AXIS = ColorRGBA::X();
 static const ColorRGBA Y_AXIS = ColorRGBA::Y();

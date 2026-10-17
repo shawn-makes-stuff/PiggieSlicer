@@ -364,10 +364,10 @@ void add_misc_options(CLI::App& app, App::InitParams& params)
         ->type_name("ABCD");
 
     app.add_flag(
-        "--single-instance,!--no-single-instance,--single-instance-on-url",
+        "--single-instance,!--no-single-instance",
         params.misc.single_instance,
-        "If enabled, the command line arguments are sent to an existing instance of GUI PrusaSlicer, "
-        "or an existing PrusaSlicer window is activated. Overrides the \"single_instance\" configuration "
+        "If enabled, the command line arguments are sent to an existing instance of GUI PiggieSlicer, "
+        "or an existing PiggieSlicer window is activated. Overrides the \"single_instance\" configuration "
         "value from application preferences."
     );
 
@@ -946,7 +946,7 @@ InitParams read_cli(::CLI::App& app, const std::string& app_version, const int a
     app.set_version_flag(
         "-v,--version",
         app_version,
-        "Display PrusaSlicer version information and exit."
+        "Display PiggieSlicer version information and exit."
     );
     app.set_help_flag("--help,-h", "Show this help message and exit.");
 

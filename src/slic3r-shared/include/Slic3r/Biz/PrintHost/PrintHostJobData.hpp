@@ -55,7 +55,6 @@ struct PrintHostJobData
     PrintHostAfterUploadAction post_action{PrintHostAfterUploadAction::None};
     std::string storage;
     std::string group;
-    std::string request_body_json;
 
     PrintHostExportFormat result_format;
 

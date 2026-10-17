@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Slic3r/Biz/UserAccount/IUserAccountListener.hpp"
 #include "Slic3r/App/LeftBarTabs.hpp"
 #include "Slic3r/App/Browser/AbstractBrowserLogic.hpp"
 
@@ -9,7 +8,7 @@
 
 namespace Slic3r::App::WX::WebView {
 
-class AbstractWebViewPanel : public wxPanel, public Biz::UserAccount::IUserAccountListener
+class AbstractWebViewPanel : public wxPanel
 {
 public:
     AbstractWebViewPanel(wxWindow* parent, int id) :
@@ -17,21 +16,6 @@ public:
     {}
 
     virtual ~AbstractWebViewPanel() = default;
-
-    // IUserAccountListener;
-    void on_user_account_id_success(bool is_refresh, const std::string& username) override {}
-
-    void on_user_account_logged_out() override {}
-
-    void on_user_account_will_refresh() override {}
-
-    void on_user_account_action_retry(
-        const Biz::Network::IHttp::Retry& retry,
-        std::function<void(void)> cancel_callback
-    ) override
-    {}
-
-    void on_printables_secret_token(const std::string& body) override {}
 
     virtual void set_next_show_url(const std::string url) {}
 

@@ -73,7 +73,6 @@ enum class MenuItemName
 
     Export,
     ExportGcode,
-    SendGcode,
     ExportGcodeToFlash,
 
     OnlinePresetUpdate,

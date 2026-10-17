@@ -446,8 +446,6 @@ void PreviewRenderModule::on_init(
     m_project_interactor.status_cache().add_listener<Biz::IStatusCacheChangedListener>(
         &m_command_binding_manager
     );
-    m_project_interactor.user_account_interactor()
-        .add_listener<Biz::UserAccount::IUserAccountListener>(&m_command_binding_manager);
     m_project_interactor.scene_interactor().add_listener<ISelectedBedInstancesChangedListener>(
         &m_command_binding_manager
     );

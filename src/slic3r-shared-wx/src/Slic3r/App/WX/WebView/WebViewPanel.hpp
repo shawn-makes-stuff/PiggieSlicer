@@ -23,17 +23,6 @@ public:
     WebViewPanel(wxWindow* parent, int id, std::unique_ptr<App::Browser::AbstractBrowserLogic>&& logic, bool do_create);
     ~WebViewPanel() = default;
 
-    // IUserAccountListener;
-    void on_user_account_id_success(bool is_refresh, const std::string& username) override;
-    void on_user_account_logged_out() override;
-    void on_user_account_will_refresh() override;
-
-    void on_user_account_action_retry(const Biz::Network::IHttp::Retry& retry, std::function<void(void)> cancel_callback) override
-    { /*unused*/
-    }
-
-    void on_printables_secret_token(const std::string& body) override;
-
     App::Browser::AbstractBrowserLogic* browser_logic() override
     {
         return m_logic.get();
@@ -125,7 +114,6 @@ protected:
     bool handle_logic_command_DoReload(const std::string& data) override;
     bool handle_logic_command_AddUserScript(const std::string& data) override;
     bool handle_logic_command_LoadResourcesPage(const std::string& data) override;
-    bool handle_logic_command_RegisterPrusaSlicerURL(const std::string& data) override;
     bool handle_logic_command_SetLoadDefaultURLOnErrorTrue(const std::string& data) override;
     bool handle_logic_command_SetLoadDefaultURLOnErrorFalse(const std::string& data) override;
     bool handle_logic_command_SwitchToSlicing(const std::string& data) override;

@@ -782,7 +782,7 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->order = 2;
     def->label = L("End G-code");
     def->tooltip = L("This end procedure is inserted at the end of the output file. "
-                   "Note that you can use placeholder variables for all PrusaSlicer settings.");
+                   "Note that you can use placeholder variables for all PiggieSlicer settings.");
     def->multiline = true;
     def->full_width = true;
     def->height = 12;
@@ -804,7 +804,7 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->gui_type = ConfigItemDef::GUIType::textfield;
     def->tooltip = L("This end procedure is inserted at the end of the output file, before the printer end gcode (and "
                    "before any toolchange from this filament in case of multimaterial printers). "
-                   "Note that you can use placeholder variables for all PrusaSlicer settings. "
+                   "Note that you can use placeholder variables for all PiggieSlicer settings. "
                    "If you have multiple extruders, the gcode is processed in extruder order.");
     def->multiline = true;
     def->full_width = true;
@@ -1979,7 +1979,7 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->label = L("G-code flavor");
     def->tooltip = L("Some G/M-code commands, including temperature control and others, are not universal. "
                    "Set this option to your printer's firmware to get a compatible output. "
-                   "The \"No extrusion\" flavor prevents PrusaSlicer from exporting any extrusion value at all.");
+                   "The \"No extrusion\" flavor prevents PiggieSlicer from exporting any extrusion value at all.");
     def->init_fn = init_with(
         GCodeFlavor::gcfRepRapSprinter,
         {{int(GCodeFlavor::gcfRepRapSprinter), "reprap", L("RepRap/Sprinter")},
@@ -2157,7 +2157,7 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->gui_type = ConfigItemDef::GUIType::f_enum_open;
     def->tooltip = L("Connect an infill line to an internal perimeter with a short segment of an additional perimeter. "
                      "If expressed as percentage (example: 15%) it is calculated over infill extrusion width. "
-                     "PrusaSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment "
+                     "PiggieSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment "
                      "shorter than infill_anchor_max is found, the infill line is connected to a perimeter segment at just one side "
                      "and the length of the perimeter segment taken is limited to this parameter, but no longer than anchor_length_max. "
                      "Set this parameter to zero to disable anchoring perimeters connected to a single infill line.");
@@ -2185,7 +2185,7 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->gui_type = ConfigItemDef::GUIType::f_enum_open;
     def->tooltip = L("Connect an infill line to an internal perimeter with a short segment of an additional perimeter. "
                      "If expressed as percentage (example: 15%) it is calculated over infill extrusion width. "
-                     "PrusaSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment "
+                     "PiggieSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment "
                      "shorter than this parameter is found, the infill line is connected to a perimeter segment at just one side "
                      "and the length of the perimeter segment taken is limited to infill_anchor, but no longer than this parameter. "
                      "Set this parameter to zero to disable anchoring.");
@@ -3300,7 +3300,7 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->category = ConfigItemDef::Category::Print_MotionDynamics;
     def->order = 3;
     def->gui_type = ConfigItemDef::GUIType::checkbox;
-    def->tooltip = L("If enabled, PrusaSlicer detects obstacles along the travel path and makes the slope steeper "
+    def->tooltip = L("If enabled, PiggieSlicer detects obstacles along the travel path and makes the slope steeper "
                      "in case an obstacle might be hit during the initial phase of the travel.");
     def->init_fn = init_with(false);
 
@@ -3751,16 +3751,16 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->gui_type = ConfigItemDef::GUIType::checkbox;
     def->order = 1;
     def->label = L("Emit temperature commands automatically");
-    def->tooltip = L("When enabled, PrusaSlicer will check whether your custom Start G-code contains G-codes to set "
+    def->tooltip = L("When enabled, PiggieSlicer will check whether your custom Start G-code contains G-codes to set "
                      "extruder, bed or chamber temperature (M104, M109, M140, M190, M141 and M191). "
                      "If so, the temperatures will not be emitted automatically so you're free to customize "
                      "the order of heating commands and other custom actions. Note that you can use "
-                     "placeholder variables for all PrusaSlicer settings, so you can put "
+                     "placeholder variables for all PiggieSlicer settings, so you can put "
                      "a \"M109 S[first_layer_temperature]\" command wherever you want.\n"
                      "If your custom Start G-code does NOT contain these G-codes, "
-                     "PrusaSlicer will execute the Start G-code after heated chamber was set to its temperature, "
+                     "PiggieSlicer will execute the Start G-code after heated chamber was set to its temperature, "
                      "bed reached its target temperature and extruder just started heating.\n\n"
-                     "When disabled, PrusaSlicer will NOT emit commands to heat up extruder, bed or chamber, "
+                     "When disabled, PiggieSlicer will NOT emit commands to heat up extruder, bed or chamber, "
                      "leaving all to Custom Start G-code.");
     def->init_fn = init_with(true);
 
@@ -3787,11 +3787,11 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->gui_type = ConfigItemDef::GUIType::textfield;
     def->tooltip = L("This start procedure is inserted at the beginning, after any printer start gcode (and "
                    "after any toolchange to this filament in case of multi-material printers). "
-                   "This is used to override settings for a specific filament. If PrusaSlicer detects "
+                   "This is used to override settings for a specific filament. If PiggieSlicer detects "
                    "M104, M109, M140 or M190 in your custom codes, such commands will "
                    "not be prepended automatically so you're free to customize the order "
                    "of heating commands and other custom actions. Note that you can use placeholder variables "
-                   "for all PrusaSlicer settings, so you can put a \"M109 S[first_layer_temperature]\" command "
+                   "for all PiggieSlicer settings, so you can put a \"M109 S[first_layer_temperature]\" command "
                    "wherever you want. If you have multiple extruders, the gcode is processed "
                    "in extruder order.");
     def->multiline = true;
@@ -4504,9 +4504,9 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->order = 5;
     def->gui_type = ConfigItemDef::GUIType::textfield;
     def->label = L("Tool change G-code");
-    def->tooltip = L("This custom code is inserted before every toolchange. Placeholder variables for all PrusaSlicer settings "
+    def->tooltip = L("This custom code is inserted before every toolchange. Placeholder variables for all PiggieSlicer settings "
                      "as well as {toolchange_z}, {previous_extruder} and {next_extruder} can be used. When a tool-changing command "
-                     "which changes to the correct extruder is included (such as T{next_extruder}), PrusaSlicer will emit no other such command. "
+                     "which changes to the correct extruder is included (such as T{next_extruder}), PiggieSlicer will emit no other such command. "
                      "It is therefore possible to script custom behaviour both before and after the toolchange.");
     def->multiline = true;
     def->full_width = true;

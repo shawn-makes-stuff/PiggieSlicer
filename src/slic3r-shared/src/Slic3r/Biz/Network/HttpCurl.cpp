@@ -62,13 +62,13 @@ struct CurlGlobalInit
             if (!bundle)
                 message = _u8L(
                     "Could not detect system SSL certificate store. "
-                    "PrusaSlicer will be unable to establish secure "
+                    "PiggieSlicer will be unable to establish secure "
                     "network connections."
                 );
             else
                 message = fmt::format(
                     "{} {}",
-                    _u8L("PrusaSlicer detected system SSL certificate store in:"),
+                    _u8L("PiggieSlicer detected system SSL certificate store in:"),
                     bundle
                 );
 
@@ -82,7 +82,7 @@ struct CurlGlobalInit
 
         if (CURLcode ec = ::curl_global_init(CURL_GLOBAL_DEFAULT)) {
             message +=
-                "CURL init has failed. PrusaSlicer will be unable to establish "
+                "CURL init has failed. PiggieSlicer will be unable to establish "
                 "network connections. See logs for additional details.";
 
             SPDLOG_ERROR("{}",::curl_easy_strerror(ec));

@@ -3,7 +3,6 @@
 #include "Slic3r/App/AppServices.hpp"
 #include "Slic3r/App/IDialogManager.hpp"
 #include "Slic3r/App/Navigator.hpp"
-#include "Slic3r/App/OpenBrowser.hpp"
 #include "Slic3r/App/Platform/IFileExplorerHandler.hpp"
 #include "Slic3r/App/Wildcards.hpp"
 #include "Slic3r/App/Yoga/LayoutButton.hpp"
@@ -30,19 +29,6 @@ constexpr float k_viewport_fraction{0.9f};
 
 constexpr float k_top_row_height{40};
 
-constexpr const char* k_preset_repo_url{"https://help.prusa3d.com/slicer-profiles/3"};
-
-void append_words(Item* row, std::string_view text)
-{
-    for (auto&& word_range : text | std::views::split(' ')) {
-        if (word_range.begin() == word_range.end()) {
-            continue;
-        }
-        std::string word(word_range.begin(), word_range.end());
-        word += " ";
-        row->emplace_back<Text>(word);
-    }
-}
 
 std::string apply_everything_label()
 {
@@ -165,8 +151,8 @@ void PresetUpdaterDialog::build_content()
 
     // TRN Preset updater dialog. Shown under the "Online sources" heading.
     const std::string offline_text = Biz::_u8L(
-        "Checking these sources over the internet is turned off in Preferences. Presets are still "
-        "installed from the files that come with the application and from local sources."
+        "PiggieSlicer does not check these sources over the internet. Presets are installed "
+        "from the files that come with the application and from local sources."
     );
     m_offline_note = sections->emplace_back<Text>(offline_text);
     m_offline_note->set_wrap_mode(Text::WrapMode::Wrap);
@@ -204,28 +190,9 @@ void PresetUpdaterDialog::build_content()
     m_add_zip_button->set_flex_shrink(0);
     m_add_zip_button->callbacks().action = [this]() { pick_zip_archive(); };
 
-    // TRN Preset updater dialog. {} is a clickable web address.
-    const std::string local_text = Biz::_u8L("Presets can also be updated from a ZIP file downloaded from {}.");
-
-    Item* local_blurb = sections->emplace_back<Item>();
-    local_blurb->set_flex_wrap(YGWrapWrap);
-    local_blurb->set_align_items(YGAlignCenter);
-    local_blurb->set_flex_shrink(0);
-
-    const size_t placeholder = local_text.find("{}");
-    append_words(local_blurb, std::string_view{local_text}.substr(0, placeholder));
-
-    m_repo_link_button = local_blurb->emplace_back<LayoutButton>(k_preset_repo_url);
-    m_repo_link_button->set_background_color(Platform::Color::ButtonTransparent);
-    m_repo_link_button->set_label_color(m_theme->color_imgui(Platform::Color::TextLink));
-    m_repo_link_button->set_content_padding({0_fpx, 0_fpx});
-    m_repo_link_button->set_cursor(ImGuiMouseCursor_Hand);
-    m_repo_link_button->callbacks().action = []()
-    { open_browser(OpenBrowserParams{.url = k_preset_repo_url}); };
-
-    if (placeholder != std::string::npos) {
-        append_words(local_blurb, std::string_view{local_text}.substr(placeholder + 2));
-    }
+    // PiggieSlicer: the sentence linked to Prusa's profile download page; the link is removed.
+    Text* local_blurb = sections->emplace_back<Text>(Biz::_u8L("Presets can also be updated from a ZIP file."));
+    local_blurb->set_wrap_mode(Text::WrapMode::Wrap);
 
     m_local_list_view = sections->emplace_back<SourceListView>(SourceFactory{m_controller});
     m_local_list_view->set_orientation(Orientation::Vertical);
@@ -338,7 +305,6 @@ void PresetUpdaterDialog::on_app_config_changed(const std::string& key)
 
 void PresetUpdaterDialog::update_repo_link_enabled()
 {
-    m_repo_link_button->set_enabled(!m_forced_mode && hyperlinks_allowed());
 }
 
 void PresetUpdaterDialog::on_preset_updater_changed()
