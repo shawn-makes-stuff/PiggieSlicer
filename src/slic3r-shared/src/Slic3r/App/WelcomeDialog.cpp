@@ -2,12 +2,12 @@
 #include <ranges>
 #include "Slic3r/App/AppConfig.hpp"
 #include "Slic3r/App/AppConfigInteractor.hpp"
-#include "Slic3r/App/Yoga/Circle.hpp"
 #include "Slic3r/App/Yoga/Icon.hpp"
 #include "Slic3r/App/Yoga/Text.hpp"
 #include "Slic3r/App/Yoga/Namespace.hpp"
 #include "Slic3r/App/Yoga/LayoutButton.hpp"
 #include "Slic3r/App/Yoga/ScrollArea.hpp"
+#include "Slic3r/App/Yoga/Rectangle.hpp"
 #include "Slic3r/App/AppServices.hpp"
 #include "Slic3r/App/AddPrinterPanel.hpp"
 #include "Slic3r/Biz/I18N/I18N.hpp"
@@ -22,7 +22,7 @@ namespace Slic3r::App {
 
 using namespace Yoga;
 
-static ImColor red{249, 115, 22};
+static ImColor red{239, 68, 68};
 static ImColor green{34, 197, 94, 178};
 
 class Paragraph : public Yoga::Item
@@ -285,14 +285,14 @@ static ItemPtr create_changelog_screen(const Theme& theme, std::function<void()>
     };
     auto result{std::make_unique<Screen>(navigation_setup)};
 
-    result->content()->emplace_back<Title>(SLIC3R_VERSION, Biz::_u8L("EARLY PREVIEW"));
+    result->content()->emplace_back<Title>("0.0.1 Alpha");
 
     auto introduction{result->content()->emplace_back<Paragraph>(
         Biz::_u8L(
-            "PiggieSlicer is based on PrusaSlicer 3.0.0, which brings multi-project support,"
-            " different printers within one project, a new UI, a new profile system for multi-tool machines,"
-            " plus early plugin support and built-in calibration prints."
-            " It's still rough in places."
+            "PiggieSlicer is currently built on top of the PrusaSlicer 3.0.0 Alpha build, which includes"
+            " many new features exclusive to the 3.x build. PiggieSlicer aims to expand on and polish this"
+            " build while adding new functionality and features of our own design. The developers of"
+            " PiggieSlicer are not directly associated with Prusa Research."
         ),
         18_fpx
     )};
@@ -315,16 +315,16 @@ static ItemPtr create_changelog_screen(const Theme& theme, std::function<void()>
         green,
         std::initializer_list<std::initializer_list<ColoredText>>{
             {
-                {Biz::_u8L("Your existing PrusaSlicer 2.x 3MF projects load and work.")},
+                {Biz::_u8L("Your existing PrusaSlicer 2.x 3MF projects are compatible.")},
                 {
                     Biz::_u8L("Configuration is automatically converted to the new format."),
                     secondary_color,
                 },
             },
             {
-                {Biz::_u8L("Profiles are stored separately.")},
+                {Biz::_u8L("PiggieSlicer runs safely alongside PrusaSlicer.")},
                 {
-                    Biz::_u8L("PiggieSlicer runs safely alongside PrusaSlicer with no conflicts."),
+                    Biz::_u8L("Profiles are stored separately, so PiggieSlicer will not conflict with existing PrusaSlicer installations."),
                     secondary_color,
                 },
             },
@@ -336,24 +336,9 @@ static ItemPtr create_changelog_screen(const Theme& theme, std::function<void()>
         red,
         std::initializer_list<std::initializer_list<ColoredText>>{
             {
-                {Biz::_u8L("This is a genuine alpha.")},
+                {Biz::_u8L("This is an Alpha build.")},
                 {
-                    Biz::_u8L("Expect instability and unfinished features."),
-                    secondary_color,
-                },
-            },
-            {
-                {Biz::_u8L("Not all PrusaSlicer 2.x features have been ported yet.")},
-                {
-                    Biz::_u8L("Some are already under development."),
-                    secondary_color,
-                },
-            },
-            {{Biz::_u8L("Standalone G-code viewer is not available in this release.")}},
-            {
-                {Biz::_u8L("Third-party printer profiles are not included in this alpha.")},
-                {
-                    Biz::_u8L("They will be added later."),
+                    Biz::_u8L("Expect instability and rough or unfinished features."),
                     secondary_color,
                 },
             },
@@ -693,30 +678,11 @@ void WelcomeDialog::reload_top_bar()
         m_top_bar->remove(m_top_bar->items().back());
     }
 
-    const auto current_screen_it{std::ranges::find(m_content->items(), m_current_screen)};
-    const std::size_t current_screen_index{
-        static_cast<std::size_t>(std::distance(m_content->items().begin(), current_screen_it))};
-    ASSERT(current_screen_index < m_content->items().size());
-
-    for (std::size_t i{}; i < m_content->items().size(); ++i) {
-        const Item* screen{m_content->items().at(i)};
-
-        if (screen == m_current_screen) {
-            auto slicer_icon{m_top_bar->emplace_back<Icon>(Render::Icon::PrusaSlicerIcon)};
-            slicer_icon->set_min_width(30_fpx);
-            slicer_icon->set_min_height(30_fpx);
-            slicer_icon->set_preserve_colors(true); // keep the white sticker backing in light theme
-        } else {
-            auto screen_indicator{m_top_bar->emplace_back<Circle>()};
-            screen_indicator->set_width(6_fpx);
-            screen_indicator->set_height(6_fpx);
-            screen_indicator->set_fill(m_theme->color_imgui(Platform::Color::Text));
-            if (i > current_screen_index) {
-                screen_indicator->set_fill(
-                    m_theme->color_imgui(Platform::Color::Text, Platform::ColorGroup::Disabled));
-            }
-        }
-    }
+    // PiggieSlicer: just the logo, no step dots.
+    auto slicer_icon{m_top_bar->emplace_back<Icon>(Render::Icon::PrusaSlicerIcon)};
+    slicer_icon->set_min_width(30_fpx);
+    slicer_icon->set_min_height(30_fpx);
+    slicer_icon->set_preserve_colors(true); // keep the white sticker backing in light theme
 }
 
 void WelcomeDialog::go_to_screen(const Item* screen)
