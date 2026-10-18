@@ -1,0 +1,651 @@
+kind: vendor
+id: Wanhao France
+name: Wanhao France
+version: 2.4.0+orca.02.04.00.06
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: D12 230 PRO M2 DIRECT
+  base_model: D12 230 PRO M2 DIRECT
+  printer_configs_order:
+  - D12-230-PRO-M2-DIRECT-0-4-nozzle
+- label: D12 230 PRO M2 MONO DUAL
+  base_model: D12 230 PRO M2 MONO DUAL
+  printer_configs_order:
+  - D12-230-PRO-M2-MONO-DUAL-0-4-nozzle
+- label: D12 230 PRO M2 MONO DUAL PoopTool
+  base_model: D12 230 PRO M2 MONO DUAL PoopTool
+  printer_configs_order:
+  - D12-230-PRO-M2-MONO-DUAL-0-4-nozzle-PoopTool
+- label: D12 230 PRO SMARTPAD DIRECT
+  base_model: D12 230 PRO SMARTPAD DIRECT
+  printer_configs_order:
+  - D12-230-PRO-SMARTPAD-DIRECT-0-4-nozzle
+- label: D12 230 PRO SMARTPAD MONO DUAL
+  base_model: D12 230 PRO SMARTPAD MONO DUAL
+  printer_configs_order:
+  - D12-230-PRO-SMARTPAD-MONO-DUAL-0-4-nozzle
+- label: D12 230 PRO SMARTPAD MONO DUAL PoopTool
+  base_model: D12 230 PRO SMARTPAD MONO DUAL PoopTool
+  printer_configs_order:
+  - D12-230-PRO-SMARTPAD-MONO-DUAL-0-4-nozzle-PoopTool
+- label: D12 300 PRO M2 DIRECT
+  base_model: D12 300 PRO M2 DIRECT
+  printer_configs_order:
+  - D12-300-PRO-M2-DIRECT-0-4-nozzle
+- label: D12 300 PRO M2 MONO DUAL
+  base_model: D12 300 PRO M2 MONO DUAL
+  printer_configs_order:
+  - D12-300-PRO-M2-MONO-DUAL-0-4-nozzle
+- label: D12 300 PRO M2 MONO DUAL PoopTool
+  base_model: D12 300 PRO M2 MONO DUAL PoopTool
+  printer_configs_order:
+  - D12-300-PRO-M2-MONO-DUAL-PoopTool-0-4-nozzle
+- label: D12 300 PRO SMARTPAD DIRECT
+  base_model: D12 300 PRO SMARTPAD DIRECT
+  printer_configs_order:
+  - D12-300-PRO-SMARTPAD-DIRECT-0-4-nozzle
+- label: D12 300 PRO SMARTPAD MONO DUAL
+  base_model: D12 300 PRO SMARTPAD MONO DUAL
+  printer_configs_order:
+  - D12-300-PRO-SMARTPAD-MONO-DUAL-0-4-nozzle
+- label: D12 300 PRO SMARTPAD MONO DUAL PoopTool
+  base_model: D12 300 PRO SMARTPAD MONO DUAL PoopTool
+  printer_configs_order:
+  - D12-300-PRO-SMARTPAD-MONO-DUAL-PoopTool-0-4-nozzle
+- label: D12 500 PRO M2 MONO DUAL
+  base_model: D12 500 PRO M2 MONO DUAL
+  printer_configs_order:
+  - D12-500-PRO-M2-MONO-DUAL-0-4-nozzle
+- label: D12 500 PRO M2 MONO DUAL PoopTool
+  base_model: D12 500 PRO M2 MONO DUAL PoopTool
+  printer_configs_order:
+  - D12-500-PRO-M2-MONO-DUAL-PoopTool-0-4-nozzle
+- label: D12 500 PRO SMARTPAD DIRECT
+  base_model: D12 500 PRO SMARTPAD DIRECT
+  printer_configs_order:
+  - D12-500-PRO-M2-DIRECT-0-4-nozzle
+  - D12-500-PRO-SMARTPAD-DIRECT-0-4-nozzle
+- label: D12 500 PRO SMARTPAD MONO DUAL
+  base_model: D12 500 PRO SMARTPAD MONO DUAL
+  printer_configs_order:
+  - D12-500-PRO-SMARTPAD-MONO-DUAL-0-4-nozzle
+- label: D12 500 PRO SMARTPAD MONO DUAL PoopTool
+  base_model: D12 500 PRO SMARTPAD MONO DUAL PoopTool
+  printer_configs_order:
+  - D12-500-PRO-SMARTPAD-MONO-DUAL-PoopTool-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: D12 230 PRO M2 DIRECT
+id: D12 230 PRO M2 DIRECT
+model:
+  base_model: D12 230 PRO M2 DIRECT
+  model: D12 230 PRO M2 DIRECT
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-230_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 230 PRO M2 DIRECT_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 230 PRO M2 MONO DUAL
+id: D12 230 PRO M2 MONO DUAL
+model:
+  base_model: D12 230 PRO M2 MONO DUAL
+  model: D12 230 PRO M2 MONO DUAL
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-230_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 230 PRO M2 MONO DUAL_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 230 PRO M2 MONO DUAL PoopTool
+id: D12 230 PRO M2 MONO DUAL PoopTool
+model:
+  base_model: D12 230 PRO M2 MONO DUAL PoopTool
+  model: D12 230 PRO M2 MONO DUAL PoopTool
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-230_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 230 PRO M2 MONO DUAL PoopTool_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 230 PRO SMARTPAD DIRECT
+id: D12 230 PRO SMARTPAD DIRECT
+model:
+  base_model: D12 230 PRO SMARTPAD DIRECT
+  model: D12 230 PRO SMARTPAD DIRECT
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-230_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 230 PRO SMARTPAD DIRECT_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 230 PRO SMARTPAD MONO DUAL
+id: D12 230 PRO SMARTPAD MONO DUAL
+model:
+  base_model: D12 230 PRO SMARTPAD MONO DUAL
+  model: D12 230 PRO SMARTPAD MONO DUAL
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-230_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 230 PRO SMARTPAD MONO DUAL_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 230 PRO SMARTPAD MONO DUAL PoopTool
+id: D12 230 PRO SMARTPAD MONO DUAL PoopTool
+model:
+  base_model: D12 230 PRO SMARTPAD MONO DUAL PoopTool
+  model: D12 230 PRO SMARTPAD MONO DUAL PoopTool
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-230_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 230 PRO SMARTPAD MONO DUAL PoopTool_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 300 PRO M2 DIRECT
+id: D12 300 PRO M2 DIRECT
+model:
+  base_model: D12 300 PRO M2 DIRECT
+  model: D12 300 PRO M2 DIRECT
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-300_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 300 PRO M2 DIRECT_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 300 PRO M2 MONO DUAL
+id: D12 300 PRO M2 MONO DUAL
+model:
+  base_model: D12 300 PRO M2 MONO DUAL
+  model: D12 300 PRO M2 MONO DUAL
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-300_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 300 PRO M2 MONO DUAL_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 300 PRO M2 MONO DUAL PoopTool
+id: D12 300 PRO M2 MONO DUAL PoopTool
+model:
+  base_model: D12 300 PRO M2 MONO DUAL PoopTool
+  model: D12 300 PRO M2 MONO DUAL PoopTool
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-300_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 300 PRO M2 MONO DUAL PoopTool_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 300 PRO SMARTPAD DIRECT
+id: D12 300 PRO SMARTPAD DIRECT
+model:
+  base_model: D12 300 PRO SMARTPAD DIRECT
+  model: D12 300 PRO SMARTPAD DIRECT
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-300_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 300 PRO SMARTPAD DIRECT_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 300 PRO SMARTPAD MONO DUAL
+id: D12 300 PRO SMARTPAD MONO DUAL
+model:
+  base_model: D12 300 PRO SMARTPAD MONO DUAL
+  model: D12 300 PRO SMARTPAD MONO DUAL
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-300_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 300 PRO SMARTPAD MONO DUAL_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 300 PRO SMARTPAD MONO DUAL PoopTool
+id: D12 300 PRO SMARTPAD MONO DUAL PoopTool
+model:
+  base_model: D12 300 PRO SMARTPAD MONO DUAL PoopTool
+  model: D12 300 PRO SMARTPAD MONO DUAL PoopTool
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-300_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 300 PRO SMARTPAD MONO DUAL PoopTool_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 500 PRO M2 DIRECT
+id: D12 500 PRO M2 DIRECT 0.4 nozzle
+model:
+  base_model: D12 500 PRO SMARTPAD DIRECT
+  model: D12 500 PRO M2 DIRECT 0.4 nozzle
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- D12 500 PRO SMARTPAD DIRECT
+visual:
+  bed_model: Wanhao_D12-500_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 500 PRO SMARTPAD DIRECT_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 500 PRO M2 MONO DUAL
+id: D12 500 PRO M2 MONO DUAL
+model:
+  base_model: D12 500 PRO M2 MONO DUAL
+  model: D12 500 PRO M2 MONO DUAL
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-500_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 500 PRO M2 MONO DUAL_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 500 PRO M2 MONO DUAL PoopTool
+id: D12 500 PRO M2 MONO DUAL PoopTool
+model:
+  base_model: D12 500 PRO M2 MONO DUAL PoopTool
+  model: D12 500 PRO M2 MONO DUAL PoopTool
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-500_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 500 PRO M2 MONO DUAL PoopTool_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 500 PRO SMARTPAD DIRECT
+id: D12 500 PRO SMARTPAD DIRECT 0.4 nozzle
+model:
+  base_model: D12 500 PRO SMARTPAD DIRECT
+  model: D12 500 PRO SMARTPAD DIRECT 0.4 nozzle
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- D12 500 PRO SMARTPAD DIRECT
+visual:
+  bed_model: Wanhao_D12-500_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 500 PRO SMARTPAD DIRECT_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 500 PRO SMARTPAD MONO DUAL
+id: D12 500 PRO SMARTPAD MONO DUAL
+model:
+  base_model: D12 500 PRO SMARTPAD MONO DUAL
+  model: D12 500 PRO SMARTPAD MONO DUAL
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-500_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 500 PRO SMARTPAD MONO DUAL_cover.png
+---
+kind: printer
+technology: FFF
+name: D12 500 PRO SMARTPAD MONO DUAL PoopTool
+id: D12 500 PRO SMARTPAD MONO DUAL PoopTool
+model:
+  base_model: D12 500 PRO SMARTPAD MONO DUAL PoopTool
+  model: D12 500 PRO SMARTPAD MONO DUAL PoopTool
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Wanhao_D12-500_buildplate_model.stl
+  bed_texture: D12_texture.png
+  thumbnail: D12 500 PRO SMARTPAD MONO DUAL PoopTool_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: D12-230-PRO-M2-DIRECT-0-4-nozzle
+name: D12 230 PRO M2 DIRECT 0.4 nozzle
+printer: D12 230 PRO M2 DIRECT
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-230-PRO-M2-MONO-DUAL-0-4-nozzle
+name: D12 230 PRO M2 MONO DUAL 0.4 nozzle
+printer: D12 230 PRO M2 MONO DUAL
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-230-PRO-M2-MONO-DUAL-0-4-nozzle-PoopTool
+name: D12 230 PRO M2 MONO DUAL 0.4 nozzle PoopTool
+printer: D12 230 PRO M2 MONO DUAL PoopTool
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-230-PRO-SMARTPAD-DIRECT-0-4-nozzle
+name: D12 230 PRO SMARTPAD DIRECT 0.4 nozzle
+printer: D12 230 PRO SMARTPAD DIRECT
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-230-PRO-SMARTPAD-MONO-DUAL-0-4-nozzle
+name: D12 230 PRO SMARTPAD MONO DUAL 0.4 nozzle
+printer: D12 230 PRO SMARTPAD MONO DUAL
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-230-PRO-SMARTPAD-MONO-DUAL-0-4-nozzle-PoopTool
+name: D12 230 PRO SMARTPAD MONO DUAL 0.4 nozzle PoopTool
+printer: D12 230 PRO SMARTPAD MONO DUAL PoopTool
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-300-PRO-M2-DIRECT-0-4-nozzle
+name: D12 300 PRO M2 DIRECT 0.4 nozzle
+printer: D12 300 PRO M2 DIRECT
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-300-PRO-M2-MONO-DUAL-0-4-nozzle
+name: D12 300 PRO M2 MONO DUAL 0.4 nozzle
+printer: D12 300 PRO M2 MONO DUAL
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-300-PRO-M2-MONO-DUAL-PoopTool-0-4-nozzle
+name: D12 300 PRO M2 MONO DUAL PoopTool 0.4 nozzle
+printer: D12 300 PRO M2 MONO DUAL PoopTool
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-300-PRO-SMARTPAD-DIRECT-0-4-nozzle
+name: D12 300 PRO SMARTPAD DIRECT 0.4 nozzle
+printer: D12 300 PRO SMARTPAD DIRECT
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-300-PRO-SMARTPAD-MONO-DUAL-0-4-nozzle
+name: D12 300 PRO SMARTPAD MONO DUAL 0.4 nozzle
+printer: D12 300 PRO SMARTPAD MONO DUAL
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-300-PRO-SMARTPAD-MONO-DUAL-PoopTool-0-4-nozzle
+name: D12 300 PRO SMARTPAD MONO DUAL PoopTool 0.4 nozzle
+printer: D12 300 PRO SMARTPAD MONO DUAL PoopTool
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-500-PRO-M2-DIRECT-0-4-nozzle
+name: D12 500 PRO M2 DIRECT 0.4 nozzle
+printer: D12 500 PRO M2 DIRECT 0.4 nozzle
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-500-PRO-M2-MONO-DUAL-0-4-nozzle
+name: D12 500 PRO M2 MONO DUAL 0.4 nozzle
+printer: D12 500 PRO M2 MONO DUAL
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-500-PRO-M2-MONO-DUAL-PoopTool-0-4-nozzle
+name: D12 500 PRO M2 MONO DUAL PoopTool 0.4 nozzle
+printer: D12 500 PRO M2 MONO DUAL PoopTool
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-500-PRO-SMARTPAD-DIRECT-0-4-nozzle
+name: D12 500 PRO SMARTPAD DIRECT 0.4 nozzle
+printer: D12 500 PRO SMARTPAD DIRECT 0.4 nozzle
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-500-PRO-SMARTPAD-MONO-DUAL-0-4-nozzle
+name: D12 500 PRO SMARTPAD MONO DUAL 0.4 nozzle
+printer: D12 500 PRO SMARTPAD MONO DUAL
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: D12-500-PRO-SMARTPAD-MONO-DUAL-PoopTool-0-4-nozzle
+name: D12 500 PRO SMARTPAD MONO DUAL PoopTool 0.4 nozzle
+printer: D12 500 PRO SMARTPAD MONO DUAL PoopTool
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

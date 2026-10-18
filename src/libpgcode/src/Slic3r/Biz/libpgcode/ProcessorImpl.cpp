@@ -12,7 +12,10 @@
 
 #if __has_include(<charconv>)
 #include <charconv>
+#include <regex>
 #include <utility>
+
+#include <boost/algorithm/string/predicate.hpp>
 #endif // __has_include
 
 namespace Slic3r::Biz::libpgcode {
@@ -158,6 +161,8 @@ PostProcessorConfig ProcessorImpl::post_processor_config()
     PostProcessorConfig ret;
     ret.export_remaining_time_enabled = m_config.export_remaining_time_enabled;
     ret.do_M104_backtrace = m_config.do_M104_backtrace;
+    ret.preheat_time = m_config.preheat_time;
+    ret.preheat_steps = m_config.preheat_steps;
     ret.extruder_temps_config = m_config.extruders.temps_config;
     ret.extruder_temps_first_layer_config = m_config.extruders.temps_first_layer_config;
 
@@ -462,6 +467,11 @@ void ProcessorImpl::process_gcode_line(const GCodeReader::GCodeLine& line)
         case 'T':
             process_T(line); // Select Tool
             break;
+        case 's':
+        case 'S':
+            if (boost::iequals(cmd, "SET_VELOCITY_LIMIT"))
+                process_SET_VELOCITY_LIMIT(line);
+            break;
         default:
             break;
         }
@@ -643,7 +653,7 @@ void ProcessorImpl::process_G1(const std::array<std::optional<float>, 4>& axes, 
         else if (m_extrusion_role == GCodeExtrusionRole::ExternalPerimeter)
             // cross section: rectangle
             m_width = delta_pos[E] * PI * sqr(1.05f * filament_radius) / (delta_xyz * m_height);
-        else if (m_extrusion_role == GCodeExtrusionRole::BridgeInfill || m_extrusion_role == GCodeExtrusionRole::None)
+        else if (m_extrusion_role == GCodeExtrusionRole::BridgeInfill || m_extrusion_role == GCodeExtrusionRole::InternalBridgeInfill || m_extrusion_role == GCodeExtrusionRole::None)
             // cross section: circle
             m_width = m_result.filament_diameters[m_extruder_id] * std::sqrt(delta_pos[E] / delta_xyz);
         else
@@ -1582,6 +1592,43 @@ void ProcessorImpl::process_M205(const GCodeReader::GCodeLine& line)
     }
 }
 
+void ProcessorImpl::process_SET_VELOCITY_LIMIT(const GCodeReader::GCodeLine& line)
+{
+    // Orca GCodeProcessor::process_SET_VELOCITY_LIMIT
+    static const std::regex square_corner_velocity_pattern("\\sSQUARE_CORNER_VELOCITY\\s*=\\s*([0-9]*\\.*[0-9]*)");
+    static const std::regex accel_pattern("\\sACCEL\\s*=\\s*([0-9]*\\.*[0-9]*)");
+    static const std::regex velocity_pattern("\\sVELOCITY\\s*=\\s*([0-9]*\\.*[0-9]*)");
+    const std::string& raw = line.raw();
+    auto value_of = [&raw](const std::regex& pattern) -> std::optional<float> {
+        std::smatch matches;
+        if (std::regex_search(raw, matches, pattern) && matches.size() == 2) {
+            try {
+                return std::stof(matches[1]);
+            } catch (...) {}
+        }
+        return std::nullopt;
+    };
+    const std::optional<float> jerk  = value_of(square_corner_velocity_pattern);
+    const std::optional<float> accel = value_of(accel_pattern);
+    const std::optional<float> speed = value_of(velocity_pattern);
+    for (size_t i = 0; i < TIME_MODES_COUNT; ++i) {
+        if (TimeMode(i) == TimeMode::Normal || m_time_processor.machine_envelope_processing_enabled) {
+            if (jerk) {
+                m_time_processor.machine_limits.max_jerk_x[i] = *jerk;
+                m_time_processor.machine_limits.max_jerk_y[i] = *jerk;
+            }
+            if (accel) {
+                m_time_processor.machines[i].set_acceleration(*accel);
+                m_time_processor.machines[i].set_travel_acceleration(*accel);
+            }
+            if (speed) {
+                m_time_processor.machine_limits.max_feedrate_x[i] = *speed;
+                m_time_processor.machine_limits.max_feedrate_y[i] = *speed;
+            }
+        }
+    }
+}
+
 void ProcessorImpl::process_M220(const GCodeReader::GCodeLine& line)
 {
     if (m_config.flavor != GCodeFlavor::gcfMarlinLegacy
@@ -1820,6 +1867,10 @@ GCodeExtrusionRole string_to_gcode_extrusion_role(const std::string_view role)
         return GCodeExtrusionRole::WipeTower;
     else if (role == "Custom")
         return GCodeExtrusionRole::Custom;
+    else if (role == "Internal bridge infill")
+        return GCodeExtrusionRole::InternalBridgeInfill;
+    else if (role == "Brim")
+        return GCodeExtrusionRole::Brim;
     else
         return GCodeExtrusionRole::None;
 }
@@ -1845,6 +1896,15 @@ void ProcessorImpl::process_tags(const std::string_view comment)
         set_extrusion_role(string_to_gcode_extrusion_role(type));
         if (m_extrusion_role == GCodeExtrusionRole::ExternalPerimeter)
             m_seams_detection_enabled = true;
+        return;
+    }
+
+    // Orca: manual tool change tag (manual_filament_change writes it instead of the T command)
+    tag = reserved_tag(Tags::Manual_Tool_Change);
+    if (comment.find(tag) == 0) {
+        const std::string_view tool_change = comment.substr(tag.length());
+        if (!tool_change.empty() && (tool_change.front() == 'T' || tool_change.front() == 't'))
+            process_T(tool_change);
         return;
     }
 
@@ -2042,7 +2102,7 @@ void ProcessorImpl::process_bambustudio_tags(const std::string_view comment)
     static const std::vector<std::pair<std::string_view, GCodeExtrusionRole>> ROLE_DICTIONARY = {
         { "Bottom surface"sv,        GCodeExtrusionRole::None },
         { "Bridge"sv,                GCodeExtrusionRole::BridgeInfill },
-        { "Brim"sv,                  GCodeExtrusionRole::Skirt},
+        { "Brim"sv,                  GCodeExtrusionRole::Brim},
         { "Custom"sv,                GCodeExtrusionRole::Custom},
         { "Gap infill"sv,            GCodeExtrusionRole::GapFill },
         { "Inner wall"sv,            GCodeExtrusionRole::Perimeter },
@@ -2396,11 +2456,11 @@ void ProcessorImpl::process_orcaslicer_tags(const std::string_view comment)
     static const std::vector<std::pair<std::string_view, GCodeExtrusionRole>> ROLE_DICTIONARY = {
         { "Bottom surface"sv,        GCodeExtrusionRole::None },
         { "Bridge"sv,                GCodeExtrusionRole::BridgeInfill },
-        { "Brim"sv,                  GCodeExtrusionRole::Skirt},
+        { "Brim"sv,                  GCodeExtrusionRole::Brim},
         { "Custom"sv,                GCodeExtrusionRole::Custom},
         { "Gap infill"sv,            GCodeExtrusionRole::GapFill },
         { "Inner wall"sv,            GCodeExtrusionRole::Perimeter },
-        { "Internal bridge"sv,       GCodeExtrusionRole::None },
+        { "Internal bridge"sv,       GCodeExtrusionRole::InternalBridgeInfill },
         { "Internal solid infill"sv, GCodeExtrusionRole::SolidInfill },
         { "Ironing"sv,               GCodeExtrusionRole::Ironing },
         { "Multiple"sv,              GCodeExtrusionRole::None},

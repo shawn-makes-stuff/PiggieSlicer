@@ -60,12 +60,16 @@ struct SupportParameters {
 //	double				support_layer_height_max;
 
 	double				gap_xy;
+	// Orca support_object_first_layer_gap
+	double				gap_xy_first_layer;
 
     float    				base_angle;
     float    				interface_angle;
 
-    // Density of the top / bottom interface and contact layers.
+    // Density of the top interface and contact layers.
     double 				interface_density;
+    // Orca support_bottom_interface_spacing: density of the bottom interface and contact layers.
+    double 				bottom_interface_density;
     // Density of the raft interface and contact layers.
     double 				raft_interface_density;
     // Density of the base support layers.
@@ -91,9 +95,33 @@ struct SupportParameters {
     // Print closed loop clockwise when it is equal to true.
     bool                    prefer_clockwise_movements;
 
+    // Orca support_ironing: the top contact layers ironed
+    bool                    ironing;
+    Flow                    ironing_flow;
+    Domain::InfillPattern   ironing_pattern;
+    float                   ironing_spacing;
+
+    // The interface pattern, for the angle of Orca's patterns
+    Domain::SupportMaterialInterfacePattern support_interface_pattern;
+
     // Produce a raft interface angle for a given SupportLayer::interface_id()
     float 					raft_interface_angle(size_t interface_id) const 
     	{ return this->raft_angle_interface + ((interface_id & 1) ? float(- M_PI / 4.) : float(+ M_PI / 4.)); }
+
+    // The support interface angle for a given SupportLayer::interface_id(): Orca's Rectilinear Interlaced alternates
+    // by 45 degrees about the interface angle, Grid follows the base; 3.0's patterns as before (grid style: the interface
+    // angle, otherwise alternating as the raft interface).
+    float 					support_interface_angle(size_t interface_id, bool grid_style) const
+    {
+        switch (this->support_interface_pattern) {
+        case Domain::SupportMaterialInterfacePattern::smipRectilinearInterlaced:
+            return this->interface_angle + ((interface_id & 1) ? float(M_PI / 4.) : float(- M_PI / 4.));
+        case Domain::SupportMaterialInterfacePattern::smipGrid:
+            return this->base_angle;
+        default:
+            return grid_style ? this->interface_angle : this->raft_interface_angle(interface_id);
+        }
+    }
 };
 
 } // namespace FFFSupport

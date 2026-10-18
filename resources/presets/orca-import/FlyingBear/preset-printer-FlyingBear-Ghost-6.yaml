@@ -1,0 +1,113 @@
+kind: printer
+id: 8pJfXXBMWt6dXW3c2ydflw
+variants:
+- condition: printer.model == "FlyingBear Ghost 6"
+  name: FlyingBear Ghost 6
+  id: Uoun+HaoTZR4y80DpIxHEg
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: 0sleqoUsPGVjfrxEZG/y2g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @FlyingBear Ghost 6
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 64
+      extruder_clearance_radius: 55
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G91 ;use relative coordinates
+        G1 E-4 F1500 ;retract the filament
+        G1 X5 Y5 Z0.2 F5000 ;wipe
+        G1 Z5 F1500 ;raise z
+        G90 ;use absolute coordinates
+        G1 X10 Y210 F5000 ;park print head
+
+        M107 ;turn off fan
+        M104 S0 ;turn off hotend
+        M140 S0 ;turn off heatbed
+        M84 ;disable motors
+      machine_max_acceleration_e:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_extruding:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_retracting:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_travel:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_x:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 2.0
+      - 2.0
+      machine_max_jerk_x:
+      - 15.0
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      - 15.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 45.0
+      - 45.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 4.0
+      - 4.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: "M220 S100 ;reset feedrate\nM221 S100 ;reset flowrate\nG21 ;set units to millimeters\nG90 ;use absolute coordinates\nM82 ;absolute extrusion mode\nM107 ;turn off colling fan\n\nM140 S[first_layer_bed_temperature] ;set bed temperature continue without waiting\nM104 S[first_layer_temperature] ;set hotend temperature continue without waiting\n\nG28 ;home\nG1 Z2 F1500 ;raise z\nG92 E0 ;reset extruder\n\nM190 S[first_layer_bed_temperature] ;wait for bed temperature\nM109 S[first_layer_temperature] ;wait for hotend temperature\n\nG1 X20 Y20 F5000 ;start position \nG1 Z0.28 F1500 ;lower z\nG1 E4 F500 ;prime the filament\n\nG1 X20 Y20.0 Z0.28 F3000.0  ;start position \nG1 X20 Y170.0 Z0.28 F1500.0 E12 ;1st line\nG1 X20.3 F1500\nG1 X20.3 Y20.0 Z0.28 F1500.0 E18 ;2nd line\n\nG92 E0 ;reset extruder\nG1 Z2 F1500 ;raise z\nG92 E0 ;reset extruder\n"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 255x0
+      - 255x210
+      - '0x210'
+      max_print_height: 210
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 100x100/PNG, 320x320/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

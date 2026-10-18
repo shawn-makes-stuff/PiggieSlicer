@@ -1,0 +1,245 @@
+kind: filament
+id: NeKr5Jjc/jlUsXU/l90LUA
+name: Pragostroj PETG @Pragostroj 0.5 nozzle
+condition: (printer.model == "KINARB 1HB" and tool.nozzle_diameter == 0.5) or (printer.model == "KINARB 2HB" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 100
+  min_fan_speed: 30
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 22
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Pragostroj
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.12
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 5
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ncRG48ZpmD31g6I8LzMcMw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: oBz2mzIhsfhDsfOw+Gg3HA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "High Temp Plate"
+  id: 8mEIe7xaIuDxr/RkxWVnrw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: GQqJ27CnnnyjBj574+69OQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: ZBG9G/iAXTiFUnGWJHywIA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 3SQWHzYUguwnF7a6+FDCNQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: E4im0nD+3Zb7I9CN3kdlTA
+name: Pragostroj PP @Pragostroj 0.5 nozzle
+condition: (printer.model == "KINARB 1HB" and tool.nozzle_diameter == 0.5) or (printer.model == "KINARB 2HB" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 0.9
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 1.1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PP
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Pragostroj
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.05
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 5
+  min_print_speed: 5
+  filament_shrinkage_compensation_xy: -1%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Lq9ccIGIb8x8T3J5PTh1JA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: 7xCdCfNnajNfYuSw3YtOhw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "High Temp Plate"
+  id: 5jRpNNmKNbO+2CxLaLEGuA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Textured PEI Plate"
+  id: jSdWyKm03zHpvtmLXQaKHg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: VOuIrcHTVVRYO5E6wYC1sw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: cSxGfVLy1xZYhFpDwpN+gg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: gUN6bVuu4ElqXJG/mtdI7A
+name: Pragostroj PP @Pragostroj 0.8 nozzle
+condition: (printer.model == "KINARB 1HB" and tool.nozzle_diameter == 0.8) or (printer.model == "KINARB 2HB" and tool.nozzle_diameter == 0.8 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 0.9
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 1.1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PP
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Pragostroj
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.05
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 5
+  min_print_speed: 5
+  filament_shrinkage_compensation_xy: -1%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: H33LDVOSVV7OFE7txDpV/A
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: Dkx/6NRDhjSpQW3Bz7UNrA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "High Temp Plate"
+  id: t/iUQPK1gcnNZYuxQ7zlIg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Textured PEI Plate"
+  id: jQywIkGmOkx/v+NrKmjrXw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: aSKjn91+GEqekUeZyM7qyg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Pnhhk19NsoFceOJqdwydTg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35

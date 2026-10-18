@@ -1,0 +1,5293 @@
+kind: filament
+id: rehbekja/9xN0et4RqVJJQ
+name: Arena ABS @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 22
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: xJvSOAyPMg1HEXbwhZGWXw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: WgStGyO9Uy1tYupHONdXDg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: grmXqJGBNsdId0g5Tf50aQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: FJqnGT/2yTgKWW8XE6ukxA
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: o5FwliDemj4e6GKsEcsy0Q
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: gjNcIo0fAXpeUorH4kRTaw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: VlA9fMcML8wxwsbYHng7Gg
+name: Arena ABS @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: tPwZcCK5d/H6x9qNrVc7mA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: kL7UOCQSuTYyhRevGXYa8g
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: H0cMSlQZ/0KCgSyj3zG31w
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: P+9HX2r0wT9FKQz7jcexEA
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: 1MLG1QZrJY5xjMDzOerRTg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: zcHX+XCkpn8JaNDrfsebAw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: JmO5F25zC/Yzf6dSsU+TuQ
+name: Arena ABS @Arena X1C 0.8 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 22
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 1kakoB5lXb+xP16w2+cmkg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: FjnLOpgTZUpWwtifoMGlBw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: J+4fJLKLqd3TV731rBuFLw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: U6DCqO/gNTnVOnGUIoHSyg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: nSxLkmMds1yR+ZzxewGPTA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: fE1aKQJrlDkZbbej6s4e9A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: mw9cDlwfvv7EwoGmjeIg1A
+name: Arena PA-CF @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 84.99
+  filament_density: 1.09
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 2
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: cPK448yrXTRg7uwlyEHpHw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: DdUrB0dKWWd6YCbwf/mF1Q
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: qitwS1fXYaIgikc4vKxCTg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: aSX4CHWE/An0Y6P6JoD/ZQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: 1ddcdQDBLxFRNETNOzekyA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: jM2Ix6nd7rAOTHjaFpDHKA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Kan/XySVsjyUgqPRysz5yg
+name: Arena PAHT-CF @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 94.99
+  filament_density: 1.06
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 2
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: W37VbWqfTyXPq9cYB4lvUQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: QNAnyKuASMHSi4ZHAz6PPA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: icD2/jmgcjnG39SJyFAvYg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: zvh+medzz3XhXE/l1NI/wQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: McsTUk3E7jVFxw7Mhm0mvA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: yf2bvBsE3UYdNDDdTd77Og
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: GloKyUpGiL4xroj4I7Q9uA
+name: Arena PC @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 39.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 23.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: EWPOg0I2r/DVyyt4HPwGdw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: KKAoIYmt7oRPV5z0u4XliA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: O40sGpPmKvb5WJDl20Bixw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: /HP64CkfL/VhoKHHX8+KsA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: 1Wc54kmZ0nzHJZD8YzWvWg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 7fNltNlw4SNZMyGXaZfX4w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: aG56iiG+Iiixbk9brt2t6w
+name: Arena PC @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 39.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Tu8+BALBtnWoIxzmXJNFcg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: nIBpjL0LVtI+vT+UY236OA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: 6yJ3aDI7JX2JPVLk7BoFZQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: Q1UqO9VfClA1ilwr7uN2VQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: 6cWRvjVPAI8eGR2t7cJ3Xg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: cezkHyssVgY3CngMcf/ekw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: fneKBiNGIXVGBtCGav8wTw
+name: Arena PC @Arena X1C 0.6 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 39.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 23.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: KJfTnwByxZ4fLnQcSetwFA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 8KNJtij9wKa9EMk8pDp32g
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: nDvdMvjjdmz9oFJuUHtoBA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: Nd1De8YdsMpjsGY4P20pyA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: qNjQRy51Qd23xy7et1uauQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: JX5VV9e8ttH7JrUORzVb1Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: BsWRn9S44d9MnJFpWWmgFw
+name: Arena PC @Arena X1C 0.8 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 39.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 23.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 8FV8Ykzbib/m5/Z9x7Hi6Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: ATRyxqZVdjLfKd69XVw5/w
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: YB/KlM2GEhWxA+q/EsuuTQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: Y3oZoyO53U0Kgki1qQuXgw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: RdIvrMRHDYyAxY77BXBLSw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: oqe9cNXcB4Q8IMztdwO5cA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 7pt/tP8fu8tNMaCnmWv9Ng
+name: Arena PET-CF @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 84.99
+  filament_density: 1.29
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S180
+    {elsif (bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S255
+    {endif};Prevent PLA from jamming
+  filament_toolchange_delay: 0
+  filament_type: PET-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: O99AiYaGs27gYKI/BzW/pQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 9yX51+XA/tTVAEMVK01FYg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: LMEUDF/e1rdqLUIw/fxgsQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: RxEf+re5p4iRxjTDoUsUIw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: nScHSEbe6tr+Ed+sTD0E+g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: epVR8eEfH5967LpZ4c6bCA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 5Y1h0wJWypSFAsFw1l5cvw
+name: Arena PETG Basic @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 14
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S255
+    {elsif (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: p8bZwVgEGKAws2t6eHrCmg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 6AAL1UCeMNeNNieukHEYIw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: gd1yLdk0/46OMYmPKD8XuQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: 543ir8vn+lL1qIGLf4J6cQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: iSBpvXfSvQPOl8MBMyPrDw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 29O5XzDM3v9ajweIe35iHg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: B1bJlVoy61KVQF2Ix87uNA
+name: Arena PETG Basic @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S255
+    {elsif (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: aQ1//VnGje8/szeZA+w6Lg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 08gdgTPyarRXcRjZIesxyw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: xmqwPVa/TqjjU8r3mISDUw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: i6U1svKm3CilsuBVtAalfw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: g9AqbAhr9HDPVY9B2JM5RQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: ggX1KYws4tAz/R1klQPF5A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: eOwEtCbl6TNRKgg3q0/faA
+name: Arena PETG Basic @Arena X1C 0.8 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 20
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S255
+    {elsif (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: g/a7eboWwUVh0giYiv4GgQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: oFl45L81i+3wMwuNiJRnFQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: CUs1EZt4KEMa2Cwc4n9RAQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: oEK+e4liHETcYPyEoq2QIA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: sAqg9krKajI9uLFhISy8cg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: meupLumdrCudzWJtav94XQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: ExZjnEYnB2cIEb/wjboJEw
+name: Arena PETG-CF @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 20
+  max_fan_speed: 30
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 14
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S180
+    {elsif (bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S255
+    {endif};Prevent PLA from jamming
+  filament_toolchange_delay: 0
+  filament_type: PETG-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 6
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ippqy+ZQlCZRoLmUM3vWGg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: p31BuoIFhQuoEjB5xpEiOg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: L1o0fuqISppMjYT7DkNPqQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: eZklEjkPMn3vm6lW8LUyhA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: j8P8Uq56vx3Pm7Dh492jXQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: J/XT4+7UUsWiy4hSHMRgMA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: mvRkpn+vO5y5TLeAWnl5Zw
+name: Arena PLA Basic @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 21
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: pAv4uVWeosojTLcGEe1E0Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: VzfBjy8UXeaOL2+UXlLjVA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: vOriTXyqXNRf6D3/UsAAvA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 2ImL2f+HmDQm7d4bet472A
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: fQRIWoXrX4c4UMt1Emy+UA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: XGwU70BPSkzg35lllUwKRw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 6gNqqL/9JoUpuYwcwWg2Lw
+name: Arena PLA Basic @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: JoPxNVfgXg6r54e5w+jDgw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: sBhZ2MUFGJJyfyMHdta7tQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: j67Gac7h4aKekVHmobpH3Q
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: EKpH8/Q05kgubvxNWqacAA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: XqZfwE1dqMHcN69hgP2c3w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: rrIYsxUh4s5EsRQkMzJRhw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: GfRE3wtd8rngr8AnMoU0sg
+name: Arena PLA Basic @Arena X1C 0.8 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 21
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 8TrsLroI/YfxDfLbMxAxHQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: nHfx8037z3twjHw2L4UWfw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: WQYsw7wFxnxqbhO3yB2xLg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: QVTcxdrY+HEklE15dvo60Q
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: SXB3s+7Bw79Xztm1W9ZUVw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: i5d5faGOnodS2wIyoucHog
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: sITDnSXUEa+2ExNuqEgUWQ
+name: Arena PLA Impact @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25.4
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 23.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: qFwEngcuK2sWkrHo/FfO/Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: IulkkLDU3i9vx9+VcMqkzQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: KxFsIyUGLOcNDZvmoTZmrA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: R4kIYuAtAbHfvictPlFVWw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: 2xyIxtFJF6ujPawpijFdIw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 1vsjJXvqq1nbemC6pfRaZA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: qM355fQPKOj2/RW7fSnZQQ
+name: Arena PLA Marble @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 29.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: wnbWRdb3mjy3NcJhgIXQSw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: uZK2GdNxITDHlg/yaMvmLg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 5RPG8XxqD+DrR1gOzGdxaw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: yb3OB6pkCNSkI1EVnOt6Qw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: BMpuoZzmnQE+Lj9EE3e3nA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Keke1zJ5isamP8aNzt0fpw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: eamWc/Ml3xVItiVUVMxtGg
+name: Arena PLA Matte @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.32
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 22
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 49RyezG0oUpqOV3dX1+TaQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: sVCthe0hs7xaJKDPCUFcRg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: xPPiqKuoeLVY/Rvkq5PJOw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: VNZ37kkk+CyVO3sx/Gc9yg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: ogZybu1lqGnRwokcQtWVjg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 4Rhr0nbl/nNF/8i73jNdzw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Hx8ykRDfCOQeOpY67K2F9g
+name: Arena PLA Matte @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.32
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +gEBJyHX4OmEIj1liyhTSg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: emXgi9Q8xpH5waEx44TSPA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: tYlqfKHA7Ila06UwWCzlGw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: lLaH3xizoQ/+9wJEAqt4Yw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: LjtKttMzeABp8W00WAK81g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: i+AZLxj4tlrflkkJ2E5dlA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 4d4sj2+dT3fKy2ZiLZWu7Q
+name: Arena PLA Matte @Arena X1C 0.8 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.32
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 22
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: taDIfnViDAgXlYGn1oEeLg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: tevHT+1/3wnFiWeG8t0UBA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: saxu22RMOYcG949AXaqmXQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: pbRsz+67Rmqz7nCt3Sy7Kw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: S0Bb24ldVONITUO9A5CEqA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 858D4b8YHIbxvXMWdqrRWg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: N61v4SslH5QUB+RFsLL2GA
+name: Arena PLA Metal @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 29.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 21
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 2YydMdg2+pux6ZPRqq+QtQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: hkifbnBQH/GwSAcAMElMGQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: pigRkoGnDVzYuZJ+0gLSHA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 0GqB1SpQa4IPccChuK65Pg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: JuDmseT6c73deNJerchaLQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 1elsoDobbDEue+8IC1GK0w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: M62lhv7v6GSlD56nK352mQ
+name: Arena PLA Metal @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 29.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: bncaOmq74qrdUa+eM8rYPg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: Dcg2+8o4J/WZ3Ww4Xlb5hQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: wrtekMaTr0A2tfn62uhttQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: kqWUOlm0DR4+iMHVESoKFA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: zTSpBkKYBARBTTqNkZYnYw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: gxqLJiaUQpGBTpjvuHoHTw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: bvc1kcjqWkTMlgH/YnUGdQ
+name: Arena PLA Silk @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 29.99
+  filament_density: 1.32
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: NuBXRIl6R4tqThZSBT2X2A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: 95inY2Abn1GMOaIETvML+w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: tLot9j2Fh/12QRqwFDtmkg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: rLfZVfo7bGg2ev4mLaXuIw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: DUwknghCWhcPw/u3SH5nMA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: LL550/w7Ctd9o/ARpmZ6tg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: /jcs4X3yYQ/25OaWNyEHPw
+name: Arena PLA Silk @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 29.99
+  filament_density: 1.32
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: USdMuZbJ9xQ6F1D4E+09SA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: SlbwMe9dzSTdaasAT3hYUQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: SszpGzgwifve4TwuiDyKLw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 3bQue1MhqrNlmN81fGII6g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: qvTfjryo+QQm/PWmSeAIhw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: isSx4nqvAUDFJ+WVtGVvtA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: F+EQTrjqY/WYOzUd6snBbw
+name: Arena PLA Sparkle @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 29.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: mwT4HPeVrRFGMVGIsA2sNA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: BvxPEA+qovFpYDfBWldw+w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: H3W/SleSMyJLCyzcqGjqdw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 78FJF7ijDywdldcXIUmHrg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: 6ksesfQB82DiMW0tPhI3IA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: /rIR8399aqmvNB3IoK47nQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: o15ep+QthLoM+wnNkCbjzQ
+name: Arena PLA Tough @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 28.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 21
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: aa/DW00M8bsSNwn6rZEoxA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: ghE9pVLu8wOi//b51/tE8w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: UBSlaMZekia2J20fYxUC3g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: kpbAQpRR9ACYZ8sNHro/1w
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: lG/i/GyTZ5Zscgwy/TlH+g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Xz2Tp+//iLaSQ454PqK3+g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: zNmqXIBR/HgG8FwNQETXxQ
+name: Arena PLA Tough @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 28.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: w+pxrWY6IrvuAoR4zYBmjQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: uA/SN6RuILBDmjFccTI//A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: omCiRDrVhl2laNGNQ1XXdg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: +xB9PKnPdnE7iCx9Cmc5sw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: BVDaVcRl/TdFox19cQMqYg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: +uqVLfm2S1JWB5Qf3owhjg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: RJkn1EyMHCDPdSq4zlh+AQ
+name: Arena PLA-CF @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 15
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: r9xvHiBsPxKjmyCnRbF9tA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: k9TeBEAa9v9idpwxlO/zVw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: Fg0e8Biiq7+23BEO+gPsnw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: lmCdAcWC0lwMdSGlL7JNbQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: JQcZ7BTb3RXQB84LU0BziQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 9HQSKbZQwHvVxAZzB+9v0w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: LvcycGKPquoUB2AHh5CI8w
+name: Arena PLA-CF @Arena X1C 0.8 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +fAwfDuFR//m+3xK+WZblQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: F2vENyVn36EyY6KsU4Tupg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: oD9jzVdMT4LQnlX3lccaFg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: tkS+4FkE2aYCYeekclNj3g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: JlfKfw8xNjLbnntsV7OCtQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: xWAQvKH+BeCQiCR0yUv/SQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: +aiyuNodUX0L93vkOBeUuw
+name: Arena Support G @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 10
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 6
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: PAjIILVewAzaqyG/U9NkyA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: eMTlcpi5cHfh7Fh3axzsQA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: tQaaSsGx1kRjKeBuyzqE9g
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: 6poXgA21deYFVCQdOGDlGw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: 4+qI3kaNz+aRNuk0uUl9Kw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: PmO7c6qgTAG+iuQUYM6M4g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Je++Txz/5OLxDwctx7g+sQ
+name: Arena Support W @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 69.98
+  filament_density: 1.3
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: NHWM3jJtR2vFCsq1OW7RJQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Engineering Plate"
+  id: L9LSA7T7vFNkZlpDLS3Crw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 1wanJ2RMcPgUa1xyqV0cVg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: VaHWsHvSpJOlJCCe7LCOcw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: 7unvpP+crd2I0iHHsy/tcA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: qEn9zJL+hiWa0yyE1UMWyg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 7dcnXo+JpaW/dAvlIF7W7g
+name: Arena Support W @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 69.98
+  filament_density: 1.3
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 0.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: jHGieBUhb4CtfbjLShFGJQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Engineering Plate"
+  id: CZVPDidk3MaJk2YAqROHfQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: lgRr4nW9wmpKufWAw5a0ig
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: ynXSEfWX5gNmu56KMkZ1Xw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: Xa7VoUGwDJHvrlNjQWGcBQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: f1U6Ddywm6cz3YBtmWXtZg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: nFV3M/+kQHijTf51tLWdHw
+name: Arena TPU 95A @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 41.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3.6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >30)||(first_layer_bed_temperature[current_extruder] >30)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Orca Arena
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 9dqAnT86vKMj/GgWP4xUKQ
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: p2GLKcC3ICxnaFMF+i6Wdg
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: vnRpJEwpSlQhisRCstinkA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: 0ib00v1mzTzHK82j9/BwzQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: /LPEdDTktKLt96eykNed+w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 5ZwBou4d77GsuBKiwqmP4g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: cTjge1o1Gb+EK1lInE70zw
+name: Generic ABS @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: CHiMWFrocj+TIqWM3s3WsA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: owxuLAIcCiVQKeSMpuPsMg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: WzIdG6VeBCrCeslhEillmg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: 9W73a01E2y4KxNlpne0JVw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: 4iAb5G9FYAEdplWS5+AkJA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: vCqFSZl5kEslpWCl9u9joA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: CRy/hMPavQBUx3qDZKYirA
+name: Generic ABS @OrcaArena 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: JNmSGy9Zz56mGMclsrt0cg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: QLok53KO1IqAwZaU5zIs2Q
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: T4e99ZGIdwa4eCkIOzyLUA
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: 0KhLJZJhZP+4gDLYB049NA
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: qpYkYvR30YP64DhsaRWGZg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: +pntfpqfR7SmA8Ia2sUqRg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: iBdIvVHZapixFNyy4rDOqA
+name: Generic ASA @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: sHRHyKRXO3u4u40FXNYlgQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: iEdqtHc0ohrlE8jc92lKMw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: wBU4t6kIGObqNs/hnUk7mA
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: +cEwRVgix52rum3BJBm+8Q
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: IJfukbScSNuS2seQG72C/Q
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: lIpq9KXZybQIQepwGXHgZQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Ccj3mCOB3cHPOjL2OLt1DQ
+name: Generic ASA @OrcaArena 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: gTkS/gRzN32JNBFeCqQWtg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: CMIXROmkHGys251xMMFkTQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: 5EDyzxnklwhTlAKDrig1ww
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: bzLNrfZX7cVZcT77zrm+DQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: 7OYThtau8DPAsvkuKuxHpg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: cbFjfLAQcTpJr17TOh+++A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: kWpdSG5LuQRoQGY1eutQNQ
+name: Generic PA @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: h3q9SF8I/TPF8epYK3o+yA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: VWitZTYsUK6EtduD8Q8fqg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: kX6Hhg8wCq0zQG9gigZiXw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: 1HZkk92gzCxwDbnL+0DYaA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: tJhAAPmUS9jxqXGKjZ1v0g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: YDLb3pWJb+EOdxw0uM4pIQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: KhvZKukR3GEgnCxiRwZ+tg
+name: Generic PA-CF @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 2
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: KIPQDNGw6aqehz9q3T1FyA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: FAnYtssys6tjh0SpbegasQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: LvIT/4Rspg5Wf3CWUqUKbw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: j791mKqsFq4XI5isZn+QVg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: W7xAiSn6w/vsl2AET9A7/g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 4yZyaJyDixfZsXm6eQycqA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 5oMkcj7goGUd7Idr6kjl+g
+name: Generic PC @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Q4Pap/oLZ2gZO5gOYVmgMQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: yi/RdQ3/R/xiRWYMrhGuhA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: 6KpAVS93IZzDc90js2tIiw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: 4n0lDOb7QKRy7D5whRwJoA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: kLJVG61ab69XFN8NsL2uzg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: BEY0gy420zNZjis7YjmM4Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: EA/4DYrG7v5RxeKMlmSlYw
+name: Generic PC @OrcaArena 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 035D6wquNgKylUaMHDcpOA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 3mHEG16h4aFHUAN2l3oALQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: XTwaRZwjMUAEjzsrzf6Otw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: PoeyrIcwlXfo06y7eD7nXA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: gVg302s9hsbsvVjsWjtscA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: pDlYz8a96o6cpoBp2J5d5w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: r6nHWNHfTDi0FtV8vCb/qA
+name: Generic PETG @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 90
+  min_fan_speed: 40
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |2-
+     ; filament start gcode
+    {if (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S255
+    {elsif (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ex4L8o74a139i+ItIZ2Pqg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: PlhMlSfQVxFzw/vJZN30IA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: 1d2NVx39Wjd7e80EZd3/gQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: w5YmTPKQU/9tBb46D4PtUQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: KxVJBtyDidpXEOvUr2fPHw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: LL2PuEMjhj8wURazRCNHiA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: nokzNMYa7MDWmmN/9icrQw
+name: Generic PETG @OrcaArena 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 90
+  min_fan_speed: 40
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |2-
+     ; filament start gcode
+    {if (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S255
+    {elsif (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 8cgXgln+P5f+W0MEEZZhVg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: RO4szDVgBSBQqz7IO2Pyjg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: l3PyF7a7/KFOchUjt28Ilw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: j8ytVrmvczn0OhKUiX7SOw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: OYFZL60b7mDWGZqrzI4xvQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: FYO4pFcbhtC6TnXYwSi5bw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: bbSG8NbFBUSNM0y47pHbGg
+name: Generic PETG-CF @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 20
+  max_fan_speed: 30
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S180
+    {elsif (bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S255
+    {endif};Prevent PLA from jamming
+  filament_toolchange_delay: 0
+  filament_type: PETG-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 6
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: h9w0fUBcrBpoDe989RZLfA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: vSvCWgmrXLqTkfUkOvuVEg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: u/WH8/TVrWUopuuB7vEdcQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: V0kEpPAuavOAdA+cBSLneA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: 0udUF39LcsTxBxojQ+Wg2g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: WRyh8++QhC5gwaQAj0ADiw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: C8a4Sm6lpcndJPfpSOtgbw
+name: Generic PLA @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif};Prevent PLA from jamming
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: EC5X86chp5drvFOTb33x/w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: UekR02g09IY+CBLRIktOVw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: heg3VFfuvAA9Brit6C7p0g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: LdcNAxItd4sM/9iqXqzoFA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: RLw/WZKTzkDz2dg6BzpgIg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: rx3MIOBkym4OdgABWBW5Fw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: g1EaR8dloK1VfviCPI94xA
+name: Generic PLA @OrcaArena 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >30)||(first_layer_bed_temperature[current_extruder] >30)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 815tWPcRuWtJxTkzpojpmg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: bo8pgjol3JOGc2SK2o7vkQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: eBUjHffoEkfka4LAVln3Cg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: aCAazpP8BSqDRKi6TXhiVg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: hk4oobvRrkP71keuMSNojg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 8VdA2rJuDnh4bNIZ5Fgw0w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: ON+8A4vXzshdDvyCvFWALA
+name: Generic PLA Silk @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 7.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.5
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif};Prevent PLA from jamming
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 99ItHBcxKVZnYLe+LxloeQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: tBTYaLmeoPtyhTcIVbVv/A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: NnsVJhmOctzFR6sxuIlYog
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: x4AwzjHouGECpXezoOG63A
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: f5upuFx7pQ5RWbzapEwqZQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 7eIon/a/KYqtg1HQReoLaw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: kQvSEMD9XfpYH0h6vTfT/g
+name: Generic PLA-CF @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 7
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: MApcZ5Ma+TVVHFtfxDM1NQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: Q0E+NIpc+Ib45gxyybXThg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: IhEBmL27qXoJ5ul1HXMlOQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: PF+MaByRCrKf9vao5mv+Jw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: V2GRRDPJuccRnPh6Muv8Qw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: dwcviwYy2PdPAQVK9Klahw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: f7IsSE9DeKx6hLBHIr/TpQ
+name: Generic PVA @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: true
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PVA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 7
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ZO+vHvuzxAjrl+5QvhXBmA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: vSFXIPz0WcY1Qo1Rc4vY2A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: eHi6itwh9bizusgtzXKr9w
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: zxZhDmuB7G0i5QI2uQOH9g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: vsUnO7DbaNHrORPHuOhFOg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Tu+Y+EByyaU6WBZv3C8wUQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: HrdysjQPhlYAbkTpPJ+qhA
+name: Generic PVA @OrcaArena 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 0.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: true
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PVA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 7
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: yyCbO1s57/r4st182+6zhA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: RYZZDQ448LvWzXQmSd25Cw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: SmEbnmSXabKCXwfKnEOggA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: a+jLOO8Jhxii9UKSKKX3IQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: fpAYGJ2zarBo0DkOEdVpxA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: HecPx5piHNipVR28ZSGvxA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: uwCPViU71Xkw4JtWB//sew
+name: Generic TPU @OrcaArena
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if (bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S255
+    {elsif (bed_temperature[current_extruder] >30)||(first_layer_bed_temperature[current_extruder] >30)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: BrFxwN/2NErXoH/Ov+S4ag
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: 6RZ8r7emuS3LqXTIvRITxA
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: sf2ZvOPwUTG5/rscK8KQQA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: bIdARG4vRbQy4kTqhme4Dg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: b30adQ4uIG+ARCmCZaEnxg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: luOQ5f5tir3Kl14oabnptA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: fAq5QTfIM0v8VZyz1gKC1g
+name: PolyLite PLA @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25.4
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 15
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: RTvJCb99HINW+qtiAGupTA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: 4J27KtFmMJJijGab4QixNw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: pC8Rt1/rrCGJsatv+aTwDQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: uS/4LwH7fcnfwidjxc+AkA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: iLK2WOS5Cg7++HDeFe8wjA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: +qR6HUFWIszn7qewk0IP7w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: cWTTZ8x9/xspTf6a5dpTbA
+name: PolyLite PLA @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25.4
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 0ArEi3tCreKiFItbo+Hvgw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: UKSvqE30GSngPf85MpbQLw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: Hv1zsEeznJQMznqDR6XXXQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: P9E1/sg8zIfFLqFf8MnM4g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: T9oZU9HQSRbPqGb9M5tmZg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 2EHnabckzONFsRMdXkLIzg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 4FU2a9beAkDwa0cf18WiEg
+name: PolyTerra PLA @Arena X1C
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.4) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.6) or (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25.4
+  filament_density: 1.31
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 22
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: uf2+GyiF3Y2QkDfA6WkqSQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: i9S6Ssr8GtSzzAjKUv4VpA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: JlDF633+mZ/8+QwSHa32HQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: +SD9W7kORI9YLdHmzJfKyw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: foSco3mk2qxb7/hsRwGSXQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: /xVkQxmT8KqQ93SLPOWTVg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: u1TswF6QC9x3qSu/6y5FeQ
+name: PolyTerra PLA @Arena X1C 0.2 nozzle
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25.4
+  filament_density: 1.31
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \nM106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    {if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255
+    {elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: k6k9k6gDZfPxkcWJPD59fw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: B03vTVJuzfvRLctDLi74ag
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: Z5Zjdm8cTOTVpw+Lea7nCg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: olKl0qFndygj41qhXJ70UA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: MijIKxeARb5eEcJsrJCe/A
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 8rTQNOLMR7m0jFs69pDIsw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: B1Kx+YZGoB34lHx+pqGE3Q
+name: Generic PA @System
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: nVKzxSUWiUVfENFlczOOMg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 2RlSDJ3KMRIW8xXM3XM/Wg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: Z/wnNbW7n/rrN5B+dpAaxQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: Pw082MxGf+VR2HMZnK+3bA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: bQKroj1vKp8skFoqmCGxrA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: r+zLFHXoemzvNmPffzGl3Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 7xzk8xqtBiW7jrJAr98iEQ
+name: Generic PA-CF @System
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 8
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: WZIg5F0C7NRpCfHPWWebRQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: +gfGcU9fEhc7Y9PX9qKMzw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: 10C4dZhyMz4k522iWBrOGw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: HQRUtEdm5uHcZwTtRia6wA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: mtWPrC4IAs5MjEADvZI8pA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: fadn/0nw17J9SOVI09K2HA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 5+HhdpyyAvGRjhXGeljJ7Q
+name: Generic PETG-CF @System
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 5
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 11.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 13
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: DqsG3PVEY0nI4QFGDrjNCQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: yVcDie3dwlPiBWhEvz/B8A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: LafcLmwhd1z554fJHNHWEQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: X1a3+xpOAf7vegVeWazs1w
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: bHkWgPfBbEKssNPAD7pjdw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: ff40u/Zc6ntvx+PaEQL2tQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: XHJ23yehnlM2wlPdefa1Uw
+name: Generic PLA Silk @System
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 7.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.5
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 6NOlNQepBInz0DaP1GxSng
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: ZU4/oihwN9YQi+GXOPchKQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: NHoRkm2L5jQIDHC+KqL7Gg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: o7u2OqfQf9O9MF7jTA5LvQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: xrL9mxCIl8j1Wz4L032aVQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: TDbRYczkLH96yuw4sXRPvw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: DjxTarb1Ln0Scz/BaDOnxQ
+name: Generic PLA-CF @System
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: BzMOmIIPTCCUiheAsTNUxg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: cKp5ob8idSLBKqC+2Z8Dog
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: /D+oRrwRexZ6RWsy0cud6Q
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 9BB6wdIzxtLWQXtOrMN0Mg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: AzvNd10VxeKoRM9ic7Oyng
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: vlniHYzkeFkZbK4Q1D6mNA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: 7mHn6RbtXojZm7A0VwHKWQ
+name: Generic TPU @System
+condition: (printer.model == "Orca Arena X1 Carbon" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 3.2
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: MI5qzcDgFSuXIZFPfOI/4g
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: iuiFh+R03ybTE4tJTXYyNQ
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: dRl/CtARDoJuLFXfLMPGFw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: 7ebSzv19iesOoJXzSLXMdw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: XeMBT/qdS2zBHxx5qx9zfA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: VaGzHzrbgakoxBLyKTzxHA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0

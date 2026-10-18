@@ -35,6 +35,7 @@ private:
     using ComboBoxTools = Yoga::ComboBoxListViewSelection<Domain::Preset::HwToolConfigDef>;
 
     Biz::Preset::PresetInteractor& m_preset_interactor;
+    Yoga::Item* m_id_background{nullptr};
     Yoga::Text* m_text_index   = nullptr;
     ComboBoxTools* m_combo_box = nullptr;
     Callbacks m_callbacks;

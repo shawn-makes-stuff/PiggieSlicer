@@ -1,0 +1,773 @@
+kind: filament
+id: m26UiiGwPPicPbbbkO3vGA
+name: Cubicon ABS @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 15
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.99
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 14
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  full_fan_speed_layer: 0
+  temperature: 245
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: FQJ/iY8cwFwMyzn4SDxPog
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: zgnQdS5ylkJ+ZmHdRZ2YFA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: DcViP5DY5tV7c4B1xc9oqg
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 120
+- condition: sheet.type == "Textured PEI Plate"
+  id: /JBiVIWsrKmzDS3+NmGTZA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: l5THD9THRxYPidzKVyG3VQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: +j/lZeRMuw7moQTWTbkBaA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: /BziJpAb2YPuT7JYWIgOig
+name: Cubicon ABS-A100 @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 15
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  deretract_speed: 25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 1.04
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_before_wipe: 70%
+  retract_length: 1.2
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  wipe: true
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 225
+  pressure_advance_value: 0.04
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: rsGxvhgKz8/Hk7EjdvufEg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: ceQOPBvISg1SljfCV7AePA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: nuQ/Ce0/k0t2w3AK9gmIJg
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured PEI Plate"
+  id: AN0YmTtwliQQOs3s3bdaaw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: olU13/FefZQzR7Ox5n3iWA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: lUOTUyYPl+MT2QE4Lu4o/w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: UjA10NmSC73xeDhnmq4FEg
+name: Cubicon ABSk @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 15
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.99
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 14
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: QvoB6PAmtMItoClv88uGVw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: X7Rg0skhihMgE5brlIKetg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: /jUgMfSkUFV7tVEUB4UqUA
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 120
+- condition: sheet.type == "Textured PEI Plate"
+  id: xKcZvapg7rGk49bbGFJJgA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: CsOix2ypa7f4V+Dpiq1HLA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: aOJ9ervbSPHqMUSrS3UiNw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: NP3dYb1SHfXX5vDEBx8OCA
+name: Cubicon PA-CF @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 50
+  min_fan_speed: 50
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.99
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 7
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 265
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: JKM9K4ZRJMEJfETMHMKvag
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: N0sXL7nXt5oErPP3o9xfhQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: dCAXkd+eQTOdn6eA3Cajhw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: uivzXF73umpVOyMppTk/Dg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: rnCC053QhYuoLu3Y0ljIBQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: wLEx0LdkO4+OQGtKAiDhjg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: X7OEl7Dw8Y+QSsvYqj9YJA
+name: Cubicon PC @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 5
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 30
+  max_fan_speed: 25
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  deretract_speed: 25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 4
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_before_wipe: 70%
+  retract_length: 0.8
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  wipe: true
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 250
+  first_layer_temperature: 245
+  pressure_advance_value: 0.01
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 0wcVn60DBUw3ODnAyGJfng
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: /aFwmUJaxuCawaSd85yuBg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: k624RizTZDfhcdz+cGRDSQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: vltM2xMahzIwCPz9UjUerg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: Fmt+0k5Lfb5hn8pxrCgTAQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: TWG58zDKOtKmPquGwk/IAw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: auoK/AMsh15Teu+lKiYH9g
+name: Cubicon PETG @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 30
+  max_fan_speed: 90
+  min_fan_speed: 80
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.24
+  deretract_speed: 25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.99
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_before_wipe: 70%
+  retract_length: 2
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  wipe: true
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 235
+  pressure_advance_value: 0.08
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 30
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: bSWj4o88Q8fGN11IvogOPQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: jvG2giGpyWjIIwrtyqGu3w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: DglCpwrMNnCawf6moEbuQg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 85
+- condition: sheet.type == "Textured PEI Plate"
+  id: 4+38iAg6TqNpPa69D5CEUg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: uX1yKSCteP6K9/MFle9Plw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: a7LqniY6BJxQJbAs3R7J1g
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: 3NM5tO62kn9YFn5xWZEyug
+name: Cubicon PLA @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 80
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  deretract_speed: 25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.99
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 23
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_before_wipe: 70%
+  retract_length: 2
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  wipe: true
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 210
+  first_layer_temperature: 205
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 50
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 255}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: DZf/xgjYyRoCqNe+qCeCUw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: dsJp0G0rnF+jdAkXMCujuw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "High Temp Plate"
+  id: mcuzClQBs9yNx/KJDzVnLw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: dGfLLOd91Z9sETdsYiRT4g
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: u3x9/pHB8Y6la2y+e9MSHw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: AbW43evBeLTMUvua/+xsFg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Ubf5rjv6y7vSNc2zM0qx9A
+name: Cubicon PLA+ @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 80
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  deretract_speed: 25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.99
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_before_wipe: 70%
+  retract_length: 2
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  wipe: true
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 210
+  first_layer_temperature: 205
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 50
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 255}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: OMY5wAj7L/0tJrdUcB6fpw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: KkkUBPLq00745QXiQLTLPg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "High Temp Plate"
+  id: mXAiiKQk1JkvoXntsMWhTw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: XcAQImi7+lptFLnVPkP0Wg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: 6N6BBk/4Oo5FBwugQKaWAg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: dYybYmOnGdW4j+XPVM984Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: BhUidv9IhKuRuszyrc4J8A
+name: Cubicon PLAi21 @Cubicon xCeler-Mini 0.4 nozzle
+condition: (printer.model == "Cubicon xCeler-Mini" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 80
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  deretract_speed: 25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.99
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 23
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_before_wipe: 70%
+  retract_length: 2
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Cubicon
+  wipe: true
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 210
+  first_layer_temperature: 205
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 50
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 255}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: kzC+NJSzHsxPYiLRoGg0mg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: tQxiLpVfJ0SIJokyDpZvxg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "High Temp Plate"
+  id: 8ZFJLSfnHP5zra1mhhzIqQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: biiZkKOtmWGwO85a7QKIQQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: MdHxlBbBjqoceDdWRLI0Bg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 85qN22PbZQhkcgAx1OsCtQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35

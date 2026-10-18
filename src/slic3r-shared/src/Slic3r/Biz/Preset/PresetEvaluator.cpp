@@ -294,11 +294,33 @@ struct ConfigValueSetterVisitor
     }
 };
 
+// Built-in settings of the generic external multi-material unit (docs/design/EXTERNAL_MMU.md §3):
+// one nozzle fed by the unit, whose firmware does the swap, so the Prusa MMU moves and the
+// ramming are off and purge volumes follow the filament colours. Applied after the preset
+// values: vendor presets set these keys unconditionally (e.g. single_extruder_multi_material: 0),
+// so applying them first would have no effect. A saved user preset's own values win (Orca: the
+// printer preset is the user's to edit), and they can be changed in the session.
+const EvalPresetValueMap& external_mmu_values()
+{
+    static const EvalPresetValueMap values{
+        {"single_extruder_multi_material", true},
+        {"enable_filament_ramming", false},
+        {"wiping_volumes_by_colour", true},
+        {"cooling_tube_length", 0.},
+        {"cooling_tube_retraction", 0.},
+        {"parking_pos_retraction", 0.},
+        {"extra_loading_move", 0.},
+        {"high_current_on_filament_swap", false},
+    };
+    return values;
+}
+
 template <typename ConfigType>
     requires std::is_base_of_v<Domain::ConfigBox, ConfigType>
 ConfigType config_values(
     const Domain::Preset::HwPrinterConfig& hw_config,
-    const EvalPresetValueMap& values
+    const EvalPresetValueMap& values,
+    const std::set<std::string>& user_keys
 )
 {
     // Constructing ConfigType from ConfigDefinitions iterates all definitions and is
@@ -344,26 +366,39 @@ ConfigType config_values(
             }
         }
     }
+    // The values describe one nozzle fed by the unit (single extruder multi material). On a
+    // multi-tool printer the slicer has no per-tool filament mapping yet (Orca's filament_map).
+    if (hw_config.tool_count == 1 && Domain::Preset::has_external_mmu(hw_config)) {
+        for (const auto& [k, v] : external_mmu_values()) {
+            // each box takes only its own keys
+            if (user_keys.contains(k))
+                continue;
+            const auto q = config.find(k);
+            if (q.item != nullptr && !q.is_override)
+                std::visit(ConfigValueSetterVisitor{q}, v);
+        }
+    }
     return config;
 }
 
 template <typename FdmConfigType, typename SlaConfigType>
 Domain::Preset::EvaluatedPreset<FdmConfigType, SlaConfigType>::PresetValues config_values(
     const Domain::Preset::HwPrinterConfig& hw_config,
-    const EvalPresetValueMap& values
+    const EvalPresetValueMap& values,
+    const std::set<std::string>& user_keys
 )
 {
     if (hw_config.technology == Domain::PrinterTechnology::FFF) {
         if constexpr (std::is_same_v<FdmConfigType, std::monostate>)
             PANIC("Unsupported config type");
         else
-            return config_values<FdmConfigType>(hw_config, values);
+            return config_values<FdmConfigType>(hw_config, values, user_keys);
     }
     if (hw_config.technology == Domain::PrinterTechnology::SLA) {
         if constexpr (std::is_same_v<SlaConfigType, std::monostate>)
             PANIC("Unsupported config type");
         else
-            return config_values<SlaConfigType>(hw_config, values);
+            return config_values<SlaConfigType>(hw_config, values, user_keys);
     }
     PANIC("Unsupported printer technology");
 }
@@ -419,7 +454,7 @@ Domain::Preset::EvaluatedPreset<FdmConfigType, SlaConfigType> PresetEvaluator::p
         .root_id    = context.root_id,
         .id         = context.id.empty() ? generate_uuid() : context.id,
         .name       = context.name,
-        .values     = config_values<FdmConfigType, SlaConfigType>(hw_config, context.values),
+        .values     = config_values<FdmConfigType, SlaConfigType>(hw_config, context.values, context.user_keys),
         .features   = context.features,
         .conditions = conditions,
         .last_node_location = context.last_node_location
@@ -510,10 +545,11 @@ PresetEvaluator::EvaluatedPrinterPresets PresetEvaluator::evaluate(const HwPrint
     append_printer_values(printer_values, hw_config);
 
     ValueMaps printer_tools_values;
-    for (const auto& tool : hw_config.tools) {
+    for (size_t tool_index = 0; tool_index < hw_config.tools.size(); ++tool_index) {
         Expr::ValueMap tool_values = printer_values;
 
-        append_tool_values(tool_values, tool);
+        append_tool_values(tool_values, hw_config.tools[tool_index]);
+        append_tool_feeder_values(tool_values, hw_config, tool_index);
         printer_tools_values.emplace_back(tool_values);
     }
 
@@ -577,9 +613,10 @@ PresetEvaluator::EvaluatedPrinterPresets PresetEvaluator::evaluate(const HwPrint
             if (hw_config.technology == Domain::PrinterTechnology::FFF) {
                 PresetCollectionEvaluator
                     tool_eval(tool_it->second, tool_names_it->second, m_eval, {}, hw_config.name);
-                for (const auto& tool : hw_config.tools) {
+                for (size_t tool_index = 0; tool_index < hw_config.tools.size(); ++tool_index) {
                     Expr::ValueMap tool_values = print_values;
-                    append_tool_values(tool_values, tool);
+                    append_tool_values(tool_values, hw_config.tools[tool_index]);
+                    append_tool_feeder_values(tool_values, hw_config, tool_index);
 
                     // evaluate all variants
                     Domain::Preset::SingleToolEvaluatedToolPrintPresets eval_variants;
@@ -618,21 +655,17 @@ PresetEvaluator::EvaluatedPrinterPresets PresetEvaluator::evaluate(const HwPrint
                 Expr::ValueMap tool_values = print_values;
                 const auto& tool = it.tool_config();
                 append_tool_values(tool_values, tool);
-
-                // TODO: feeder settings?
-                // const auto feeder_count = it.feeder_count();
-                // if (feeder_count > 0) {
-                //     const auto& feeder = it.feeder_config(feeder_count - 1);
-                //     append_feeder_values(feeder_values, feeder);
-                // }
+                // the feeder of this slot's tool
+                const auto* feeder = Domain::Preset::find_tool_feeder(hw_config, it.tool_index());
+                append_feeder_values(tool_values, feeder);
 
                 Domain::Preset::SingleToolEvaluatedMaterialPresets variants;
-                // Cache key is tool.id because tool_values only depends on
-                // print_values (shared) + tool.features (same for same tool.id).
-                // If feeder values are added to tool_values, the cache key must
-                // include the feeder address as well.
+                // tool_values only depends on print_values (shared) + tool.features (same for
+                // same tool.id) + the tool's feeder, so these make the cache key.
+                const std::string cache_key = feeder == nullptr ? tool.id :
+                    tool.id + "|" + feeder->id;
                 if (use_material_cache) {
-                    if (const auto cache_it = material_cache.find(tool.id);
+                    if (const auto cache_it = material_cache.find(cache_key);
                         cache_it != material_cache.end())
                     {
                         variants = cache_it->second;
@@ -659,7 +692,7 @@ PresetEvaluator::EvaluatedPrinterPresets PresetEvaluator::evaluate(const HwPrint
                     );
                 }
                 if (use_material_cache) {
-                    material_cache[tool.id] = variants;
+                    material_cache[cache_key] = variants;
                 }
                 materials.emplace_back(std::move(variants));
             }

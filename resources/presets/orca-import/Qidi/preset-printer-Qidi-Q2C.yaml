@@ -1,0 +1,567 @@
+kind: printer
+id: GTGPihYMd+tRvHCjSXFnvA
+variants:
+- condition: printer.model == "Qidi Q2C"
+  name: Qidi Q2C
+  id: GrFBi1DR0vAIKg0G9IoGXw
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: rGmQxgqt3oy+hWYtzDPrxA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: "{local long_retractions_when_cut = (custom_parameter_printer_long_retractions_when_cut__0, custom_parameter_printer_long_retractions_when_cut__1)}{local retraction_distances_when_cut = (custom_parameter_printer_retraction_distances_when_cut__0, custom_parameter_printer_retraction_distances_when_cut__1)}{if current_extruder != next_extruder}\nG1 Z{max_layer_z + 3.0} F1200\nTOOL_CHANGE_START F=[current_extruder] T=[next_extruder]\nBUFFER_MONITORING ENABLE=0\nDISABLE_ALL_SENSOR\nM106 S255\nMOVE_TO_TRASH\n{if long_retractions_when_cut[previous_extruder]}\nG1 E-{retraction_distances_when_cut[previous_extruder]} F{old_filament_e_feedrate}\n{else}\nG1 E-10 F{old_filament_e_feedrate}\n{endif}\nM400\nCUT_FILAMENT T=[current_extruder]\nMOVE_TO_TRASH\nM106 P2 S0\nUNLOAD_T[current_extruder]\nT[next_extruder]\n{if custom_parameter_filament_nozzle_temperature_range_high[current_extruder] >= custom_parameter_filament_nozzle_temperature_range_high[next_extruder]}\nM104 S{custom_parameter_filament_nozzle_temperature_range_high[current_extruder]}\n\
+        {else}\nM104 S{custom_parameter_filament_nozzle_temperature_range_high[next_extruder]}\n{endif}\n; FLUSH_START\nM106 S25\nG1 E30 F300\n; FLUSH_END\n{if long_retractions_when_cut[previous_extruder]}\nG1 E{retraction_distances_when_cut[previous_extruder]} F{old_filament_e_feedrate}\n{endif}\n{if flush_length_1 > 1}\n; FLUSH_START\n{if flush_length_1 > 23.7}\nG1 E23.7 F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\n{else}\nG1 E{flush_length_1} F{old_filament_e_feedrate}\n{endif}\nG1 E-[old_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_2 > 1}\n; FLUSH_START\n\
+        G1 X92 F9000\nG1 E[old_retract_length_toolchange] F300\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_3 > 1}\n; FLUSH_START\nG1 X85 F9000\nG1 E[new_retract_length_toolchange] F300\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3\
+        \ * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_4 > 1}\n; FLUSH_START\nG1 X92 F9000\nG1 E[new_retract_length_toolchange] F300\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\nM400\nM106 S255\nM104 S[new_filament_temp]\nINIT_SYNC_BUFFER_STATE\nBUFFER_MONITORING ENABLE=1\nG1 E10 F25 \nM109 S[new_filament_temp]\nG1 E-5 F1800\nCLEAR_OOZE\nTOOL_CHANGE_END\nG1 Y270 F8000\nM106 S0\nG1 E2 F1800\n\
+        ENABLE_ALL_SENSOR\n{endif}\n"
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.10mm Standard @Q2C 0.2 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 5
+      extruder_clearance_height: 47
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: SET_PRINT_STATS_INFO CURRENT_LAYER={layer_num + 1}
+      end_gcode: |-
+        DISABLE_BOX_HEATER
+        M140 S0
+        BUFFER_MONITORING ENABLE=0
+        DISABLE_ALL_SENSOR
+        G1 E-3 F1800
+        G0 Z{max_layer_z + 3} F600
+        UNLOAD_FILAMENT T=[current_extruder]
+        G0 Y270 F12000
+        G0 X90 Y270 F12000
+        {if max_layer_z < max_print_height / 2}G1 Z{max_print_height / 2 + 10} F600{else}G1 Z{min(max_print_height, max_layer_z + 3)}{endif}
+        M104 S0
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      machine_max_jerk_e:
+      - 4.0
+      - 4.0
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 4.0
+      - 4.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      machine_max_feedrate_x:
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}PRINT_START BED=[first_layer_bed_temperature[initial_extruder]] HOTEND=[first_layer_temperature] EXTRUDER=[initial_extruder]
+        SET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]
+        M83
+        M140 S[first_layer_bed_temperature[initial_extruder]]
+        M104 S[first_layer_temperature]
+        G4 P3000
+        T[initial_tool]
+        G1 X108.000 Y1 F30000
+        G0 Z[first_layer_height] F600
+        ;G1 E3 F1800
+        G90
+        M83
+        G0 X128 E8  F{outer_wall_volumetric_speed/(24/20)    * 60}
+        G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G91
+        G1 X1 Z-0.300
+        G1 X4
+        G1 Z1 F1200
+        G90
+        M400
+        G1 X108.000 Y2.5 F30000
+        G0 Z[first_layer_height] F600
+        M83
+        G0 X128 E10  F{outer_wall_volumetric_speed/(24/20)    * 60}
+        G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G91
+        G1 X1 Z-0.300
+        G1 X4
+        G1 Z1 F1200
+        G90
+        M400
+        G1 Z1 F600
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 270x0
+      - 270x270
+      - '0x270'
+      max_print_height: 256
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 150x150/PNG
+      custom_parameters_printer: '{"long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: FDsmb6u3DsdwoS+b1rohGA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: "{local long_retractions_when_cut = (custom_parameter_printer_long_retractions_when_cut__0, custom_parameter_printer_long_retractions_when_cut__1)}{local retraction_distances_when_cut = (custom_parameter_printer_retraction_distances_when_cut__0, custom_parameter_printer_retraction_distances_when_cut__1)}{if current_extruder != next_extruder}\nG1 Z{max_layer_z + 3.0} F1200\nTOOL_CHANGE_START F=[current_extruder] T=[next_extruder]\nBUFFER_MONITORING ENABLE=0\nDISABLE_ALL_SENSOR\nM106 S255\nMOVE_TO_TRASH\n{if long_retractions_when_cut[previous_extruder]}\nG1 E-{retraction_distances_when_cut[previous_extruder]} F{old_filament_e_feedrate}\n{else}\nG1 E-10 F{old_filament_e_feedrate}\n{endif}\nM400\nCUT_FILAMENT T=[current_extruder]\nMOVE_TO_TRASH\nM106 P2 S0\nUNLOAD_T[current_extruder]\nT[next_extruder]\n{if custom_parameter_filament_nozzle_temperature_range_high[current_extruder] >= custom_parameter_filament_nozzle_temperature_range_high[next_extruder]}\nM104 S{custom_parameter_filament_nozzle_temperature_range_high[current_extruder]}\n\
+        {else}\nM104 S{custom_parameter_filament_nozzle_temperature_range_high[next_extruder]}\n{endif}\n; FLUSH_START\nM106 S25\nG1 E30 F300\n; FLUSH_END\n{if long_retractions_when_cut[previous_extruder]}\nG1 E{retraction_distances_when_cut[previous_extruder]} F{old_filament_e_feedrate}\n{endif}\n{if flush_length_1 > 1}\n; FLUSH_START\n{if flush_length_1 > 23.7}\nG1 E23.7 F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\n{else}\nG1 E{flush_length_1} F{old_filament_e_feedrate}\n{endif}\nG1 E-[old_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_2 > 1}\n; FLUSH_START\n\
+        G1 X92 F9000\nG1 E[old_retract_length_toolchange] F300\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_3 > 1}\n; FLUSH_START\nG1 X85 F9000\nG1 E[new_retract_length_toolchange] F300\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3\
+        \ * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_4 > 1}\n; FLUSH_START\nG1 X92 F9000\nG1 E[new_retract_length_toolchange] F300\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\nM400\nM106 S255\nM104 S[new_filament_temp]\nINIT_SYNC_BUFFER_STATE\nBUFFER_MONITORING ENABLE=1\nG1 E10 F25 \nM109 S[new_filament_temp]\nG1 E-5 F1800\nCLEAR_OOZE\nTOOL_CHANGE_END\nG1 Y270 F8000\nM106 S0\nG1 E2 F1800\n\
+        ENABLE_ALL_SENSOR\n{endif}\n"
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard @Qidi Q2C
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 5
+      extruder_clearance_height: 47
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: SET_PRINT_STATS_INFO CURRENT_LAYER={layer_num + 1}
+      end_gcode: |-
+        DISABLE_BOX_HEATER
+        M140 S0
+        BUFFER_MONITORING ENABLE=0
+        DISABLE_ALL_SENSOR
+        G1 E-3 F1800
+        G0 Z{max_layer_z + 3} F600
+        UNLOAD_FILAMENT T=[current_extruder]
+        G0 Y270 F12000
+        G0 X90 Y270 F12000
+        {if max_layer_z < max_print_height / 2}G1 Z{max_print_height / 2 + 10} F600{else}G1 Z{min(max_print_height, max_layer_z + 3)}{endif}
+        M104 S0
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      machine_max_jerk_e:
+      - 4.0
+      - 4.0
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 4.0
+      - 4.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      machine_max_feedrate_x:
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}PRINT_START BED=[first_layer_bed_temperature[initial_extruder]] HOTEND=[first_layer_temperature] EXTRUDER=[initial_extruder]
+        SET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]
+        M83
+        M140 S[first_layer_bed_temperature[initial_extruder]]
+        M104 S[first_layer_temperature]
+        G4 P3000
+        T[initial_tool]
+        G1 X108.000 Y1 F30000
+        G0 Z[first_layer_height] F600
+        ;G1 E3 F1800
+        G90
+        M83
+        G0 X128 E8  F{outer_wall_volumetric_speed/(24/20)    * 60}
+        G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G91
+        G1 X1 Z-0.300
+        G1 X4
+        G1 Z1 F1200
+        G90
+        M400
+        G1 X108.000 Y2.5 F30000
+        G0 Z[first_layer_height] F600
+        M83
+        G0 X128 E10  F{outer_wall_volumetric_speed/(24/20)    * 60}
+        G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G91
+        G1 X1 Z-0.300
+        G1 X4
+        G1 Z1 F1200
+        G90
+        M400
+        G1 Z1 F600
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 270x0
+      - 270x270
+      - '0x270'
+      max_print_height: 256
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 150x150/PNG
+      custom_parameters_printer: '{"long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: pwEpJON/Hy7700fxX21wsg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: "{local long_retractions_when_cut = (custom_parameter_printer_long_retractions_when_cut__0, custom_parameter_printer_long_retractions_when_cut__1)}{local retraction_distances_when_cut = (custom_parameter_printer_retraction_distances_when_cut__0, custom_parameter_printer_retraction_distances_when_cut__1)}{if current_extruder != next_extruder}\nG1 Z{max_layer_z + 3.0} F1200\nTOOL_CHANGE_START F=[current_extruder] T=[next_extruder]\nBUFFER_MONITORING ENABLE=0\nDISABLE_ALL_SENSOR\nM106 S255\nMOVE_TO_TRASH\n{if long_retractions_when_cut[previous_extruder]}\nG1 E-{retraction_distances_when_cut[previous_extruder]} F{old_filament_e_feedrate}\n{else}\nG1 E-10 F{old_filament_e_feedrate}\n{endif}\nM400\nCUT_FILAMENT T=[current_extruder]\nMOVE_TO_TRASH\nM106 P2 S0\nUNLOAD_T[current_extruder]\nT[next_extruder]\n{if custom_parameter_filament_nozzle_temperature_range_high[current_extruder] >= custom_parameter_filament_nozzle_temperature_range_high[next_extruder]}\nM104 S{custom_parameter_filament_nozzle_temperature_range_high[current_extruder]}\n\
+        {else}\nM104 S{custom_parameter_filament_nozzle_temperature_range_high[next_extruder]}\n{endif}\n; FLUSH_START\nM106 S25\nG1 E30 F300\n; FLUSH_END\n{if long_retractions_when_cut[previous_extruder]}\nG1 E{retraction_distances_when_cut[previous_extruder]} F{old_filament_e_feedrate}\n{endif}\n{if flush_length_1 > 1}\n; FLUSH_START\n{if flush_length_1 > 23.7}\nG1 E23.7 F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\n{else}\nG1 E{flush_length_1} F{old_filament_e_feedrate}\n{endif}\nG1 E-[old_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_2 > 1}\n; FLUSH_START\n\
+        G1 X92 F9000\nG1 E[old_retract_length_toolchange] F300\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_3 > 1}\n; FLUSH_START\nG1 X85 F9000\nG1 E[new_retract_length_toolchange] F300\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3\
+        \ * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_4 > 1}\n; FLUSH_START\nG1 X92 F9000\nG1 E[new_retract_length_toolchange] F300\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\nM400\nM106 S255\nM104 S[new_filament_temp]\nINIT_SYNC_BUFFER_STATE\nBUFFER_MONITORING ENABLE=1\nG1 E10 F25 \nM109 S[new_filament_temp]\nG1 E-5 F1800\nCLEAR_OOZE\nTOOL_CHANGE_END\nG1 Y270 F8000\nM106 S0\nG1 E2 F1800\n\
+        ENABLE_ALL_SENSOR\n{endif}\n"
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.30mm Standard @Q2C 0.6 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 5
+      extruder_clearance_height: 47
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: SET_PRINT_STATS_INFO CURRENT_LAYER={layer_num + 1}
+      end_gcode: |-
+        DISABLE_BOX_HEATER
+        M140 S0
+        BUFFER_MONITORING ENABLE=0
+        DISABLE_ALL_SENSOR
+        G1 E-3 F1800
+        G0 Z{max_layer_z + 3} F600
+        UNLOAD_FILAMENT T=[current_extruder]
+        G0 Y270 F12000
+        G0 X90 Y270 F12000
+        {if max_layer_z < max_print_height / 2}G1 Z{max_print_height / 2 + 10} F600{else}G1 Z{min(max_print_height, max_layer_z + 3)}{endif}
+        M104 S0
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      machine_max_jerk_e:
+      - 4.0
+      - 4.0
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 4.0
+      - 4.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      machine_max_feedrate_x:
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}PRINT_START BED=[first_layer_bed_temperature[initial_extruder]] HOTEND=[first_layer_temperature] EXTRUDER=[initial_extruder]
+        SET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]
+        M83
+        M140 S[first_layer_bed_temperature[initial_extruder]]
+        M104 S[first_layer_temperature]
+        G4 P3000
+        T[initial_tool]
+        G1 X108.000 Y1 F30000
+        G0 Z[first_layer_height] F600
+        ;G1 E3 F1800
+        G90
+        M83
+        G0 X128 E8  F{outer_wall_volumetric_speed/(24/20)    * 60}
+        G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G91
+        G1 X1 Z-0.300
+        G1 X4
+        G1 Z1 F1200
+        G90
+        M400
+        G1 X108.000 Y2.5 F30000
+        G0 Z[first_layer_height] F600
+        M83
+        G0 X128 E10  F{outer_wall_volumetric_speed/(24/20)    * 60}
+        G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G91
+        G1 X1 Z-0.300
+        G1 X4
+        G1 Z1 F1200
+        G90
+        M400
+        G1 Z1 F600
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 270x0
+      - 270x270
+      - '0x270'
+      max_print_height: 256
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 150x150/PNG
+      custom_parameters_printer: '{"long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: Ux2n8+MKShtbGn2tOEKoyA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: "{local long_retractions_when_cut = (custom_parameter_printer_long_retractions_when_cut__0, custom_parameter_printer_long_retractions_when_cut__1)}{local retraction_distances_when_cut = (custom_parameter_printer_retraction_distances_when_cut__0, custom_parameter_printer_retraction_distances_when_cut__1)}{if current_extruder != next_extruder}\nG1 Z{max_layer_z + 3.0} F1200\nTOOL_CHANGE_START F=[current_extruder] T=[next_extruder]\nBUFFER_MONITORING ENABLE=0\nDISABLE_ALL_SENSOR\nM106 S255\nMOVE_TO_TRASH\n{if long_retractions_when_cut[previous_extruder]}\nG1 E-{retraction_distances_when_cut[previous_extruder]} F{old_filament_e_feedrate}\n{else}\nG1 E-10 F{old_filament_e_feedrate}\n{endif}\nM400\nCUT_FILAMENT T=[current_extruder]\nMOVE_TO_TRASH\nM106 P2 S0\nUNLOAD_T[current_extruder]\nT[next_extruder]\n{if custom_parameter_filament_nozzle_temperature_range_high[current_extruder] >= custom_parameter_filament_nozzle_temperature_range_high[next_extruder]}\nM104 S{custom_parameter_filament_nozzle_temperature_range_high[current_extruder]}\n\
+        {else}\nM104 S{custom_parameter_filament_nozzle_temperature_range_high[next_extruder]}\n{endif}\n; FLUSH_START\nM106 S25\nG1 E30 F300\n; FLUSH_END\n{if long_retractions_when_cut[previous_extruder]}\nG1 E{retraction_distances_when_cut[previous_extruder]} F{old_filament_e_feedrate}\n{endif}\n{if flush_length_1 > 1}\n; FLUSH_START\n{if flush_length_1 > 23.7}\nG1 E23.7 F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\n{else}\nG1 E{flush_length_1} F{old_filament_e_feedrate}\n{endif}\nG1 E-[old_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_2 > 1}\n; FLUSH_START\n\
+        G1 X92 F9000\nG1 E[old_retract_length_toolchange] F300\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_3 > 1}\n; FLUSH_START\nG1 X85 F9000\nG1 E[new_retract_length_toolchange] F300\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3\
+        \ * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\n{if flush_length_4 > 1}\n; FLUSH_START\nG1 X92 F9000\nG1 E[new_retract_length_toolchange] F300\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E-[new_retract_length_toolchange] F1800\n; FLUSH_END\n{endif}\nM400\nM106 S255\nM104 S[new_filament_temp]\nINIT_SYNC_BUFFER_STATE\nBUFFER_MONITORING ENABLE=1\nG1 E10 F25 \nM109 S[new_filament_temp]\nG1 E-5 F1800\nCLEAR_OOZE\nTOOL_CHANGE_END\nG1 Y270 F8000\nM106 S0\nG1 E2 F1800\n\
+        ENABLE_ALL_SENSOR\n{endif}\n"
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.40mm Standard @Q2C 0.8 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 5
+      extruder_clearance_height: 47
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: SET_PRINT_STATS_INFO CURRENT_LAYER={layer_num + 1}
+      end_gcode: |-
+        DISABLE_BOX_HEATER
+        M140 S0
+        BUFFER_MONITORING ENABLE=0
+        DISABLE_ALL_SENSOR
+        G1 E-3 F1800
+        G0 Z{max_layer_z + 3} F600
+        UNLOAD_FILAMENT T=[current_extruder]
+        G0 Y270 F12000
+        G0 X90 Y270 F12000
+        {if max_layer_z < max_print_height / 2}G1 Z{max_print_height / 2 + 10} F600{else}G1 Z{min(max_print_height, max_layer_z + 3)}{endif}
+        M104 S0
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      machine_max_jerk_e:
+      - 4.0
+      - 4.0
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 4.0
+      - 4.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      machine_max_feedrate_x:
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}PRINT_START BED=[first_layer_bed_temperature[initial_extruder]] HOTEND=[first_layer_temperature] EXTRUDER=[initial_extruder]
+        SET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]
+        M83
+        M140 S[first_layer_bed_temperature[initial_extruder]]
+        M104 S[first_layer_temperature]
+        G4 P3000
+        T[initial_tool]
+        G1 X108.000 Y1 F30000
+        G0 Z[first_layer_height] F600
+        ;G1 E3 F1800
+        G90
+        M83
+        G0 X128 E8  F{outer_wall_volumetric_speed/(24/20)    * 60}
+        G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G91
+        G1 X1 Z-0.300
+        G1 X4
+        G1 Z1 F1200
+        G90
+        M400
+        G1 X108.000 Y2.5 F30000
+        G0 Z[first_layer_height] F600
+        M83
+        G0 X128 E10  F{outer_wall_volumetric_speed/(24/20)    * 60}
+        G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+        G91
+        G1 X1 Z-0.300
+        G1 X4
+        G1 Z1 F1200
+        G90
+        M400
+        G1 Z1 F600
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 270x0
+      - 270x270
+      - '0x270'
+      max_print_height: 256
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 150x150/PNG
+      custom_parameters_printer: '{"long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "support_air_filtration": true}'

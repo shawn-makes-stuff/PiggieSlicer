@@ -21,10 +21,6 @@ static const std::string EXTRUDE_SET_SPEED_TAG = ";_EXTRUDE_SET_SPEED";
 static const std::string EXTERNAL_PERIMETER_TAG = ";_EXTERNAL_PERIMETER";
 static const std::string INTERNAL_PERIMETER_TAG = ";_INTERNAL_PERIMETER";
 
-// Maximum segment length to split a long segment if the initial and the final flow rate differ.
-// Smaller value means a smoother transition between two different flow rates.
-static constexpr float max_segment_length = 5.f;
-
 // For how many GCode lines back will adjust a flow rate from the latest line.
 // Bigger values affect the GCode export speed a lot, and smaller values could
 // affect how distant will be propagated a flow rate adjustment.
@@ -41,7 +37,10 @@ static constexpr double max_ignored_gap_between_extruding_segments = 3.;
 // of feedrate and reduce the size of the G-code.
 static constexpr float min_emitted_feedrate_change = 0.20f * 60.f;
 
-PressureEqualizer::PressureEqualizer(const Slic3r::PrintConfigView &config) : m_use_relative_e_distances(config.get<bool>("use_relative_e_distances"))
+PressureEqualizer::PressureEqualizer(const Slic3r::PrintConfigView &config)
+    : m_use_relative_e_distances(config.get<bool>("use_relative_e_distances"))
+    , m_max_segment_length(float(config.get<double>("max_volumetric_extrusion_rate_slope_segment_length")))
+    , m_external_perimeter_only(config.get<bool>("extrusion_rate_smoothing_external_perimeter_only"))
 {
     // Preallocate some data, so that output_buffer.data() will return an empty string.
     output_buffer.assign(32, 0);
@@ -545,7 +544,7 @@ void PressureEqualizer::output_gcode_line(const size_t line_idx)
     if (std::abs(feedrate_avg - line.pos_end[4]) <= min_emitted_feedrate_change) {
         // The average feedrate is close to the original feedrate, so we emit the line with the original feedrate.
         push_line_to_output(line_idx, line.pos_end[4], comment);
-    } else if (auto nSegments = size_t(ceil(l / max_segment_length)); nSegments == 1) { // Just update this segment.
+    } else if (auto nSegments = size_t(ceil(l / m_max_segment_length)); nSegments == 1) { // Just update this segment.
         push_line_to_output(line_idx, line.feedrate() * line.volumetric_correction_avg(), comment);
     } else {
         bool accelerating = line.volumetric_extrusion_rate_start < line.volumetric_extrusion_rate_end;
@@ -568,11 +567,11 @@ void PressureEqualizer::output_gcode_line(const size_t line_idx)
             // One may achieve higher print speeds if part of the segment is not speed limited.
             l_acc    = t_acc * feedrate_avg;
             l_steady = l - l_acc;
-            if (l_steady < 0.5f * max_segment_length) {
+            if (l_steady < 0.5f * m_max_segment_length) {
                 l_acc    = l;
                 l_steady = 0.f;
             } else
-                nSegments = size_t(ceil(l_acc / max_segment_length));
+                nSegments = size_t(ceil(l_acc / m_max_segment_length));
         }
 
         float pos_start[5];
@@ -672,7 +671,10 @@ void PressureEqualizer::adjust_volumetric_rate(const size_t first_line_idx, cons
                 rate_end = rate_succ;
 
             // Don't alter the flow rate for these extrusion types.
-            if (!line.adjustable_flow || line.extrusion_role == GCodeExtrusionRole::BridgeInfill || line.extrusion_role == GCodeExtrusionRole::Ironing) {
+            if (!line.adjustable_flow || line.extrusion_role == GCodeExtrusionRole::BridgeInfill || line.extrusion_role == GCodeExtrusionRole::InternalBridgeInfill ||
+                line.extrusion_role == GCodeExtrusionRole::Ironing ||
+                (m_external_perimeter_only && line.extrusion_role != GCodeExtrusionRole::ExternalPerimeter &&
+                 line.extrusion_role != GCodeExtrusionRole::OverhangPerimeter)) {
                 rate_end = line.volumetric_extrusion_rate_end;
             } else if (line.volumetric_extrusion_rate_end > rate_end) {
                 line.volumetric_extrusion_rate_end = rate_end;
@@ -727,7 +729,10 @@ void PressureEqualizer::adjust_volumetric_rate(const size_t first_line_idx, cons
 
             float rate_start = feedrate_per_extrusion_role[iRole];
             // Don't alter the flow rate for these extrusion types.
-            if (!line.adjustable_flow || line.extrusion_role == GCodeExtrusionRole::BridgeInfill || line.extrusion_role == GCodeExtrusionRole::Ironing) {
+            if (!line.adjustable_flow || line.extrusion_role == GCodeExtrusionRole::BridgeInfill || line.extrusion_role == GCodeExtrusionRole::InternalBridgeInfill ||
+                line.extrusion_role == GCodeExtrusionRole::Ironing ||
+                (m_external_perimeter_only && line.extrusion_role != GCodeExtrusionRole::ExternalPerimeter &&
+                 line.extrusion_role != GCodeExtrusionRole::OverhangPerimeter)) {
                 rate_start = line.volumetric_extrusion_rate_start;
             } else if (iRole == size_t(line.extrusion_role) && rate_prec < rate_start)
                 rate_start = rate_prec;

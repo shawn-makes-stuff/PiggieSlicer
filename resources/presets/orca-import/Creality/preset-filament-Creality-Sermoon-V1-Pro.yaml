@@ -1,0 +1,409 @@
+kind: filament
+id: XX4Po+u1fSlBgBpHKxIOgg
+name: CR-PETG @Sermoon V1 Pro-all
+condition: (printer.model == "Creality Sermoon V1 Pro" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: '""'
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 50
+  min_fan_speed: 20
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 0
+  filament_density: 0
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: '""'
+  filament_ramming_parameters: '"120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6"'
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Creality
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.05
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "nozzle_temperature_range_high": 240}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: OfMTB6OnwmdXWKaL2L4bmA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: QD9cUAbGquLC+WGA2++sbw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: LEISQcuuxaHYf95uoUODMw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: TWouctjpI+38xbicRaDFiw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: UgGzP0ojehg7CiTzpCXmmg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: lX5cM41Jn9AroMYIjPgEqw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: pDOKS4h8XtlwssdbVEPPRA
+name: CR-PLA @Sermoon V1 Pro-all
+condition: (printer.model == "Creality Sermoon V1 Pro" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: '""'
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 18
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: '""'
+  filament_ramming_parameters: '"120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6"'
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Creality
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "nozzle_temperature_range_high": 240}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: dYiv3/E4mrigovRuNC3J0g
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "Engineering Plate"
+  id: nJXwiIuPuxTX0dQrXrSPkg
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "High Temp Plate"
+  id: nwLQsNZg0+5O2jG4ui7aqw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: 12RScE79DRoqQRJHFNs1tw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: 7bdKeEsCVV7uOc7+YVnSeQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: SlWCuU3vgH7HlBTskzz7vw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: XkXEMUcWrvmI2j2+ph5Cbg
+name: CR-TPU @Sermoon V1 Pro-all
+condition: (printer.model == "Creality Sermoon V1 Pro" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 35
+  disable_fan_first_layers: 1
+  filament_colour: '""'
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 0
+  filament_density: 0
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: '""'
+  filament_ramming_parameters: '"120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6"'
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Creality
+  full_fan_speed_layer: 0
+  temperature: 215
+  first_layer_temperature: 215
+  pressure_advance_value: 0.05
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "nozzle_temperature_range_high": 240}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: HkJRxqFFJSD8Oy7KClXbVQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: wUrjA0KGJMvOpLaP6uAw1Q
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "High Temp Plate"
+  id: g3tj/qjfLWE9j+eb8ExLdg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: 4K0Pk8FQVBmM78pfCaysHQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: zkA134583zNzmpd87a6wSw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: ePbVNibbtbQ6oMaU7wn1zQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: N1S/MuC4SPZn+6b710vOZQ
+name: Generic ABS @Sermoon V1 Pro-all
+condition: (printer.model == "Creality Sermoon V1 Pro" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: '""'
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 0
+  filament_density: 0
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: '""'
+  filament_ramming_parameters: '"120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6"'
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 250
+  first_layer_temperature: 250
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 5
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "nozzle_temperature_range_high": 260}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 5/sLa/YL2VTrHzRUMeRsGg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: HvAQOODKK/h+dmcs4Sxgqg
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: njS5aOLecCrg15Byeya9Yw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: PHdS7Bn39MW60gkvr8t5HQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: w1YD6zGM+S4MeFYxL3qrNQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: YzWQSFVC9oZDtx5ToZHP8g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Ynd77fmL7LmjRMgPr0zrdQ
+name: Hyper PLA @Sermoon V1 Pro-all
+condition: (printer.model == "Creality Sermoon V1 Pro" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: '""'
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: '""'
+  filament_ramming_parameters: '"120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6"'
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Creality
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.04
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "nozzle_temperature_range_high": 240}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ON2WXwWIDFRq/Gbb09y02Q
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "Engineering Plate"
+  id: uFOfVKvf2Vcda0qQM13g4g
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "High Temp Plate"
+  id: 7HAAyIlEaOQlVs20ltgS1w
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "Textured PEI Plate"
+  id: hP8SYCUTbI8GQjTc3NrfFQ
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "Textured Cool Plate"
+  id: BZ0GV/sYrJD/lJHAuX5zVQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: EkPIWrnxFOu3bWlIs/KRJg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35

@@ -1,0 +1,769 @@
+kind: vendor
+id: Qidi
+name: Qidi
+version: 2.4.0+orca.02.04.00.17
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Qidi Q1 Pro
+  base_model: Qidi Q1 Pro
+  printer_configs_order:
+  - Qidi-Q1-Pro-0-2-nozzle
+  - Qidi-Q1-Pro-0-4-nozzle
+  - Qidi-Q1-Pro-0-6-nozzle
+  - Qidi-Q1-Pro-0-8-nozzle
+- label: Qidi Q2
+  base_model: Qidi Q2
+  printer_configs_order:
+  - Qidi-Q2-0-2-nozzle
+  - Qidi-Q2-0-4-nozzle
+  - Qidi-Q2-0-6-nozzle
+  - Qidi-Q2-0-8-nozzle
+- label: Qidi Q2C
+  base_model: Qidi Q2C
+  printer_configs_order:
+  - Qidi-Q2C-0-2-nozzle
+  - Qidi-Q2C-0-4-nozzle
+  - Qidi-Q2C-0-6-nozzle
+  - Qidi-Q2C-0-8-nozzle
+- label: Qidi X-CF Pro
+  base_model: Qidi X-CF Pro
+  printer_configs_order:
+  - Qidi-X-CF-Pro-0-4-nozzle
+- label: Qidi X-Max
+  base_model: Qidi X-Max
+  printer_configs_order:
+  - Qidi-X-Max-0-4-nozzle
+- label: Qidi X-Max 3
+  base_model: Qidi X-Max 3
+  printer_configs_order:
+  - Qidi-X-Max-3-0-2-nozzle
+  - Qidi-X-Max-3-0-4-nozzle
+  - Qidi-X-Max-3-0-6-nozzle
+  - Qidi-X-Max-3-0-8-nozzle
+- label: Qidi X-Max 4
+  base_model: Qidi X-Max 4
+  printer_configs_order:
+  - Qidi-X-Max-4-0-2-nozzle
+  - Qidi-X-Max-4-0-4-nozzle
+  - Qidi-X-Max-4-0-6-nozzle
+  - Qidi-X-Max-4-0-8-nozzle
+- label: Qidi X-Plus
+  base_model: Qidi X-Plus
+  printer_configs_order:
+  - Qidi-X-Plus-0-4-nozzle
+- label: Qidi X-Plus 3
+  base_model: Qidi X-Plus 3
+  printer_configs_order:
+  - Qidi-X-Plus-3-0-2-nozzle
+  - Qidi-X-Plus-3-0-4-nozzle
+  - Qidi-X-Plus-3-0-6-nozzle
+  - Qidi-X-Plus-3-0-8-nozzle
+- label: Qidi X-Plus 4
+  base_model: Qidi X-Plus 4
+  printer_configs_order:
+  - Qidi-X-Plus-4-0-2-nozzle
+  - Qidi-X-Plus-4-0-4-nozzle
+  - Qidi-X-Plus-4-0-6-nozzle
+  - Qidi-X-Plus-4-0-8-nozzle
+- label: Qidi X-Plus 5
+  base_model: Qidi X-Plus 5
+  printer_configs_order:
+  - Qidi-X-Plus-5-0-2-nozzle
+  - Qidi-X-Plus-5-0-4-nozzle
+  - Qidi-X-Plus-5-0-6-nozzle
+  - Qidi-X-Plus-5-0-8-nozzle
+- label: Qidi X-Smart 3
+  base_model: Qidi X-Smart 3
+  printer_configs_order:
+  - Qidi-X-Smart-3-0-2-nozzle
+  - Qidi-X-Smart-3-0-4-nozzle
+  - Qidi-X-Smart-3-0-6-nozzle
+  - Qidi-X-Smart-3-0-8-nozzle
+---
+kind: printer
+technology: FFF
+name: Qidi Q1 Pro
+id: Qidi Q1 Pro
+model:
+  base_model: Qidi Q1 Pro
+  model: Qidi Q1 Pro
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_Q1Pro_buildplate_model.stl
+  bed_texture: qidi_Q1Pro_buildplate_texture.svg
+  thumbnail: Qidi Q1 Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi Q2
+id: Qidi Q2
+model:
+  base_model: Qidi Q2
+  model: Qidi Q2
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_q2_buildplate_model.stl
+  bed_texture: qidi_q2_buildplate_texture.svg
+  thumbnail: Qidi Q2_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi Q2C
+id: Qidi Q2C
+model:
+  base_model: Qidi Q2C
+  model: Qidi Q2C
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_q2c_buildplate_model.stl
+  bed_texture: qidi_q2c_buildplate_texture.svg
+  thumbnail: Qidi Q2C_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-CF Pro
+id: Qidi X-CF Pro
+model:
+  base_model: Qidi X-CF Pro
+  model: Qidi X-CF Pro
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xcfpro_buildplate_model.stl
+  bed_texture: qidi_xcfpro_buildplate_texture.svg
+  thumbnail: Qidi X-CF Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-Max
+id: Qidi X-Max
+model:
+  base_model: Qidi X-Max
+  model: Qidi X-Max
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xmax_buildplate_model.stl
+  bed_texture: qidi_xmax_buildplate_texture.svg
+  thumbnail: Qidi X-Max_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-Max 3
+id: Qidi X-Max 3
+model:
+  base_model: Qidi X-Max 3
+  model: Qidi X-Max 3
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xmax3_buildplate_model.stl
+  bed_texture: qidi_xmax3_buildplate_texture.svg
+  thumbnail: Qidi X-Max 3_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-Max 4
+id: Qidi X-Max 4
+model:
+  base_model: Qidi X-Max 4
+  model: Qidi X-Max 4
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xmax4_buildplate_model.stl
+  bed_texture: qidi_xmax4_buildplate_texture.svg
+  thumbnail: Qidi X-Max 4_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-Plus
+id: Qidi X-Plus
+model:
+  base_model: Qidi X-Plus
+  model: Qidi X-Plus
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xplus_buildplate_model.stl
+  bed_texture: qidi_xplus_buildplate_texture.svg
+  thumbnail: Qidi X-Plus_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-Plus 3
+id: Qidi X-Plus 3
+model:
+  base_model: Qidi X-Plus 3
+  model: Qidi X-Plus 3
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xplus3_buildplate_model.stl
+  bed_texture: qidi_xplus3_buildplate_texture.svg
+  thumbnail: Qidi X-Plus 3_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-Plus 4
+id: Qidi X-Plus 4
+model:
+  base_model: Qidi X-Plus 4
+  model: Qidi X-Plus 4
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xplus4_buildplate_model.stl
+  bed_texture: qidi_xplus4_buildplate_texture.svg
+  thumbnail: Qidi X-Plus 4_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-Plus 5
+id: Qidi X-Plus 5
+model:
+  base_model: Qidi X-Plus 5
+  model: Qidi X-Plus 5
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xplus5_buildplate_model.stl
+  bed_texture: qidi_xplus5_buildplate_texture.svg
+  thumbnail: Qidi X-Plus 5_cover.png
+---
+kind: printer
+technology: FFF
+name: Qidi X-Smart 3
+id: Qidi X-Smart 3
+model:
+  base_model: Qidi X-Smart 3
+  model: Qidi X-Smart 3
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: qidi_xsmart3_buildplate_model.stl
+  bed_texture: qidi_xsmart3_buildplate_texture.svg
+  thumbnail: Qidi X-Smart 3_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Qidi-Q1-Pro-0-2-nozzle
+name: Qidi Q1 Pro 0.2 nozzle
+printer: Qidi Q1 Pro
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q1-Pro-0-4-nozzle
+name: Qidi Q1 Pro 0.4 nozzle
+printer: Qidi Q1 Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q1-Pro-0-6-nozzle
+name: Qidi Q1 Pro 0.6 nozzle
+printer: Qidi Q1 Pro
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q1-Pro-0-8-nozzle
+name: Qidi Q1 Pro 0.8 nozzle
+printer: Qidi Q1 Pro
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q2-0-2-nozzle
+name: Qidi Q2 0.2 nozzle
+printer: Qidi Q2
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q2-0-4-nozzle
+name: Qidi Q2 0.4 nozzle
+printer: Qidi Q2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q2-0-6-nozzle
+name: Qidi Q2 0.6 nozzle
+printer: Qidi Q2
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q2-0-8-nozzle
+name: Qidi Q2 0.8 nozzle
+printer: Qidi Q2
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q2C-0-2-nozzle
+name: Qidi Q2C 0.2 nozzle
+printer: Qidi Q2C
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q2C-0-4-nozzle
+name: Qidi Q2C 0.4 nozzle
+printer: Qidi Q2C
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q2C-0-6-nozzle
+name: Qidi Q2C 0.6 nozzle
+printer: Qidi Q2C
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-Q2C-0-8-nozzle
+name: Qidi Q2C 0.8 nozzle
+printer: Qidi Q2C
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-CF-Pro-0-4-nozzle
+name: Qidi X-CF Pro 0.4 nozzle
+printer: Qidi X-CF Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-0-4-nozzle
+name: Qidi X-Max 0.4 nozzle
+printer: Qidi X-Max
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-3-0-2-nozzle
+name: Qidi X-Max 3 0.2 nozzle
+printer: Qidi X-Max 3
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-3-0-4-nozzle
+name: Qidi X-Max 3 0.4 nozzle
+printer: Qidi X-Max 3
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-3-0-6-nozzle
+name: Qidi X-Max 3 0.6 nozzle
+printer: Qidi X-Max 3
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-3-0-8-nozzle
+name: Qidi X-Max 3 0.8 nozzle
+printer: Qidi X-Max 3
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-4-0-2-nozzle
+name: Qidi X-Max 4 0.2 nozzle
+printer: Qidi X-Max 4
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-4-0-4-nozzle
+name: Qidi X-Max 4 0.4 nozzle
+printer: Qidi X-Max 4
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-4-0-6-nozzle
+name: Qidi X-Max 4 0.6 nozzle
+printer: Qidi X-Max 4
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Max-4-0-8-nozzle
+name: Qidi X-Max 4 0.8 nozzle
+printer: Qidi X-Max 4
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-0-4-nozzle
+name: Qidi X-Plus 0.4 nozzle
+printer: Qidi X-Plus
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-3-0-2-nozzle
+name: Qidi X-Plus 3 0.2 nozzle
+printer: Qidi X-Plus 3
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-3-0-4-nozzle
+name: Qidi X-Plus 3 0.4 nozzle
+printer: Qidi X-Plus 3
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-3-0-6-nozzle
+name: Qidi X-Plus 3 0.6 nozzle
+printer: Qidi X-Plus 3
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-3-0-8-nozzle
+name: Qidi X-Plus 3 0.8 nozzle
+printer: Qidi X-Plus 3
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-4-0-2-nozzle
+name: Qidi X-Plus 4 0.2 nozzle
+printer: Qidi X-Plus 4
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-4-0-4-nozzle
+name: Qidi X-Plus 4 0.4 nozzle
+printer: Qidi X-Plus 4
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-4-0-6-nozzle
+name: Qidi X-Plus 4 0.6 nozzle
+printer: Qidi X-Plus 4
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-4-0-8-nozzle
+name: Qidi X-Plus 4 0.8 nozzle
+printer: Qidi X-Plus 4
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-5-0-2-nozzle
+name: Qidi X-Plus 5 0.2 nozzle
+printer: Qidi X-Plus 5
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-5-0-4-nozzle
+name: Qidi X-Plus 5 0.4 nozzle
+printer: Qidi X-Plus 5
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-5-0-6-nozzle
+name: Qidi X-Plus 5 0.6 nozzle
+printer: Qidi X-Plus 5
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Plus-5-0-8-nozzle
+name: Qidi X-Plus 5 0.8 nozzle
+printer: Qidi X-Plus 5
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Smart-3-0-2-nozzle
+name: Qidi X-Smart 3 0.2 nozzle
+printer: Qidi X-Smart 3
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Smart-3-0-4-nozzle
+name: Qidi X-Smart 3 0.4 nozzle
+printer: Qidi X-Smart 3
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Smart-3-0-6-nozzle
+name: Qidi X-Smart 3 0.6 nozzle
+printer: Qidi X-Smart 3
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Qidi-X-Smart-3-0-8-nozzle
+name: Qidi X-Smart 3 0.8 nozzle
+printer: Qidi X-Smart 3
+tools:
+- tool: '0.8'
+sheet: high_temp_plate

@@ -31,6 +31,10 @@ ConfigRowItem::ConfigRowItem(
     set_fill(m_theme->color_imgui(Platform::Color::Transparent));
     set_border_width(2);
     set_border_color(m_theme->color_imgui(Platform::Color::Transparent));
+    // room between the search highlight and the label / input; the negative margin keeps the
+    // rows aligned with the rest of the page
+    set_padding(Paddings(6.f, 0.f));
+    set_margin(Margins(-6.f, 0.f));
     set_gap(5.f);
 
     m_left_side = emplace_back<Item>();
@@ -162,7 +166,8 @@ void ConfigRowItem::on_data_update()
 void ConfigRowItem::navigate_to_item(const Domain::ConfigItem* config_item)
 {
     if (m_state == config_item) {
-        set_border_color(m_theme->color_imgui(Platform::Color::AccentTertiary));
+        // the active tab's colour (subdued piggie pink)
+        set_border_color(m_theme->color_imgui(Platform::Color::Button, Platform::ColorGroup::Active));
     } else {
         set_border_color(m_theme->color_imgui(Platform::Color::Transparent));
     }

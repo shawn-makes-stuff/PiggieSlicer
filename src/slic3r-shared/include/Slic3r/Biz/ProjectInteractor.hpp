@@ -34,6 +34,10 @@ class Project;
 class Workbench;
 } // namespace Slic3r::Domain
 
+namespace Slic3r::Biz::PrintHost {
+struct FilamentLane;
+} // namespace Slic3r::Biz::PrintHost
+
 namespace Slic3r::Biz {
 
 class ISelectedProjectChangedListener;
@@ -457,6 +461,23 @@ public:
     );
 
     void load_models_to_project(std::vector<boost::filesystem::path> paths);
+
+    /**
+     * @brief Filament sync from the printer (Orca-like): attaches the external multi-material
+     * unit to given tool with the reported lane count, sets each slot's colour and selects the
+     * matching generic filament preset ("Generic PLA", ...) when there is one.
+     *
+     * @param lanes - read from the printer, e.g. by PrintHost::fetch_filament_lanes()
+     * @return false when nothing was reported or the unit cannot be attached to the tool.
+     */
+    bool sync_filaments_from_lanes(size_t tool_index, const std::vector<PrintHost::FilamentLane>& lanes);
+    /**
+     * @brief Reads the lanes of the selected physical printer in a background job and applies
+     * them with sync_filaments_from_lanes() (the sidebar's filament [sync] button).
+     *
+     * @param done - called on the main thread with an empty string on success, else the error.
+     */
+    void sync_filaments_from_selected_printer(size_t tool_index, std::function<void(std::string)> done);
 
     /**
      * @brief Callback from AppInstanceMessageHandler.

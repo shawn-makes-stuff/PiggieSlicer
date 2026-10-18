@@ -204,9 +204,82 @@ ZHeightPairs layer_height_profile_from_ranges(
     );
 }
 
+// Orca adjust_layer_series_to_align_object_height: the last 5 layers' heights adjusted within the layer height limits
+// so the last one ends at the object height (at least 6 layers).
+static bool adjust_layer_series_to_align_object_height(const SlicingParameters &slicing_params, LayerZRanges &layer_series)
+{
+    const double object_height = slicing_params.object_print_z_height();
+    if (Domain::is_approx(layer_series.back().top_z, object_height))
+        return true;
+    const size_t layer_size = layer_series.size();
+    if (layer_size < 6)
+        return false;
+
+    std::vector<double> last_5_layers_height;
+    for (size_t i = 0; i < 5; ++i)
+        last_5_layers_height.emplace_back(layer_series[layer_size - 5 + i].top_z - layer_series[layer_size - 5 + i].bottom_z);
+
+    double            gap = std::abs(layer_series.back().top_z - object_height);
+    std::vector<bool> can_adjust(5, true);
+    const bool        taller_than_object = layer_series.back().top_z < object_height;
+    auto get_valid_size = [&can_adjust]() {
+        return int(std::count(can_adjust.begin(), can_adjust.end(), true));
+    };
+    auto adjust_layer_height = [&slicing_params, &last_5_layers_height, &can_adjust, &get_valid_size, &taller_than_object](double gap) {
+        const double delta_gap  = gap / get_valid_size();
+        double       remain_gap = 0;
+        for (size_t i = 0; i < last_5_layers_height.size(); ++i) {
+            double &l_height = last_5_layers_height[i];
+            if (taller_than_object) {
+                if (can_adjust[i] && Domain::is_approx(l_height, slicing_params.max_layer_height)) {
+                    remain_gap += delta_gap;
+                    can_adjust[i] = false;
+                    continue;
+                }
+                if (can_adjust[i] && l_height + delta_gap > slicing_params.max_layer_height) {
+                    remain_gap += l_height + delta_gap - slicing_params.max_layer_height;
+                    l_height      = slicing_params.max_layer_height;
+                    can_adjust[i] = false;
+                } else
+                    l_height += delta_gap;
+            } else {
+                if (can_adjust[i] && Domain::is_approx(l_height, slicing_params.min_layer_height)) {
+                    remain_gap += delta_gap;
+                    can_adjust[i] = false;
+                    continue;
+                }
+                if (can_adjust[i] && l_height - delta_gap < slicing_params.min_layer_height) {
+                    remain_gap += slicing_params.min_layer_height + delta_gap - l_height;
+                    l_height      = slicing_params.min_layer_height;
+                    can_adjust[i] = false;
+                } else
+                    l_height -= delta_gap;
+            }
+        }
+        return remain_gap;
+    };
+
+    while (gap > 0) {
+        // the 5 layers cannot reach the height within the valid layer heights
+        if (get_valid_size() == 0)
+            return false;
+        gap = adjust_layer_height(gap);
+        if (Domain::is_approx(gap, 0.0))
+            break;
+    }
+    for (size_t i = 0; i < last_5_layers_height.size(); ++i) {
+        Domain::LayerZRange &range = layer_series[layer_size - 5 + i];
+        if (i > 0)
+            range.bottom_z = layer_series[layer_size - 5 + i - 1].top_z;
+        range.top_z = range.bottom_z + last_5_layers_height[i];
+    }
+    return true;
+}
+
 LayerZRanges generate_object_layers(
     const SlicingParameters& slicing_params,
-    const ZHeightPairs& layer_height_profile
+    const ZHeightPairs& layer_height_profile,
+    const bool precise_z_height
 )
 {
     const GenerateLayersParams generate_layers_params{
@@ -218,10 +291,14 @@ LayerZRanges generate_object_layers(
         .first_object_layer_height_fixed = slicing_params.first_object_layer_height_fixed()
     };
 
-    return Algorithms::LayerHeight::generate_object_layers(
+    LayerZRanges out = Algorithms::LayerHeight::generate_object_layers(
         generate_layers_params,
         layer_height_profile
     );
+    // Orca precise_z_height
+    if (precise_z_height && ! out.empty())
+        adjust_layer_series_to_align_object_height(slicing_params, out);
+    return out;
 }
 
 }; // namespace Slic3r

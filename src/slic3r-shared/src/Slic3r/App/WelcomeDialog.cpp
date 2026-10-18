@@ -285,7 +285,7 @@ static ItemPtr create_changelog_screen(const Theme& theme, std::function<void()>
     };
     auto result{std::make_unique<Screen>(navigation_setup)};
 
-    result->content()->emplace_back<Title>("0.0.1 Alpha");
+    result->content()->emplace_back<Title>(SLIC3R_APP_VERSION_DISPLAY);
 
     auto introduction{result->content()->emplace_back<Paragraph>(
         Biz::_u8L(
@@ -351,7 +351,7 @@ static ItemPtr create_changelog_screen(const Theme& theme, std::function<void()>
 struct PrinterToAdd
 {
     Domain::Preset::HwPrinterConfig config;
-    std::string preset_item_id;
+    std::string template_id;
 };
 
 class PrinterScreen : public Item
@@ -411,9 +411,12 @@ public:
                                               printer.tools.tool_defs.at(selected_tool)));
                 }
 
-                add_printer(PrinterToAdd{config, printer.preset_item_id});
+                add_printer(PrinterToAdd{config, printer.template_id});
                 show_dialog(false);
             });
+        // fill the dialog like the screens do, so the printer grid uses its whole width
+        m_dialog->set_width_percent(100);
+        m_dialog->set_flex_grow(1);
         m_dialog->set_visible(false);
     }
 
@@ -463,13 +466,13 @@ public:
         update_navigation();
     }
 
-    void delete_printer(const std::string& preset_item_id)
+    void delete_printer(const std::string& template_id)
     {
         ASSERT(m_printers_to_add.size() == m_printers->items().size());
 
         auto it{std::ranges::find_if(m_printers_to_add,
                                      [&](const PrinterToAdd& printer)
-                                     { return printer.preset_item_id == preset_item_id; })};
+                                     { return printer.template_id == template_id; })};
 
         const std::size_t index{
             static_cast<std::size_t>(std::distance(m_printers_to_add.begin(), it))};
@@ -500,7 +503,7 @@ public:
         auto it{
             std::ranges::find_if(m_printers_to_add,
                                  [&](const PrinterToAdd& candidate)
-                                 { return candidate.preset_item_id == printer.preset_item_id; })};
+                                 { return candidate.template_id == printer.template_id; })};
 
         const std::size_t index{
             static_cast<std::size_t>(std::distance(m_printers_to_add.begin(), it))};
@@ -555,7 +558,7 @@ public:
             right_section->emplace_back<LayoutButton>("", Render::Icon::DeleteBtnIcon)};
         delete_button->set_width(19_fpx);
         delete_button->set_aspect_ratio(1);
-        delete_button->callbacks().action = [this, id = printer.preset_item_id]()
+        delete_button->callbacks().action = [this, id = printer.template_id]()
         { delete_printer(id); };
 
         clear_state();
@@ -575,7 +578,7 @@ private:
 
     std::string m_default_title{Biz::_u8L("Choose your printer")};
     std::string m_default_subtitle{
-        Biz::_u8L("If you have more then one printer you can also add them now.")};
+        Biz::_u8L("If you have more than one printer you can also add them now.")};
 };
 
 WelcomeDialog::WelcomeDialog(Biz::ProjectInteractor& project_interactor) :
@@ -635,31 +638,39 @@ void WelcomeDialog::finalize(const std::vector<PrinterToAdd>& printers)
     std::vector<Domain::Preset::HwPrinterConfig> printer_configs;
     printer_configs.reserve(printers.size());
 
-    std::vector<std::string> printer_preset_item_ids;
-    printer_preset_item_ids.reserve(printers.size());
-
     for (const PrinterToAdd& printer : printers) {
         printer_configs.push_back(printer.config);
-        printer_preset_item_ids.push_back(printer.preset_item_id);
     }
 
-    m_project_interactor.preset_interactor().update_changed_printer_configs(printer_configs);
+    // build and evaluate just the chosen printers (the picker lists unbuilt templates)
+    auto& preset_interactor = m_project_interactor.preset_interactor();
+    preset_interactor.update_changed_printer_configs(printer_configs);
 
     AppSettingsAdvanced& app_settings_advanced{
         AppServices::instance().app_config().app_settings_advanced()};
     app_settings_advanced.printer_favorite_presets.clear();
+    app_settings_advanced.added_printers = std::set<std::string>{};
 
     ASSERT(!printer_configs.empty());
-    ASSERT(printer_preset_item_ids.size() == printer_configs.size());
 
     for (std::size_t i{}; i < printer_configs.size(); ++i) {
-        Domain::Preset::HwPrinterConfig& hw_config{printer_configs[i]};
-        const std::string& printer_preset_item_id{printer_preset_item_ids[i]};
-        app_settings_advanced.toggle_printer_favorite_preset(printer_preset_item_id, hw_config.id);
+        const Domain::Preset::HwPrinterConfig& hw_config{printer_configs[i]};
+        for (const std::string& preset_id : preset_interactor.system_printer_preset_ids(hw_config.id)) {
+            app_settings_advanced.toggle_printer_favorite_preset(preset_id, hw_config.id);
+        }
+        app_settings_advanced.added_printers->insert(Biz::Preset::PresetInteractor::added_printer_key(
+            hw_config.vendor_id, printers[i].template_id
+        ));
     }
 
-    m_project_interactor.preset_interactor().select_printer_preset(printer_configs.front().id,
-                                                                   printer_preset_item_ids.front());
+    const std::vector<std::string> first_ids =
+        preset_interactor.system_printer_preset_ids(printer_configs.front().id);
+    if (!first_ids.empty()) {
+        preset_interactor.select_printer_preset(printer_configs.front().id, first_ids.front());
+        // the placeholder printer's process / filament may suit the new printer too: start the
+        // added printer with its own defaults, as a new project of it would
+        preset_interactor.select_printer_defaults();
+    }
 
     auto& app_config_interactor{AppServices::instance().app_config_interactor()};
     app_config_interactor.set_item_value("printers_only_favorites", Domain::ConfigValue{false});

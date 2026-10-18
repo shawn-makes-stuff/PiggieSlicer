@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     Slic3r::App::init_common();
 
     Slic3r::App::InitParams init_params =
-        Slic3r::App::Launcher::read_cli(app, SLIC3R_VERSION, argc, argv);
+        Slic3r::App::Launcher::read_cli(app, SLIC3R_APP_VERSION, argc, argv);
     if (init_params.exit_code.has_value()) {
         return init_params.exit_code.value();
     }

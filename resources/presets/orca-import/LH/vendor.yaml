@@ -1,0 +1,134 @@
+kind: vendor
+id: LH
+name: LH
+version: 2.4.0+orca.02.04.00.07
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: LH Stinger
+  base_model: LH Stinger
+  printer_configs_order:
+  - LH-Stinger-0-4-nozzle
+- label: LH Stinger MMU
+  base_model: LH Stinger MMU
+  printer_configs_order:
+  - LH-Stinger-MMU-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: LH Stinger
+id: LH Stinger
+model:
+  base_model: LH Stinger
+  model: LH Stinger
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: LH_Stinger_buildplate_model.stl
+  bed_texture: LH_Stinger_buildplate_texture.svg
+  thumbnail: LH Stinger_cover.png
+---
+kind: printer
+technology: FFF
+name: LH Stinger MMU
+id: LH Stinger MMU
+model:
+  base_model: LH Stinger MMU
+  model: LH Stinger MMU
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: LH_Stinger_buildplate_model.stl
+  bed_texture: LH_Stinger_MMU_buildplate_texture.svg
+  thumbnail: LH Stinger MMU_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: LH-Stinger-0-4-nozzle
+name: LH Stinger 0.4 nozzle
+printer: LH Stinger
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: LH-Stinger-MMU-0-4-nozzle
+name: LH Stinger MMU 0.4 nozzle
+printer: LH Stinger MMU
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

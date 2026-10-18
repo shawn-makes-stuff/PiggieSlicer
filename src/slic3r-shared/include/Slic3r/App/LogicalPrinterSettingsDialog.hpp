@@ -79,6 +79,8 @@ private:
     void on_about_to_show() override;
     void update_settings_data();
     void update_color_mix_visibility();
+    void remove_selected_printer();
+    void update_remove_printer_button();
 
     void on_config_container_selection_changed(
         Domain::SelectionId project_id,
@@ -145,6 +147,7 @@ private:
     Yoga::InputText* m_input_text_search{nullptr};
     Yoga::LayoutButton* m_only_favorites_button{nullptr};
     Yoga::LayoutButton* m_add_printer_button{nullptr};
+    Yoga::LayoutButton* m_remove_printer_button{nullptr};
     Biz::UnsharedPointer<Biz::ObservableListSortFilter<Biz::Preset::PresetItem>>
         m_preset_favorite_filter;
     Biz::UnsharedPointer<Biz::ObservableListSearcher<Biz::Preset::PresetItem>> m_preset_searcher;

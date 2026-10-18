@@ -103,6 +103,7 @@ void PhysicalPrinterSettingsDialog::create_page_list()
 
     Item* keywords_row = m_page_list->emplace_back<Item>();
     keywords_row->set_padding({0, 5});
+    keywords_row->set_gap(5); // as the filament type filters (MaterialSelectionDialog)
 
     const std::pair<DisplayModes, std::string> keywords[] = {
         // TRN Physical printer list filter button: shows every printer.
@@ -145,7 +146,7 @@ void PhysicalPrinterSettingsDialog::create_page_list()
              auto* button = static_cast<PhysicalPrinterSettingsButton*>(m_printer_list_view->get_item(index));
             m_physical_printer_interactor.select_uuid(button->uuid());
             check_printer_button(button->uuid());
-            m_physical_printer_advanced_settings_dialog->attach_to_item(content_item(), Position::Left);
+            m_physical_printer_advanced_settings_dialog->attach_to_item(content_item(), Position::Right);
             m_navigator.set_opened_dialog(m_physical_printer_advanced_settings_dialog);
         },
         [this](size_t index)
@@ -177,20 +178,7 @@ void PhysicalPrinterSettingsDialog::create_page_list()
     check_printer_button(m_physical_printer_interactor.selected_uuid());
     set_compatibility_to_buttons();
 
-    m_page_list->emplace_back<Separator>(Orientation::Horizontal);
-
-    Item* row = m_page_list->emplace_back<Item>();
-    row->set_justify_content(YGJustifySpaceBetween);
-
-    LayoutButton* add_printer_button =
-        m_page_list->emplace_back<LayoutButton>("Add physical printer");
-
-    add_printer_button->callbacks().action = [this]
-    {
-        m_physical_printer_interactor.on_dialog_button_add_new();
-        m_physical_printer_advanced_settings_dialog->attach_to_item(content_item(), Position::Left);
-        m_navigator.set_opened_dialog(m_physical_printer_advanced_settings_dialog);
-    };
+    // network printers are added from the Printer section's network printer button
 }
 
 void PhysicalPrinterSettingsDialog::check_printer_button(const std::string& uuid)

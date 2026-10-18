@@ -111,6 +111,8 @@ public:
     bool InsertPage(size_t n, const wxString& text, bool bSelect = false, const std::string& bmp_name = "");
     void RemovePage(size_t n);
     void SetPageText(size_t n, const wxString& strText);
+    /// Hides a page's button (the page is selected by other buttons, e.g. Prepare / Preview).
+    void ShowPageButton(size_t n, bool show);
     wxString GetPageText(size_t n) const;
 
     virtual void UnselectPopupButtons() = 0;

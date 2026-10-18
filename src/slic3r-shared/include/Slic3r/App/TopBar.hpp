@@ -76,12 +76,19 @@ public:
     void on_plugins_scanned(const Lua::PluginRegistry& registry) override;
 
     void focus_search();
+    /// Hands the search bar to the sidebar (it sits above the Printer section); focus_search still works.
+    Yoga::ObjectPtr take_search_bar();
+    /// Still owned elsewhere after take_search_bar (the sidebar).
+    SearchBar* search_bar() const { return m_search_bar; }
+
+protected:
+    // the bar's empty space moves the window, a double click maximizes (custom caption)
+    void render_body(const Yoga::Vec2f& pos, const Yoga::Vec2f& size) override;
 
 private:
-    void add_save_project_btn(Item* parent);
+    void add_window_btns(Item* parent);
     void add_undo_btn(Item* parent);
     void add_redo_btn(Item* parent);
-    void add_show_ui_btn(Item* parent);
 
     void add_menu_btns(Item* parent);
     void add_menu_btns_items();
@@ -117,6 +124,7 @@ private:
     Yoga::LayoutButton* m_redo_stack_btn{nullptr};
     Yoga::LayoutButton* m_show_ui_btn{nullptr};
     Item* m_undo_redo_wrapper{nullptr};
+    Yoga::LayoutButton* m_maximize_btn{nullptr};
 
     Yoga::Menu* m_main_menu{nullptr};
     Yoga::Menu* m_file_menu{nullptr};

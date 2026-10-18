@@ -331,16 +331,26 @@ void copy(const std::string& name, const ConfigValue& value, Config& config)
             config.set(name, enum_values);
         } else if constexpr (std::is_same_v<ValueType, Domain::FloatOrPercentage>)
         {
-            ASSERT(!item_value.is_percentage());
-            config.set(name, item_value.float_value());
+            // a percentage left to its user (no ratio_over) stays a percentage
+            if (item_value.is_percentage())
+                config.set(name, item_value.percentage());
+            else
+                config.set(name, item_value.float_value());
         } else if constexpr (std::is_same_v<ValueType, std::vector<Domain::FloatOrPercentage>>)
         {
-            std::vector<double> values;
-            for (const Domain::FloatOrPercentage& value : item_value) {
-                ASSERT(!value.is_percentage());
-                values.push_back(value.float_value());
+            if (!item_value.empty() && std::all_of(item_value.begin(), item_value.end(), [](const auto& v) { return v.is_percentage(); })) {
+                std::vector<Domain::Percentage> values;
+                for (const Domain::FloatOrPercentage& value : item_value)
+                    values.push_back(value.percentage());
+                config.set(name, values);
+            } else {
+                std::vector<double> values;
+                for (const Domain::FloatOrPercentage& value : item_value) {
+                    ASSERT(!value.is_percentage());
+                    values.push_back(value.float_value());
+                }
+                config.set(name, values);
             }
-            config.set(name, values);
         } else {
             config.set(name, item_value);
         }

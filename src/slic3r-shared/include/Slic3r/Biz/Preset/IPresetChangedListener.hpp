@@ -16,7 +16,8 @@ enum class PresetItemType
 enum class HwItemType
 {
     ToolItem,
-    SheetItem
+    SheetItem,
+    FeederItem
 };
 
 class IPresetChangedListener

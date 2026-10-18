@@ -28,6 +28,15 @@ public:
     bool is_fullscreen() const override;
     void set_fullscreen(bool on) override;
     void close_application() override;
+    bool has_custom_caption() const override;
+    void minimize_window() override;
+    void toggle_maximize_window() override;
+    bool is_window_maximized() const override;
+    void start_window_drag() override;
+#ifdef _WIN32
+    // the top few pixels pass to the frame, which resizes from its top edge (custom caption)
+    WXLRESULT MSWWindowProc(WXUINT msg, WXWPARAM wParam, WXLPARAM lParam) override;
+#endif
 
 protected:
     void on_render_requested() override;

@@ -1,0 +1,919 @@
+kind: vendor
+id: Geeetech
+name: Geeetech
+version: 2.4.0+orca.02.04.00.02
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Geeetech A10 M
+  base_model: Geeetech A10 M
+  printer_configs_order:
+  - Geeetech-A10-M-0-4-nozzle
+- label: Geeetech A10 Pro
+  base_model: Geeetech A10 Pro
+  printer_configs_order:
+  - Geeetech-A10-Pro-0-2-nozzle
+  - Geeetech-A10-Pro-0-4-nozzle
+  - Geeetech-A10-Pro-0-6-nozzle
+  - Geeetech-A10-Pro-0-8-nozzle
+- label: Geeetech A10 T
+  base_model: Geeetech A10 T
+  printer_configs_order:
+  - Geeetech-A10-T-0-4-nozzle
+- label: Geeetech A20
+  base_model: Geeetech A20
+  printer_configs_order:
+  - Geeetech-A20-0-2-nozzle
+  - Geeetech-A20-0-4-nozzle
+  - Geeetech-A20-0-6-nozzle
+  - Geeetech-A20-0-8-nozzle
+- label: Geeetech A20 M
+  base_model: Geeetech A20 M
+  printer_configs_order:
+  - Geeetech-A20-M-0-4-nozzle
+- label: Geeetech A20 T
+  base_model: Geeetech A20 T
+  printer_configs_order:
+  - Geeetech-A20-T-0-4-nozzle
+- label: Geeetech A30 M
+  base_model: Geeetech A30 M
+  printer_configs_order:
+  - Geeetech-A30-M-0-4-nozzle
+- label: Geeetech A30 Pro
+  base_model: Geeetech A30 Pro
+  printer_configs_order:
+  - Geeetech-A30-Pro-0-2-nozzle
+  - Geeetech-A30-Pro-0-4-nozzle
+  - Geeetech-A30-Pro-0-6-nozzle
+  - Geeetech-A30-Pro-0-8-nozzle
+- label: Geeetech A30 T
+  base_model: Geeetech A30 T
+  printer_configs_order:
+  - Geeetech-A30-T-0-4-nozzle
+- label: Geeetech M1
+  base_model: Geeetech M1
+  printer_configs_order:
+  - Geeetech-M1-0-2-nozzle
+  - Geeetech-M1-0-4-nozzle
+  - Geeetech-M1-0-6-nozzle
+  - Geeetech-M1-0-8-nozzle
+- label: Geeetech Mizar
+  base_model: Geeetech Mizar
+  printer_configs_order:
+  - Geeetech-Mizar-0-2-nozzle
+  - Geeetech-Mizar-0-4-nozzle
+  - Geeetech-Mizar-0-6-nozzle
+  - Geeetech-Mizar-0-8-nozzle
+- label: Geeetech Mizar M
+  base_model: Geeetech Mizar M
+  printer_configs_order:
+  - Geeetech-Mizar-M-0-4-nozzle
+- label: Geeetech Mizar Max
+  base_model: Geeetech Mizar Max
+  printer_configs_order:
+  - Geeetech-Mizar-Max-0-2-nozzle
+  - Geeetech-Mizar-Max-0-4-nozzle
+  - Geeetech-Mizar-Max-0-6-nozzle
+  - Geeetech-Mizar-Max-0-8-nozzle
+- label: Geeetech Mizar Pro
+  base_model: Geeetech Mizar Pro
+  printer_configs_order:
+  - Geeetech-Mizar-Pro-0-2-nozzle
+  - Geeetech-Mizar-Pro-0-4-nozzle
+  - Geeetech-Mizar-Pro-0-6-nozzle
+  - Geeetech-Mizar-Pro-0-8-nozzle
+- label: Geeetech Mizar S
+  base_model: Geeetech Mizar S
+  printer_configs_order:
+  - Geeetech-Mizar-S-0-2-nozzle
+  - Geeetech-Mizar-S-0-4-nozzle
+  - Geeetech-Mizar-S-0-6-nozzle
+  - Geeetech-Mizar-S-0-8-nozzle
+- label: Geeetech Thunder
+  base_model: Geeetech Thunder
+  printer_configs_order:
+  - Geeetech-Thunder-0-2-nozzle
+  - Geeetech-Thunder-0-4-nozzle
+  - Geeetech-Thunder-0-6-nozzle
+  - Geeetech-Thunder-0-8-nozzle
+---
+kind: printer
+technology: FFF
+name: Geeetech A10 M
+id: Geeetech A10 M
+model:
+  base_model: Geeetech A10 M
+  model: Geeetech A10 M
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 220x220.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A10 M_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech A10 Pro
+id: Geeetech A10 Pro
+model:
+  base_model: Geeetech A10 Pro
+  model: Geeetech A10 Pro
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 220x220.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A10 Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech A10 T
+id: Geeetech A10 T
+model:
+  base_model: Geeetech A10 T
+  model: Geeetech A10 T
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 220x220.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A10 T_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech A20
+id: Geeetech A20
+model:
+  base_model: Geeetech A20
+  model: Geeetech A20
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 250x250.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A20_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech A20 M
+id: Geeetech A20 M
+model:
+  base_model: Geeetech A20 M
+  model: Geeetech A20 M
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 250x250.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A20 M_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech A20 T
+id: Geeetech A20 T
+model:
+  base_model: Geeetech A20 T
+  model: Geeetech A20 T
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 250x250.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A20 T_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech A30 M
+id: Geeetech A30 M
+model:
+  base_model: Geeetech A30 M
+  model: Geeetech A30 M
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 320x320.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A30 M_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech A30 Pro
+id: Geeetech A30 Pro
+model:
+  base_model: Geeetech A30 Pro
+  model: Geeetech A30 Pro
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 320x320.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A30 Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech A30 T
+id: Geeetech A30 T
+model:
+  base_model: Geeetech A30 T
+  model: Geeetech A30 T
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 320x320.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech A30 T_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech M1
+id: Geeetech M1
+model:
+  base_model: Geeetech M1
+  model: Geeetech M1
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 105x105.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech M1_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech Mizar
+id: Geeetech Mizar
+model:
+  base_model: Geeetech Mizar
+  model: Geeetech Mizar
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 220x220.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech Mizar_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech Mizar M
+id: Geeetech Mizar M
+model:
+  base_model: Geeetech Mizar M
+  model: Geeetech Mizar M
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 255x255.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech Mizar M_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech Mizar Max
+id: Geeetech Mizar Max
+model:
+  base_model: Geeetech Mizar Max
+  model: Geeetech Mizar Max
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 320x320.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech Mizar Max_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech Mizar Pro
+id: Geeetech Mizar Pro
+model:
+  base_model: Geeetech Mizar Pro
+  model: Geeetech Mizar Pro
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 220x220.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech Mizar Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech Mizar S
+id: Geeetech Mizar S
+model:
+  base_model: Geeetech Mizar S
+  model: Geeetech Mizar S
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 255x255.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech Mizar S_cover.png
+---
+kind: printer
+technology: FFF
+name: Geeetech Thunder
+id: Geeetech Thunder
+model:
+  base_model: Geeetech Thunder
+  model: Geeetech Thunder
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 250x250.stl
+  bed_texture: Geeetech_buildplate_texture.svg
+  thumbnail: Geeetech Thunder_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Geeetech-A10-M-0-4-nozzle
+name: Geeetech A10 M 0.4 nozzle
+printer: Geeetech A10 M
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A10-Pro-0-2-nozzle
+name: Geeetech A10 Pro 0.2 nozzle
+printer: Geeetech A10 Pro
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A10-Pro-0-4-nozzle
+name: Geeetech A10 Pro 0.4 nozzle
+printer: Geeetech A10 Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A10-Pro-0-6-nozzle
+name: Geeetech A10 Pro 0.6 nozzle
+printer: Geeetech A10 Pro
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A10-Pro-0-8-nozzle
+name: Geeetech A10 Pro 0.8 nozzle
+printer: Geeetech A10 Pro
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A10-T-0-4-nozzle
+name: Geeetech A10 T 0.4 nozzle
+printer: Geeetech A10 T
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A20-0-2-nozzle
+name: Geeetech A20 0.2 nozzle
+printer: Geeetech A20
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A20-0-4-nozzle
+name: Geeetech A20 0.4 nozzle
+printer: Geeetech A20
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A20-0-6-nozzle
+name: Geeetech A20 0.6 nozzle
+printer: Geeetech A20
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A20-0-8-nozzle
+name: Geeetech A20 0.8 nozzle
+printer: Geeetech A20
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A20-M-0-4-nozzle
+name: Geeetech A20 M 0.4 nozzle
+printer: Geeetech A20 M
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A20-T-0-4-nozzle
+name: Geeetech A20 T 0.4 nozzle
+printer: Geeetech A20 T
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A30-M-0-4-nozzle
+name: Geeetech A30 M 0.4 nozzle
+printer: Geeetech A30 M
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A30-Pro-0-2-nozzle
+name: Geeetech A30 Pro 0.2 nozzle
+printer: Geeetech A30 Pro
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A30-Pro-0-4-nozzle
+name: Geeetech A30 Pro 0.4 nozzle
+printer: Geeetech A30 Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A30-Pro-0-6-nozzle
+name: Geeetech A30 Pro 0.6 nozzle
+printer: Geeetech A30 Pro
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A30-Pro-0-8-nozzle
+name: Geeetech A30 Pro 0.8 nozzle
+printer: Geeetech A30 Pro
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-A30-T-0-4-nozzle
+name: Geeetech A30 T 0.4 nozzle
+printer: Geeetech A30 T
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-M1-0-2-nozzle
+name: Geeetech M1 0.2 nozzle
+printer: Geeetech M1
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-M1-0-4-nozzle
+name: Geeetech M1 0.4 nozzle
+printer: Geeetech M1
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-M1-0-6-nozzle
+name: Geeetech M1 0.6 nozzle
+printer: Geeetech M1
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-M1-0-8-nozzle
+name: Geeetech M1 0.8 nozzle
+printer: Geeetech M1
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-0-2-nozzle
+name: Geeetech Mizar 0.2 nozzle
+printer: Geeetech Mizar
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-0-4-nozzle
+name: Geeetech Mizar 0.4 nozzle
+printer: Geeetech Mizar
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-0-6-nozzle
+name: Geeetech Mizar 0.6 nozzle
+printer: Geeetech Mizar
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-0-8-nozzle
+name: Geeetech Mizar 0.8 nozzle
+printer: Geeetech Mizar
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-M-0-4-nozzle
+name: Geeetech Mizar M 0.4 nozzle
+printer: Geeetech Mizar M
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-Max-0-2-nozzle
+name: Geeetech Mizar Max 0.2 nozzle
+printer: Geeetech Mizar Max
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-Max-0-4-nozzle
+name: Geeetech Mizar Max 0.4 nozzle
+printer: Geeetech Mizar Max
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-Max-0-6-nozzle
+name: Geeetech Mizar Max 0.6 nozzle
+printer: Geeetech Mizar Max
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-Max-0-8-nozzle
+name: Geeetech Mizar Max 0.8 nozzle
+printer: Geeetech Mizar Max
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-Pro-0-2-nozzle
+name: Geeetech Mizar Pro 0.2 nozzle
+printer: Geeetech Mizar Pro
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-Pro-0-4-nozzle
+name: Geeetech Mizar Pro 0.4 nozzle
+printer: Geeetech Mizar Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-Pro-0-6-nozzle
+name: Geeetech Mizar Pro 0.6 nozzle
+printer: Geeetech Mizar Pro
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-Pro-0-8-nozzle
+name: Geeetech Mizar Pro 0.8 nozzle
+printer: Geeetech Mizar Pro
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-S-0-2-nozzle
+name: Geeetech Mizar S 0.2 nozzle
+printer: Geeetech Mizar S
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-S-0-4-nozzle
+name: Geeetech Mizar S 0.4 nozzle
+printer: Geeetech Mizar S
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-S-0-6-nozzle
+name: Geeetech Mizar S 0.6 nozzle
+printer: Geeetech Mizar S
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Mizar-S-0-8-nozzle
+name: Geeetech Mizar S 0.8 nozzle
+printer: Geeetech Mizar S
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Thunder-0-2-nozzle
+name: Geeetech Thunder 0.2 nozzle
+printer: Geeetech Thunder
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Thunder-0-4-nozzle
+name: Geeetech Thunder 0.4 nozzle
+printer: Geeetech Thunder
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Thunder-0-6-nozzle
+name: Geeetech Thunder 0.6 nozzle
+printer: Geeetech Thunder
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Geeetech-Thunder-0-8-nozzle
+name: Geeetech Thunder 0.8 nozzle
+printer: Geeetech Thunder
+tools:
+- tool: '0.8'
+sheet: high_temp_plate

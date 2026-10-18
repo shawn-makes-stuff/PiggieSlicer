@@ -17,6 +17,8 @@
 #include "Slic3r/App/IAppConfigChangedListener.hpp"
 #include "Slic3r/App/IMenuUpdatedListener.hpp"
 #include "Slic3r/Biz/PhysicalPrinter/IPhysicalPrinterChangedListener.hpp"
+#include "Slic3r/Biz/StatusCache.hpp"
+#include "Slic3r/Biz/ISelectedBedInstanceChangedListener.hpp"
 
 #include <wx/wx.h>
 
@@ -53,6 +55,8 @@ class MainFrame :
     public IAppConfigChangedListener,
     public Biz::IProjectsChangedListener,
     public Biz::PhysicalPrinter::IPhysicalPrinterChangedListener,
+    public Biz::IStatusCacheChangedListener,
+    public Biz::ISelectedBedInstancesChangedListener,
     public IMenuUpdatedListener
 {
 public:
@@ -90,6 +94,13 @@ public:
     void on_printer_data_changed() override;
 
     void on_menu_updated() override;
+
+#ifdef _WIN32
+    // no system caption: the app's top bar carries the window buttons (WXRenderCanvas::
+    // has_custom_caption); the resize borders, snapping and the shadow stay
+    WXLRESULT MSWWindowProc(WXUINT msg, WXWPARAM wParam, WXLPARAM lParam) override;
+    bool m_custom_caption{false};
+#endif
 private:
     void init_left_bar(Biz::ProjectInteractor& project_interactor);
     void init_physical_printer_page(Biz::ProjectInteractor& project_interactor);
@@ -98,6 +109,12 @@ private:
     void complete_and_bind_left_bar();
     void remove_left_bar_page(LeftBarTabs page_id);
     void ensure_slicing_page_selected();
+    // Orca's Prepare / Preview / Device tabs in the left bar
+    void bind_mode_buttons();
+    void update_mode_buttons();
+    // Preview is enabled once a selected bed is sliced
+    void on_status_cache_status_code_changed(const Domain::SlicingId id) override;
+    void on_selected_bed_instances_changed(Domain::SelectionId project_id, const Biz::Scene::BedSelection& bed_selection) override;
 
     void on_language_changed() override;
     void on_app_config_changed(const std::string& key) override;

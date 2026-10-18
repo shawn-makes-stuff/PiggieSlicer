@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include "libslic3r/ShortestPath.hpp"
+#include "libslic3r/GCode/OrderingStrategies.hpp"
 #include "libslic3r/KDTreeIndirect.hpp"
 #include "libslic3r/MutablePriorityQueue.hpp"
 #include "libslic3r/Print.hpp"
@@ -2039,12 +2040,12 @@ std::vector<const PrintInstance*> chain_print_object_instances(const Print &prin
         	instances.emplace_back(i, j);
         }
     }
-	auto segment_end_point = [&object_reference_points](size_t idx, bool /* first_point */) -> const Point& { return object_reference_points[idx]; };
-	std::vector<std::pair<size_t, bool>> ordered = chain_segments_greedy<Point, decltype(segment_end_point)>(segment_end_point, instances.size(), nullptr);
+	// Orca: nearest neighbor, then 2-opt and crossing removal
+	const std::vector<size_t> path = chain_points_with_postprocessing(object_reference_points, nullptr);
     std::vector<const PrintInstance*> out;
 	out.reserve(instances.size());
-	for (auto &segment_and_reversal : ordered) {
-		const std::pair<size_t, size_t> &inst = instances[segment_and_reversal.first];
+	for (size_t idx : path) {
+		const std::pair<size_t, size_t> &inst = instances[idx];
 		out.emplace_back(&print.objects()[inst.first]->instances()[inst.second]);
 	}
 	return out;

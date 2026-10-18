@@ -79,6 +79,11 @@ void Navigator::navigate_to_module_type(Render::ModuleType type)
     set_render_module_type(type);
 }
 
+Render::ModuleType Navigator::current_module_type() const
+{
+    return has_modules() ? m_project_contexts->selected().type : Render::ModuleType::Plater;
+}
+
 void Navigator::set_render_module_type(Render::ModuleType type)
 {
     ProjectContext& context               = m_project_contexts->selected();
@@ -233,6 +238,12 @@ void Navigator::close_application()
 {
     m_canvas->close_application();
 }
+
+bool Navigator::has_custom_caption() const { return m_canvas->has_custom_caption(); }
+void Navigator::minimize_window() { m_canvas->minimize_window(); }
+void Navigator::toggle_maximize_window() { m_canvas->toggle_maximize_window(); }
+bool Navigator::is_window_maximized() const { return m_canvas->is_window_maximized(); }
+void Navigator::start_window_drag() { m_canvas->start_window_drag(); }
 
 void Navigator::on_app_config_changed(const std::string& key)
 {

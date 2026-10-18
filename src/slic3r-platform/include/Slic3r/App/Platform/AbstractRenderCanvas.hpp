@@ -62,6 +62,11 @@ public:
     bool is_fullscreen() const override { return false; }
     void set_fullscreen(bool on) override {}
     void close_application() override {}
+    bool has_custom_caption() const override { return false; }
+    void minimize_window() override {}
+    void toggle_maximize_window() override {}
+    bool is_window_maximized() const override { return false; }
+    void start_window_drag() override {}
 
     bool is_text_input_focused() const;
 

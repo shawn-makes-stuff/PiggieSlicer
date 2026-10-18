@@ -129,7 +129,10 @@ MaterialSelectionDialog::MaterialSelectionDialog(
                     return false;
                 }
             }
-            if (m_only_favorites_button->checked() && !is_favorite(data)) {
+            // Orca lists the user's own presets with the installed ones
+            if (m_only_favorites_button->checked() && m_list_has_favorites && !is_favorite(data)
+                && data.origin != Domain::Preset::PresetOrigin::User)
+            {
                 return false;
             }
 
@@ -220,7 +223,7 @@ MaterialSelectionDialog::MaterialSelectionDialog(
     m_material_searcher->set_source_model(m_material_filter.get());
 
     // Material Settings Dialog setup
-    m_material_settings_dialog->attach_to_item(content_item(), Position::Left);
+    m_material_settings_dialog->attach_to_item(content_item(), Position::Right);
 
     m_material_settings_dialog->dialog_callbacks().tab_selected = [this](size_t current_index)
     {
@@ -310,9 +313,33 @@ void MaterialSelectionDialog::update_preset_list()
 
     m_preset_list = &m_material_presets.at(m_material_index);
     m_preset_list->add_listener<Biz::IListSelectionChangedListener>(this);
+    install_default_materials();
 
     m_material_filter->set_source_model(&m_preset_list->items());
     on_list_selection_changed(m_preset_list->selected_index());
+}
+
+void MaterialSelectionDialog::install_default_materials()
+{
+    const auto& items = m_preset_list->items();
+    auto any_favorite = [&items]()
+    {
+        for (size_t i = 0, n = items.size(); i < n; ++i)
+            if (is_favorite(items.at(i)))
+                return true;
+        return false;
+    };
+    m_list_has_favorites = any_favorite();
+    if (m_list_has_favorites)
+        return;
+    const std::vector<std::string> names =
+        m_project_interactor.preset_interactor().default_material_names();
+    auto& settings = AppServices::instance().app_config().app_settings_advanced();
+    for (size_t i = 0, n = items.size(); i < n; ++i) {
+        if (std::ranges::find(names, items.at(i).name) != names.end())
+            settings.toggle_material_favorite_preset(items.at(i).id);
+    }
+    m_list_has_favorites = any_favorite();
 }
 
 MaterialSettingsDialog& MaterialSelectionDialog::material_settings_dialog()

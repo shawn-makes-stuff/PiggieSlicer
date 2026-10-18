@@ -339,6 +339,13 @@ struct ConfigItemDef
     OptionGroup option_group = OptionGroup::Unknown;
     int order                = 0;
     std::string row_group;
+    // Orca's place in the sidebar (Tab.cpp TabPrint::build), set by apply_orca_layout (OrcaLayout.cpp):
+    // orca_group indexes orca_layout_groups() (0 = none: the 3.0 layout), orca_order orders the rows.
+    uint16_t orca_group = 0;
+    int orca_order      = 0;
+    // Orca's option mode: the least detailed of the sidebar's views that shows the setting.
+    enum class Mode : uint8_t { Simple, Advanced, Expert };
+    Mode mode = Mode::Advanced;
     std::string tooltip; // A tooltip text shown in the GUI.
     std::vector<std::string> units; // Text right from the input field.
     std::string cli; // Format of this parameter on a command line.
@@ -423,6 +430,8 @@ public:
 
     // Add a config definition. Calling this after ctr finishes is an error.
     ConfigItemDef* add(const std::string_view name, const std::type_info& type);
+    // A definition added so far, nullptr if none. Calling this after ctr finishes is an error.
+    ConfigItemDef* find(const std::string_view name);
 
 private:
     void check_valid() const;

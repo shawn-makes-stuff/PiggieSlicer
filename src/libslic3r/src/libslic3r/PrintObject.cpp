@@ -31,6 +31,8 @@
 #include "Slic3r/Biz/Algorithms/AABBTreeLines.hpp"
 #include "libslic3r/ExPolygon.hpp"
 #include "libslic3r/Flow.hpp"
+#include "libslic3r/ConnectedBodies.hpp"
+#include "Slic3r/Biz/Algorithms/MeshSplitImpl.hpp"
 #include "libslic3r/GCode/ExtrusionProcessor.hpp"
 #include "libslic3r/Line.hpp"
 #include "libslic3r/Polygon.hpp"
@@ -428,6 +430,56 @@ void PrintObject::prepare_infill()
     
     // the following step needs to be done before combination because it may need
     // to remove only half of the combined infill
+    // Orca: precompute the object's 3D connected bodies for separated infills / per-model
+    // centering. Two islands belong to the same body when their slices overlap on adjacent
+    // layers; islands that only overlap in top-down projection but never touch (e.g. interleaved
+    // chain links) stay separate, matching "split to objects". Each layer island then records
+    // the full bounding box of its body, so its infill is centered on that body as if it were
+    // sliced alone. Compute this before bridges so anchors and extrusion share the same origin.
+    bool needs_separated_components = false;
+    for (size_t i = 0; i < this->num_printing_regions(); ++ i) {
+        const PrintRegion &region  = this->printing_region(i);
+        const auto         pattern = region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill);
+        if (region.config().get<bool>("separated_infills") ||
+            region.config().get<Domain::CenterOfSurfacePattern>("center_of_surface_pattern") == Domain::CenterOfSurfacePattern::EachModel ||
+            (region.extruder_config_value<Domain::Percentage>("fill_density", FlowRole::frInfill).value > 0 &&
+             (pattern == Domain::InfillPattern::ipAdaptiveCubic || pattern == Domain::InfillPattern::ipSupportCubic))) {
+            needs_separated_components = true;
+            break;
+        }
+    }
+    // Orca: Fast path: the feature only changes anything when the object is made of more than one
+    // connected body. Detect that cheaply the same way as "Split to objects" — more than one
+    // model part, or a single part whose mesh is splittable (is_splittable() is cached). A single
+    // body already shares the object center, i.e. the default, so skip the connectivity pass.
+    if (needs_separated_components) {
+        int                        parts      = 0;
+        const Domain::ModelVolume *first_part = nullptr;
+        for (const Domain::ModelVolume *v : this->model_object()->volumes)
+            if (v->is_model_part()) { ++ parts; first_part = v; }
+        if (parts <= 1 && ! (first_part != nullptr && Biz::Algorithms::ModelVolume::is_splittable(*first_part)))
+            needs_separated_components = false;
+    }
+    m_separated_body_bboxes.clear();
+    for (Layer *layer : m_layers)
+        layer->lslices_separated_component_ids.clear();
+    if (needs_separated_components) {
+        std::vector<const ExPolygons *> islands;
+        islands.reserve(m_layers.size());
+        for (const Layer *layer : m_layers)
+            islands.emplace_back(&layer->lslices);
+        size_t                           bodies = 0;
+        std::vector<std::vector<size_t>> ids    = connected_bodies(islands, bodies, [this]() { m_print->throw_if_canceled(); });
+        // Orca: Merge the bounding boxes of the islands of each body.
+        m_separated_body_bboxes.assign(bodies, BoundingBox());
+        for (size_t i = 0; i < m_layers.size(); ++ i) {
+            Layer *layer = m_layers[i];
+            for (size_t a = 0; a < layer->lslices.size(); ++ a)
+                m_separated_body_bboxes[ids[i][a]] = BB::merge(m_separated_body_bboxes[ids[i][a]], get_extents(layer->lslices[a]));
+            layer->lslices_separated_component_ids = std::move(ids[i]);
+        }
+    }
+
     this->bridge_over_infill();
     m_print->throw_if_canceled();
 
@@ -487,17 +539,14 @@ void PrintObject::infill()
     if (this->set_started(posInfill)) {
         // TRN Status for the Print calculation 
         m_print->set_status(Domain::Percentage{45}, Biz::Slicing::ProgressInfo::MakingInfill);
-        const auto& adaptive_fill_octree = this->m_adaptive_fill_octrees.first;
-        const auto& support_fill_octree = this->m_adaptive_fill_octrees.second;
-
         SPDLOG_DEBUG("Filling layers in parallel - start");
         tbb::parallel_for(
             tbb::blocked_range<size_t>(0, m_layers.size()),
-            [this, &adaptive_fill_octree = adaptive_fill_octree, &support_fill_octree = support_fill_octree](const tbb::blocked_range<size_t>& range) {
+            [this](const tbb::blocked_range<size_t>& range) {
                 PRINT_OBJECT_TIME_LIMIT_MILLIS(PRINT_OBJECT_TIME_LIMIT_DEFAULT);
                 for (size_t layer_idx = range.begin(); layer_idx < range.end(); ++ layer_idx) {
                     m_print->throw_if_canceled();
-                    m_layers[layer_idx]->make_fills(adaptive_fill_octree.get(), support_fill_octree.get(), this->m_lightning_generator.get());
+                    m_layers[layer_idx]->make_fills(&this->m_adaptive_fill_octrees, this->m_lightning_generator.get());
                 }
             }
         );
@@ -604,7 +653,10 @@ void PrintObject::estimate_curled_extrusions()
     if (this->set_started(posEstimateCurledExtrusions)) {
         if (this->print()->config().get<bool>("avoid_crossing_curled_overhangs") ||
             std::any_of(this->print()->m_print_regions.begin(), this->print()->m_print_regions.end(),
-                        [](const PrintRegion *region) { return region->extruder_config_value<bool>("enable_dynamic_overhang_speeds", FlowRole::frPerimeter); })) {
+                        [](const PrintRegion *region) {
+                            return region->extruder_config_value<bool>("enable_dynamic_overhang_speeds", FlowRole::frPerimeter) &&
+                                region->extruder_config_value<bool>("slowdown_for_curled_perimeters", FlowRole::frPerimeter);
+                        })) {
             SPDLOG_DEBUG("Estimating areas with curled extrusions - start");
             m_print->set_status(Domain::Percentage{88}, Biz::Slicing::ProgressInfo::EstimatingCurledExtrusions);
 
@@ -643,8 +695,10 @@ void PrintObject::calculate_overhanging_perimeters()
             pr->collect_object_printing_extruders(*this->print(), extruders);
 
             const std::vector<bool> enable_dynamic_fan_speeds = this->print()->config().get<std::vector<bool>>("enable_dynamic_fan_speeds");
+            // Orca's overhang fan measures the overhangs too
+            const std::vector<bool> enable_overhang_bridge_fan = this->print()->config().get<std::vector<bool>>("enable_overhang_bridge_fan");
             if (std::any_of(extruders.begin(), extruders.end(),
-                            [&enable_dynamic_fan_speeds](unsigned int extruder_id) { return enable_dynamic_fan_speeds.at(extruder_id); })) {
+                            [&](unsigned int extruder_id) { return enable_dynamic_fan_speeds.at(extruder_id) || enable_overhang_bridge_fan.at(extruder_id); })) {
                 regions_with_dynamic_speeds.insert(pr);
             }
         }
@@ -688,14 +742,81 @@ void PrintObject::calculate_overhanging_perimeters()
     }
 }
 
-std::pair<FillAdaptive::OctreePtr, FillAdaptive::OctreePtr> PrintObject::prepare_adaptive_infill_data(
-    const std::vector<std::pair<const Surface *, float>> &surfaces_w_bottom_z) const
+// Orca: Separated body of the island containing a point of a layer, else of the island outline nearest within 1 mm, or -1.
+static int separated_body_at(const Layer &layer, const Point &point)
+{
+    int    body = -1;
+    double best = scaled<double>(1.);
+    for (size_t i = 0; i < layer.lslices.size() && i < layer.lslices_separated_component_ids.size() && best > 0.; ++ i) {
+        const BoundingBox bbox = BB::inflated(get_extents(layer.lslices[i]), coord_t(best));
+        if (! bbox.contains(point))
+            continue;
+        const double dist = Algorithms::ExPolygon::contains(layer.lslices[i], point) ? 0. : (point_projection(layer.lslices[i], point) - point).cast<double>().norm();
+        if (dist < best) {
+            best = dist;
+            body = int(layer.lslices_separated_component_ids[i]);
+        }
+    }
+    return body;
+}
+
+// Orca: The object mesh in the octree frame split by separated body. Each connected component goes to the body
+// most of its sampled triangles lie on, sampled a layer height inside the solid at the layer nearest to them.
+static std::vector<indexed_triangle_set> split_mesh_by_body(const PrintObject &object, const indexed_triangle_set &mesh, size_t num_bodies)
+{
+    const Eigen::Matrix3d             to_object = FillAdaptive::transform_to_world().toRotationMatrix();
+    const double                      inset     = object.config().get<double>("layer_height");
+    std::vector<indexed_triangle_set> bodies(num_bodies);
+    for (const indexed_triangle_set &component : its_split(mesh)) {
+        std::vector<size_t> votes(num_bodies, 0);
+        const size_t        step = std::max<size_t>(1, component.indices.size() / 8);
+        for (size_t i = 0; i < component.indices.size(); i += step) {
+            const stl_triangle_vertex_indices &tri = component.indices[i];
+            const Vec3d a = component.vertices[tri[0]].cast<double>(), b = component.vertices[tri[1]].cast<double>(),
+                        d = component.vertices[tri[2]].cast<double>();
+            const Vec3d  normal = (b - a).cross(d - a);
+            const double area2  = normal.norm();
+            const Vec3d  c = to_object * ((a + b + d) / 3. - (area2 > 0. ? Vec3d(normal * (inset / area2)) : Vec3d::Zero()));
+            size_t lo = 0, hi = object.layer_count();
+            while (lo < hi) {
+                const size_t mid = (lo + hi) / 2;
+                if (object.get_layer(int(mid))->slice_z < c.z())
+                    lo = mid + 1;
+                else
+                    hi = mid;
+            }
+            if (lo == object.layer_count() || (lo > 0 && c.z() - object.get_layer(int(lo) - 1)->slice_z < object.get_layer(int(lo))->slice_z - c.z()))
+                -- lo;
+            if (const int body = separated_body_at(*object.get_layer(int(lo)), Point(scaled<coord_t>(c.x()), scaled<coord_t>(c.y()))); body >= 0)
+                ++ votes[body];
+        }
+        if (const auto best = std::max_element(votes.begin(), votes.end()); *best > 0)
+            Domain::its_merge(bodies[best - votes.begin()], component);
+    }
+    return bodies;
+}
+
+FillAdaptive::RegionOctrees PrintObject::prepare_adaptive_infill_data(
+    const std::vector<std::pair<const Surface *, const Layer *>> &surfaces_w_layer) const
 {
     using namespace FillAdaptive;
 
-    auto [adaptive_line_spacing, support_line_spacing] = adaptive_fill_line_spacing(*this);
-    if ((adaptive_line_spacing == 0. && support_line_spacing == 0.) || this->layers().empty())
-        return std::make_pair(OctreePtr(), OctreePtr());
+    // Orca: Each region fills with the octrees of its own line spacing, shared by the regions of equal spacing.
+    const std::vector<double>            line_spacing = adaptive_fill_line_spacing(*this);
+    std::vector<std::pair<double, bool>> spacings; // Line spacing, support cubic.
+    RegionOctrees                        octrees;
+    octrees.region_set.assign(line_spacing.size(), -1);
+    for (size_t region_id = 0; region_id < line_spacing.size(); ++ region_id)
+        if (line_spacing[region_id] > 0.) {
+            const std::pair<double, bool> spacing(line_spacing[region_id], this->printing_region(region_id).extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill) == Domain::InfillPattern::ipSupportCubic);
+            const auto                    it = std::find(spacings.begin(), spacings.end(), spacing);
+            octrees.region_set[region_id]    = int(it - spacings.begin());
+            if (it == spacings.end())
+                spacings.push_back(spacing);
+        }
+    if (spacings.empty() || this->layers().empty())
+        return {};
+    octrees.sets.resize(spacings.size());
 
     indexed_triangle_set mesh = this->model_object()->raw_indexed_triangle_set();
     // Rotate mesh and build octree on it with axis-aligned (standart base) cubes.
@@ -703,29 +824,104 @@ std::pair<FillAdaptive::OctreePtr, FillAdaptive::OctreePtr> PrintObject::prepare
     its_transform(mesh, to_octree * this->trafo_centered(), true);
 
     // Triangulate internal bridging surfaces.
-    std::vector<std::vector<Vec3d>> overhangs(std::max(surfaces_w_bottom_z.size(), size_t(1)));
+    std::vector<std::vector<Vec3d>> overhangs(std::max(surfaces_w_layer.size(), size_t(1)));
     // ^ make sure vector is not empty, even with no briding surfaces we still want to build the adaptive trees later, some continue normally
-    tbb::parallel_for(tbb::blocked_range<int>(0, surfaces_w_bottom_z.size()),
-        [this, &to_octree, &overhangs, &surfaces_w_bottom_z](const tbb::blocked_range<int> &range) {
+    tbb::parallel_for(tbb::blocked_range<int>(0, surfaces_w_layer.size()),
+        [this, &to_octree, &overhangs, &surfaces_w_layer](const tbb::blocked_range<int> &range) {
             PRINT_OBJECT_TIME_LIMIT_MILLIS(PRINT_OBJECT_TIME_LIMIT_DEFAULT);
             for (int surface_idx = range.begin(); surface_idx < range.end(); ++surface_idx) {
                 std::vector<Vec3d> &out = overhangs[surface_idx];
                 m_print->throw_if_canceled();
-
                 using Slic3r::Biz::Algorithms::Tesselate::triangulate_expolygon_3d;
-                append(out, triangulate_expolygon_3d(surfaces_w_bottom_z[surface_idx].first->expolygon,
-                                                   surfaces_w_bottom_z[surface_idx].second));
+                append(out, triangulate_expolygon_3d(surfaces_w_layer[surface_idx].first->expolygon,
+                                                   float(surfaces_w_layer[surface_idx].second->bottom_z())));
                 for (Vec3d &p : out)
                     p = (to_octree * p).eval();
             }
         });
+
+    // Orca: Each body gets the octree it has when sliced on its own, from its own triangles, for each line spacing
+    // its regions fill with. Body num_bodies stands for the whole object, which serves an object of a single body
+    // and the surfaces of bodies that have no octree of their own.
+    const size_t                           num_bodies = m_separated_body_bboxes.size();
+    std::vector<std::pair<size_t, size_t>> to_build; // Set, body.
+    std::vector<indexed_triangle_set>      body_meshes;
+    std::vector<std::vector<Vec3d>>        body_overhangs(num_bodies);
+    if (num_bodies > 1) {
+        body_meshes = split_mesh_by_body(*this, mesh, num_bodies);
+        for (size_t i = 0; i < surfaces_w_layer.size(); ++ i)
+            if (const int body = separated_body_at(*surfaces_w_layer[i].second, surfaces_w_layer[i].first->expolygon.contour.points.front()); body >= 0)
+                append(body_overhangs[body], overhangs[i]);
+        std::vector<std::vector<char>> fills(spacings.size(), std::vector<char>(num_bodies + 1, false));
+        for (const Layer *layer : m_layers)
+            for (size_t region_id = 0; region_id < layer->regions().size() && region_id < octrees.region_set.size(); ++ region_id)
+                if (const int set = octrees.region_set[region_id]; set >= 0)
+                    for (const Surface &surface : layer->regions()[region_id]->fill_surfaces()) {
+                        const int body = separated_body_at(*layer, surface.expolygon.contour.points.front());
+                        fills[set][body >= 0 && ! body_meshes[body].indices.empty() ? size_t(body) : num_bodies] = true;
+                    }
+        for (size_t set = 0; set < spacings.size(); ++ set) {
+            octrees.sets[set].bodies.resize(num_bodies);
+            for (size_t body = 0; body <= num_bodies; ++ body)
+                if (fills[set][body])
+                    to_build.emplace_back(set, body);
+        }
+    } else
+        for (size_t set = 0; set < spacings.size(); ++ set)
+            to_build.emplace_back(set, num_bodies);
+
     // and gather them.
     for (size_t i = 1; i < overhangs.size(); ++ i)
         append(overhangs.front(), std::move(overhangs[i]));
 
-    return std::make_pair(
-        adaptive_line_spacing ? build_octree(mesh, overhangs.front(), adaptive_line_spacing, false) : OctreePtr(),
-        support_line_spacing  ? build_octree(mesh, overhangs.front(), support_line_spacing, true) : OctreePtr());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, to_build.size()), [&](const tbb::blocked_range<size_t> &range) {
+        for (size_t i = range.begin(); i < range.end(); ++ i) {
+            m_print->throw_if_canceled();
+            const auto [set, body] = to_build[i];
+            const bool object      = body == num_bodies;
+            (object ? octrees.sets[set].object : octrees.sets[set].bodies[body]) =
+                build_octree(object ? mesh : body_meshes[body], object ? overhangs.front() : body_overhangs[body], spacings[set].first,
+                             spacings[set].second);
+        }
+    });
+    return octrees;
+}
+
+// Orca prepare_tpms_radial_fields
+TpmsRadialFields PrintObject::prepare_tpms_radial_fields() const
+{
+    TpmsRadialFields fields;
+    std::array<bool, size_t(Domain::TpmsAdaptiveMode::Count)> modes{};
+    for (size_t region_id = 0; region_id < this->num_printing_regions(); ++region_id) {
+        const PrintRegion &region  = this->printing_region(region_id);
+        const double       density = region.extruder_config_value<Domain::Percentage>("fill_density", FlowRole::frInfill).value;
+        const auto         pattern = region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill);
+        if (density > 0 && density < 100 &&
+            (pattern == Domain::InfillPattern::ipGyroid || pattern == Domain::InfillPattern::ipTpmsD || pattern == Domain::InfillPattern::ipTpmsFK))
+            modes[size_t(region.config().get<Domain::TpmsAdaptiveMode>("tpms_adaptive"))] = true;
+    }
+    modes[size_t(Domain::TpmsAdaptiveMode::Disabled)] = false;
+    if (std::find(modes.begin(), modes.end(), true) == modes.end() || m_layers.empty())
+        return fields;
+
+    std::vector<TpmsRadialField::Slice> slices;
+    slices.reserve(m_layers.size());
+    BoundingBox bbox;
+    for (const Layer *layer : m_layers) {
+        slices.push_back({layer->bottom_z(), layer->print_z, &layer->lslices});
+        bbox = BB::merge(bbox, get_extents(layer->lslices));
+    }
+    if (!bbox.defined)
+        return fields;
+    for (size_t mode = 0; mode < modes.size(); ++mode) {
+        if (!modes[mode])
+            continue;
+        // Without a field, the infill falls back to the regular pattern.
+        auto field = std::make_unique<TpmsRadialField>(slices, bbox, Domain::TpmsAdaptiveMode(mode), [this]() { m_print->throw_if_canceled(); });
+        if (!field->empty())
+            fields[mode] = std::move(field);
+    }
+    return fields;
 }
 
 FillLightning::GeneratorPtr PrintObject::prepare_lightning_infill_data()
@@ -875,14 +1071,20 @@ void PrintObject::detect_surfaces_type()
 
                     // collapse very narrow parts (using the safety offset in the diff is not enough)
                     const float filtering_offset = static_cast<float>(layerm->flow(frExternalPerimeter).scaled_width()) / 10.f;
+                    // Orca counterbore_hole_bridging (sacrificial layer): the infill bridged over the holes is outside of
+                    // the slices, it is added for the bottom bridges there
+                    ExPolygons layerm_slices_surfaces = to_expolygons(layerm->slices().surfaces);
+                    if (layerm->region().config().get<Domain::CounterboreHoleBridging>("counterbore_hole_bridging") ==
+                        Domain::CounterboreHoleBridging::SacrificialLayer)
+                        layerm_slices_surfaces = union_ex(layerm_slices_surfaces, layerm->fill_expolygons());
 
                     // find top surfaces (difference between current surfaces
                     // of current layer and upper one)
                     Surfaces top;
                     if (upper_layer) {
                         ExPolygons upper_slices = interface_shells ? 
-                            diff_ex(layerm->slices().surfaces, upper_layer->m_regions[region_id]->slices().surfaces, ApplySafetyOffset::Yes) :
-                            diff_ex(layerm->slices().surfaces, upper_layer->lslices, ApplySafetyOffset::Yes);
+                            diff_ex(layerm_slices_surfaces, upper_layer->m_regions[region_id]->slices().surfaces, ApplySafetyOffset::Yes) :
+                            diff_ex(layerm_slices_surfaces, upper_layer->lslices, ApplySafetyOffset::Yes);
                         surfaces_append(top, opening_ex(upper_slices, filtering_offset), stTop);
                     } else {
                         // if no upper layer, all surfaces of this one are solid
@@ -908,7 +1110,7 @@ void PrintObject::detect_surfaces_type()
                         surfaces_append(
                             bottom,
                             opening_ex(
-                                diff_ex(layerm->slices().surfaces, lower_layer->lslices, ApplySafetyOffset::Yes),
+                                diff_ex(layerm_slices_surfaces, lower_layer->lslices, ApplySafetyOffset::Yes),
                                 filtering_offset),
                             surface_type_bottom_other);
                         // if user requested internal shells, we need to identify surfaces
@@ -920,7 +1122,7 @@ void PrintObject::detect_surfaces_type()
                                 bottom,
                                 opening_ex(
                                     diff_ex(
-                                        intersection(layerm->slices().surfaces, lower_layer->lslices), // supported
+                                        intersection(layerm_slices_surfaces, lower_layer->lslices), // supported
                                         lower_layer->m_regions[region_id]->slices().surfaces,
                                         ApplySafetyOffset::Yes),
                                     filtering_offset),
@@ -958,6 +1160,66 @@ void PrintObject::detect_surfaces_type()
                         Polygons top_polygons = to_polygons(std::move(top));
                         top.clear();
                         surfaces_append(top, opening_ex(diff_ex(top_polygons, bottom), float(SCALED_EPSILON)), stTop);
+                    }
+
+                    // Orca top_surface_expansion: the top surfaces grown to cover the material left by the features rising
+                    // from them (filling the holes and joining the tops, so the features rest on solid infill). Each island
+                    // is grown and clipped separately, never across a gap into another; the original top is kept and the
+                    // bottoms are never claimed, so this only adds area.
+                    const PrintRegion &region        = layerm->region();
+                    const double       top_expansion = region.config().get<double>("top_surface_expansion");
+                    // nothing to expand without a top fill
+                    if (top_expansion > 0. && region.extruder_config_value<int>("top_solid_layers", FlowRole::frSolidInfill) > 0 &&
+                        region.config().get<Domain::Percentage>("top_surface_density").value > 0. && ! top.empty()) {
+                        const double     d = scale_(top_expansion);
+                        const ExPolygons T = union_ex(to_expolygons(top));
+                        const Polygons   T_polygons = Algorithms::ExPolygon::to_polygons(T);
+                        // the walls are laid out on spacing, not width; a single wall over the top surfaces is exactly the
+                        // situation handled here
+                        const auto one_wall_top = region.config().get<Domain::TopOnePerimeterType>("top_one_perimeter_type");
+                        const int  perimeters   = region.extruder_config_value<int>("perimeters", FlowRole::frPerimeter);
+                        const int  wall_loops   = one_wall_top == Domain::TopOnePerimeterType::TopSurfaces ||
+                                (one_wall_top == Domain::TopOnePerimeterType::TopmostOnly && upper_layer == nullptr) ?
+                            std::min(perimeters, 1) : perimeters;
+                        const double wall_band  = wall_loops <= 0 ? 0. :
+                            double(layerm->flow(frExternalPerimeter).scaled_width()) +
+                            double(layerm->flow(frPerimeter).scaled_spacing()) * double(wall_loops - 1);
+                        const double margin     = scale_(region.config().get<double>("top_surface_expansion_margin"));
+                        // the minimum real top to act on: about 2 top infill lines
+                        const float  min_top    = float(layerm->flow(frTopSolidInfill).scaled_width());
+                        const auto   direction  = region.config().get<Domain::TopSurfaceExpansionDirection>("top_surface_expansion_direction");
+
+                        ExPolygons grown;
+                        for (const ExPolygon &island : union_ex(layerm_slices_surfaces)) {
+                            // The top infill is inside the walls: seeded and measured from the island minus the wall band,
+                            // so a section whose exposed top is just the walls is skipped.
+                            const ExPolygons infill_region = wall_band > 0. ? offset_ex(island, -float(wall_band)) : ExPolygons{ island };
+                            const ExPolygons island_top    = intersection_ex(
+                                Algorithms::ClipperUtils::clip_clipper_polygons_with_subject_bbox(T_polygons, BB::inflated(get_extents(island), SCALED_EPSILON)),
+                                infill_region);
+                            if (opening_ex(island_top, min_top).empty())
+                                continue;
+
+                            // grown, then only what the direction allows, told apart by the top's own outline (holes closed)
+                            ExPolygons expanded = offset_ex(island_top, float(d), ClipperLib::jtMiter, 2.);
+                            if (direction != Domain::TopSurfaceExpansionDirection::InwardAndOutward) {
+                                ExPolygons outline;
+                                outline.reserve(island_top.size());
+                                for (const ExPolygon &ex : island_top)
+                                    outline.emplace_back(ex.contour);
+                                outline  = union_ex(outline);
+                                expanded = direction == Domain::TopSurfaceExpansionDirection::Inward ?
+                                    intersection_ex(expanded, outline) :             // only the growth into the holes
+                                    diff_ex(expanded, diff_ex(outline, island_top)); // only the growth past the outer edge
+                            }
+                            // clear of the walls by the margin
+                            const ExPolygons allowed = margin > 0. ? offset_ex(infill_region, -float(margin)) : infill_region;
+                            append(grown, intersection_ex(expanded, allowed));
+                        }
+
+                        ExPolygons new_top = diff_ex(union_ex(T, grown), to_expolygons(bottom));
+                        top.clear();
+                        surfaces_append(top, std::move(new_top), stTop);
                     }
 
         #ifdef SLIC3R_DEBUG_SLICE_PROCESSING
@@ -1013,6 +1275,65 @@ void PrintObject::detect_surfaces_type()
 	        	m_layers[num_layers - 1]->m_regions[region_id]->m_slices.set_type(stTop);
 	        for (size_t i = num_layers; i < m_layers.size(); ++ i)
 	        	m_layers[i]->m_regions[region_id]->m_slices.set_type(stInternal);
+        }
+
+        // Orca enable_extra_bridge_layer (external): the internal areas of the layer above the bottom bridges become
+        // bottom bridges too, filtered by the width of the walls
+        if (const auto extra_bridge_layer = this->config().get<Domain::EnableExtraBridgeLayer>("enable_extra_bridge_layer");
+            extra_bridge_layer == Domain::EnableExtraBridgeLayer::ApplyToAll || extra_bridge_layer == Domain::EnableExtraBridgeLayer::ExternalBridgeOnly) {
+            const size_t last = m_layers.empty() ? 0 : m_layers.size() - 1;
+            // read the bridges first, then write the layers above: an iteration writes only layer i + 1
+            std::vector<Polygons> bridge_polys_per_layer(last);
+            tbb::parallel_for(tbb::blocked_range<size_t>(0, last), [this, region_id, &bridge_polys_per_layer](const tbb::blocked_range<size_t> &range) {
+                for (size_t i = range.begin(); i < range.end(); ++i) {
+                    m_print->throw_if_canceled();
+                    for (const Surface &sbot : m_layers[i]->m_regions[region_id]->m_slices.surfaces)
+                        if (sbot.surface_type == stBottomBridge)
+                            Algorithms::Polygon::append(bridge_polys_per_layer[i], sbot.expolygon);
+                }
+            });
+            tbb::parallel_for(tbb::blocked_range<size_t>(0, last), [this, region_id, &bridge_polys_per_layer](const tbb::blocked_range<size_t> &range) {
+                for (size_t i = range.begin(); i < range.end(); ++i) {
+                    m_print->throw_if_canceled();
+                    const Polygons &polygons_bridge = bridge_polys_per_layer[i];
+                    if (polygons_bridge.empty())
+                        continue;
+                    Surfaces &top_surfs = m_layers[i + 1]->m_regions[region_id]->m_slices.surfaces;
+                    Surfaces  new_surfaces;
+                    new_surfaces.reserve(top_surfs.size());
+                    // no second bridge narrower than the walls on both sides
+                    const LayerRegion *layerm                   = m_layers[i]->m_regions[region_id];
+                    const int          number_of_internal_walls = std::max(0, layerm->region().extruder_config_value<int>("perimeters", FlowRole::frPerimeter) - 1);
+                    const float        offset_distance          = float(layerm->flow(frExternalPerimeter).scaled_width() +
+                                                                        layerm->flow(frPerimeter).scaled_width() * number_of_internal_walls);
+                    // no second bridge under the top surfaces of the layer above
+                    ExPolygons same_layer_top_expanded;
+                    {
+                        ExPolygons same_layer_top;
+                        for (const Surface &s : top_surfs)
+                            if (s.surface_type == stTop)
+                                same_layer_top.push_back(s.expolygon);
+                        if (!same_layer_top.empty())
+                            same_layer_top_expanded = offset_ex(same_layer_top, offset_distance);
+                    }
+                    for (Surface &s_up : top_surfs) {
+                        if (s_up.surface_type != stInternal) {
+                            new_surfaces.push_back(std::move(s_up));
+                            continue;
+                        }
+                        const Polygons p_up    = Algorithms::ExPolygon::to_polygons(s_up.expolygon);
+                        ExPolygons     overlap = intersection_ex(p_up, polygons_bridge, ApplySafetyOffset::Yes);
+                        overlap                = offset_ex(shrink_ex(overlap, offset_distance), offset_distance);
+                        if (!same_layer_top_expanded.empty() && !overlap.empty())
+                            overlap = diff_ex(overlap, same_layer_top_expanded, ApplySafetyOffset::Yes);
+                        for (ExPolygon &ex_remainder : union_safety_offset_ex(diff_ex(p_up, overlap, ApplySafetyOffset::Yes)))
+                            new_surfaces.emplace_back(stInternal, std::move(ex_remainder));
+                        for (ExPolygon &ex_overlap : union_safety_offset_ex(overlap))
+                            new_surfaces.emplace_back(stBottomBridge, std::move(ex_overlap));
+                    }
+                    top_surfs = std::move(new_surfaces);
+                }
+            });
         }
 
         SPDLOG_DEBUG("Detecting solid surfaces for region {} - clipping in parallel - start", region_id);
@@ -1660,10 +1981,13 @@ void PrintObject::bridge_over_infill()
                 unsupported_area = closing(unsupported_area, float(SCALED_EPSILON));
                 // By expanding the lower layer solids, we avoid making bridges from the tiny internal overhangs that are (very likely) supported by previous layer solids
                 // NOTE that we cannot filter out polygons worth bridging by their area, because sometimes there is a very small internal island that will grow into large hole
+                // Orca dont_filter_internal_bridges: less expansion and shrinking keeps smaller internal bridges
+                const Domain::InternalBridgeFilter bridge_filter        = po->config().get<Domain::InternalBridgeFilter>("dont_filter_internal_bridges");
+                const double                       expansion_multiplier = bridge_filter != Domain::InternalBridgeFilter::Disabled ? 1 : 3;
                 lower_layer_solids = shrink(lower_layer_solids, 1 * spacing); // first remove thin regions that will not support anything
-                lower_layer_solids = expand(lower_layer_solids, (1 + 3) * spacing); // then expand back (opening), and further for parts supported by internal solids
+                lower_layer_solids = expand(lower_layer_solids, (1 + expansion_multiplier) * spacing); // then expand back (opening), and further for parts supported by internal solids
                 // By shrinking the unsupported area, we avoid making bridges from narrow ensuring region along perimeters.
-                unsupported_area   = shrink(unsupported_area, 3 * spacing);
+                unsupported_area   = shrink(unsupported_area, expansion_multiplier * spacing);
                 unsupported_area   = diff(unsupported_area, lower_layer_solids);
 
                 for (const LayerRegion *region : layer->regions()) {
@@ -1672,8 +1996,12 @@ void PrintObject::bridge_over_infill()
                         Polygons unsupported         = intersection(Algorithms::ExPolygon::to_polygons(s->expolygon), unsupported_area);
                         // The following flag marks those surfaces, which overlap with unuspported area, but at least part of them is supported. 
                         // These regions can be filtered by area, because they for sure are touching solids on lower layers, and it does not make sense to bridge their tiny overhangs 
-                        bool     partially_supported = Algorithms::Polygon::area(unsupported) < Algorithms::Polygon::area(Algorithms::ExPolygon::to_polygons(s->expolygon)) - EPSILON;
-                        if (!unsupported.empty() && (!partially_supported || Algorithms::Polygon::area(unsupported) > 3 * 3 * spacing * spacing)) {
+                        if (bridge_filter == Domain::InternalBridgeFilter::NoFilter) {
+                            // Orca: every internal overhang is bridged, the unsupported area grown to trigger the bridging
+                            if (!unsupported.empty())
+                                candidate_surfaces.push_back(CandidateSurface(s, lidx, expand(unsupported, 4 * spacing), region, 0));
+                        } else if (const bool partially_supported = Algorithms::Polygon::area(unsupported) < Algorithms::Polygon::area(Algorithms::ExPolygon::to_polygons(s->expolygon)) - EPSILON;
+                                   !unsupported.empty() && (!partially_supported || Algorithms::Polygon::area(unsupported) > 3 * 3 * spacing * spacing)) {
                             Polygons worth_bridging = intersection(Algorithms::ExPolygon::to_polygons(s->expolygon), expand(unsupported, 4 * spacing));
                             // after we extracted the part worth briding, we go over the leftovers and merge the tiny ones back, to not brake the surface too much
                             for (const Polygon& p : diff(Algorithms::ExPolygon::to_polygons(s->expolygon), expand(worth_bridging, spacing))) {
@@ -1802,14 +2130,15 @@ void PrintObject::bridge_over_infill()
     std::map<size_t, Polylines> infill_lines;
     // SECTION to generate infill polylines
     {
-        std::vector<std::pair<const Surface *, float>> surfaces_w_bottom_z;
+        std::vector<std::pair<const Surface *, const Layer *>> surfaces_w_layer;
         for (const auto &pair : surfaces_by_layer) {
             for (const CandidateSurface &c : pair.second) {
-                surfaces_w_bottom_z.emplace_back(c.original_surface, c.region->m_layer->bottom_z());
+                surfaces_w_layer.emplace_back(c.original_surface, c.region->m_layer);
             }
         }
 
-        this->m_adaptive_fill_octrees = this->prepare_adaptive_infill_data(surfaces_w_bottom_z);
+        this->m_adaptive_fill_octrees = this->prepare_adaptive_infill_data(surfaces_w_layer);
+        this->m_tpms_radial_fields    = this->prepare_tpms_radial_fields();
 
         std::vector<size_t> layers_to_generate_infill;
         for (const auto &pair : surfaces_by_layer) {
@@ -1825,8 +2154,7 @@ void PrintObject::bridge_over_infill()
             for (size_t job_idx = r.begin(); job_idx < r.end(); job_idx++) {
                 size_t lidx = layers_to_generate_infill[job_idx];
                 infill_lines.at(
-                    lidx) = po->get_layer(lidx)->generate_sparse_infill_polylines_for_anchoring(po->m_adaptive_fill_octrees.first.get(),
-                                                                                                po->m_adaptive_fill_octrees.second.get(),
+                    lidx) = po->get_layer(lidx)->generate_sparse_infill_polylines_for_anchoring(&po->m_adaptive_fill_octrees,
                                                                                                 po->m_lightning_generator.get());
             }
         });
@@ -2315,6 +2643,19 @@ void PrintObject::bridge_over_infill()
                         // Also, use Infill pattern that is neutral for angle determination, since there are no infill lines.
                         bridging_angle = determine_bridging_angle(area_to_be_bridge, Algorithms::Polyline::to_lines(boundary_plines), Domain::InfillPattern::ipLine);
                     }
+                    // Orca internal_bridge_angle (relative_bridge_angle: added to the automatic one)
+                    if (const double internal_angle = candidate.region->region().config().get<double>("internal_bridge_angle"); internal_angle > 0) {
+                        if (candidate.region->region().config().get<bool>("relative_bridge_angle"))
+                            bridging_angle += deg2rad(internal_angle);
+                        else {
+                            bridging_angle = deg2rad(internal_angle);
+                            // Orca align_infill_direction_to_model
+                            if (candidate.region->region().config().get<bool>("align_infill_direction_to_model")) {
+                                const auto &m = po->trafo().matrix();
+                                bridging_angle += std::atan2(double(m(1, 0)), double(m(0, 0)));
+                            }
+                        }
+                    }
 
                     boundary_plines.insert(boundary_plines.end(), anchors.begin(), anchors.end());
                     if (!lightning_area.empty() && !intersection(area_to_be_bridge, lightning_area).empty()) {
@@ -2436,6 +2777,77 @@ void PrintObject::bridge_over_infill()
             }
         }
     });
+
+    // Orca enable_extra_bridge_layer (internal): the internal and solid areas of the layer above the internal bridges
+    // become internal bridges at 90 degrees to them
+    if (const auto extra_bridge_layer = m_config.get<Domain::EnableExtraBridgeLayer>("enable_extra_bridge_layer");
+        extra_bridge_layer == Domain::EnableExtraBridgeLayer::ApplyToAll || extra_bridge_layer == Domain::EnableExtraBridgeLayer::InternalBridgeOnly) {
+        struct LayerBridgeCache {
+            ExPolygons polys;
+            double     angle           = 0.0;
+            float      offset_distance = 0.0f;
+            bool       has_bridge      = false;
+        };
+        const size_t last = this->layers().size() < 2 ? 0 : this->layers().size() - 1;
+        std::vector<LayerBridgeCache> caches(this->layers().size());
+        // read the bridges first, then write the layers above: an iteration writes only layer lidx + 1
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, last), [this, &caches](const tbb::blocked_range<size_t> &r) {
+            for (size_t lidx = r.begin(); lidx < r.end(); ++lidx) {
+                const Layer      *layer = this->get_layer(lidx);
+                LayerBridgeCache &cache = caches[lidx];
+                if (!layer->regions().empty())
+                    cache.offset_distance = float(layer->regions().front()->flow(frSolidInfill).scaled_width());
+                for (const LayerRegion *region : layer->regions())
+                    for (const Surface &surf : region->fill_surfaces())
+                        if (surf.surface_type == stInternalBridge) {
+                            cache.polys.push_back(surf.expolygon);
+                            cache.angle      = surf.bridge_angle;
+                            cache.has_bridge = true;
+                        }
+                // shrink and expand to remove trivial bridging areas
+                if (cache.has_bridge)
+                    cache.polys = offset_ex(shrink_ex(cache.polys, cache.offset_distance), cache.offset_distance);
+                cache.has_bridge = cache.has_bridge && !cache.polys.empty();
+            }
+        });
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, last), [this, &caches](const tbb::blocked_range<size_t> &r) {
+            for (size_t lidx = r.begin(); lidx < r.end(); ++lidx) {
+                const LayerBridgeCache &cache = caches[lidx];
+                if (!cache.has_bridge)
+                    continue;
+                Layer           *next_layer            = m_layers[lidx + 1];
+                const double     bridging_angle_second = cache.angle + M_PI / 2.0;
+                const ExPolygons bridging_union        = union_safety_offset_ex(cache.polys);
+                for (LayerRegion *next_region : next_layer->regions()) {
+                    Surfaces next_new_surfaces;
+                    Surfaces keep_surfaces;
+                    for (const Surface &s : next_region->fill_surfaces())
+                        if (s.surface_type != stInternal && s.surface_type != stInternalSolid)
+                            keep_surfaces.push_back(s);
+                    for (const Surface *s : next_region->fill_surfaces().filter_by_types({stInternal, stInternalSolid})) {
+                        ExPolygons overlap = intersection_ex(ExPolygons{s->expolygon}, bridging_union, ApplySafetyOffset::Yes);
+                        overlap            = offset_ex(shrink_ex(overlap, cache.offset_distance), cache.offset_distance);
+                        if (overlap.empty()) {
+                            keep_surfaces.push_back(*s);
+                            continue;
+                        }
+                        Surface bridge{*s, ExPolygon{}};
+                        bridge.surface_type = stInternalBridge;
+                        bridge.bridge_angle = bridging_angle_second;
+                        for (const ExPolygon &ep : overlap)
+                            next_new_surfaces.emplace_back(bridge, ep);
+                        ExPolygons leftover = diff_ex(s->expolygon, bridging_union, ApplySafetyOffset::Yes);
+                        leftover            = offset_ex(shrink_ex(leftover, cache.offset_distance), cache.offset_distance);
+                        for (const ExPolygon &ep : union_safety_offset_ex(leftover))
+                            next_new_surfaces.emplace_back(*s, ep);
+                    }
+                    next_region->m_fill_surfaces.surfaces.clear();
+                    next_region->m_fill_surfaces.append(keep_surfaces);
+                    next_region->m_fill_surfaces.append(next_new_surfaces);
+                }
+            }
+        });
+    }
 
     SPDLOG_INFO("Bridge over infill - End {}", log_memory_info());
 
@@ -2682,6 +3094,13 @@ void PrintObject::discover_horizontal_shells()
                     if (surface.surface_type == stInternal)
                         surface.surface_type = type;
             }
+
+            // Orca extra_solid_infills: insert a solid internal layer. Mark stInternal surfaces as stInternalSolid.
+            if (const std::string extra_solid_infills = region_config.get<std::string>("extra_solid_infills");
+                !extra_solid_infills.empty() && check_layer_id_pattern(extra_solid_infills, int(i)))
+                for (Surface &surface : layerm->m_fill_surfaces.surfaces)
+                    if (surface.surface_type == stInternal)
+                        surface.surface_type = stInternalSolid;
 
             // If ensure_vertical_shell_thickness, then the rest has already been performed by discover_vertical_shells().
             if (region_config.get<Domain::EnsureVerticalShellThickness>("ensure_vertical_shell_thickness") != Domain::EnsureVerticalShellThickness::Disabled)
@@ -2963,7 +3382,9 @@ void PrintObject::combine_infill()
                   region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill) == Domain::InfillPattern::ipMonotonic     ||
                   region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill) == Domain::InfillPattern::ipGrid          ||
                   region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill) == Domain::InfillPattern::ipLine          ||
-                  region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill) == Domain::InfillPattern::ipHoneycomb) ? 1.5f : 0.5f) * 
+                  region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill) == Domain::InfillPattern::ipLateralLattice ||
+                  region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill) == Domain::InfillPattern::ipHoneycomb ||
+                  region.extruder_config_value<Domain::InfillPattern>("fill_pattern", FlowRole::frInfill) == Domain::InfillPattern::ipLateralHoneycomb) ? 1.5f : 0.5f) * 
                     layerms.back()->flow(frSolidInfill).scaled_width();
             for (ExPolygon &expoly : intersection)
                 Slic3r::append(intersection_with_clearance, offset(expoly, clearance_offset));

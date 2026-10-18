@@ -1,0 +1,391 @@
+kind: printer
+id: KjPaQg+UgwDodrRuoppCDg
+variants:
+- condition: printer.model == "LONGER LK10 Plus"
+  name: LONGER LK10 Plus
+  id: KL7UJdlS+aDWfgfRslug6g
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: 5EjCxbpI6O0JrOLiNOQIjw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+
+        ;[layer_z]
+
+        TIMELAPSE_TAKE_FRAME
+
+        G92 E0.0
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @LONGER LK10 Plus (0.2 nozzle)
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 50
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        PRINT_END
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 7000.0
+      machine_max_acceleration_retracting:
+      - 7000.0
+      machine_max_acceleration_travel:
+      - 7000.0
+      machine_max_acceleration_x:
+      - 7000.0
+      machine_max_acceleration_y:
+      - 7000.0
+      machine_max_acceleration_z:
+      - 300.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        START_PRINT_PREPARE BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+        START_PURGE_WIPE TRAVEL_SPEED=[travel_speed]
+        START_PRINT_COOL_PURGE
+        START_PRINT_FINAL_HEAT BED_TEMP=[first_layer_bed_temperature[initial_extruder]] NOZZLE_TEMP=[first_layer_temperature] TRAVEL_SPEED=[travel_speed]
+        START_PRIME_LINES TRAVEL_SPEED=[travel_speed]
+        ; filament start gcode
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 320x0
+      - 320x320
+      - '0x320'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: BdsEn/KTimqMtXVF7MEyEQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+
+        ;[layer_z]
+
+        TIMELAPSE_TAKE_FRAME
+
+        G92 E0.0
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @LONGER LK10 Plus (0.4 nozzle)
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 50
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        PRINT_END
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 7000.0
+      machine_max_acceleration_retracting:
+      - 7000.0
+      machine_max_acceleration_travel:
+      - 7000.0
+      machine_max_acceleration_x:
+      - 7000.0
+      machine_max_acceleration_y:
+      - 7000.0
+      machine_max_acceleration_z:
+      - 300.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        START_PRINT_PREPARE BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+        START_PURGE_WIPE TRAVEL_SPEED=[travel_speed]
+        START_PRINT_COOL_PURGE
+        START_PRINT_FINAL_HEAT BED_TEMP=[first_layer_bed_temperature[initial_extruder]] NOZZLE_TEMP=[first_layer_temperature] TRAVEL_SPEED=[travel_speed]
+        START_PRIME_LINES TRAVEL_SPEED=[travel_speed]
+        ; filament start gcode
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 320x0
+      - 320x320
+      - '0x320'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: AHpY5RUWoDUcjf8e5joBhQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+
+        ;[layer_z]
+
+        TIMELAPSE_TAKE_FRAME
+
+        G92 E0.0
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @LONGER LK10 Plus (0.6 nozzle)
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 50
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        PRINT_END
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 7000.0
+      machine_max_acceleration_retracting:
+      - 7000.0
+      machine_max_acceleration_travel:
+      - 7000.0
+      machine_max_acceleration_x:
+      - 7000.0
+      machine_max_acceleration_y:
+      - 7000.0
+      machine_max_acceleration_z:
+      - 300.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        START_PRINT_PREPARE BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+        START_PURGE_WIPE TRAVEL_SPEED=[travel_speed]
+        START_PRINT_COOL_PURGE
+        START_PRINT_FINAL_HEAT BED_TEMP=[first_layer_bed_temperature[initial_extruder]] NOZZLE_TEMP=[first_layer_temperature] TRAVEL_SPEED=[travel_speed]
+        START_PRIME_LINES TRAVEL_SPEED=[travel_speed]
+        ; filament start gcode
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 320x0
+      - 320x320
+      - '0x320'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: w1Z3UfQW+kFxr9XENazcSw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+
+        ;[layer_z]
+
+        TIMELAPSE_TAKE_FRAME
+
+        G92 E0.0
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @LONGER LK10 Plus (0.8 nozzle)
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 50
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        PRINT_END
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 7000.0
+      machine_max_acceleration_retracting:
+      - 7000.0
+      machine_max_acceleration_travel:
+      - 7000.0
+      machine_max_acceleration_x:
+      - 7000.0
+      machine_max_acceleration_y:
+      - 7000.0
+      machine_max_acceleration_z:
+      - 300.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        START_PRINT_PREPARE BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+        START_PURGE_WIPE TRAVEL_SPEED=[travel_speed]
+        START_PRINT_COOL_PURGE
+        START_PRINT_FINAL_HEAT BED_TEMP=[first_layer_bed_temperature[initial_extruder]] NOZZLE_TEMP=[first_layer_temperature] TRAVEL_SPEED=[travel_speed]
+        START_PRIME_LINES TRAVEL_SPEED=[travel_speed]
+        ; filament start gcode
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 320x0
+      - 320x320
+      - '0x320'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

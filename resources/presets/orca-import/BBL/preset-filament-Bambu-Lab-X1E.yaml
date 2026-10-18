@@ -1,0 +1,3080 @@
+kind: filament
+id: pkLUwgqyPMKaFZ/a8+7vyA
+name: Bambu ABS @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 15.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_long_retractions_when_cut": "1", "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_retraction_distances_when_cut": "18", "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: gN3RVIAydM6bvzestoyYow
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: QyfPotpZtmCzowN+cyJ4sw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: eeX7ZFzwBoAEnlUyb+qEcA
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: 9St6Lec7y9poKtZd6HGXOg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: BCa8hvcBLJV5UXWO6PQANA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: /FHyhr5GCAIz3JpThVNAYA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: mtCYozMioYJsz23xuAS5hg
+name: Bambu ABS @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 15.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_long_retractions_when_cut": "1", "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_retraction_distances_when_cut": "18", "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: XgC/D0o8iHCdF862iF6BNw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Pw6JAi7EyjGjpU3ms8dz3A
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: eXIJ5IUSU1eK5lbvYDLy1w
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: s6+wpk1cV4U82aNQGTCpuQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: iY4R1pbH3aNNKY68gUOucA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: f+1U/azH6LdlUdEhFTvfBg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: zq6nGOCTuJaRK1XKV8UYRg
+name: Bambu ABS @BBL X1E 0.8 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 15.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_long_retractions_when_cut": "1", "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_retraction_distances_when_cut": "18", "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: jFtN8GQ3dVhLnX6UVBqJdQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: QE6uapRLD92IsEwH5Q67rg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: /TT2bnUjY7OL7ixNJu4JFA
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: pdIobD4KtnM2Daj32O1k7Q
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: DFP0q3rQBV6hAB7nxn6CWg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: wetV1ZEvAi+smyCiVw0BZw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: DuvIu72FNANwVftHeLDtpA
+name: Bambu ASA @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 35
+  min_fan_speed: 25
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 26.99
+  filament_density: 1.05
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_long_retractions_when_cut": "1", "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_retraction_distances_when_cut": "18", "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ttKocArWJP+BuPSubCAP+w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: coLoiRE6AVO6KVoypjP3NA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: gjhmr9VjrN4IuEOVTvgFrQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: dK7ccS+CsqMT5GaHRPd+XQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: G5Xgt8DDzzfa1fjApcIUlw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: OD5N4R4m9a7gdo4oCmJ+gw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: nJ4zaD+llf7CwEdX1a+OQg
+name: Bambu ASA @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 35
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 26.99
+  filament_density: 1.05
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_long_retractions_when_cut": "1", "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_retraction_distances_when_cut": "18", "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: xYEXwb7ibOPI4DklzflRMg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: PCmBcus+ru9Bte+UF8p2bg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: Eb/iePQxaxzqeHSpJaipGQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: zIkLlhAIvDkSsa0kychp2w
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: tBi6gBvsLPyXHPg6JEYOSA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: dn4ZLWFD0mtgUiehn15k3A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: qA0YiTZo4uDuNJFLQu6x3g
+name: Bambu ASA @BBL X1E 0.4 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 35
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 26.99
+  filament_density: 1.05
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_long_retractions_when_cut": "1", "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_retraction_distances_when_cut": "18", "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: NqshV8X6o7GlMa1s8snzvw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: SQiINzu243yXcDcZ12iOOA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: g6rhqqnLMpfbjaIbb2pj9g
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: Qh5yo3ZMdvckY5Kz8MFNcg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: WM4DTvWpvsVWwcUklNoZrA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: HX0KM6EzaSJcHM+O1/t6iA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: ZXRZ1hn6sv3J32uJb7jHhQ
+name: Bambu PA-CF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 84.99
+  filament_density: 1.09
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 2
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 2, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 300, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 170}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 2xH7ZUIzNMTdc8plgsFJPg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: kkimEx2eVPUgRV+3h4Pngg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: yc/E5mJi3pVa5NLyWrajDw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: 5f9QtCtkg9DKzoGET1J9xA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: i6HVObrzEldWQcQY0N8KtA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 4qk7DhmnAPzZ4YdusRZGsw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: SLa3smx25pkkSi+US0N8JA
+name: Bambu PA6-CF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 76.99
+  filament_density: 1.1
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PA6-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 275
+  first_layer_temperature: 275
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 300, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 170}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: hCWLZpcNLMIOm4vdAUvGVA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: +cl5BOiVxB/t7eT1MEAqbA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: Je0fj7g2SUchh0OY27S2Ig
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: A7eX67nZRWX4s1JhXhlQoA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: I/yrwcddyGajJSq+gl3Mzw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: rn748+dH4VY/TqPDpbNNbg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: tGWT/uLJhVphFKIzbHmAxQ
+name: Bambu PC @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 36.99
+  filament_density: 1.185
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 14K2MGV7apLOCtCtiq9n3w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: iFnLqNQoeNPYf3Q8hAUxeA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: wyWUrr6DjbJz43bjjdST9w
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: AYSr4r6JmAVZrqP7GiDW9w
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: aiF8ps/xsbOoPujUjLoFvw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: jPsjVQXFD+8IHMBFfGcSpw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: RUJQhUKQK1pGIMwCCibkkg
+name: Bambu PC @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 36.99
+  filament_density: 1.185
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: CJtlNv+J/sBiYxVBgtm4Cg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: XEeECi6cKESwf64M3CTelQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: 4TlTwio5xuKKnOlvO37rMQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: AhiMWcuui7MTVZeJo3QsgQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: ohwshlCSaQwxxVGRsqqYCQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: g53XAvGuRmE0amd3CHwqIA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: nJTvQOjpXae3N+JZHQx2dA
+name: Bambu PC @BBL X1E 0.6 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 36.99
+  filament_density: 1.185
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: chAA2gur3eLf0uwYd+tuhA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: H7GtH9mxvV8d596X8mq1Lg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: 09+8GKU8ou4tNiiIOHa6IA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: X+dLyECuSn4MlyE0px9jzQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: AF1khAlM0l7rm6NVMN2f1w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: K6PGZYpHo24MKSZfbR2Dhw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: O4aRvrUsvhDgGYpPo2Dd4A
+name: Bambu PC @BBL X1E 0.8 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 36.99
+  filament_density: 1.185
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: GksUTVROlhWEzdplo2rWlg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 4PJcbSKpRUrj+qQNGoOxVg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: 27Zm3ytxdKbaX7wjfl4PjQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: hkdsVcmHRrfQz/rB7UYQSw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: PAO7XlhA6+brIqYBOBqb1A
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: uDnHe4ZOrOuqOLYnk+becw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: x+HaBS1vK2j9+l1+wc+WYw
+name: Bambu PC FR @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 51.99
+  filament_density: 1.19
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: GKuqUByKSn58/rZHAWLZ/g
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: HkzHPWqltPu5cVkvQ2WTbg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: wuoEe5cCJFkZMd7ebDsPXw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: 3OVkIgERftZ6DYUZUZEnpQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: xz92qsliW+3FCMBOGCRdVA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: pJ2NR/ReEO2zMrJPd8LWgg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: PHaH+ys7Cu1JU83T9UVHBA
+name: Bambu PC FR @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 51.99
+  filament_density: 1.19
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 6lJO+DXw/Tdp8MvFDd3ptg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 6BiL998Dewt1hKy4AYM2CQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: s9GI/eQo6W2GcdCr4eUkbA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: 1qei7fCqBZfHM/f1ioiscw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: 28U+XelJHryjsWhoWbwPzw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: xeI73nvJxKHEn/FUhUKpYQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: EqknKXUhx4cKm86ttmj1xg
+name: Bambu PC FR @BBL X1E 0.6 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 51.99
+  filament_density: 1.19
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: c3iQdejW0zlLdR5y1rsQow
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: fZY9lkVH54/xbwngyl/spg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: nqIaIhLI0GGaccr7OqdykQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: uItWXZR5ANAyMuZIOERGMA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: uJyoEGGbx/zBEyf4WMPfuQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 184hmLizldplzNyK3EPu7g
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: pLCuCYAtHJVm3PLWcIrELg
+name: Bambu PC FR @BBL X1E 0.8 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 51.99
+  filament_density: 1.19
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: xEQZtkrUN/m/ymCjM/uJ4w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Dsmq/gfVcc7WmH6LuxdO2Q
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: OM1ksQlS0Yaw4LOxbyumdQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: W8aecGfikn2Iare57a0yMg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: RKeP4seOI1U58rD7IghajQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: E8XbG6hDvIo0yyve5Jdi3w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 6uXNg+nYbVxEemnalBkvzg
+name: Bambu PET-CF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 80
+  max_fan_speed: 80
+  min_fan_speed: 1
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 81.99
+  filament_density: 1.29
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.9555
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if (bed_temperature[current_extruder] >80)||(first_layer_bed_temperature[current_extruder] >80)}M106 P3 S255\n{elsif (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PET-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 1
+  min_print_speed: 35
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 185}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ndMcE9iLmA4pVagY5JzcaQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 4loz1PAMrGHmBFQaKmYNyw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: 36JSi0ex2TaCY4i/2quscg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: CzKbon2p9KSBuAhe5SooBA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: E8y32gHS7m6ALKQPrBom6A
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 9VXYwV77965H10Y4aoBvag
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+---
+kind: filament
+id: 343VytfAvPkgGqbkySSL1Q
+name: Bambu PLA Glow @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 21.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(first_layer_bed_temperature[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S50\n{endif}\nM142 P1 R35 S40\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 70, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 1, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_long_retractions_when_cut": "1", "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_retraction_distances_when_cut": "18", "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 240, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 45}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 7MEplKwIQ9FJlD5YruIh7Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: +VMUI1wAUZ5ODynk295KtQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: KqYCvQ3SEkxa+JeXwtqwvQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: oVRLACEX1QtxUJP7xJdJYw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: gt0FE7BkAGXU+VKuTHdh0w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: I6gOivb4oD64hDxLrbjz1g
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: eV5l4wERm+Tv35Q4eqkX2w
+name: Bambu PLA Glow @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 21.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(first_layer_bed_temperature[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S50\n{endif}\nM142 P1 R35 S40\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 70, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 1, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_long_retractions_when_cut": "1", "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_retraction_distances_when_cut": "18", "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 240, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 45}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: vZls306+NyFxFmpsnj0wDQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: bM0CyCQU7cNo98ARNFOsPw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: ZvHli28dlX7g5yMcxzZTAw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 1jpQmmIDpFLkm5cjEppKmA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: BhbrrkW4xd1KSSnXAKd4NA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: vp2XIwLKJNf3lX0rKrEZVw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: RCvgU/ep2KCS8ehLznPXzg
+name: Bambu PPA-CF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 195.99
+  filament_density: 1.17
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 320, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 210}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 5CLfg0wyKxfN8YiXQ0zUFA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: wxQk3oV/C6w1/Iv7IBbueA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: asXC6vrhX7trglWw/AkDJw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: 1nlpeESAUGa4JXgZ4Z6IHQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: FOe2B2d/G+c1K2cHieG4ng
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: v/HsM8X+CfyTaniq+xoNKg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: bylRq7Z/1c867t4D6ZmHtA
+name: Bambu PPS-CF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 169.32
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPS-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 320
+  first_layer_temperature: 320
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 340, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 220}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: hnlExL9eE7ggn51RZD8tAw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: /0P3wfy9UQXUHl0+JZpRlw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: V1a2meMfM9l9BrfLAsRNdw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: CGCqxDSK71T4XzrsYTZuxA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: 3QXTSQoHax9z5eRCymmPCg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: NHv08gx/HRN/SV/vW2TACQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 3Rzbrgy10ihUfZxHnjxrww
+name: Bambu Support G @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 10
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 6
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 300, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 108}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: qzms2j5KmdxewNjs6Qs+mQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: SIRYBuAgJcAEQDAgKS2MQw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: DHIBZYAKYic9WBALFv2tDw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: FXhNY8G2yIuCXP0XuxsW2A
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: 37LOgCFDkisweIy0n6OOZw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 7RcUhpCHZLAaLvi2dcryiA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 6Yt4nRzAiHRc+YN93kX2cw
+name: Bambu TPU 95A HF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 38.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.8
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >30)||(first_layer_bed_temperature[current_extruder] >30)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Bambu Lab
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 70, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 1, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 250, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 30}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: UgsRjpotHw2v5vIA1YOz4g
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: bjISXmVa+QINVQCgfFjPdA
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: VAhE9xriFBEMpwzkeNjPjg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: +gjtjrN8ra+4jOgDcQ3iQg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: eGiPhe3juV/96StIgcPA/A
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: pgHnC3H7ZynhsfiYmLmu4g
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: qf4gHVZuvjsSm5c7pFQ2jg
+name: Generic ABS @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 15
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +7QmZ3CDOTDfeZRDo73ipA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: xUnOn4tCObRHk8pxEgSkEA
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: T0VUAexmwnoSzzbOY5lHmw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: xLsZYvdr2LVWLtB6nWqJRQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: tflbWadGo/sIC1NftE0q7g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: F2LxYG4ZuPOA+FaJl4sm3g
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: s4wJC9usbD8P1F1qO8Qifw
+name: Generic ABS @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: peNnCuJWjjUMa6KB5vyE+A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: CpeTutsAxbGkV++IqyEKrQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: VfJ0vrwRamCKuXguDHjY+g
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: oEVV97NKryb6q6wNvUB1mw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: mWHW/idxfD0iSJeU1zNTJA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: DL/rCdToFxKOmlodnIhSCg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 9SIoGo2YrmpDd0IM0g0z+A
+name: Generic ASA @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Of6LmtjItcjOC3zJ+4HFTw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 5PeZ8t9OnliACkcX1U8Wdg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: 8hjjpFH6YCVUUsWugpbNhQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: 3IFgJq2xj1GhNoM1HjYF5g
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: ImYrbUlhi3sJWTgfJCYDjA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: CVxYJDdKRflqi003KjgDLg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: yrZGoroULzWhE0bFyC0hhg
+name: Generic ASA @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 8O1PTKCaFIIaxXSi3tvvZw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: uTm+uasu0AVFSEaZcyFGVQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: rOgCN93KcIJP640GZvX3Cg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: //K5PDJOR7Fh+UHOlXPP6w
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: jl4pcSRgWYYG5GfsnJkxlA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: iUgxbWVGq2xJuS218wcWJQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: Sylrh/lRhRNub41mIViKGA
+name: Generic PA-CF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 2
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 2, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 300, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 170}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ADVDhY14kpJamYLig23MhQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: J8HB4rdhVkI7+vkJK3LRVA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: CP3M6RkwFu7Z9rrLk5vBHA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: 0lhv02RKsGi93cCVR65s3g
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: FG0jXeQC/9lCiBpbJ8FI1w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Ps9rgC/rd59qCuaGRQ5tmg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 9UlzwVSuVoHhISNzKs99kQ
+name: Generic PC @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: eiESdNp6CXq2dabimVB1SA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Ldx59Wbg5ImbfXku1wRiQw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: /yNKhZDMa1Q4UqdpHxD3YQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: rzuWPnTlUqWO+wDbQBzZVA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: 3vAz+AboquKP/+03WP26OA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 41NguBZr3KQbMgYnV3Ppng
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: uUTlvy/pANOpq1GP0+qrew
+name: Generic PC @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 1
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 290, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 120}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: qN0OOp2ZJphIFjlqm8tjhw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 4BeWn5dh8n/vHlUouyEQqA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: 2He3isVYFNaAAqow/faPoA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: Cwuf4aXEvRseEsU4pVaGbw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: msMMqDRr/en2wvSr7MkTAg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Bj30IcvHMvt0aSAokxOLaQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: yqXvaWe3iULICx2r6F+4ew
+name: Generic PPA-CF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 35
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.17
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 320, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 210}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: N4XLXtQ1tznpvOKhT+w2Qg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: zyKaztzTKacu/wk8ULZ1NQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: W8s3oWetp0a0eVxYbgaKxw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: bhwASyuxBB87IhC9cBVjAA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: 7dGanQIqYSB7sQ7PHxVngQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 7noPbUjmuV0De5o9QRViHA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: za6G+LuztsyHrjYNgNE3aA
+name: Generic PPA-GF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.17
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPA-GF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 320, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 210}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: v/apgRKAugNOzdC6sZ8dcA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: V8zC/dkPPNczJ7HRlMSKhw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: mWqJdNllhttmqDB55X7VYw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: agZ8wJN7qlO1bxvs4wLATA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: f/HPVRu1tPaA93vxRvroHA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 8WhzGBJco9I0mSKjg+Xe4Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: XyjZDnpCBMj3ngC1hkN+Kg
+name: Generic PPS @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 50
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 0
+  filament_density: 1.36
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 4
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 320
+  first_layer_temperature: 320
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 340, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 125}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 6Gx8ALzo4Hk6YP4n/6d9pg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: qub+01Da+C68Ets5lkDTKA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: 5QrKA94IC1uC1ky7b6HgwA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: Qefsr+Ryi55y3tj0ijQQvA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: nig3ff7sN/FPM0zDvJ3M5w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: oAZXQv08G8HnIurj0PRi8Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: bxCzgn4SsRfihLK25x8xrg
+name: Generic PPS-CF @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 240
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPS-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 320
+  first_layer_temperature: 320
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 340, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 220}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: mdFXclxzFurq4Y3WrPQ8qg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: fMvySpqQuaJNT6v/daUpUQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: x/dSFdVKCtuuC6PFd8nVvA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: VAZbJ5neSq2Sb3BHaodEBw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: gpyW4EYV8CZaIY2H4GCJtw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Ni2OBQdrbP41EUfDXTNtSQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 5iop4CRK+eCk/d54fMe+nA
+name: PolyLite ABS @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 26.9
+  filament_density: 1.03
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 15
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: dNTjtYpA3PCnfxYTnoLimQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: cNlOAlcXk9wmazpe7Z7ARw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: 548mRgZiiyj8fmflkTD4HQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: gGi27w4Zw2agj2eIblbjsw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: 60RStqBhtpXjBuv5XgO8YA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: PdG/ucKUclc6+n6EZfRCUA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: zgDVQYm5zJYOowwXNYfYfw
+name: PolyLite ABS @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 26.9
+  filament_density: 1.03
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: MybAFBULwthB1zlsOMRA/w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: AUfbQ3U0tZ2nqQXw0wcZuQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: KeW8OMh+C0lakmTVqGPMjg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: Oqn8/FjHoaYmKnYL5WDo7A
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: FhWy62rTMMkgvoDj/GECxQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: RJEgjpQUNGkk5hhQaGibkg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: k4olgZp6lZv61D3nQDwW6w
+name: PolyLite ASA @BBL X1E
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.4) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.6) or (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 23.6
+  filament_density: 1.02
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 13
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: T5NWIfelIWknZ5VNa0lo/Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 6gZJ4Mk6XKEdS5DZsJo8hw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: +yzutm/ceMHXN8cp2mQgvw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: bHhIp+8c2Yi7vMpFF814gg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: LgP2lxEXPFRks1ZtdLqWGQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: XnY3rYhM8dj+XthbtLZzRw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: ACIsb8QjT16CheHmyEaZSQ
+name: PolyLite ASA @BBL X1E 0.2 nozzle
+condition: (printer.model == "Bambu Lab X1E" and tool.nozzle_diameter == 0.2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 23.6
+  filament_density: 1.02
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "additional_cooling_fan_speed": 0, "additional_fan_full_speed_layer": 0, "close_additional_fan_first_x_layers": 3, "during_print_exhaust_fan_speed": 70, "filament_cooling_before_tower": 0.0, "filament_flush_temp": 0, "filament_flush_volumetric_speed": 0.0, "filament_pre_cooling_temperature_nc": 0, "filament_retract_length_nc": 14.0, "filament_tower_interface_print_temp": -1, "filament_tower_interface_purge_volume": 20.0, "first_x_layer_fan_speed": 0.0, "long_retractions_when_ec": false, "nozzle_temperature_range_high": 280, "retraction_distances_when_ec": 0.0, "temperature_vitrification": 100}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 6ZlwYiWjwHCzjrd79284CA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: W6EugZ2tcauaC/3IASyuMw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: C4yo24gyuQaaj2iX1BEuSg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: ApJNqghIPgMgusAEPvnVUA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: RF98AycD0qasz5BWbV807w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: xnOy4k3EI3Ggmm/n5iffrA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0

@@ -279,7 +279,10 @@ OverhangSpeeds calculate_overhang_speed(
 
     const float extrusion_speed   = std::min(interpolate_speed(speed_sections, attributes.overhang_attributes->start_distance_from_prev_layer),
                                              interpolate_speed(speed_sections, attributes.overhang_attributes->end_distance_from_prev_layer));
-    const float curled_base_speed = interpolate_speed(speed_sections, attributes.width * attributes.overhang_attributes->proximity_to_curled_lines);
+    // Orca slowdown_for_curled_perimeters
+    const float curled_base_speed = config.slowdown_for_curled_perimeters.at(extruder_id) ?
+        interpolate_speed(speed_sections, attributes.width * attributes.overhang_attributes->proximity_to_curled_lines) :
+        extrusion_speed;
 
     const float fan_speed         = std::min(interpolate_speed(fan_speed_sections, attributes.overhang_attributes->start_distance_from_prev_layer),
                                              interpolate_speed(fan_speed_sections, attributes.overhang_attributes->end_distance_from_prev_layer));
@@ -289,7 +292,24 @@ OverhangSpeeds calculate_overhang_speed(
         overhang_speeds.print_speed = -1;
     }
 
-    if (!config.enable_dynamic_fan_speeds.at(extruder_id)) {
+    if (config.enable_overhang_bridge_fan.at(extruder_id)) {
+        // Orca: the overhang fan speed once the overlap with the layer below is at most the threshold's
+        // (Overhang threshold none: every external perimeter); bridges take the bridge fan speed
+        const Domain::OverhangFanThreshold threshold = config.overhang_fan_threshold.at(extruder_id);
+        bool active = false;
+        if (threshold == Domain::OverhangFanThreshold::None) {
+            active = attributes.role.is_external_perimeter();
+        } else {
+            const float overlap_threshold =
+                threshold == Domain::OverhangFanThreshold::Overhang10 ? 0.9f :
+                threshold == Domain::OverhangFanThreshold::Overhang25 ? 0.75f :
+                threshold == Domain::OverhangFanThreshold::Overhang50 ? 0.5f :
+                threshold == Domain::OverhangFanThreshold::Overhang75 ? 0.25f : 0.05f;
+            // overlap = 1 - distance from the layer below / width
+            active = attributes.overhang_attributes->start_distance_from_prev_layer >= attributes.width * (1.f - overlap_threshold);
+        }
+        overhang_speeds.fan_speed = active ? float(config.overhang_fan_speed.at(extruder_id)) : -1.f;
+    } else if (!config.enable_dynamic_fan_speeds.at(extruder_id)) {
         overhang_speeds.fan_speed = -1;
     } else if (current_fan_speed.has_value() && (fan_speed < *current_fan_speed) && (*current_fan_speed - fan_speed) <= MIN_FAN_SPEED_NEGATIVE_CHANGE_TO_EMIT) {
         // Always allow the fan speed to be increased without any hysteresis, but the speed will be decreased only when it exceeds a limit for minimum change.

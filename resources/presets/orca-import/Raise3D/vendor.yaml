@@ -1,0 +1,302 @@
+kind: vendor
+id: Raise3D
+name: Raise3D
+version: 2.4.0+orca.02.04.00.03
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Raise3D Pro3
+  base_model: Raise3D Pro3
+  printer_configs_order:
+  - Raise3D-Pro3-0-4-nozzle-Dual
+  - Raise3D-Pro3-0-4-nozzle-Left
+  - Raise3D-Pro3-0-4-nozzle-Right
+- label: Raise3D Pro3 Plus
+  base_model: Raise3D Pro3 Plus
+  printer_configs_order:
+  - Raise3D-Pro3-Plus-0-4-nozzle-Dual
+  - Raise3D-Pro3-Plus-0-4-nozzle-Left
+  - Raise3D-Pro3-Plus-0-4-nozzle-Right
+---
+kind: printer
+technology: FFF
+name: Raise3D Pro3 0.4 nozzle (Dual)
+id: Raise3D Pro3 0.4 nozzle (Dual)
+model:
+  base_model: Raise3D Pro3
+  model: Raise3D Pro3 0.4 nozzle (Dual)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- Raise3D Pro3
+visual:
+  bed_model: raise3d_pro3_buildplate_model.stl
+  bed_texture: raise3d_pro3_buildplate_texture.svg
+  thumbnail: Raise3D Pro3_cover.png
+---
+kind: printer
+technology: FFF
+name: Raise3D Pro3 0.4 nozzle (Left)
+id: Raise3D Pro3 0.4 nozzle (Left)
+model:
+  base_model: Raise3D Pro3
+  model: Raise3D Pro3 0.4 nozzle (Left)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- Raise3D Pro3
+visual:
+  bed_model: raise3d_pro3_buildplate_model.stl
+  bed_texture: raise3d_pro3_buildplate_texture.svg
+  thumbnail: Raise3D Pro3_cover.png
+---
+kind: printer
+technology: FFF
+name: Raise3D Pro3 0.4 nozzle (Right)
+id: Raise3D Pro3 0.4 nozzle (Right)
+model:
+  base_model: Raise3D Pro3
+  model: Raise3D Pro3 0.4 nozzle (Right)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- Raise3D Pro3
+visual:
+  bed_model: raise3d_pro3_buildplate_model.stl
+  bed_texture: raise3d_pro3_buildplate_texture.svg
+  thumbnail: Raise3D Pro3_cover.png
+---
+kind: printer
+technology: FFF
+name: Raise3D Pro3 Plus 0.4 nozzle (Dual)
+id: Raise3D Pro3 Plus 0.4 nozzle (Dual)
+model:
+  base_model: Raise3D Pro3 Plus
+  model: Raise3D Pro3 Plus 0.4 nozzle (Dual)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- Raise3D Pro3 Plus
+visual:
+  bed_model: raise3d_pro3plus_buildplate_model.stl
+  bed_texture: raise3d_pro3plus_buildplate_texture.svg
+  thumbnail: Raise3D Pro3 Plus_cover.png
+---
+kind: printer
+technology: FFF
+name: Raise3D Pro3 Plus 0.4 nozzle (Left)
+id: Raise3D Pro3 Plus 0.4 nozzle (Left)
+model:
+  base_model: Raise3D Pro3 Plus
+  model: Raise3D Pro3 Plus 0.4 nozzle (Left)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- Raise3D Pro3 Plus
+visual:
+  bed_model: raise3d_pro3plus_buildplate_model.stl
+  bed_texture: raise3d_pro3plus_buildplate_texture.svg
+  thumbnail: Raise3D Pro3 Plus_cover.png
+---
+kind: printer
+technology: FFF
+name: Raise3D Pro3 Plus 0.4 nozzle (Right)
+id: Raise3D Pro3 Plus 0.4 nozzle (Right)
+model:
+  base_model: Raise3D Pro3 Plus
+  model: Raise3D Pro3 Plus 0.4 nozzle (Right)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- Raise3D Pro3 Plus
+visual:
+  bed_model: raise3d_pro3plus_buildplate_model.stl
+  bed_texture: raise3d_pro3plus_buildplate_texture.svg
+  thumbnail: Raise3D Pro3 Plus_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Raise3D-Pro3-0-4-nozzle-Dual
+name: Raise3D Pro3 0.4 nozzle (Dual)
+printer: Raise3D Pro3 0.4 nozzle (Dual)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Raise3D-Pro3-0-4-nozzle-Left
+name: Raise3D Pro3 0.4 nozzle (Left)
+printer: Raise3D Pro3 0.4 nozzle (Left)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Raise3D-Pro3-0-4-nozzle-Right
+name: Raise3D Pro3 0.4 nozzle (Right)
+printer: Raise3D Pro3 0.4 nozzle (Right)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Raise3D-Pro3-Plus-0-4-nozzle-Dual
+name: Raise3D Pro3 Plus 0.4 nozzle (Dual)
+printer: Raise3D Pro3 Plus 0.4 nozzle (Dual)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Raise3D-Pro3-Plus-0-4-nozzle-Left
+name: Raise3D Pro3 Plus 0.4 nozzle (Left)
+printer: Raise3D Pro3 Plus 0.4 nozzle (Left)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Raise3D-Pro3-Plus-0-4-nozzle-Right
+name: Raise3D Pro3 Plus 0.4 nozzle (Right)
+printer: Raise3D Pro3 Plus 0.4 nozzle (Right)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate

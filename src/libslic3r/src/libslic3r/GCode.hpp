@@ -17,6 +17,9 @@
 #include "libslic3r/GCode/GCodeWriter.hpp"
 #include "libslic3r/GCode/LabelObjects.hpp"
 #include "libslic3r/GCode/PressureEqualizer.hpp"
+#include "libslic3r/GCode/AdaptivePAProcessor.hpp"
+#include "libslic3r/GCode/FanMover.hpp"
+#include "libslic3r/GCode/SmallAreaInfillFlowCompensator.hpp"
 #include "libslic3r/GCode/RetractWhenCrossingPerimeters.hpp"
 #include "libslic3r/GCode/SmoothPath.hpp"
 #include "libslic3r/GCode/SpiralVase.hpp"
@@ -295,7 +298,9 @@ private:
     std::string extrude_perimeters(
         const PrintRegion &region,
         const std::vector<GCode::ExtrusionOrder::Perimeter> &perimeters,
-        const InstanceToPrint &print_instance
+        const InstanceToPrint &print_instance,
+        // the perimeters of the region printed before these (Orca wipe_inward)
+        const std::vector<GCode::ExtrusionOrder::Perimeter> *printed_before = nullptr
     );
 
     std::string extrude_infill_ranges(
@@ -364,6 +369,8 @@ private:
         const Biz::Slicing::ExtrudeConfig& config,
         ExtrusionRole role = ExtrusionRole::None
     );
+    // Orca retract_lift_enforce: whether a retraction may lift Z here
+    bool retract_lift_allowed(const Biz::Slicing::ExtrudeConfig& config, unsigned int extruder_id) const;
 
     std::string retract_and_wipe(
         const std::vector<double>& retract_speed,
@@ -442,6 +449,8 @@ private:
     std::map<unsigned, double>          m_volumetric_speed;
     // Support for the extrusion role markers. Which marker is active?
     Slic3r::Domain::GCodeExtrusionRole m_last_extrusion_role;
+    // the role of the last extrusion other than gap fill (Orca retract_lift_enforce)
+    ExtrusionRole                       m_last_notgapfill_role{ExtrusionRole::None};
     // Support for G-Code Processor
     float                               m_last_height{ 0.0f };
     float                               m_last_layer_z{ 0.0f };
@@ -459,15 +468,35 @@ private:
     std::unique_ptr<SpiralVase>         m_spiral_vase;
     std::unique_ptr<GCodeFindReplace>   m_find_replace;
     std::unique_ptr<PressureEqualizer>  m_pressure_equalizer;
+    // Orca fan_speedup_time / fan_kickstart
+    std::unique_ptr<FanMover>           m_fan_mover;
+    // Orca small_area_infill_flow_compensation
+    std::optional<SmallAreaInfillFlowCompensator> m_small_area_infill_flow_compensator;
+    // Orca adaptive pressure advance: the layer pass, and per material slot whether it is on (with pressure
+    // advance) and on within features
+    std::unique_ptr<AdaptivePAProcessor> m_pa_processor;
+    std::vector<bool>                   m_adaptive_pa;
+    std::vector<bool>                   m_adaptive_pa_overhangs;
+    // the smooth path being extruded already has its PA_CHANGE tag, its length-weighted average flow
+    bool                                m_apa_path_set{false};
+    double                              m_apa_average_mm3_per_mm{0.};
+    double                              m_apa_last_mm3_per_mm{0.};
     std::unique_ptr<GCode::WipeTowerIntegration> m_wipe_tower;
 
     // Current fan speed set by dynamic fan speed control.
     std::optional<float>                m_current_dynamic_fan_speed;
+    // Orca: role fan markers open (support interface, ironing) and the layer they were opened on
+    std::array<bool, 3>                 m_role_fan_on { false, false, false };
+    std::array<int, 3>                  m_role_fan_layer { -1, -1, -1 };
+    // Orca bed_temperature_formula "by highest temp": first layer / other layers
+    std::optional<std::pair<int, int>>  m_highest_bed_temperature;
+    // Orca: the filament mass at the last layer change (curr_layer_mass)
+    double                              m_last_layer_accumulated_mass { 0. };
 
-    // Heights (print_z) at which the skirt has already been extruded.
-    std::vector<double>               m_skirt_done;
-    // Has the brim been extruded already? Brim is being extruded only for the first object of a multi-object print.
-    bool                                m_brim_done;
+    // Orca: per skirt / brim group the heights (print_z) at which its skirt has already been extruded, the object
+    // instances whose brims are not extruded yet
+    std::vector<std::vector<double>>    m_skirt_group_done;
+    std::set<ObjectInstanceID>          m_pending_brims;
     // Flag indicating whether the nozzle temperature changes from 1st to 2nd layer were performed.
     bool                                m_second_layer_things_done;
     // G-code that is due to be written before the next extrusion
@@ -505,6 +534,12 @@ private:
     std::string                         _process_start_gcode(const Print &print, unsigned int current_extruder_id);
     void                                _print_first_layer_chamber_temperature(GCodeOutputStream &file, const Print &print, const std::string &gcode, int temp, bool wait, bool accurate);
     void                                _print_first_layer_bed_temperature(GCodeOutputStream &file, const Print &print, const std::string &gcode, unsigned int first_printing_extruder_id, bool wait);
+    // The bed temperature of the first / the other layers (bed_temperature_formula, bed_temperature_extruder)
+    int                                 bed_temperature(const Print &print, bool first_layer, unsigned int first_printing_extruder_id) const;
+    // the current_extruder / Orca current_filament_id ... placeholders
+    void                                set_current_extruder_placeholders(unsigned int extruder_id, const Domain::ConfigView &config);
+    // Orca get_outer_wall_volumetric_speed
+    double                              outer_wall_volumetric_speed(const Print &print, unsigned int extruder_id) const;
     void                                _print_first_layer_extruder_temperatures(GCodeOutputStream &file, const Print &print, const std::string &gcode, unsigned int first_printing_extruder_id, bool wait);
     // On the first printing layer. This flag triggers first layer speeds.
     bool                                on_first_layer() const { return m_layer != nullptr && m_layer->id() == 0; }

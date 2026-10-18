@@ -1,0 +1,380 @@
+kind: vendor
+id: re3D
+name: re3D
+version: 3.0.12+orca.03.00.12
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    supports_175_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: re3D Gigabot 4
+  base_model: re3D Gigabot 4
+  printer_configs_order:
+  - re3D-Gigabot-4-0-4-nozzle
+  - re3D-Gigabot-4-0-8-nozzle
+- label: re3D Gigabot 4 XLT
+  base_model: re3D Gigabot 4 XLT
+  printer_configs_order:
+  - re3D-Gigabot-4-XLT-0-4-nozzle
+  - re3D-Gigabot-4-XLT-0-8-nozzle
+- label: re3D GigabotX 2
+  base_model: re3D GigabotX 2
+  printer_configs_order:
+  - re3D-GigabotX-2-0-8-nozzle
+  - re3D-GigabotX-2-1-75-nozzle
+- label: re3D GigabotX 2 XLT
+  base_model: re3D GigabotX 2 XLT
+  printer_configs_order:
+  - re3D-GigabotX-2-XLT-0-8-nozzle
+  - re3D-GigabotX-2-XLT-1-75-nozzle
+- label: re3D Terabot 4
+  base_model: re3D Terabot 4
+  printer_configs_order:
+  - re3D-Terabot-4-0-4-nozzle
+  - re3D-Terabot-4-0-8-nozzle
+- label: re3D TerabotX 2
+  base_model: re3D TerabotX 2
+  printer_configs_order:
+  - re3D-TerabotX-2-0-8-nozzle
+  - re3D-TerabotX-2-1-75-nozzle
+---
+kind: printer
+technology: FFF
+name: re3D Gigabot 4
+id: re3D Gigabot 4
+model:
+  base_model: re3D Gigabot 4
+  model: re3D Gigabot 4
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: re3D Gigabot 4_buildplate_texture.svg
+  thumbnail: re3D Gigabot 4_cover.png
+---
+kind: printer
+technology: FFF
+name: re3D Gigabot 4 XLT
+id: re3D Gigabot 4 XLT
+model:
+  base_model: re3D Gigabot 4 XLT
+  model: re3D Gigabot 4 XLT
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: re3D Gigabot 4 XLT_buildplate_texture.svg
+  thumbnail: re3D Gigabot 4 XLT_cover.png
+---
+kind: printer
+technology: FFF
+name: re3D GigabotX 2
+id: re3D GigabotX 2
+model:
+  base_model: re3D GigabotX 2
+  model: re3D GigabotX 2
+tool_count: 1
+features:
+  supports_08_nozzle:
+    default: true
+  supports_175_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: re3D GigabotX 2_buildplate_texture.svg
+  thumbnail: re3D GigabotX 2_cover.png
+---
+kind: printer
+technology: FFF
+name: re3D GigabotX 2 XLT
+id: re3D GigabotX 2 XLT
+model:
+  base_model: re3D GigabotX 2 XLT
+  model: re3D GigabotX 2 XLT
+tool_count: 1
+features:
+  supports_08_nozzle:
+    default: true
+  supports_175_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: re3D GigabotX 2 XLT_buildplate_texture.svg
+  thumbnail: re3D GigabotX 2 XLT_cover.png
+---
+kind: printer
+technology: FFF
+name: re3D Terabot 4
+id: re3D Terabot 4
+model:
+  base_model: re3D Terabot 4
+  model: re3D Terabot 4
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: re3D Terabot 4_buildplate_texture.svg
+  thumbnail: re3D Terabot 4_cover.png
+---
+kind: printer
+technology: FFF
+name: re3D TerabotX 2
+id: re3D TerabotX 2
+model:
+  base_model: re3D TerabotX 2
+  model: re3D TerabotX 2
+tool_count: 1
+features:
+  supports_08_nozzle:
+    default: true
+  supports_175_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: re3D TerabotX 2_buildplate_texture.svg
+  thumbnail: re3D TerabotX 2_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: tool
+technology: FFF
+id: '1.75'
+name: 1.75 nozzle
+condition: printer.supports_175_nozzle
+features:
+  nozzle_diameter:
+    default: 1.75
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: re3D-Gigabot-4-0-4-nozzle
+name: re3D Gigabot 4 0.4 nozzle
+printer: re3D Gigabot 4
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-Gigabot-4-0-8-nozzle
+name: re3D Gigabot 4 0.8 nozzle
+printer: re3D Gigabot 4
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-Gigabot-4-XLT-0-4-nozzle
+name: re3D Gigabot 4 XLT 0.4 nozzle
+printer: re3D Gigabot 4 XLT
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-Gigabot-4-XLT-0-8-nozzle
+name: re3D Gigabot 4 XLT 0.8 nozzle
+printer: re3D Gigabot 4 XLT
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-GigabotX-2-0-8-nozzle
+name: re3D GigabotX 2 0.8 nozzle
+printer: re3D GigabotX 2
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-GigabotX-2-1-75-nozzle
+name: re3D GigabotX 2 1.75 nozzle
+printer: re3D GigabotX 2
+tools:
+- tool: '1.75'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-GigabotX-2-XLT-0-8-nozzle
+name: re3D GigabotX 2 XLT 0.8 nozzle
+printer: re3D GigabotX 2 XLT
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-GigabotX-2-XLT-1-75-nozzle
+name: re3D GigabotX 2 XLT 1.75 nozzle
+printer: re3D GigabotX 2 XLT
+tools:
+- tool: '1.75'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-Terabot-4-0-4-nozzle
+name: re3D Terabot 4 0.4 nozzle
+printer: re3D Terabot 4
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-Terabot-4-0-8-nozzle
+name: re3D Terabot 4 0.8 nozzle
+printer: re3D Terabot 4
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-TerabotX-2-0-8-nozzle
+name: re3D TerabotX 2 0.8 nozzle
+printer: re3D TerabotX 2
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: re3D-TerabotX-2-1-75-nozzle
+name: re3D TerabotX 2 1.75 nozzle
+printer: re3D TerabotX 2
+tools:
+- tool: '1.75'
+sheet: high_temp_plate

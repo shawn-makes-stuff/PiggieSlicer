@@ -1,0 +1,202 @@
+kind: vendor
+id: Vzbot
+name: Vzbot
+version: 2.4.0+orca.02.04.00.04
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_05_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Vzbot 235 AWD
+  base_model: Vzbot 235 AWD
+  printer_configs_order:
+  - Vzbot-235-AWD-0-4-nozzle
+  - Vzbot-235-AWD-0-5-nozzle
+  - Vzbot-235-AWD-0-6-nozzle
+- label: Vzbot 330 AWD
+  base_model: Vzbot 330 AWD
+  printer_configs_order:
+  - Vzbot-330-AWD-0-4-nozzle
+  - Vzbot-330-AWD-0-5-nozzle
+  - Vzbot-330-AWD-0-6-nozzle
+---
+kind: printer
+technology: FFF
+name: Vzbot 235 AWD
+id: Vzbot 235 AWD
+model:
+  base_model: Vzbot 235 AWD
+  model: Vzbot 235 AWD
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Vz235SlicerBedModel-cnc.stl
+  bed_texture: VzBot_PS_bed_235.svg
+  thumbnail: Vzbot 235 AWD_cover.png
+---
+kind: printer
+technology: FFF
+name: Vzbot 330 AWD
+id: Vzbot 330 AWD
+model:
+  base_model: Vzbot 330 AWD
+  model: Vzbot 330 AWD
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Vz330SlicerBedModel-cnc.stl
+  bed_texture: VzBot_PS_bed_330.svg
+  thumbnail: Vzbot 330 AWD_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.5'
+name: 0.5 nozzle
+condition: printer.supports_05_nozzle
+features:
+  nozzle_diameter:
+    default: 0.5
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Vzbot-235-AWD-0-4-nozzle
+name: Vzbot 235 AWD 0.4 nozzle
+printer: Vzbot 235 AWD
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Vzbot-235-AWD-0-5-nozzle
+name: Vzbot 235 AWD 0.5 nozzle
+printer: Vzbot 235 AWD
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Vzbot-235-AWD-0-6-nozzle
+name: Vzbot 235 AWD 0.6 nozzle
+printer: Vzbot 235 AWD
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Vzbot-330-AWD-0-4-nozzle
+name: Vzbot 330 AWD 0.4 nozzle
+printer: Vzbot 330 AWD
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Vzbot-330-AWD-0-5-nozzle
+name: Vzbot 330 AWD 0.5 nozzle
+printer: Vzbot 330 AWD
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Vzbot-330-AWD-0-6-nozzle
+name: Vzbot 330 AWD 0.6 nozzle
+printer: Vzbot 330 AWD
+tools:
+- tool: '0.6'
+sheet: high_temp_plate

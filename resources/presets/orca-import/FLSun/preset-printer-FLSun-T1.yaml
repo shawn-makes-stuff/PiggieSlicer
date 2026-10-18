@@ -1,0 +1,196 @@
+kind: printer
+id: 0iPcHCJCw/tJL8yYXZ7NLQ
+variants:
+- condition: printer.model == "FLSun T1"
+  name: FLSun T1
+  id: qls96uOI1bzCi1MtEQTv7w
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: HlcHY23g+hD4sS7P2k/ILg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: PAUSE
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @FLSun T1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        M107 T0
+        M104 S0
+        M104 S0 T1
+        M140 S0
+        G92 E0
+        G91
+        G1 E-1 F2100
+        G1 Z+0.5 F6000
+        G28
+        G90
+      machine_max_acceleration_e:
+      - 30000.0
+      - 30000.0
+      machine_max_acceleration_extruding:
+      - 30000.0
+      - 30000.0
+      machine_max_acceleration_retracting:
+      - 30000.0
+      - 30000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 30000.0
+      - 30000.0
+      machine_max_acceleration_y:
+      - 30000.0
+      - 30000.0
+      machine_max_acceleration_z:
+      - 30000.0
+      - 30000.0
+      machine_max_jerk_e:
+      - 100.0
+      - 100.0
+      machine_max_jerk_x:
+      - 20000.0
+      - 20000.0
+      machine_max_jerk_y:
+      - 20000.0
+      - 20000.0
+      machine_max_jerk_z:
+      - 10000.0
+      - 10000.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 1000.0
+      - 1000.0
+      machine_max_feedrate_x:
+      - 1000.0
+      - 1000.0
+      machine_max_feedrate_y:
+      - 1000.0
+      - 1000.0
+      machine_max_feedrate_z:
+      - 1000.0
+      - 1000.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        G21
+        G90
+        M82
+        G28
+        M140 S[first_layer_bed_temperature]
+        M104 S[first_layer_temperature] T0
+        M109 S[first_layer_temperature] T0
+        M190 S[first_layer_bed_temperature]
+        G1 Z150 F3000
+        G1 X-130 Y0 Z0.4
+        M107 T0
+        G92 E0
+        G3 X0 Y-130 I130 J0 Z0.3 E30 F2000
+        G1 Z2 F2000
+        G92 E0
+        SET_TMC_CURRENT STEPPER=extruder CURRENT=0.8
+      parking_pos_retraction: 92
+      bed_shape:
+      - 129.505x11.3302
+      - 128.025x22.5743
+      - 125.57x33.6465
+      - 122.16x44.4626
+      - 117.82x54.9404
+      - 112.583x65
+      - 106.49x74.5649
+      - 99.5858x83.5624
+      - 91.9239x91.9239
+      - 83.5624x99.5858
+      - 74.5649x106.49
+      - 65x112.583
+      - 54.9404x117.82
+      - 44.4626x122.16
+      - 33.6465x125.57
+      - 22.5743x128.025
+      - 11.3302x129.505
+      - 7.9602e-15x130
+      - -11.3302x129.505
+      - -22.5743x128.025
+      - -33.6465x125.57
+      - -44.4626x122.16
+      - -54.9404x117.82
+      - -65x112.583
+      - -74.5649x106.49
+      - -83.5624x99.5858
+      - -91.9239x91.9239
+      - -99.5858x83.5624
+      - -106.49x74.5649
+      - -112.583x65
+      - -117.82x54.9404
+      - -122.16x44.4626
+      - -125.57x33.6465
+      - -128.025x22.5743
+      - -129.505x11.3302
+      - -130x1.59204e-14
+      - -129.505x-11.3302
+      - -128.025x-22.5743
+      - -125.57x-33.6465
+      - -122.16x-44.4626
+      - -117.82x-54.9404
+      - -112.583x-65
+      - -106.49x-74.5649
+      - -99.5858x-83.5624
+      - -91.9239x-91.9239
+      - -83.5624x-99.5858
+      - -74.5649x-106.49
+      - -65x-112.583
+      - -54.9404x-117.82
+      - -44.4626x-122.16
+      - -33.6465x-125.57
+      - -22.5743x-128.025
+      - -11.3302x-129.505
+      - -2.38806e-14x-130
+      - 11.3302x-129.505
+      - 22.5743x-128.025
+      - 33.6465x-125.57
+      - 44.4626x-122.16
+      - 54.9404x-117.82
+      - 65x-112.583
+      - 74.5649x-106.49
+      - 83.5624x-99.5858
+      - 91.9239x-91.9239
+      - 99.5858x-83.5624
+      - 106.49x-74.5649
+      - 112.583x-65
+      - 117.82x-54.9404
+      - 122.16x-44.4626
+      - 125.57x-33.6465
+      - 128.025x-22.5743
+      - 129.505x-11.3302
+      - 130x-3.18408e-14
+      max_print_height: 330
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

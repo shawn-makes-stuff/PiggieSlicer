@@ -65,6 +65,7 @@ private:
 
     Yoga::Text* m_label_preset_name{nullptr};
     Yoga::LayoutButton* m_revert_button{nullptr};
+    Yoga::LayoutButton* m_delete_button{nullptr};
 };
 
 } // namespace Slic3r::App

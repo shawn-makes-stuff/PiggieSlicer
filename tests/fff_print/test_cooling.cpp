@@ -194,6 +194,8 @@ SCENARIO("Cooling integration tests", "[Cooling]") {
         config.filament[0].items.opt("fan_below_layer_time").set(0);
         config.filament[0].items.opt("slowdown_below_layer_time").set(0);
         config.print.items.opt("bridge_speed").set(99.0);
+        // Orca's internal bridges get the bridge fan too, at internal_bridge_speed (default 150 % of bridge_speed)
+        config.print.items.opt("internal_bridge_speed").set(Domain::FloatOrPercentage{Domain::Percentage{100}});
         config.print.items.opt("enable_dynamic_overhang_speeds").set(false);
         // internal bridges use solid_infil speed
         config.print.items.opt("bottom_solid_layers").set(1);

@@ -1,0 +1,72 @@
+kind: printer
+id: HpWK/nGyhCBnTNekG9YJQw
+variants:
+- condition: printer.model == "Creality CR-10"
+  name: Creality CR-10
+  id: YbE+gTPonqu5QyVPh1fFmA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: 8RKk7NRhbqzswumD6Gdsmg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Creality CR-10 0.4 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 33
+      extruder_clearance_radius: 70
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: "G91 ;Relative positionning\nG1 E-2 F2700 ;Retract a bit\P\nG1 E-2 Z1 F2400 ;Retract and raise Z\P\nG1 X5 Y5 F3000 ;Wipe out\P\nG1 Z10 ;Raise Z more\P\nG90 ;Absolute positionning\P\P\nG1 X0 Y0 ;Present print\P\nM106 S0 ;Turn-off fan\P\nM104 S0 ;Turn-off hotend\P\nM140 S0 ;Turn-off bed\P\P\nM84 X Y E ;Disable all steppers but Z\P"
+      machine_max_acceleration_extruding:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      machine_max_acceleration_retracting:
+      - 500.0
+      - 1000.0
+      - 500.0
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: "M220 S100 ;Reset Feedrate\nM221 S100 ;Reset Flowrate\n\nM140 S[first_layer_bed_temperature[initial_extruder]] ;Set final bed temp  \nG28 ;Home\nG92 E0 ;Reset Extruder\nG1 Z2.0 F3000 ;Move Z Axis up\nM104 S[first_layer_temperature] ;Set final nozzle temp  \nG1 X10.1 Y20 Z0.28 F5000.0 ;Move to start position\nM190 S[first_layer_bed_temperature[initial_extruder]] ;Wait for bed temp to stabilize  \nM109 S[first_layer_temperature] ;Wait for nozzle temp to stabilize  \nG1 X10.1 Y145.0 Z0.28 F1500.0 E15 ;Draw the first line\nG1 X10.4 Y145.0 Z0.28 F5000.0 ;Move to side a little\nG1 X10.4 Y20 Z0.28 F1500.0 E30 ;Draw the second line\nG92 E0  ;Reset Extruder\nG1 E-1.0000 F1800 ;Retract a bit\nG1 Z2.0 F3000 ;Move Z Axis up\nG1 E0.0000 F1800"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 300x0
+      - 300x300
+      - '0x300'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "support_air_filtration": false}'

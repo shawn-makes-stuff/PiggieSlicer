@@ -7,6 +7,9 @@
 #include <wx/dcclient.h>
 #include <wx/clipbrd.h>
 #include <wx/toplevel.h>
+#ifdef _WIN32
+#include <wx/msw/wrapwin.h>
+#endif
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 
@@ -1243,5 +1246,69 @@ void WXRenderCanvas::close_application()
         mainframe->Close();
     }
 }
+
+// Windows: the main frame drops the system caption (MainFrame::MSWWindowProc) and the top bar
+// carries the window buttons. Elsewhere the system title bar stays.
+bool WXRenderCanvas::has_custom_caption() const
+{
+#ifdef _WIN32
+    // the preference as it was at start-up (the frame's caption is set up once, MainFrame)
+    static const bool custom = AppServices::instance().app_config().get<bool>("custom_title_bar");
+    return custom;
+#else
+    return false;
+#endif
+}
+
+void WXRenderCanvas::minimize_window()
+{
+    if (wxFrame* mainframe = dynamic_cast<wxFrame*>(wxTheApp->GetTopWindow()))
+        mainframe->Iconize(true);
+}
+
+void WXRenderCanvas::toggle_maximize_window()
+{
+    if (wxFrame* mainframe = dynamic_cast<wxFrame*>(wxTheApp->GetTopWindow()))
+        mainframe->Maximize(!mainframe->IsMaximized());
+}
+
+bool WXRenderCanvas::is_window_maximized() const
+{
+    const wxFrame* mainframe = dynamic_cast<wxFrame*>(wxTheApp->GetTopWindow());
+    return mainframe != nullptr && mainframe->IsMaximized();
+}
+
+void WXRenderCanvas::start_window_drag()
+{
+#ifdef _WIN32
+    if (wxFrame* mainframe = dynamic_cast<wxFrame*>(wxTheApp->GetTopWindow())) {
+        // the system's move loop, as dragging a title bar (snapping, restore from maximized)
+        if (HasCapture())
+            ReleaseMouse();
+        ::ReleaseCapture();
+        ::SendMessage(static_cast<HWND>(mainframe->GetHWND()), WM_NCLBUTTONDOWN, HTCAPTION, 0);
+        // the loop ate the button release
+        ImGui::GetIO().AddMouseButtonEvent(ImGuiMouseButton_Left, false);
+        request_render();
+    }
+#endif
+}
+
+#ifdef _WIN32
+WXLRESULT WXRenderCanvas::MSWWindowProc(WXUINT msg, WXWPARAM wParam, WXLPARAM lParam)
+{
+    if (msg == WM_NCHITTEST && has_custom_caption()) {
+        wxTopLevelWindow* top = dynamic_cast<wxTopLevelWindow*>(wxGetTopLevelParent(this));
+        if (top != nullptr && !top->IsMaximized()) {
+            RECT rc;
+            ::GetWindowRect(static_cast<HWND>(top->GetHWND()), &rc);
+            const int y = int(short(HIWORD(lParam)));
+            if (y - rc.top < ::GetSystemMetrics(SM_CYFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER))
+                return HTTRANSPARENT;
+        }
+    }
+    return wxGLCanvas::MSWWindowProc(msg, wParam, lParam);
+}
+#endif
 
 } // namespace Slic3r::App::Platform::WX

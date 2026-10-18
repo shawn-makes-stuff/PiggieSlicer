@@ -80,6 +80,8 @@ SCENARIO("Shells", "[Shells]") {
         config.print.items.opt("solid_infill_speed").set(FloatOrPercentage{99});
         config.print.items.opt("top_solid_infill_speed").set(FloatOrPercentage{99});
         config.print.items.opt("bridge_speed").set(72.0);
+        // Orca's internal bridges (over sparse infill) default to 150 % of bridge_speed.
+        config.print.items.opt("internal_bridge_speed").set(FloatOrPercentage{Percentage{100}});
         config.print.items.opt("first_layer_speed").set(FloatOrPercentage{Percentage{100}});
         config.filament.at(0).items.opt("cooling").set(false);
 
@@ -130,6 +132,7 @@ SCENARIO("Shells (from Perl)", "[Shells]") {
         // to prevent speeds from being altered
         config.filament.at(0).items.opt("cooling").set(false);
         config.print.items.opt("bridge_speed").set(solid_speed);
+        config.print.items.opt("internal_bridge_speed").set(FloatOrPercentage{Percentage{100}});
         config.print.items.opt("solid_infill_speed").set(FloatOrPercentage{solid_speed});
         config.print.items.opt("top_solid_infill_speed").set(FloatOrPercentage{solid_speed});
         // to prevent speeds from being altered

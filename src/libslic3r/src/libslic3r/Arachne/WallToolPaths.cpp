@@ -44,7 +44,9 @@ WallToolPaths::WallToolPaths(
     const coord_t wall_0_inset,
     const double layer_height,
     const PrintRegionConfigView& print_region_config,
-    unsigned extruder_id
+    unsigned extruder_id,
+    const bool first_layer,
+    const bool top_or_bottom_layer
 )
     : outline(outline)
     , bead_width_0(bead_width_0)
@@ -61,6 +63,7 @@ WallToolPaths::WallToolPaths(
     , toolpaths_generated(false)
     , print_region_config(print_region_config)
     , extruder_id(extruder_id)
+    , top_or_bottom_layer(top_or_bottom_layer)
 {
     ASSERT(extruder_id < std::numeric_limits<unsigned>::max());
     const auto nozzle_diameters{Biz::Slicing::get_nozzle_diameters(print_region_config.hw_config())};
@@ -73,7 +76,7 @@ WallToolPaths::WallToolPaths(
     this->min_feature_size = scaled<coord_t>(min_feature_size_opt.get_abs_value(this->min_nozzle_diameter));
 
     const auto min_bead_width_opt =
-        print_region_config.get<std::vector<Domain::FloatOrPercentage>>("min_bead_width")
+        print_region_config.get<std::vector<Domain::FloatOrPercentage>>(first_layer ? "initial_layer_min_bead_width" : "min_bead_width")
             .at(extruder_id);
     this->min_bead_width = scaled<coord_t>(min_bead_width_opt.get_abs_value(this->min_nozzle_diameter));
 
@@ -88,6 +91,45 @@ WallToolPaths::WallToolPaths(
         print_region_config.get<std::vector<Domain::FloatOrPercentage>>("wall_transition_length")
             .at(extruder_id);
     this->wall_transition_length = scaled<coord_t>(wall_transition_length_opt.get_abs_value(this->min_nozzle_diameter));
+
+    this->min_length_factor       = print_region_config.get<std::vector<double>>("min_length_factor").at(extruder_id);
+    this->wall_maximum_resolution = scaled<coord_t>(print_region_config.get<std::vector<double>>("wall_maximum_resolution").at(extruder_id));
+    this->wall_maximum_deviation  = scaled<coord_t>(print_region_config.get<std::vector<double>>("wall_maximum_deviation").at(extruder_id));
+    this->wall_transition_angle   = print_region_config.get<std::vector<double>>("wall_transition_angle").at(extruder_id);
+    this->wall_distribution_count = print_region_config.get<std::vector<int>>("wall_distribution_count").at(extruder_id);
+}
+
+WallToolPaths::WallToolPaths(
+    const Polygons& outline,
+    const coord_t bead_width_0,
+    const coord_t bead_width_x,
+    const size_t inset_count,
+    const coord_t wall_0_inset,
+    const double layer_height,
+    const WallToolPathsParams &params
+)
+    : outline(outline)
+    , bead_width_0(bead_width_0)
+    , bead_width_x(bead_width_x)
+    , inset_count(inset_count)
+    , wall_0_inset(wall_0_inset)
+    , layer_height(layer_height)
+    , print_thin_walls(Slic3r::Arachne::fill_outline_gaps)
+    , min_feature_size(scaled<coord_t>(params.min_feature_size))
+    , min_bead_width(scaled<coord_t>(params.min_bead_width))
+    , small_area_length(static_cast<double>(bead_width_0) / 2.)
+    , wall_transition_filter_deviation(scaled<coord_t>(params.wall_transition_filter_deviation))
+    , wall_transition_length(scaled<coord_t>(params.wall_transition_length))
+    , min_nozzle_diameter(0.f)
+    , min_length_factor(params.min_length_factor)
+    , top_or_bottom_layer(params.is_top_or_bottom_layer)
+    , wall_maximum_resolution(params.wall_maximum_resolution)
+    , wall_maximum_deviation(params.wall_maximum_deviation)
+    , wall_transition_angle(params.wall_transition_angle)
+    , wall_distribution_count(params.wall_distribution_count)
+    , toolpaths_generated(false)
+    , extruder_id(0)
+{
 }
 
 void simplify(Polygon &thiss, const int64_t smallest_line_segment_squared, const int64_t allowed_error_distance_squared)
@@ -486,12 +528,10 @@ const std::vector<VariableWidthLines> &WallToolPaths::generate()
     if (this->inset_count < 1)
         return toolpaths;
 
-    const coord_t smallest_segment = Slic3r::Arachne::meshfix_maximum_resolution;
-    const coord_t allowed_distance = Slic3r::Arachne::meshfix_maximum_deviation;
+    const coord_t smallest_segment = this->wall_maximum_resolution;
+    const coord_t allowed_distance = this->wall_maximum_deviation;
     const coord_t epsilon_offset = (allowed_distance / 2) - 1;
-    const double transitioning_angle = deg2rad(
-        this->print_region_config.get<std::vector<double>>("wall_transition_angle")
-            .at(extruder_id));
+    const double transitioning_angle = deg2rad(this->wall_transition_angle);
     constexpr coord_t discretization_step_size = scaled<coord_t>(0.8);
 
     // Simplify outline for boost::voronoi consumption. Absolutely no self intersections or near-self intersections allowed:
@@ -523,7 +563,6 @@ const std::vector<VariableWidthLines> &WallToolPaths::generate()
     const double wall_split_middle_threshold = std::clamp(2. * unscaled<double>(this->min_bead_width) / external_perimeter_extrusion_width - 1., 0.01, 0.99); // For an uneven nr. of lines: When to split the middle wall into two.
     const double wall_add_middle_threshold   = std::clamp(unscaled<double>(this->min_bead_width) / perimeter_extrusion_width, 0.01, 0.99); // For an even nr. of lines: When to add a new middle in between the innermost two walls.
 
-    const int wall_distribution_count = this->print_region_config.get<std::vector<int>>("wall_distribution_count").at(extruder_id);
     const size_t max_bead_count = (inset_count < std::numeric_limits<coord_t>::max() / 2) ? 2 * inset_count : std::numeric_limits<coord_t>::max();
     const auto beading_strat = BeadingStrategyFactory::makeStrategy
         (
@@ -683,7 +722,7 @@ template<typename T> bool shorterThan(const T &shape, const coord_t check_length
     return true;
 }
 
-void WallToolPaths::removeSmallLines(std::vector<VariableWidthLines> &toolpaths)
+void WallToolPaths::removeSmallLines(std::vector<VariableWidthLines> &toolpaths) const
 {
     for (VariableWidthLines &inset : toolpaths) {
         for (size_t line_idx = 0; line_idx < inset.size(); line_idx++) {
@@ -691,7 +730,9 @@ void WallToolPaths::removeSmallLines(std::vector<VariableWidthLines> &toolpaths)
             coord_t        min_width = std::numeric_limits<coord_t>::max();
             for (const ExtrusionJunction &j : line)
                 min_width = std::min(min_width, j.w);
-            if (line.is_odd && !line.is_closed && shorterThan(line, min_width / 2)) { // remove line
+            // Orca: min_length_factor except on the bottom and topmost layers, to prevent gaps there
+            if (line.is_odd && !line.is_closed &&
+                shorterThan(line, this->top_or_bottom_layer ? (min_width / 2) : coord_t(min_width * this->min_length_factor))) { // remove line
                 line = std::move(inset.back());
                 inset.erase(--inset.end());
                 line_idx--; // reconsider the current position
@@ -700,12 +741,12 @@ void WallToolPaths::removeSmallLines(std::vector<VariableWidthLines> &toolpaths)
     }
 }
 
-void WallToolPaths::simplifyToolPaths(std::vector<VariableWidthLines> &toolpaths)
+void WallToolPaths::simplifyToolPaths(std::vector<VariableWidthLines> &toolpaths) const
 {
     for (size_t toolpaths_idx = 0; toolpaths_idx < toolpaths.size(); ++toolpaths_idx)
     {
-        const int64_t maximum_resolution = Slic3r::Arachne::meshfix_maximum_resolution;
-        const int64_t maximum_deviation = Slic3r::Arachne::meshfix_maximum_deviation;
+        const int64_t maximum_resolution = this->wall_maximum_resolution;
+        const int64_t maximum_deviation = this->wall_maximum_deviation;
         const int64_t maximum_extrusion_area_deviation = Slic3r::Arachne::meshfix_maximum_extrusion_area_deviation; // unit: μm²
         for (auto& line : toolpaths[toolpaths_idx])
         {

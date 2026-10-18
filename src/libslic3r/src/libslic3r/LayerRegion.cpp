@@ -19,6 +19,7 @@
 #include "libslic3r/ClipperUtils.hpp"
 #include "libslic3r/Geometry.hpp"
 #include "libslic3r/PerimeterGenerator.hpp"
+#include "libslic3r/Feature/FuzzySkin/FuzzySkin.hpp"
 #include "libslic3r/Print.hpp"
 #include "libslic3r/Surface.hpp"
 #include "Slic3r/Biz/Algorithms/SVG.hpp"
@@ -51,20 +52,29 @@ Flow LayerRegion::flow(FlowRole role, double layer_height) const
     return m_region->flow(*m_layer->object(), role, layer_height, m_layer->id() == 0);
 }
 
-Flow LayerRegion::bridging_flow(FlowRole role, bool force_thick_bridges) const
+Flow LayerRegion::bridging_flow(FlowRole role, bool force_thick_bridges, std::optional<bool> thick_bridge) const
 {
     const PrintRegion       &region         = this->region();
     const PrintObject       &print_object   = *this->layer()->object();
-    if (print_object.config().get<bool>("thick_bridges") || force_thick_bridges) {
+    // Here this->extruder(role) - 1 may underflow to MAX_INT, but then the get_at() will follback to zero'th element, so everything is all right.
+    auto nozzle_diameter = float(region.nozzle_diameter(role));
+    // Orca bridge_line_width (a percentage of the nozzle diameter, 0: default)
+    const double bridge_width      = region.extruder_config_value<Domain::FloatOrPercentage>("bridge_line_width", role).get_abs_value(nozzle_diameter);
+    const bool   has_bridge_width  = bridge_width > 0.;
+    const double bridge_flow_ratio = region.extruder_config_value<double>("bridge_flow_ratio", role);
+    if (thick_bridge.value_or(print_object.config().get<bool>("thick_bridges") || force_thick_bridges)) {
         // The old Slic3r way (different from all other slicers): Use rounded extrusions.
-        // Get the configured nozzle_diameter for the extruder associated to the flow role requested.
-        // Here this->extruder(role) - 1 may underflow to MAX_INT, but then the get_at() will follback to zero'th element, so everything is all right.
-        auto nozzle_diameter = float(region.nozzle_diameter(role));
+        float thread_diameter = has_bridge_width ? float(bridge_width) : nozzle_diameter;
+        if (bridge_flow_ratio > 0.)
+            thread_diameter *= float(sqrt(bridge_flow_ratio));
         // Applies default bridge spacing.
-        return Flow::bridging_flow(float(sqrt(region.extruder_config_value<double>("bridge_flow_ratio", role))) * nozzle_diameter, nozzle_diameter);
+        return Flow::bridging_flow(thread_diameter, nozzle_diameter);
     } else {
         // The same way as other slicers: Use normal extrusions. Apply bridge_flow_ratio while maintaining the original spacing.
-        return this->flow(role).with_flow_ratio(region.extruder_config_value<double>("bridge_flow_ratio", role));
+        Flow base_flow = this->flow(role);
+        if (has_bridge_width)
+            base_flow = Flow(float(bridge_width), base_flow.height(), nozzle_diameter);
+        return base_flow.with_flow_ratio(bridge_flow_ratio);
     }
 }
 
@@ -87,7 +97,7 @@ void LayerRegion::slices_to_fill_surfaces_clipped()
 // Produce perimeter extrusions, gap fill extrusions and fill polygons for input slices.
 void LayerRegion::make_perimeters(
     // Input slices for which the perimeters, gap fills and fill expolygons are to be generated.
-    const SurfaceCollection                                &slices,
+    SurfaceCollection                                      &slices,
     // Configuration regions that will be applied to parts of created perimeters.
     const PerimeterRegions                                 &perimeter_regions,
     // Ranges of perimeter extrusions and gap fill extrusions per suface, referencing
@@ -117,6 +127,7 @@ void LayerRegion::make_perimeters(
 
     PerimeterGenerator::Parameters params(
         this->layer()->height,
+        this->layer()->slice_z,
         int(this->layer()->id()),
         this->flow(frPerimeter),
         this->flow(frExternalPerimeter),
@@ -133,11 +144,43 @@ void LayerRegion::make_perimeters(
     // Cache for offsetted lower_slices
     Polygons          lower_layer_polygons_cache;
 
+    // Orca FuzzySkin group_region_by_fuzzify: whether the contours / holes get fuzzy skin on this layer, and the area
+    // within reach of the layer below (a line width plus the noise amplitude): walls farther out are bridging and
+    // stay smooth
+    {
+        using namespace Feature::FuzzySkin;
+        coord_t max_thickness = 0;
+        auto    fuzzy         = [this, &params, &max_thickness](const PrintRegionConfigView &config) {
+            const FuzzySkinConfig cfg{config, int(this->layer()->id())};
+            const bool            contour = should_fuzzify(cfg, cfg.layer_id, 0, true);
+            const bool            hole    = should_fuzzify(cfg, cfg.layer_id, 0, false);
+            params.has_fuzzy_skin |= contour;
+            params.has_fuzzy_hole |= hole;
+            if (contour || hole)
+                max_thickness = std::max(max_thickness, cfg.thickness);
+        };
+        fuzzy(region_config);
+        for (const PerimeterRegion &perimeter_region : perimeter_regions)
+            fuzzy(perimeter_region.region->config());
+        params.lower_slices = lower_slices;
+        {
+            const auto &m = this->layer()->object()->trafo().matrix();
+            params.model_rotation = std::atan2(double(m(1, 0)), double(m(0, 0)));
+        }
+        if ((params.has_fuzzy_skin || params.has_fuzzy_hole) && lower_slices != nullptr)
+            params.fuzzy_supported_area = offset_ex(*lower_slices, float(params.ext_perimeter_flow.scaled_width() + max_thickness));
+    }
+
+    // Orca counterbore_hole_bridging: the bridged infill over the holes, per slice
+    std::vector<ExPolygons> no_bridge_fills = PerimeterGenerator::process_no_bridge(params, slices.surfaces, lower_slices);
+
     for (const Surface &surface : slices) {
         auto perimeters_begin      = uint32_t(m_perimeters.size());
         auto gap_fills_begin       = uint32_t(m_thin_fills.size());
         auto fill_expolygons_begin = uint32_t(fill_expolygons.size());
-        if (this->layer()->object()->config().get<Domain::PerimeterGeneratorType>("perimeter_generator") == Domain::PerimeterGeneratorType::Arachne && !spiral_vase)
+        if (surface.expolygon.empty())
+            ;
+        else if (this->layer()->object()->config().get<Domain::PerimeterGeneratorType>("perimeter_generator") == Domain::PerimeterGeneratorType::Arachne && !spiral_vase)
             PerimeterGenerator::process_arachne(
                 // input:
                 params,
@@ -161,6 +204,7 @@ void LayerRegion::make_perimeters(
                 m_perimeters,
                 m_thin_fills,
                 fill_expolygons);
+        append(fill_expolygons, std::move(no_bridge_fills[&surface - slices.surfaces.data()]));
         perimeter_and_gapfill_ranges.emplace_back(
             ExtrusionRange{ perimeters_begin, uint32_t(m_perimeters.size()) }, 
             ExtrusionRange{ gap_fills_begin,  uint32_t(m_thin_fills.size()) });
@@ -509,9 +553,21 @@ void LayerRegion::process_external_surfaces(const Layer *lower_layer, const Poly
     {
         SPDLOG_TRACE("Processing external surface, detecting bridges. layer {}", this->layer()->print_z);
         const double custom_angle = this->region().config().get<double>("bridge_angle");
-        bridges.surfaces = custom_angle > 0 ?
-            expand_merge_surfaces(m_fill_surfaces.surfaces, stBottomBridge, expansion_zones, closing_radius, deg2rad(custom_angle)) :
+        // Orca relative_bridge_angle: the angle is added to the detected ones
+        const bool   relative_angle = this->region().config().get<bool>("relative_bridge_angle");
+        // Orca align_infill_direction_to_model: an absolute angle turns with the model
+        double align_offset = 0.;
+        if (this->region().config().get<bool>("align_infill_direction_to_model")) {
+            const auto &m = this->layer()->object()->trafo().matrix();
+            align_offset  = std::atan2(double(m(1, 0)), double(m(0, 0)));
+        }
+        bridges.surfaces = custom_angle > 0 && !relative_angle ?
+            expand_merge_surfaces(m_fill_surfaces.surfaces, stBottomBridge, expansion_zones, closing_radius, deg2rad(custom_angle) + align_offset) :
             expand_bridges_detect_orientations(m_fill_surfaces.surfaces, expansion_zones, closing_radius);
+        if (custom_angle > 0 && relative_angle)
+            for (Surface &bridge_surface : bridges.surfaces)
+                if (bridge_surface.bridge_angle >= 0)
+                    bridge_surface.bridge_angle += deg2rad(custom_angle);
         SPDLOG_TRACE("Processing external surface, detecting bridges - done");
 #if 0
         {

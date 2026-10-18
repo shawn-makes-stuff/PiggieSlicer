@@ -2,6 +2,7 @@
 #define slic3r_LayerRegion_hpp_
 
 #include <assert.h>
+#include <optional>
 #include <stdint.h>
 #include <functional>
 #include <string>
@@ -114,14 +115,16 @@ public:
 
     Flow    flow(FlowRole role) const;
     Flow    flow(FlowRole role, double layer_height) const;
-    Flow    bridging_flow(FlowRole role, bool force_thick_bridges = false) const;
+    // Orca: thick_bridge, if given, decides alone (thick internal bridges); else the object's thick_bridges or force_thick_bridges
+    Flow    bridging_flow(FlowRole role, bool force_thick_bridges = false, std::optional<bool> thick_bridge = std::nullopt) const;
 
     void    slices_to_fill_surfaces_clipped();
     void    prepare_fill_surfaces();
     // Produce perimeter extrusions, gap fill extrusions and fill polygons for input slices.
     void    make_perimeters(
         // Input slices for which the perimeters, gap fills and fill expolygons are to be generated.
-        const SurfaceCollection                                &slices,
+        // Orca counterbore_hole_bridging takes the unsupported parts over the holes out of them.
+        SurfaceCollection                                      &slices,
         // Configuration regions that will be applied to parts of created perimeters.
         const PerimeterRegions                                 &perimeter_regions,
         // Ranges of perimeter extrusions and gap fill extrusions per suface, referencing

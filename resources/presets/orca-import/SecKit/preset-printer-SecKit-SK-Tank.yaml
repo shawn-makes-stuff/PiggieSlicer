@@ -1,0 +1,107 @@
+kind: printer
+id: 87wC2cTe84CxdwjoAEh2ug
+variants:
+- condition: printer.model == "SecKit SK-Tank"
+  name: SecKit SK-Tank
+  id: IK/SN0MxxsfM70cS3UjYyQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: saTfKMh6714e3um9v1Kq1w
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @SecKit
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 44
+      extruder_clearance_radius: 46
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_extruding:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_retracting:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_travel:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_x:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_y:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_z:
+      - 200.0
+      - 200.0
+      machine_max_jerk_e:
+      - 8.0
+      - 8.0
+      machine_max_jerk_x:
+      - 14.14
+      - 14.14
+      machine_max_jerk_y:
+      - 14.14
+      - 14.14
+      machine_max_jerk_z:
+      - 2.0
+      - 2.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 180.0
+      - 180.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+        G90
+        G92 E0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 350x0
+      - 350x350
+      - '0x350'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

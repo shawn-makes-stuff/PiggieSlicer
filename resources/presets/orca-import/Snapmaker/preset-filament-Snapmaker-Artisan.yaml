@@ -1,0 +1,88 @@
+kind: filament
+id: QX8lVHdCsm95e/4fsj2/kA
+name: Snapmaker Dual ABS Benchy
+condition: (printer.model == "Snapmaker Artisan" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 2
+  max_fan_speed: 50
+  min_fan_speed: 35
+  filament_cooling_final_speed: 60
+  filament_cooling_initial_speed: 35
+  filament_cooling_moves: 2
+  filament_cost: 50
+  filament_density: 1.04
+  deretract_speed: 55
+  filament_diameter: 1.75
+  end_filament_gcode: ''
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 35
+  filament_loading_speed_start: 35
+  filament_max_volumetric_speed: 31
+  filament_minimal_purge_on_wipe_tower: 0
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 0
+  filament_notes: |
+    eSUN ABS+
+    Sunlu ABS+
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_layer_change: false
+  retract_length: 0.5
+  retract_speed: 55
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: ''
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 35
+  filament_vendor: Snapmaker
+  wipe: false
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 250
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: false
+  slowdown_below_layer_time: 0
+  min_print_speed: 0
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "hot_plate_temp": 110, "hot_plate_temp_initial_layer": 105, "idle_temperature": 0, "temperature_vitrification": 189}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: UIaQ9WO/7IXtJlyNi4gorg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: y7MMpWyFF6ruqN8irND4Tw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: jYN0pCVpxs4GP5vHHnre0Q
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: A1Wmi7ENpoL8yRJKZhxdgA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Textured Cool Plate"
+  id: yC87vDluG0DLR8FGYRLsqA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: ER0xxYFu8knl8CTAnLb9tQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35

@@ -26,6 +26,15 @@ using PrintToolSubcategoryListViewFactory = Yoga::ViewFactory<
     Biz::IConfigBoxSetter&,
     Biz::ProjectInteractor&>;
 
+// the sidebar's groups: the last argument selects Orca's layout (PrintToolSubcategoryItem)
+using PrintTabGroupFactory = Yoga::ViewFactory<
+    PrintToolSubcategoryItem,
+    Biz::PrintToolItem,
+    Biz::PrintToolConfigBoxInteractor&,
+    Biz::IConfigBoxSetter&,
+    Biz::ProjectInteractor&,
+    bool>;
+
 class PrintToolSubcategoryListView :
     public Yoga::ListView<
         PrintToolSubcategoryItem,

@@ -367,7 +367,7 @@ MoveVerticesPerLayer get_brim_preview(const Slic3r::Print& print, const float he
 
     const libpgcode::MoveVertex vertex_template{
         .type = libpgcode::MoveType::Extrude,
-        .extrusion_role = GCodeExtrusionRole::Skirt,
+        .extrusion_role = GCodeExtrusionRole::Brim,
         .extruder_id = static_cast<uint8_t>(0),
     };
 

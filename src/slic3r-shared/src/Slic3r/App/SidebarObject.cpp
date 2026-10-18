@@ -371,7 +371,7 @@ SidebarObject::SidebarObject(Biz::ProjectInteractor& project_interactor) :
 
     m_override_group_filter->set_source_model(object_settings_observable_list);
 
-    m_override_settings_dialog->attach_to_item(this, Position::Left);
+    m_override_settings_dialog->attach_to_item(this, Position::Right);
     m_override_settings_dialog->callbacks().opened = [this]
     { m_add_settings_button->set_checked(true); };
     m_override_settings_dialog->callbacks().closed = [this]

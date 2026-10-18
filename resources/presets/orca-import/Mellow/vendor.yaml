@@ -1,0 +1,173 @@
+kind: vendor
+id: Mellow
+name: Mellow
+version: 2.4.0+orca.02.04.00.02
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: M1
+  base_model: M1
+  printer_configs_order:
+  - M1-0-2-nozzle
+  - M1-0-4-nozzle
+  - M1-0-6-nozzle
+  - M1-0-8-nozzle
+---
+kind: printer
+technology: FFF
+name: M1
+id: M1
+model:
+  base_model: M1
+  model: M1
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: M1_bed_model.stl
+  bed_texture: mellow_bed_texture.svg
+  thumbnail: M1_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: M1-0-2-nozzle
+name: M1 0.2 nozzle
+printer: M1
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: M1-0-4-nozzle
+name: M1 0.4 nozzle
+printer: M1
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: M1-0-6-nozzle
+name: M1 0.6 nozzle
+printer: M1
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: M1-0-8-nozzle
+name: M1 0.8 nozzle
+printer: M1
+tools:
+- tool: '0.8'
+sheet: high_temp_plate

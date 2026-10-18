@@ -12,6 +12,7 @@
 #include <cstring>
 
 #include "Slic3r/Assert.hpp"
+#include "Slic3r/Domain/ConfigDefsFDM.hpp"
 #include "Slic3r/Domain/GCodeFlavor.hpp"
 #include "Slic3r/Domain/Types.hpp"
 #include "libslic3r/GCode/GCodeWriterConfig.hpp"
@@ -50,6 +51,14 @@ public:
     std::string set_print_acceleration(unsigned int acceleration)   { return set_acceleration_internal(Acceleration::Print, acceleration); }
     std::string set_travel_acceleration(unsigned int acceleration)  { return set_acceleration_internal(Acceleration::Travel, acceleration); }
     std::string set_junction_deviation(double junction_deviation);
+    // Orca enable_power_loss_recovery: Marlin 2 M413 S1 / S0, nothing for "printer configuration"
+    std::string set_power_loss_recovery(Domain::PowerLossRecoveryMode mode) const;
+    // Orca: XY jerk (M205 X Y, Klipper SQUARE_CORNER_VELOCITY, Repetier M207) and, for Klipper, both
+    // in one SET_VELOCITY_LIMIT
+    std::string set_jerk_xy(double jerk);
+    std::string set_accel_and_jerk(unsigned int acceleration, double jerk);
+    // Orca: Klipper's acceleration is SET_VELOCITY_LIMIT when accel_to_decel is on
+    bool klipper_velocity_limit() const;
     std::string reset_e(bool force = false);
     std::string update_progress(unsigned int num, unsigned int tot, bool allow_100 = false) const;
     // return false if this extruder was already selected
@@ -105,6 +114,8 @@ public:
 
     std::string retract(bool before_wipe = false);
     std::string retract_for_toolchange(bool before_wipe = false);
+    // Retract to this total length (Orca: what a wipe cannot retract, before the wipe)
+    std::string retract_to(double length, bool toolchange);
     std::string unretract();
 
     // Current position of the printer, in G-code coordinates.
@@ -119,24 +130,39 @@ public:
     // by this function while the current Z-hop accumulator is updated.
     void        update_position(const Domain::Vec3d &new_pos);
 
+    // Orca: the first layer's travels use initial_layer_travel_speed
+    void        set_is_first_layer(bool first_layer) { m_is_first_layer = first_layer; }
+    double      travel_speed() const
+    { return m_is_first_layer ? config.initial_layer_travel_speed.get_abs_value(config.travel_speed) : config.travel_speed; }
+    // The last feedrate set (mm/min), for Orca's role based wipe speed
+    double      current_speed() const { return m_current_speed; }
+
     // Returns whether this flavor supports separate print and travel acceleration.
     bool supports_separate_travel_acceleration() const;
 
     // To be called by the CoolingBuffer from another thread.
-    static std::string set_fan(const Domain::GCodeFlavor gcode_flavor, bool gcode_comments, unsigned int speed);
+    // Orca: part_cooling_fan_min_pwm raises a non-zero speed to it (fan off stays off)
+    static std::string set_fan(const Domain::GCodeFlavor gcode_flavor, bool gcode_comments, unsigned int speed, unsigned int min_pwm = 0);
+    // Orca: the auxiliary part cooling fan (M106 P2)
+    static std::string set_additional_fan(bool gcode_comments, unsigned int speed);
     // To be called by the main thread. It always emits the G-code, it does not remember the previous state.
     // Keeping the state is left to the CoolingBuffer, which runs asynchronously on another thread.
     std::string set_fan(unsigned int speed) const;
+    // Orca: the exhaust fan (air filtration), speed in percent
+    std::string set_exhaust_fan(int speed) const;
 
     std::string set_pressure_advance(double pressure_advance, const std::string& vendor_id) const;
     std::string emit_automatic_pressure_advance_calibration() const;
 
 private:
+    bool            m_is_first_layer{false};
+    mutable double  m_current_speed{0.};
 	// Extruders are sorted by their ID, so that binary search is possible.
     std::vector<Extruder> m_extruders;
     Extruder*       m_extruder;
     unsigned int    m_last_acceleration = (unsigned int)(-1);
     unsigned int    m_last_travel_acceleration = (unsigned int)(-1); // only used for flavors supporting separate print/travel acc
+    double          m_last_jerk = 0.;
     // Limit for setting the acceleration, to respect the machine limits set for the Marlin firmware.
     // If set to zero, the limit is not in action.
 

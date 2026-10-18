@@ -697,11 +697,31 @@ inline bool has_compatible_layer_regions(const PrintRegionConfigView &config, co
         == other_config.get<std::vector<bool>>("overhangs").at(extruder_id)
         && std::abs(extrusion_width - other_extrusion_width) < 1e6
         && config.get<bool>("thin_walls") == other_config.get<bool>("thin_walls")
-        && config.get<std::vector<bool>>("external_perimeters_first").at(extruder_id)
-        == other_config.get<std::vector<bool>>("external_perimeters_first").at(extruder_id)
+        && config.get<std::vector<Domain::WallSequence>>("wall_sequence").at(extruder_id)
+        == other_config.get<std::vector<Domain::WallSequence>>("wall_sequence").at(extruder_id)
         && config.get<std::vector<Domain::FloatOrPercentage>>("infill_overlap").at(extruder_id)
         == other_config.get<std::vector<Domain::FloatOrPercentage>>("infill_overlap")
                .at(extruder_id)
+        // Orca's perimeter settings (Orca Layer.cpp)
+        && config.get<std::vector<Domain::Percentage>>("top_bottom_infill_wall_overlap").at(extruder_id)
+        == other_config.get<std::vector<Domain::Percentage>>("top_bottom_infill_wall_overlap").at(extruder_id)
+        && config.get<std::vector<Domain::FloatOrPercentage>>("min_width_top_surface").at(extruder_id)
+        == other_config.get<std::vector<Domain::FloatOrPercentage>>("min_width_top_surface").at(extruder_id)
+        && config.get<double>("filter_out_gap_fill") == other_config.get<double>("filter_out_gap_fill")
+        && config.get<std::vector<bool>>("alternate_extra_wall").at(extruder_id)
+        == other_config.get<std::vector<bool>>("alternate_extra_wall").at(extruder_id)
+        && config.get<bool>("overhang_reverse") == other_config.get<bool>("overhang_reverse")
+        && config.get<bool>("overhang_reverse_internal_only") == other_config.get<bool>("overhang_reverse_internal_only")
+        && config.get<Domain::FloatOrPercentage>("overhang_reverse_threshold") == other_config.get<Domain::FloatOrPercentage>("overhang_reverse_threshold")
+        && config.get<bool>("unsupported_wall_last") == other_config.get<bool>("unsupported_wall_last")
+        && config.get<std::vector<double>>("min_length_factor").at(extruder_id)
+        == other_config.get<std::vector<double>>("min_length_factor").at(extruder_id)
+        && config.get<std::vector<double>>("wall_maximum_resolution").at(extruder_id)
+        == other_config.get<std::vector<double>>("wall_maximum_resolution").at(extruder_id)
+        && config.get<std::vector<double>>("wall_maximum_deviation").at(extruder_id)
+        == other_config.get<std::vector<double>>("wall_maximum_deviation").at(extruder_id)
+        && config.get<std::vector<Domain::FloatOrPercentage>>("initial_layer_min_bead_width").at(extruder_id)
+        == other_config.get<std::vector<Domain::FloatOrPercentage>>("initial_layer_min_bead_width").at(extruder_id)
         && has_compatible_dynamic_overhang_speed(config, other_config, extruder_id);
 }
 
@@ -785,8 +805,10 @@ void Layer::make_perimeters()
         }
 
         if (layer_region_ids.size() == 1) { // Optimization.
-            curr_region.make_perimeters(curr_region.slices(), perimeter_regions, perimeter_and_gapfill_ranges, fill_expolygons, fill_expolygons_ranges);
-            this->sort_perimeters_into_islands(curr_region.slices(), curr_region_id, perimeter_and_gapfill_ranges, std::move(fill_expolygons), fill_expolygons_ranges, layer_region_ids);
+            // a copy: the perimeter generator may change the slices (Orca counterbore_hole_bridging)
+            SurfaceCollection slices = curr_region.slices();
+            curr_region.make_perimeters(slices, perimeter_regions, perimeter_and_gapfill_ranges, fill_expolygons, fill_expolygons_ranges);
+            this->sort_perimeters_into_islands(slices, curr_region_id, perimeter_and_gapfill_ranges, std::move(fill_expolygons), fill_expolygons_ranges, layer_region_ids);
         } else {
             SurfaceCollection new_slices;
             // Use the region with highest infill rate, as the make_perimeters() function below decides on the gap fill based on the infill existence.
@@ -1042,6 +1064,20 @@ void Layer::sort_perimeters_into_islands(
                     }
                 }
             } while (sort_region_id != -1);
+            // Orca counterbore_hole_bridging: the infill bridged over the holes lies outside of all the region slices,
+            // thus lost by the split above: it goes to the first region
+            if (this_layer_region.region().config().get<Domain::CounterboreHoleBridging>("counterbore_hole_bridging") !=
+                Domain::CounterboreHoleBridging::None) {
+                Surfaces all_region_slices;
+                for (uint32_t region_idx : layer_region_ids)
+                    append(all_region_slices, m_regions[region_idx]->slices().surfaces);
+                if (ExPolygons extra_fill = diff_ex(fill_expolygons, all_region_slices, ApplySafetyOffset::Yes); ! extra_fill.empty()) {
+                    LayerRegion &front = *m_regions[layer_region_ids.front()];
+                    for (const ExPolygon &expolygon : extra_fill)
+                        front.m_fill_expolygons_bboxes.emplace_back(get_extents(expolygon));
+                    append(front.m_fill_expolygons, std::move(extra_fill));
+                }
+            }
         } else {
             this_layer_region.m_fill_expolygons        = std::move(fill_expolygons);
             this_layer_region.m_fill_expolygons_bboxes = std::move(fill_expolygons_bboxes);

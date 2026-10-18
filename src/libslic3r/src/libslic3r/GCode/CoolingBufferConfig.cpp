@@ -3,6 +3,14 @@
 namespace Slic3r::Biz::Slicing {
 CoolingBufferConfig::CoolingBufferConfig(const PrintConfigView& print_config) :
     bridge_fan_speed{print_config.get<std::vector<int>>("bridge_fan_speed")},
+    initial_layer_fan_speed{print_config.get<std::vector<int>>("initial_layer_fan_speed")},
+    support_material_interface_fan_speed{print_config.get<std::vector<int>>("support_material_interface_fan_speed")},
+    ironing_fan_speed{print_config.get<std::vector<int>>("ironing_fan_speed")},
+    internal_bridge_fan_speed{print_config.get<std::vector<int>>("internal_bridge_fan_speed")},
+    additional_cooling_fan_speed{print_config.get<std::vector<int>>("additional_cooling_fan_speed")},
+    dont_slow_down_outer_wall{print_config.get<std::vector<bool>>("dont_slow_down_outer_wall")},
+    auxiliary_fan{print_config.get<bool>("auxiliary_fan")},
+    part_cooling_fan_min_pwm{print_config.get<int>("part_cooling_fan_min_pwm")},
     cooling{print_config.get<std::vector<bool>>("cooling")},
     cooling_perimeter_transition_distance{
         print_config.get<std::vector<double>>("cooling_perimeter_transition_distance")

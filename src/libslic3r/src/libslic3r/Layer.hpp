@@ -37,6 +37,7 @@ class PrintObject;
 
 namespace FillAdaptive {
     struct Octree;
+    struct RegionOctrees;
 }
 
 namespace FillLightning {
@@ -181,6 +182,8 @@ public:
     ExPolygons 				lslices;
     std::vector<size_t>     lslice_indices_sorted_by_print_order;
     LayerSlices             lslices_ex;
+    // Orca separated_infills: the connected body of each of lslices, empty when the object is one body
+    std::vector<size_t>     lslices_separated_component_ids;
 
     size_t                  region_count() const { return m_regions.size(); }
     const LayerRegion*      get_region(int idx) const { return m_regions[idx]; }
@@ -209,12 +212,10 @@ public:
         return false;
     }
     void                    make_perimeters();
-    void                    make_fills(FillAdaptive::Octree     *adaptive_fill_octree,
-                                       FillAdaptive::Octree     *support_fill_octree,
-                                       FillLightning::Generator *lightning_generator);
-    Polylines               generate_sparse_infill_polylines_for_anchoring(FillAdaptive::Octree *adaptive_fill_octree,
-                                                                           FillAdaptive::Octree *support_fill_octree,
-                                                                           FillLightning::Generator* lightning_generator) const;
+    void                    make_fills(const FillAdaptive::RegionOctrees *fill_octrees,
+                                       FillLightning::Generator          *lightning_generator);
+    Polylines               generate_sparse_infill_polylines_for_anchoring(const FillAdaptive::RegionOctrees *fill_octrees,
+                                                                           FillLightning::Generator          *lightning_generator) const;
     void 					make_ironing();
 
     void                    export_region_slices_to_svg(const char *path) const;

@@ -1,4 +1,5 @@
 #include "Slic3r/Biz/ProjectInteractor.hpp"
+#include "Slic3r/Biz/PrintHost/PrintHostMoonraker.hpp"
 
 #include <Slic3r/Assert.hpp>
 #include <Slic3r/Domain/Workbench.hpp>
@@ -594,6 +595,100 @@ void ProjectInteractor::on_selected_bed_instances_changed(Domain::SelectionId pr
 
     if (container_id != m_selection.config_container_id())
         do_select_config_container(container_id);
+}
+
+bool ProjectInteractor::sync_filaments_from_lanes(
+    size_t tool_index,
+    const std::vector<PrintHost::FilamentLane>& lanes
+)
+{
+    if (lanes.empty())
+        return false;
+
+    // Orca: the slot count follows the highest reported lane
+    int max_lane_index = 0;
+    for (const auto& lane : lanes)
+        max_lane_index = std::max(max_lane_index, lane.index);
+    if (!m_preset_interactor.set_external_mmu(tool_index, uint32_t(max_lane_index + 1), true))
+        return false;
+
+    const auto& hw_config = m_preset_interactor.current_printer_config();
+    size_t first_slot = 0;
+    while (Domain::Preset::MaterialIterator::from_slot_index(hw_config, first_slot).tool_index() != tool_index)
+        ++first_slot;
+    const size_t unit_slots = Domain::Preset::find_external_mmu(hw_config, tool_index)->slot_count;
+
+    std::vector<std::string> colors(hw_config.material_slot_count());
+    for (const auto& lane : lanes) {
+        if (lane.index < 0 || size_t(lane.index) >= unit_slots)
+            continue;
+        const size_t slot = first_slot + size_t(lane.index);
+        colors[slot]      = lane.color;
+
+        const std::string family = PrintHost::generic_filament_family(lane.material);
+        if (family.empty())
+            continue;
+        const std::string name = "Generic " + family;
+        const auto& items      = m_preset_interactor.material_presets().at(slot).items();
+        for (size_t i = 0, n = items.size(); i < n; ++i) {
+            const auto& item = items.at(i);
+            if (item.name == name || item.name.starts_with(name + " @")) {
+                m_preset_interactor.select_material_preset(slot, item.id, true);
+                break;
+            }
+        }
+    }
+    m_project_settings_interactor.set_colors_from_connect(selected_config_container_id(), colors);
+    return true;
+}
+
+void ProjectInteractor::sync_filaments_from_selected_printer(
+    size_t tool_index,
+    std::function<void(std::string)> done
+)
+{
+    auto& physical_printers = physical_printer_interactor();
+    if (!physical_printers.is_printer_upload_selected()) {
+        // TRN Error of the sidebar's filament sync button.
+        done(_u8L("Select a network printer to sync filaments from."));
+        return;
+    }
+
+    struct Result
+    {
+        std::optional<std::vector<PrintHost::FilamentLane>> lanes;
+        std::string msg;
+    };
+    Platform::PlatformServices::instance()
+        .job_manager()
+        .create_job(
+            "filament_sync",
+            [](Biz::JThread::StopToken, PhysicalPrinter::PhysicalPrinterConfig printer) -> Result
+            {
+                Result result;
+                result.lanes = PrintHost::fetch_filament_lanes(printer, result.msg);
+                return result;
+            },
+            physical_printers.selected_physical_printer_data()
+        )
+        .on_result(
+            [this, tool_index, done](Result result)
+            {
+                if (!result.lanes.has_value()) {
+                    done(result.msg);
+                } else if (!sync_filaments_from_lanes(tool_index, *result.lanes)) {
+                    // TRN Error of the sidebar's filament sync button.
+                    done(_u8L("The printer reported no filament lanes."));
+                } else {
+                    done({});
+                }
+            }
+        )
+        .on_exception(
+            // TRN Error of the sidebar's filament sync button.
+            [done](const std::exception_ptr&) { done(_u8L("Reading filaments from the printer failed.")); }
+        )
+        .start();
 }
 
 void ProjectInteractor::set_dialog_provider(IMessageDialogProvider* dialog_provider)

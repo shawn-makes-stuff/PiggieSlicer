@@ -291,11 +291,16 @@ void Popup::resize(const SizeInfo& size_info)
         return;
     }
 
+    // popups keep the main layout's padding (5 px) clear of the window's bottom edge, the same gap
+    // as below the sidebar
+    constexpr float bottom_margin = 5.f;
+    const float usable_height     = size_info.viewport_size_y - bottom_margin;
+
     ImRect popup_rect;
     if (m_attached_type == AttachedType::Item) {
         const Vec2f attachee_global_pos = m_attached_to->get_global_pos();
         m_last_attached_pos             = attachee_global_pos;
-        const ImRect size_rect(0, 0, size_info.viewport_size_x, size_info.viewport_size_y);
+        const ImRect size_rect(0, 0, size_info.viewport_size_x, usable_height);
         const ImVec2 target_pos{attachee_global_pos.x(), attachee_global_pos.y()};
         const ImRect target_rect{
             target_pos,
@@ -337,7 +342,7 @@ void Popup::resize(const SizeInfo& size_info)
         popup_rect.Max = popup_rect.Min + ImVec2(m_content_item->width(), m_content_item->height());
     }
 
-    Imgui::move_window_to_bounds({m_last_size.x(), m_last_size.y()}, popup_rect);
+    Imgui::move_window_to_bounds({m_last_size.x(), usable_height}, popup_rect);
 
     if (m_attached_type != AttachedType::FreeStanding) {
         if (!Domain::fuzzy_compare(m_content_item->left(), popup_rect.Min.x)) {

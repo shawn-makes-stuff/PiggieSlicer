@@ -3,6 +3,9 @@
 #include "Slic3r/Domain/FullConfigFDM.hpp"
 #include "Slic3r/Domain/TestUtils.hpp"
 #include "Slic3r/Domain/Config.hpp"
+#include "Slic3r/Domain/OrcaLayout.hpp"
+
+#include <algorithm>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
@@ -339,4 +342,39 @@ TEST_CASE_METHOD(
     REQUIRE(!result[1].is_percentage());
     CHECK(result[0].float_value() == Catch::Approx(25));
     CHECK(result[1].float_value() == Catch::Approx(100));
+}
+
+TEST_CASE("Orca's sidebar layout is applied to the print settings", "[FDMConfig]")
+{
+    const auto find = [](std::string_view name) -> const ConfigItemDef& {
+        const auto& defs = get_defs_fdm().defs();
+        const auto it = std::ranges::find(defs, name, &ConfigItemDef::name);
+        REQUIRE(it != defs.end());
+        return *it;
+    };
+    const auto groups = orca_layout_groups();
+    using Category = ConfigItemDef::Category;
+    for (const ConfigItemDef& def : get_defs_fdm().defs()) {
+        CHECK(def.orca_group < groups.size());
+        // every print setting of the sidebar's categories has a place (else the sidebar hides it)
+        const auto* location = std::get_if<FDMConfigLocation>(&def.location);
+        if (location && *location == FDMConfigLocation::Print && def.category != Category::Hidden
+            && def.category != Category::Unknown && uint16_t(def.category) >= uint16_t(Category::Print_LayersSurfaces)
+            && uint16_t(def.category) <= uint16_t(Category::Print_Notes))
+        {
+            INFO(def.name);
+            CHECK(def.orca_group != 0);
+        }
+    }
+
+    // Orca: Quality > Layer height, Simple; Quality > Seam, Expert (Tab.cpp, PrintConfig.cpp)
+    const ConfigItemDef& layer_height = find("layer_height");
+    CHECK(groups[layer_height.orca_group].label == "Layer height");
+    CHECK(layer_height.mode == ConfigItemDef::Mode::Simple);
+    const ConfigItemDef& wipe_inward = find("wipe_inward");
+    CHECK(groups[wipe_inward.orca_group].label == "Seam");
+    CHECK(wipe_inward.mode == ConfigItemDef::Mode::Expert);
+    // Orca's wall_loops (Strength > Walls) is 3.0's perimeters
+    CHECK(groups[find("perimeters").orca_group].label == "Walls");
+    CHECK(find("perimeters").orca_order < find("thin_walls").orca_order);
 }

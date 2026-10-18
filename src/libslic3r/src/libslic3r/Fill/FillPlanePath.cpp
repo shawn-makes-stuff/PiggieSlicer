@@ -6,6 +6,13 @@
 #include "../ShortestPath.hpp"
 #include "FillPlanePath.hpp"
 #include "libslic3r/Fill/FillBase.hpp"
+#include "libslic3r/Fill/FillCornerSmoothing.hpp"
+
+#include <numeric>
+#include <type_traits>
+#include <unordered_map>
+
+#include "Slic3r/Biz/Algorithms/Line.hpp"
 
 using namespace Slic3r::Biz;
 
@@ -73,6 +80,69 @@ void InfillPolylineClipper::add_point(const Vec2d &fpt)
     }
 }
 
+// Orca restore_source_path_order: the fragments clipped out of the source polyline sorted and oriented to run in its
+// order and direction.
+static void restore_source_path_order(const Polyline &source, Polylines &fragments)
+{
+    const Points &src = source.points;
+    if (src.size() < 2 || fragments.empty())
+        return;
+
+    std::unordered_map<Point, size_t, Domain::PointHash> source_index;
+    source_index.reserve(src.size());
+    for (size_t i = 0; i < src.size(); ++ i)
+        source_index.emplace(src[i], i);
+
+    // the index of the source vertex where the fragment starts, then the offset of its start from that vertex, for the
+    // fragments cut out of one long source segment
+    std::vector<std::pair<size_t, double>> keys(fragments.size());
+    for (size_t n = 0; n < fragments.size(); ++ n) {
+        Polyline    &pl    = fragments[n];
+        const size_t npos  = size_t(-1);
+        size_t       front = npos;
+        size_t       back  = npos;
+        for (const Point &pt : pl.points)
+            if (auto it = source_index.find(pt); it != source_index.end()) {
+                front = it->second;
+                break;
+            }
+        for (auto i = pl.points.rbegin(); i != pl.points.rend(); ++ i)
+            if (auto it = source_index.find(*i); it != source_index.end()) {
+                back = it->second;
+                break;
+            }
+        Vec2crd source_dir;
+        if (front == npos) {
+            // all the vertices were created by the clipping: the fragment lies on a single source segment
+            double best = std::numeric_limits<double>::max();
+            for (size_t i = 0; i + 1 < src.size(); ++ i)
+                if (const double d = Algorithms::Line::distance_to_squared(Line(src[i], src[i + 1]), pl.first_point()); d < best) {
+                    best  = d;
+                    front = i;
+                }
+            back       = front;
+            source_dir = src[front + 1] - src[front];
+        } else
+            source_dir = src[std::min(back + 1, src.size() - 1)] - src[front > 0 ? front - 1 : 0];
+        if (front > back) {
+            pl.reverse();
+            std::swap(front, back);
+        } else if (front == back && (pl.last_point() - pl.first_point()).cast<double>().dot(source_dir.cast<double>()) < 0.)
+            pl.reverse();
+        const Vec2crd seg = src[std::min(front + 1, src.size() - 1)] - src[front];
+        keys[n] = { front, (pl.first_point() - src[front]).cast<double>().dot(seg.cast<double>()) };
+    }
+
+    std::vector<size_t> order(fragments.size());
+    std::iota(order.begin(), order.end(), size_t(0));
+    std::sort(order.begin(), order.end(), [&keys](size_t a, size_t b) { return keys[a] < keys[b]; });
+    Polylines sorted;
+    sorted.reserve(fragments.size());
+    for (size_t n : order)
+        sorted.emplace_back(std::move(fragments[n]));
+    fragments = std::move(sorted);
+}
+
 void FillPlanePath::_fill_surface_single(
     const FillParams                &params, 
     unsigned int                     thickness_layers,
@@ -82,11 +152,12 @@ void FillPlanePath::_fill_surface_single(
 {
     expolygon.rotate(-direction.first);
 
-    //FIXME Vojtech: We are not sure whether the user expects the fill patterns on visible surfaces to be aligned across all the islands of a single layer.
-    // One may align for this->centered() to align the patterns for Archimedean Chords and Octagram Spiral patterns.
-    const bool align = params.density < 0.995;
+    // Orca: only the sparse infill is aligned across layers, as the top / bottom surfaces may be less dense too
+    const bool align = params.extrusion_role == ExtrusionRole::InternalInfill;
 
     BoundingBox snug_bounding_box = BB::inflated(get_extents(expolygon), SCALED_EPSILON);
+    // Orca: expanded to avoid artifacts at the edges (the outer lines of a multiline path)
+    snug_bounding_box = BB::inflated(snug_bounding_box, coord_t(scale_(this->spacing) * params.multiline));
 
 
     BoundingBox rotated_box;
@@ -96,13 +167,12 @@ void FillPlanePath::_fill_surface_single(
     rotated_box = BB::merge(rotated_box, Domain::rotated(Point(this->bounding_box.max.x(), this->bounding_box.min.y()), -direction.first));
 
     // Rotated bounding box of the area to fill in with the pattern.
-    BoundingBox bounding_box = align ?
-        // Sparse infill needs to be aligned across layers. Align infill across layers using the object's bounding box.
-        // TODO: This unnecessary copy will remain until the old BoundingBox is replaced with Domain::BoundingBox2crd.
-        rotated_box :
-        // Solid infill does not need to be aligned across layers, generate the infill pattern
-        // around the clipping expolygon only.
-        snug_bounding_box;
+    // Sparse infill needs to be aligned across layers, using the object's bounding box. The solid surfaces are centered
+    // on each surface, the object or the assembly (Orca center_of_surface_pattern).
+    BoundingBox bounding_box =
+        align || params.center_of_surface_pattern == Domain::CenterOfSurfacePattern::EachModel ? rotated_box :
+        params.center_of_surface_pattern == Domain::CenterOfSurfacePattern::EachSurface         ? snug_bounding_box :
+                                                                                                  this->extended_object_bounding_box();
 
     Point shift = this->centered() ? 
         BB::center(bounding_box) :
@@ -112,7 +182,7 @@ void FillPlanePath::_fill_surface_single(
 
     Polyline polyline;
     {
-        auto distance_between_lines = scaled<double>(this->spacing) / params.density;
+        auto distance_between_lines = scaled<double>(this->spacing) * params.multiline / params.density;
         auto min_x = coord_t(ceil(double(bounding_box.min.x()) / distance_between_lines));
         auto min_y = coord_t(ceil(double(bounding_box.min.y()) / distance_between_lines));
         auto max_x = coord_t(ceil(double(bounding_box.max.x()) / distance_between_lines));
@@ -122,22 +192,36 @@ void FillPlanePath::_fill_surface_single(
             // Filling in a bounding box over the whole object, clip generated polyline against the snug bounding box.
             snug_bounding_box = BB::translated(snug_bounding_box, Point{-shift.x(), -shift.y()});
             InfillPolylineClipper output(snug_bounding_box, distance_between_lines);
-            this->generate(min_x, min_y, max_x, max_y, resolution, output);
+            this->generate(min_x, min_y, max_x, max_y, resolution, params, output);
             polyline.points = std::move(output.result());
         } else {
             // Filling in a snug bounding box, no need to clip.
             InfillPolylineOutput output(distance_between_lines);
-            this->generate(min_x, min_y, max_x, max_y, resolution, output);
+            this->generate(min_x, min_y, max_x, max_y, resolution, params, output);
             polyline.points = std::move(output.result());
         }
     }
 
     if (polyline.size() >= 2) {
-        Polylines polylines = intersection_pl(polyline, expolygon);
+        // Orca fill_multiline
+        Polylines polylines { polyline };
+        multiline_fill(polylines, params, spacing);
+        polylines = intersection_pl(std::move(polylines), expolygon);
         Polylines chained;
-        if (params.dont_connect() || params.density > 0.5 || polylines.size() <= 1)
-            chained = chain_polylines(std::move(polylines));
-        else
+        if (params.dont_connect() || params.density > 0.5 || polylines.size() <= 1) {
+            if (params.fill_order != Domain::SurfaceFillOrder::Default) {
+                // Orca: the fragments in the order along the generated path, which runs from the center outwards (the
+                // distance from the center cannot be used: along the Octagram Spiral it oscillates more than the rings)
+                restore_source_path_order(polyline, polylines);
+                chained = std::move(polylines);
+                if (params.fill_order == Domain::SurfaceFillOrder::Inward) {
+                    std::reverse(chained.begin(), chained.end());
+                    for (Polyline &pl : chained)
+                        pl.reverse();
+                }
+            } else
+                chained = chain_polylines(std::move(polylines));
+        } else
             connect_infill(std::move(polylines), expolygon, chained, this->spacing, params);
         // paths must be repositioned and rotated back
         for (Polyline &pl : chained) {
@@ -246,12 +330,75 @@ static void generate_hilbert_curve(coord_t min_x, coord_t min_y, coord_t max_x, 
     }
 }
 
+// Rounds the corners of the generated path on its way to the infill output.
+template<typename Output>
+class SmoothingPolylineOutput
+{
+public:
+    SmoothingPolylineOutput(Output &output, const double smooth_factor, const double tolerance)
+        : m_output(output), m_smoother(smooth_factor, tolerance) {}
+
+    void reserve(size_t n) { m_output.reserve(n); }
+    void add_point(const Vec2d &pt) { auto emit = emitter(); m_smoother.push(pt, emit); }
+    // The smoother holds back the last point of the path until it knows there is no corner left to round.
+    void finish() { auto emit = emitter(); m_smoother.flush(emit); }
+
+private:
+    // The curves of two adjacent corners meet at the midpoint of the segment they share, where they
+    // may round to the very same output point. Drop those, they would be zero length extrusions.
+    auto emitter()
+    {
+        return [this](const Vec2d &pt) {
+            const Point snapped = m_output.scaled(pt);
+            if (m_has_last_snapped && snapped == m_last_snapped)
+                return;
+            m_last_snapped     = snapped;
+            m_has_last_snapped = true;
+            m_output.add_point(pt);
+        };
+    }
+
+    Output        &m_output;
+    CornerSmoother m_smoother;
+    Point          m_last_snapped { Point::Zero() };
+    bool           m_has_last_snapped { false };
+};
+
+// Runs the path generator against the concrete output type, optionally through the corner smoother.
+// The outputs do not share a virtual add_point(), so the type has to be resolved here.
+template<typename GenerateFn>
+static void generate_path(FillPlanePath::InfillPolylineOutput &output, const FillParams &params, const double resolution, GenerateFn generate)
+{
+    const double smooth_factor = sanitize_smooth_factor(params.smooth_factor);
+    auto run = [smooth_factor, resolution, &generate](auto &out) {
+        if (smooth_factor == 0.) {
+            generate(out);
+        } else {
+            SmoothingPolylineOutput<std::remove_reference_t<decltype(out)>> smoothing(out, smooth_factor, resolution);
+            generate(smoothing);
+            smoothing.finish();
+        }
+    };
+
+    if (output.clips())
+        run(static_cast<InfillPolylineClipper&>(output));
+    else
+        run(output);
+}
+
 void FillHilbertCurve::generate(coord_t min_x, coord_t min_y, coord_t max_x, coord_t max_y, const double /* resolution */, InfillPolylineOutput &output)
 {
     if (output.clips())
         generate_hilbert_curve(min_x, min_y, max_x, max_y, static_cast<InfillPolylineClipper&>(output));
     else
         generate_hilbert_curve(min_x, min_y, max_x, max_y, output);
+}
+
+void FillHilbertCurve::generate(coord_t min_x, coord_t min_y, coord_t max_x, coord_t max_y, const double resolution,
+    const FillParams &params, InfillPolylineOutput &output)
+{
+    generate_path(output, params, resolution,
+        [min_x, min_y, max_x, max_y](auto &out) { generate_hilbert_curve(min_x, min_y, max_x, max_y, out); });
 }
 
 template<typename Output>
@@ -292,6 +439,13 @@ void FillOctagramSpiral::generate(coord_t min_x, coord_t min_y, coord_t max_x, c
         generate_octagram_spiral(min_x, min_y, max_x, max_y, static_cast<InfillPolylineClipper&>(output));
     else
         generate_octagram_spiral(min_x, min_y, max_x, max_y, output);
+}
+
+void FillOctagramSpiral::generate(coord_t min_x, coord_t min_y, coord_t max_x, coord_t max_y, const double resolution,
+    const FillParams &params, InfillPolylineOutput &output)
+{
+    generate_path(output, params, resolution,
+        [min_x, min_y, max_x, max_y](auto &out) { generate_octagram_spiral(min_x, min_y, max_x, max_y, out); });
 }
 
 } // namespace Slic3r

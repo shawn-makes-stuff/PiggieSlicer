@@ -1,0 +1,302 @@
+kind: vendor
+id: UltiMaker
+name: UltiMaker
+version: 2.4.0+orca.02.04.00.06
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: UltiMaker 2
+  base_model: UltiMaker 2
+  printer_configs_order:
+  - UltiMaker-2-0-4-nozzle-jirn7m
+  - UltiMaker-2-0-6-nozzle-28xpvi
+  - UltiMaker-2-0-8-nozzle-nQxM1X
+- label: UltiMaker 2 extended+
+  base_model: UltiMaker 2 extended+
+  printer_configs_order:
+  - UltiMaker-2-extended-0-4-nozzle
+  - UltiMaker-2-extended-0-6-nozzle
+  - UltiMaker-2-extended-0-8-nozzle
+- label: UltiMaker 2+
+  base_model: UltiMaker 2+
+  printer_configs_order:
+  - UltiMaker-2-0-4-nozzle-Ge7WyC
+  - UltiMaker-2-0-6-nozzle-OkB_Bg
+  - UltiMaker-2-0-8-nozzle-sWQQs1
+- label: UltiMaker S5
+  base_model: UltiMaker S5
+  printer_configs_order:
+  - UltiMaker-S5-0-4-nozzle-Single-Extruder
+  - UltiMaker-S5-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: UltiMaker 2
+id: UltiMaker 2
+model:
+  base_model: UltiMaker 2
+  model: UltiMaker 2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: ultimaker_2_buildplate_model.stl
+  bed_texture: ultimaker_2_buildplate_texture.svg
+  thumbnail: UltiMaker 2_cover.png
+---
+kind: printer
+technology: FFF
+name: UltiMaker 2 extended+
+id: UltiMaker 2 extended+
+model:
+  base_model: UltiMaker 2 extended+
+  model: UltiMaker 2 extended+
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: ultimaker_2_buildplate_model.stl
+  bed_texture: ultimaker_2_buildplate_texture.svg
+  thumbnail: UltiMaker 2 extended+_cover.png
+---
+kind: printer
+technology: FFF
+name: UltiMaker 2+
+id: UltiMaker 2+
+model:
+  base_model: UltiMaker 2+
+  model: UltiMaker 2+
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: ultimaker_2_buildplate_model.stl
+  bed_texture: ultimaker_2_buildplate_texture.svg
+  thumbnail: UltiMaker 2+_cover.png
+---
+kind: printer
+technology: FFF
+name: UltiMaker S5
+id: UltiMaker S5
+model:
+  base_model: UltiMaker S5
+  model: UltiMaker S5
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: ultimaker_s5_buildplate_model.stl
+  bed_texture: ultimaker_s5_buildplate_texture.svg
+  thumbnail: UltiMaker S5_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: UltiMaker-2-0-4-nozzle-jirn7m
+name: UltiMaker 2 0.4 nozzle
+printer: UltiMaker 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-2-0-6-nozzle-28xpvi
+name: UltiMaker 2 0.6 nozzle
+printer: UltiMaker 2
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-2-0-8-nozzle-nQxM1X
+name: UltiMaker 2 0.8 nozzle
+printer: UltiMaker 2
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-2-extended-0-4-nozzle
+name: UltiMaker 2 extended+ 0.4 nozzle
+printer: UltiMaker 2 extended+
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-2-extended-0-6-nozzle
+name: UltiMaker 2 extended+ 0.6 nozzle
+printer: UltiMaker 2 extended+
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-2-extended-0-8-nozzle
+name: UltiMaker 2 extended+ 0.8 nozzle
+printer: UltiMaker 2 extended+
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-2-0-4-nozzle-Ge7WyC
+name: UltiMaker 2+ 0.4 nozzle
+printer: UltiMaker 2+
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-2-0-6-nozzle-OkB_Bg
+name: UltiMaker 2+ 0.6 nozzle
+printer: UltiMaker 2+
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-2-0-8-nozzle-sWQQs1
+name: UltiMaker 2+ 0.8 nozzle
+printer: UltiMaker 2+
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-S5-0-4-nozzle
+name: UltiMaker S5 0.4 nozzle
+printer: UltiMaker S5
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: UltiMaker-S5-0-4-nozzle-Single-Extruder
+name: UltiMaker S5 0.4 nozzle - Single Extruder
+printer: UltiMaker S5
+tool_count: 1
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

@@ -128,6 +128,7 @@ private:
     CurrentPresetLabel* m_current_preset_label{nullptr};
 
     Yoga::LayoutButton* m_revert_button{nullptr};
+    Yoga::LayoutButton* m_delete_button{nullptr};
 };
 
 } // namespace Slic3r::App

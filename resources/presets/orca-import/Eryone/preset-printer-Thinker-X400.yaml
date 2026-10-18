@@ -1,0 +1,203 @@
+kind: printer
+id: Wj3TrQm41ipAopJc6olnDw
+variants:
+- condition: printer.model == "Thinker X400"
+  name: Thinker X400
+  id: GlkOkX5QBGP3sZCeCDMDuA
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: a6RJrLV26JxzYrsOtx4mQA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Standard @Thinker X400 0.2 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 40
+      extruder_clearance_radius: 85
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 12000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.3
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 8.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: "M117 Heating\nM104 S[first_layer_temperature] ; set extruder temp\nM109 S[first_layer_temperature] ; wait for extruder temp\nPRINT_START \nG90 ; use absolute coordinates\nM83 ; extruder relative mode\nM204 S[machine_max_acceleration_extruding] T[machine_max_acceleration_retracting]\nM104 S0\nM140 S[first_layer_bed_temperature[initial_extruder]] ; set bed temp\nM117 Heating\nM190 S[first_layer_bed_temperature[initial_extruder]]\nM104 S[first_layer_temperature] ; set extruder temp\nM109 S[first_layer_temperature] ; wait for extruder temp\n;QUAD_GANTRY_LEVEL\nCLEAN_N S=[first_layer_temperature] X=240 Y=-3 A=0 D=0.4\nM117 Quad Level\n_QUAD_GANTRY_LEVEL  horizontal_move_z=10 retry_tolerance=1 LIFT_SPEED=5\nG28 Z\nM117 Quad Level\n_QUAD_GANTRY_LEVEL  horizontal_move_z=5 retry_tolerance=0.05 LIFT_SPEED=5\nM117 Bed Mesh Level\nG1 X132.5 Y197.5\nG28 N\nBED_MESH_CALIBRATE\nM117 Heating\nG1 X275.0 Y0.0 Z0.3 F1500 ; move print head up\nM104 S[first_layer_temperature] ; set extruder\
+        \ temp\nM109 S[first_layer_temperature] ; wait for extruder temp\nM117 .\nINTRO_LINE D=0.2 ;intro line with 0.2 mm nozzle"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 400x0
+      - 400x400
+      - '0x400'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 250x250/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: PRoRqbWFtaxNAcS7sHxQxQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Thinker X400
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 40
+      extruder_clearance_radius: 85
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 12000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.3
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 8.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: "M117 Heating\nM104 S[first_layer_temperature] ; set extruder temp\nM109 S[first_layer_temperature] ; wait for extruder temp\nPRINT_START \nG90 ; use absolute coordinates\nM83 ; extruder relative mode\nM204 S[machine_max_acceleration_extruding] T[machine_max_acceleration_retracting]\nM104 S0\nM140 S[first_layer_bed_temperature[initial_extruder]] ; set bed temp\nM117 Heating\nM190 S[first_layer_bed_temperature[initial_extruder]]\nM104 S[first_layer_temperature] ; set extruder temp\nM109 S[first_layer_temperature] ; wait for extruder temp\n;QUAD_GANTRY_LEVEL\nCLEAN_N S=[first_layer_temperature] X=240 Y=-3 A=0 D=0.4\nM117 Quad Level\n_QUAD_GANTRY_LEVEL  horizontal_move_z=10 retry_tolerance=1 LIFT_SPEED=5\nG28 Z\nM117 Quad Level\n_QUAD_GANTRY_LEVEL  horizontal_move_z=5 retry_tolerance=0.05 LIFT_SPEED=5\nM117 Bed Mesh Level\nG1 X132.5 Y197.5\nG28 N\nBED_MESH_CALIBRATE\nM117 Heating\nG1 X275.0 Y0.0 Z0.3 F1500 ; move print head up\nM104 S[first_layer_temperature] ; set extruder\
+        \ temp\nM109 S[first_layer_temperature] ; wait for extruder temp\nM117 .\nINTRO_LINE D=0.4 ;intro line with 0.4 mm nozzle"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 400x0
+      - 400x400
+      - '0x400'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 250x250/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

@@ -17,6 +17,8 @@
 #include <wx/display.h>
 #include <wx/fontutil.h>
 
+#include <algorithm>
+
 namespace Slic3r::App::Desktop {
 
 namespace {
@@ -35,67 +37,35 @@ float get_display_scale_factor(const wxPoint& pos)
     return scale;
 }
 
-// This function is responsible for creating a bitmap correctly scaled for the target display.
+// A plain card in piggie grey (#292929) with a thin border, scaled for the target display; the
+// logo and the texts are drawn on it by SplashScreen::Decorate.
 static wxBitmap make_bitmap(bool is_editor, double scale)
 {
-    // 1. Load the base 1x resolution bitmap from the JPEG file.
-    wxBitmap bmp_1x = wxBitmap(WX::from_u8(var("splashscreen.jpg")), wxBITMAP_TYPE_JPEG);
-
-    if (!bmp_1x.IsOk()) {
-        // Fallback to a bundled bitmap if the JPEG fails to load.
-        wxBitmapBundle* bmp_bndl = WX::get_bmp_bundle("PiggieSlicer", 400);
-        bmp_1x = bmp_bndl->GetBitmap(bmp_bndl->GetPreferredBitmapSizeAtScale(1.0));
-        // It's critical to have a valid bitmap here.
-        if (!bmp_1x.IsOk()) return wxBitmap();
-    }
-
-    // 2. Calculate logical and scaled dimensions for the final composite bitmap.
-    // The final bitmap has a dark grey banner on the left, making it wider.
-    const wxSize image_part_logical_size = bmp_1x.GetSize();
-    const int final_logical_width  = lround((double) 3 / 2 * image_part_logical_size.GetWidth());
-    const int final_logical_height = image_part_logical_size.GetHeight();
-
+    // half the old splash's width (900 x 540: the picture and the banner beside it)
+    const wxSize logical_size(450, 540);
     const int border{1};
 
-    wxSize final_scaled_size(
-        lround(final_logical_width * scale),
-        lround(final_logical_height * scale)
-    );
-    final_scaled_size.IncBy(2 * border);
+    wxSize scaled_size(lround(logical_size.GetWidth() * scale), lround(logical_size.GetHeight() * scale));
+    scaled_size.IncBy(2 * border);
 
-    // 3. Create a wxImage to build the hi-res splash screen.
-    wxImage final_image(final_scaled_size);
-    if (!final_image.IsOk()) return wxBitmap();
+    wxImage image(scaled_size);
+    if (!image.IsOk()) return wxBitmap();
 
-    // 4.1 Render the border
-    wxRect rc(final_scaled_size);
-    final_image.SetRGB(rc, 100, 100, 100);
+    wxRect rc(scaled_size);
+    image.SetRGB(rc, 100, 100, 100);
     rc.Deflate(border);
-    // 4.2 Fill the entire image with the banner background color.
-    final_image.SetRGB(rc, 41, 41, 41); // piggie black
+    image.SetRGB(rc, 41, 41, 41); // piggie grey
 
-    // 5. Rescale the original JPEG image part to the target resolution.
-    wxImage image_part_scaled = bmp_1x.ConvertToImage().Rescale(lround(image_part_logical_size.GetWidth() * scale),
-                                                               lround(image_part_logical_size.GetHeight() * scale),
-                                                               wxIMAGE_QUALITY_HIGH);
-
-    // 6. Paste the scaled image part onto the grey background at the correct position.
-    const int image_part_x_offset =
-        lround((final_logical_width - image_part_logical_size.GetWidth()) * scale) + border;
-    final_image.Paste(image_part_scaled, image_part_x_offset, border);
-
-    // 7. Convert the final wxImage to a wxBitmap.
-    wxBitmap final_bitmap(final_image);
+    wxBitmap bitmap(image);
 
 #ifndef __WXMSW__
-    // 8. This is the crucial step for non-Windows platforms: set the bitmap's scale factor.
     // This tells wxWidgets that this large bitmap should occupy a smaller logical area.
-    if (final_bitmap.IsOk()) {
-        final_bitmap.SetScaleFactor(scale);
+    if (bitmap.IsOk()) {
+        bitmap.SetScaleFactor(scale);
     }
 #endif
 
-    return final_bitmap;
+    return bitmap;
 }
 
 } // namespace
@@ -181,81 +151,59 @@ void SplashScreen::Decorate(wxBitmap& bmp)
     if (!bmp.IsOk())
         return;
 
-    // draw text to the box at the left of the splashscreen.
-    // this box will be 2/5 of the weight of the bitmap, and be at the left.
-    int width = lround(bmp.GetLogicalWidth() * 0.33);
+    const int width  = bmp.GetLogicalWidth();
+    const int height = bmp.GetLogicalHeight();
+    const wxCoord margin = lround(24 * m_scale);
 
     // load bitmap for logo
     WX::BitmapCache bmp_cache;
-    int logo_size = lround(width * 0.25);
+    const int logo_size = lround(width * 0.25); // the old banner's logo was 74 px
     wxBitmap* logo_bmp_ptr = bmp_cache.load_svg("PiggieSlicer", logo_size, logo_size);
     if (logo_bmp_ptr == nullptr)
         return;
 
-    wxCoord margin = 20 * m_scale;
-
     // use a memory DC to draw directly onto the bitmap
     wxMemoryDC memDc(bmp);
 
-    // draw logo
-    int logo_pos_x = static_cast<int>(0.5 * (width - logo_size));
-    memDc.DrawBitmap(*logo_bmp_ptr, logo_pos_x, 2 * margin, true);
+    // logo
+    int y = 2 * margin;
+    memDc.DrawBitmap(*logo_bmp_ptr, (width - logo_size) / 2, y, true);
+    y += logo_size + margin;
 
-    wxRect banner_rect(wxPoint(0, logo_size + margin), wxPoint(width, bmp.GetLogicalHeight()));
-    banner_rect.Deflate(margin, 2 * margin);
-
-    wxString strPrusa  = WX::from_u8("Piggie");
-    wxString strSlicer = WX::from_u8("Slicer");
-
+    // title: "Piggie" white, "Slicer" pink, centred together
+    const wxString strPiggie = WX::from_u8("Piggie");
+    const wxString strSlicer = WX::from_u8("Slicer");
     memDc.SetFont(m_constant_text.title_font);
-    int widthPrusa    = memDc.GetTextExtent(strPrusa).GetWidth();
-    int widthSlicer   = memDc.GetTextExtent(strSlicer).GetWidth();
-    int widthCombined = memDc.GetTextExtent(strPrusa + strSlicer).GetWidth();
-    int kerning       = widthCombined - (widthPrusa + widthSlicer);
-
-    int banner_h_center = static_cast<int>((width - kerning) * 0.5);
-    wxRect banner_rect_Prusa(
-        banner_rect.GetLeftTop(),
-        wxPoint(banner_h_center, banner_rect.GetBottom())
-    );
-    banner_h_center += 1 + kerning;
-    wxRect banner_rect_Slicer(
-        wxPoint(banner_h_center, banner_rect.GetTop()),
-        banner_rect.GetRightBottom()
-    );
-
-    // draw the (white) labels inside of our black box (at the left of the splashscreen)
+    const int widthPiggie   = memDc.GetTextExtent(strPiggie).GetWidth();
+    const int widthCombined = memDc.GetTextExtent(strPiggie + strSlicer).GetWidth();
+    const int title_x       = (width - widthCombined) / 2;
     memDc.SetTextForeground(m_text_color);
-
-    memDc.DrawLabel(strPrusa, banner_rect_Prusa, wxALIGN_TOP | wxALIGN_RIGHT);
+    memDc.DrawText(strPiggie, title_x, y);
     memDc.SetTextForeground(m_highlighted_text_color);
-    memDc.DrawLabel(strSlicer, banner_rect_Slicer, wxALIGN_TOP | wxALIGN_LEFT);
+    memDc.DrawText(strSlicer, title_x + widthPiggie, y);
     memDc.SetTextForeground(m_text_color);
+    y += memDc.GetTextExtent(m_constant_text.title).GetY() + margin / 4;
 
-    int title_height = memDc.GetTextExtent(m_constant_text.title).GetY();
-    banner_rect.SetTop(banner_rect.GetTop() + title_height + margin);
-
+    // version
     memDc.SetFont(m_constant_text.version_font);
-    memDc.DrawLabel(m_constant_text.version, banner_rect, wxALIGN_TOP | wxALIGN_CENTER_HORIZONTAL);
-    int version_height = memDc.GetTextExtent(m_constant_text.version).GetY();
-    banner_rect.SetTop(banner_rect.GetTop() + version_height + margin);
+    const wxRect version_rect(0, y, width, height - y);
+    memDc.DrawLabel(m_constant_text.version, version_rect, wxALIGN_TOP | wxALIGN_CENTER_HORIZONTAL);
+    y += memDc.GetTextExtent(m_constant_text.version).GetY();
 
-    // save remained place for the text with application state
-    m_state_text_rect = banner_rect;
-
-    banner_rect.SetBottom(banner_rect_Prusa.GetBottom());
+    // credits at the bottom
     memDc.SetFont(m_constant_text.credits_font);
-    memDc.DrawLabel(
-        m_constant_text.credits,
-        banner_rect,
-        wxALIGN_BOTTOM | wxALIGN_CENTER_HORIZONTAL
-    );
+    const wxRect credits_rect(margin, y, width - 2 * margin, height - y - 2 * margin);
+    memDc.DrawLabel(m_constant_text.credits, credits_rect, wxALIGN_BOTTOM | wxALIGN_CENTER_HORIZONTAL);
+    const int credits_top = credits_rect.GetBottom() - memDc.GetMultiLineTextExtent(m_constant_text.credits).GetY();
+
+    // the application state (SetText) in the space between the version and the credits
+    m_state_text_rect = wxRect(margin, y + margin / 2, width - 2 * margin, std::max(0, credits_top - y - margin));
 }
 
 void SplashScreen::init_constant_text()
 {
     // The text banner width in logical pixels.
-    int text_banner_width = lround(0.33 * m_main_bitmap.GetLogicalWidth()) - roundl(m_scale * 80);
+    int text_banner_width = lround(0.55 * m_main_bitmap.GetLogicalWidth());
 
     m_constant_text.init(WX::w_config()->normal_font(), m_is_editor, text_banner_width);
 }
@@ -276,24 +224,24 @@ void SplashScreen::ConstantText::init(const wxFont& init_font, bool is_editor, i
 
     // dynamically get the version to display
     // TRN: {} is a placeholder for version number
-    version = from_u8(fmt::format(fmt::runtime(Biz::_u8L("Version {}")), SLIC3R_VERSION));
+    version = from_u8(fmt::format(fmt::runtime(Biz::_u8L("Version {}")), SLIC3R_APP_VERSION_DISPLAY));
 
     // credits information
     std::string credits_str = fmt::format(
-        "{}\n\n{}\n\n{}",
+        "{}\n\n{}",
         fmt::format(
             fmt::runtime(
-                // TRN: {} is a placeholder for the application name (e.g., "PrusaSlicer").
-                // Please preserve the "\n" newline characters to maintain the 3-line format of this phrase.
+                // TRN: {} is a placeholder for the application name (PiggieSlicer).
+                // Please preserve the "\n" newline characters to keep the line breaks of this phrase.
                 Biz::_u8L(
-                    "{} is based on Slic3r\n"
+                    "{} is built on PrusaSlicer,\n"
+                    "which is based on Slic3r\n"
                     "by Alessandro Ranellucci\n"
                     "and the RepRap community."
                 )
             ),
             SLIC3R_APP_NAME
         ),
-        Biz::_u8L("Developed by Prusa Research."),
         Biz::_u8L("Licensed under GNU AGPLv3.")
     );
     credits = from_u8(credits_str);
@@ -305,7 +253,7 @@ void SplashScreen::ConstantText::init(const wxFont& init_font, bool is_editor, i
     float title_font_scale = static_cast<float>(text_banner_width) / title_width;
     title_font             = init_font.Scaled(title_font_scale);
 
-    credits_font = version_font = title_font.Scaled(0.3f);
+    credits_font = version_font = title_font.Scaled(0.35f);
     title_font = title_font.Bold();
 }
 

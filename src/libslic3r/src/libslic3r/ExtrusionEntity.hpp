@@ -303,6 +303,11 @@ class ExtrusionLoop : public ExtrusionEntity
 public:
     ExtrusionPaths paths;
 
+    // Orca overhang_reverse: printed against the wall direction
+    bool           reverse_direction{false};
+    // Orca unsupported_wall_last: printed after the infill
+    bool           print_after_infill{false};
+
     ExtrusionLoop() = default;
     ExtrusionLoop(ExtrusionLoopRole role) : m_loop_role(role) {}
     ExtrusionLoop(const ExtrusionPaths &paths, ExtrusionLoopRole role = elrDefault) : paths(paths), m_loop_role(role) {}

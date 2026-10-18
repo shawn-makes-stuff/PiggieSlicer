@@ -30,6 +30,21 @@ constexpr coord_t meshfix_maximum_resolution               = scaled<coord_t>(0.5
 constexpr coord_t meshfix_maximum_deviation                = scaled<coord_t>(0.025);
 constexpr coord_t meshfix_maximum_extrusion_area_deviation = scaled<coord_t>(2.);
 
+// Orca WallToolPathsParams: explicit parameters instead of the region's (in mm, the angle in degrees)
+struct WallToolPathsParams
+{
+    double min_bead_width{ 0. };
+    double min_feature_size{ 0. };
+    double min_length_factor{ 0.5 };
+    double wall_transition_length{ 0. };
+    double wall_transition_angle{ 10. };
+    double wall_transition_filter_deviation{ 0. };
+    int    wall_distribution_count{ 1 };
+    bool   is_top_or_bottom_layer{ false };
+    coord_t wall_maximum_resolution{ meshfix_maximum_resolution };
+    coord_t wall_maximum_deviation{ meshfix_maximum_deviation };
+};
+
 class WallToolPaths
 {
 public:
@@ -49,7 +64,20 @@ public:
         coord_t wall_0_inset,
         double layer_height,
         const PrintRegionConfigView& print_region_config,
-        const unsigned extruder_id
+        const unsigned extruder_id,
+        // Orca make_paths_params: the first layer (initial_layer_min_bead_width), the bottom or topmost layer
+        // (no min_length_factor)
+        const bool first_layer = false,
+        const bool top_or_bottom_layer = false
+    );
+    WallToolPaths(
+        const Polygons& outline,
+        coord_t bead_width_0,
+        coord_t bead_width_x,
+        size_t inset_count,
+        coord_t wall_0_inset,
+        double layer_height,
+        const WallToolPathsParams &params
     );
 
     /*!
@@ -105,7 +133,7 @@ protected:
     /*!
      * Remove polylines shorter than half the smallest line width along that polyline.
      */
-    static void removeSmallLines(std::vector<VariableWidthLines> &toolpaths);
+    void removeSmallLines(std::vector<VariableWidthLines> &toolpaths) const;
 
     /*!
      * Simplifies the variable-width toolpaths by calling the simplify on every line in the toolpath using the provided
@@ -113,7 +141,7 @@ protected:
      * \param settings The settings as provided by the user
      * \return
      */
-    static void simplifyToolPaths(std::vector<VariableWidthLines>  &toolpaths);
+    void simplifyToolPaths(std::vector<VariableWidthLines>  &toolpaths) const;
 
 private:
     const Polygons& outline; //<! A reference to the outline polygon that is the designated area
@@ -129,6 +157,14 @@ private:
     coord_t wall_transition_filter_deviation; //!< The allowed line width deviation induced by filtering
     coord_t wall_transition_length;
     float min_nozzle_diameter;
+    // Orca min_length_factor, applied above the bottom and below the topmost layer
+    double min_length_factor;
+    bool top_or_bottom_layer;
+    // Orca wall_maximum_resolution / wall_maximum_deviation (were the meshfix_maximum_* constants)
+    coord_t wall_maximum_resolution;
+    coord_t wall_maximum_deviation;
+    double wall_transition_angle; //<! in degrees
+    int wall_distribution_count;
     bool toolpaths_generated; //<! Are the toolpaths generated
     std::vector<VariableWidthLines> toolpaths; //<! The generated toolpaths
     Polygons inner_contour;  //<! The inner contour of the generated toolpaths

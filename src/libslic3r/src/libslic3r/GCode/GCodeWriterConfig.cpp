@@ -47,6 +47,11 @@ GCodeWriterConfig::GCodeWriterConfig(const PrintConfigView& print_config)
             print_config.get<std::vector<double>>("machine_max_acceleration_travel").front() :
             0
     ));
+    max_jerk_x = emit_limits ? print_config.get<std::vector<double>>("machine_max_jerk_x").front() : 0.;
+    max_jerk_y = emit_limits ? print_config.get<std::vector<double>>("machine_max_jerk_y").front() : 0.;
+    accel_to_decel_enable = print_config.get<bool>("accel_to_decel_enable");
+    manual_filament_change = print_config.get<bool>("manual_filament_change");
+    accel_to_decel_factor = print_config.get<Domain::Percentage>("accel_to_decel_factor").value;
     max_junction_deviation  = emit_limits ?
          print_config.get<std::vector<double>>("machine_max_junction_deviation").front() :
          0.;
@@ -56,6 +61,7 @@ GCodeWriterConfig::GCodeWriterConfig(const PrintConfigView& print_config)
     use_relative_e_distances = print_config.get<bool>("use_relative_e_distances");
     use_firmware_retraction = print_config.get<bool>("use_firmware_retraction");
     travel_speed = print_config.get<double>("travel_speed");
+    initial_layer_travel_speed = print_config.get<Domain::FloatOrPercentage>("initial_layer_travel_speed");
     travel_speed_z = print_config.get<double>("travel_speed_z");
     filament_diameter        = print_config.get<std::vector<double>>("filament_diameter");
     filament_density         = print_config.get<std::vector<double>>("filament_density");

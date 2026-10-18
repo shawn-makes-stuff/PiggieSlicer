@@ -1,0 +1,224 @@
+kind: vendor
+id: MagicMaker
+name: MagicMaker
+version: 2.4.0+orca.02.04.00.06
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: MM BoneKing
+  base_model: MM BoneKing
+  printer_configs_order:
+  - MM-BoneKing-0-4-nozzle
+- label: MM hj SK
+  base_model: MM hj SK
+  printer_configs_order:
+  - MM-hj-SK-0-4-nozzle
+- label: MM hqs SF
+  base_model: MM hqs SF
+  printer_configs_order:
+  - MM-hqs-SF-0-4-nozzle
+- label: MM hqs hj
+  base_model: MM hqs hj
+  printer_configs_order:
+  - MM-hqs-hj-0-4-nozzle
+- label: MM slb
+  base_model: MM slb
+  printer_configs_order:
+  - MM-slb-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: MM BoneKing
+id: MM BoneKing
+model:
+  base_model: MM BoneKing
+  model: MM BoneKing
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 310_buildplate_model.stl
+  bed_texture: MM_buildplate_texture.svg
+  thumbnail: MM BoneKing_cover.png
+---
+kind: printer
+technology: FFF
+name: MM hj SK
+id: MM hj SK
+model:
+  base_model: MM hj SK
+  model: MM hj SK
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 220210_buildplate_model.stl
+  bed_texture: MM_buildplate_texture.svg
+  thumbnail: MM hj SK_cover.png
+---
+kind: printer
+technology: FFF
+name: MM hqs SF
+id: MM hqs SF
+model:
+  base_model: MM hqs SF
+  model: MM hqs SF
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 220210_buildplate_model.stl
+  bed_texture: MM_buildplate_texture.svg
+  thumbnail: MM hqs SF_cover.png
+---
+kind: printer
+technology: FFF
+name: MM hqs hj
+id: MM hqs hj
+model:
+  base_model: MM hqs hj
+  model: MM hqs hj
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 220210_buildplate_model.stl
+  bed_texture: MM_buildplate_texture.svg
+  thumbnail: MM hqs hj_cover.png
+---
+kind: printer
+technology: FFF
+name: MM slb
+id: MM slb
+model:
+  base_model: MM slb
+  model: MM slb
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: 125_buildplate_model.stl
+  bed_texture: MM_buildplate_texture.svg
+  thumbnail: MM slb_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: MM-BoneKing-0-4-nozzle
+name: MM BoneKing 0.4 nozzle
+printer: MM BoneKing
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MM-hj-SK-0-4-nozzle
+name: MM hj SK 0.4 nozzle
+printer: MM hj SK
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MM-hqs-SF-0-4-nozzle
+name: MM hqs SF 0.4 nozzle
+printer: MM hqs SF
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MM-hqs-hj-0-4-nozzle
+name: MM hqs hj 0.4 nozzle
+printer: MM hqs hj
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MM-slb-0-4-nozzle
+name: MM slb 0.4 nozzle
+printer: MM slb
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

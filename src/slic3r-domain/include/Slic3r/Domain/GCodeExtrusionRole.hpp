@@ -23,6 +23,10 @@ enum class GCodeExtrusionRole : uint8_t {
     WipeTower,
     // Custom (user defined) G-code block, for example start / end G-code.
     Custom,
+    // Orca: bridging infill inside the object (over sparse infill)
+    InternalBridgeInfill,
+    // Orca: brim (was printed as skirt)
+    Brim,
     // Stopper to count number of enums.
     Count
 };

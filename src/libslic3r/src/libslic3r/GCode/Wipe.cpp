@@ -22,26 +22,15 @@ namespace Slic3r::GCode {
 void Wipe::init(const PrintConfigView &config, const std::vector<unsigned int> &extruders)
 {
     this->reset_path();
+    m_wipe_speed            = config.get<Domain::FloatOrPercentage>("wipe_speed");
+    m_role_based_wipe_speed = config.get<bool>("role_based_wipe_speed");
 
-    // Calculate maximum wipe length to accumulate by the wipe cache.
-    // Paths longer than wipe_xy should never be needed for the wipe move.
+    // Maximum wipe length to accumulate by the wipe cache: the longest wipe_distance (Orca).
+    m_wipe_distance = config.get<std::vector<double>>("wipe_distance");
     double wipe_xy = 0;
-    const bool multimaterial = extruders.size() > 1;
     for (auto id : extruders)
-        if (config.get<std::vector<bool>>("wipe").at(id)) {
-            // Wipe length to extrusion ratio.
-            const double xy_to_e = this->calc_xy_to_e_ratio(
-                config.get<std::vector<double>>("retract_speed"),
-                config.get<double>("travel_speed"),
-                id
-            );
-            wipe_xy = std::max(
-                wipe_xy,
-                config.get<std::vector<double>>("retract_length").at(id) / xy_to_e
-            );
-            if (multimaterial)
-                wipe_xy = std::max(wipe_xy, config.get<std::vector<double>>("retract_length_toolchange").at(id) / xy_to_e);
-        }
+        if (config.get<std::vector<bool>>("wipe").at(id))
+            wipe_xy = std::max(wipe_xy, m_wipe_distance.at(id));
 
     if (wipe_xy == 0)
         this->disable();
@@ -88,7 +77,7 @@ std::string Wipe::wipe(
         retract_length > 0 && this->has_path()) {
         // Delayed emitting of a wipe start tag.
         bool wiped = false;
-        const double wipe_speed = this->calc_wipe_speed(travel_speed);
+        const double wipe_speed = this->wipe_speed(travel_speed, gcodegen.writer().current_speed());
         auto start_wipe = [&wiped, &gcode, &gcodegen, wipe_speed](){
             if (! wiped) {
                 wiped = true;
@@ -96,7 +85,23 @@ std::string Wipe::wipe(
                 gcode += gcodegen.writer().set_speed(wipe_speed * 60, {}, gcodegen.enable_cooling_markers() ? ";_WIPE"sv : ""sv);
             }
         };
-        const double xy_to_e    = this->calc_xy_to_e_ratio(retract_speed, travel_speed, extruder.id());
+        // Orca: the wipe is at most wipe_distance long (from the current position along the path), retracting
+        // what it can over it at the retraction speed; the rest is retracted before the wipe
+        double path_length = unscaled((this->path().front().point + m_offset - *gcodegen.last_position).cast<double>().norm()) +
+            unscaled(Geometry::ArcWelder::path_length<double>(this->path()));
+        const double wipe_length = std::min(path_length, m_wipe_distance.at(extruder.id()));
+        // 0.95: the effective retraction speed stays below the configured one after rounding (3.0's Wipe)
+        const double during_wipe = std::min(retract_length, 0.95 * retract_speed.at(extruder.id()) * wipe_length / wipe_speed);
+        if (during_wipe <= EPSILON || wipe_length <= EPSILON) {
+            this->reset_path();
+            return gcode;
+        }
+        if (retract_length - during_wipe > EPSILON) {
+            const double full_length = toolchange ? extruder.retract_length_toolchange() : extruder.retract_length();
+            gcode += gcodegen.writer().retract_to(full_length - during_wipe, toolchange);
+            retract_length = during_wipe;
+        }
+        const double xy_to_e    = during_wipe / wipe_length;
         auto         wipe_linear = [&gcode, &gcodegen, &retract_length, xy_to_e](const Vec2d &prev_quantized, Vec2d &p) {
             Vec2d  p_quantized = GCodeFormatter::quantize(p);
             if (p_quantized == prev_quantized) {
@@ -206,57 +211,27 @@ std::string Wipe::wipe(
     return gcode;
 }
 
-// Make a little move inwards before leaving loop after path was extruded,
-// thus the current extruder position is at the end of a path and the path
-// may not be closed in case the loop was clipped to hide a seam.
-std::optional<Point> wipe_hide_seam(const SmoothPath &path, const bool path_reversed, const double wipe_length)
+std::string Wipe::wipe_without_retraction(GCodeGenerator &gcodegen, double travel_speed)
 {
-    assert(! path.empty());
-    assert(path.front().path.size() >= 2);
-    assert(path.back().path.size() >= 2);
-
-    // Heuristics for estimating whether there is a chance that the wipe move will fit inside a small perimeter
-    // or that the wipe move direction could be calculated with reasonable accuracy.
-    if (longer_than(path, 2.5 * wipe_length)) {
-        // The print head will be moved away from path end inside the island.
-        Point p_current = path.back().path.back().point;
-        Point p_next = path.front().path.front().point;
-        Point p_prev;
-        {
-            // Is the seam hiding gap large enough already?
-            double l = wipe_length - (p_next - p_current).cast<double>().norm();
-            if (l > 0) {
-                // Not yet.
-                std::optional<Point> n = sample_path_point_at_distance_from_start(path, l);
-                assert(n);
-                if (! n)
-                    // Wipe move cannot be calculated, the loop is not long enough. This should not happen due to the longer_than() test above.
-                    return {};
+    std::string gcode;
+    if (this->has_path()) {
+        gcode += ";" + std::string{Biz::libpgcode::reserved_tag(Biz::libpgcode::Tags::Wipe_Start)} + "\n";
+        gcode += gcodegen.writer().set_speed(this->wipe_speed(travel_speed, gcodegen.writer().current_speed()) * 60, {},
+                                             gcodegen.enable_cooling_markers() ? ";_WIPE"sv : ""sv);
+        Vec2d prev = gcodegen.point_to_gcode_quantized(*gcodegen.last_position);
+        for (const Geometry::ArcWelder::Segment &segment : this->path()) {
+            const Vec2d p = GCodeFormatter::quantize(Vec2d(gcodegen.point_to_gcode(segment.point + m_offset)));
+            if (p != prev) {
+                gcode += gcodegen.writer().extrude_to_xy(p, 0., "wipe inward"sv);
+                prev = p;
             }
-            if (std::optional<Point> p = sample_path_point_at_distance_from_start(path, wipe_length); p)
-                p_prev = *p;
-            else
-                // Wipe move cannot be calculated, the loop is not long enough. This should not happen due to the longer_than() test above.
-                return {};
         }
-        // Detect angle between last and first segment.
-        // The side depends on the original winding order of the polygon (left for contours, right for holes).
-        double angle_inside = angle(p_next - p_current, p_prev - p_current);
-        assert(angle_inside >= -M_PI && angle_inside <= M_PI);
-        // 3rd of this angle will be taken, thus make the angle monotonic before interpolation.
-        if (path_reversed) {
-            if (angle_inside > 0)
-                angle_inside -= 2.0 * M_PI;
-        } else {
-            if (angle_inside < 0)
-                angle_inside += 2.0 * M_PI;
-        }
-        // Rotate the forward segment inside by 1/3 of the wedge angle.
-        auto v_rotated = Eigen::Rotation2D(angle_inside) * (p_next - p_current).cast<double>().normalized();
-        return p_current + (v_rotated * wipe_length).cast<coord_t>();
+        gcode += ";" + std::string{Biz::libpgcode::reserved_tag(Biz::libpgcode::Tags::Wipe_End)} + "\n";
+        gcodegen.last_position = gcodegen.gcode_to_point(prev);
     }
-
-    return {};
+    // Prevent wiping again on the same path.
+    this->reset_path();
+    return gcode;
 }
 
 } // namespace Slic3r::GCode

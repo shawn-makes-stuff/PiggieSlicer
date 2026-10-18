@@ -1,0 +1,151 @@
+kind: printer
+id: ib2fQSTm7/EBjEUcZdq5/A
+variants:
+- condition: printer.model == "Anycubic 4Max Pro 2"
+  name: Anycubic 4Max Pro 2
+  id: qsjQxQ6TfN2f0FwwVc+4NA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: PbNEXgTFbl1gP1v/eUYVTA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      change_extrusion_role_gcode: ''
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      enable_filament_ramming: true
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        M104 S0 ; turn off extruder heating
+        M140 S0 ; turn off bed heating
+        M107 ; turn off fans
+        G91 ; relative positioning
+        G0 Z+0.5 ; move Z up a tiny bit
+        G90 ; absolute positioning
+        G0 X135 Y105 F{machine_max_feedrate_x[0]*60} ; move extruder to center position
+        G0 Z190.5 F{machine_max_feedrate_z[0]*60} ; lower the plattform to Z min
+        M84 ; steppers off
+        G90 ; absolute positioning
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 1250.0
+      - 1250.0
+      machine_max_acceleration_retracting:
+      - 1250.0
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_x:
+      - 900.0
+      - 900.0
+      machine_max_acceleration_y:
+      - 900.0
+      - 900.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 6.0
+      - 6.0
+      machine_max_jerk_y:
+      - 6.0
+      - 6.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.2
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 120.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 16.0
+      - 16.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        G21 ; metric values
+        G90 ; absolute positioning
+        M82 ; set extruder to absolute mode
+        M140 S[first_layer_bed_temperature] ; set bed temp
+        G28 X0 Y0 ; home X and Y
+        G28 Z0 ; home Z
+        G1 Z30 F{machine_max_feedrate_z[0]*60} ; move Z a bit down to not blow on the bed edge while heating
+        G1 X10 F3900 ; let some space on x to prevent the filament cooling exhaust from beeing blocked by the servo motor
+        M190 S[first_layer_bed_temperature[initial_extruder]] ; wait for bed temp
+        M104 S[first_layer_temperature] ; set extruder temp
+        M106 S80 ; turn on fan to prevent air nozzle melt while heating up
+        M109 S[first_layer_temperature] ; wait for extruder temp
+        M107 ; start with the fan off
+        G28 X0 ; goto X home again
+        G92 E0 ; zero the extruded length
+        G1 Z0.2 F360 ; move plattform upwards
+        ; extrude material next to the plattform (comment or remove following lines to disable)
+        G1 F180 E20 ; extrude some material next to the plattform
+        G92 E0 ; zero the extruded length
+        G1 E-[retract_length] F{retract_speed[0]*60} ; do a filament retract
+        G92 E0 ; zero the extruded length again
+        G1 X5 F3900 ; move sideways to get rid of that string
+        G1 E[retract_length] F{retract_speed[0]*60} ; do a filament deretract with retract parameters
+        G92 E0 ; zero the extruded length again
+        ; draw intro line (comment or remove following lines to disable)
+        G1 X30 E5 F700 ; draw intro line
+        G92 E0 ; zero the extruded length
+        G1 E-[retract_length] F{retract_speed[0]*60} ; do a filament retract
+        G1 X40 Z2.0 ; move away from the introline
+        G92 E0 ; zero the extruded length again
+        G1 E[retract_length] F{retract_speed[0]*60} ; do a filament deretract with retract parameters
+        ; end of intro line code
+        M117 Printing...
+        G5
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 270x0
+      - 270x210
+      - '0x210'
+      max_print_height: 190
+      printer_notes: ''
+      between_objects_gcode: ''
+      purge_in_prime_tower: true
+      single_extruder_multi_material: true
+      support_air_filtration: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG

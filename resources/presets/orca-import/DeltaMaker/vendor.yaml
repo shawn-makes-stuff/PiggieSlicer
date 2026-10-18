@@ -1,0 +1,176 @@
+kind: vendor
+id: DeltaMaker
+name: DeltaMaker
+version: 2.4.0+orca.02.04.00.04
+features:
+  printer:
+    supports_035_nozzle:
+      default: false
+      user_editable: false
+    supports_05_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.35
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: DeltaMaker 2
+  base_model: DeltaMaker 2
+  printer_configs_order:
+  - DeltaMaker-2-0-35-nozzle
+- label: DeltaMaker 2T
+  base_model: DeltaMaker 2T
+  printer_configs_order:
+  - DeltaMaker-2T-0-5-nozzle
+- label: DeltaMaker 2XT
+  base_model: DeltaMaker 2XT
+  printer_configs_order:
+  - DeltaMaker-2XT-0-5-nozzle
+---
+kind: printer
+technology: FFF
+name: DeltaMaker 2
+id: DeltaMaker 2
+model:
+  base_model: DeltaMaker 2
+  model: DeltaMaker 2
+tool_count: 1
+features:
+  supports_035_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: deltamaker_2_buildplate_model.stl
+  bed_texture: deltamaker_2_buildplate_texture.svg
+  thumbnail: DeltaMaker 2_cover.png
+---
+kind: printer
+technology: FFF
+name: DeltaMaker 2T
+id: DeltaMaker 2T
+model:
+  base_model: DeltaMaker 2T
+  model: DeltaMaker 2T
+tool_count: 1
+features:
+  supports_05_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: deltamaker_2_buildplate_model.stl
+  bed_texture: deltamaker_2_buildplate_texture.svg
+  thumbnail: DeltaMaker 2T_cover.png
+---
+kind: printer
+technology: FFF
+name: DeltaMaker 2XT
+id: DeltaMaker 2XT
+model:
+  base_model: DeltaMaker 2XT
+  model: DeltaMaker 2XT
+tool_count: 1
+features:
+  supports_05_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: deltamaker_2_buildplate_model.stl
+  bed_texture: deltamaker_2_buildplate_texture.svg
+  thumbnail: DeltaMaker 2XT_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.35'
+name: 0.35 nozzle
+condition: printer.supports_035_nozzle
+features:
+  nozzle_diameter:
+    default: 0.35
+---
+kind: tool
+technology: FFF
+id: '0.5'
+name: 0.5 nozzle
+condition: printer.supports_05_nozzle
+features:
+  nozzle_diameter:
+    default: 0.5
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: DeltaMaker-2-0-35-nozzle
+name: DeltaMaker 2 0.35 nozzle
+printer: DeltaMaker 2
+tools:
+- tool: '0.35'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: DeltaMaker-2T-0-5-nozzle
+name: DeltaMaker 2T 0.5 nozzle
+printer: DeltaMaker 2T
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: DeltaMaker-2XT-0-5-nozzle
+name: DeltaMaker 2XT 0.5 nozzle
+printer: DeltaMaker 2XT
+tools:
+- tool: '0.5'
+sheet: high_temp_plate

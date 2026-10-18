@@ -149,8 +149,9 @@ SCENARIO("Print: Brim generation", "[Print]") {
             config.print.items.opt("brim_type").set(BrimType::OuterOnly);
             config.print.items.opt("brim_width").set(3.0);
 	        Slic3r::Test::init_and_process_print({TestMesh::cube_20x20x20}, print, config);
-            THEN("Brim Extrusion collection has 3 loops in it") {
-                REQUIRE(print.brim().items_count() == 3);
+            // Orca rounds the brim width down to an even number of line spacings: 3 mm -> 2 loops.
+            THEN("Brim Extrusion collection has 2 loops in it") {
+                REQUIRE(print.brim().items_count() == 2);
             }
         }
         WHEN("Brim is set to 6mm")  {

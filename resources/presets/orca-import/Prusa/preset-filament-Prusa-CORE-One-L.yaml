@@ -1,0 +1,335 @@
+kind: filament
+id: 7tkODat2UNTnxUm49ymwEw
+name: Generic ABS @System
+condition: (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.926
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 3}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ZuPzJuyzV11kSKRRP13R8w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: JXjk+CHxAUrZ2ayj7uOryw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: a+Fkmg8f4CutBuPAVVtq5g
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: NqaKSTDAJi0vD6Agf6Ofpg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: DMnXRXGmNBOU9qd6RN5/jQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: WaRTlVQfuft/tPMMxMCzrw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 7T3XTP84h6g9QyrsD58yLQ
+name: Generic PETG @System
+condition: (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 20
+  max_fan_speed: 100
+  min_fan_speed: 20
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 3}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 1FlnYfgov8Cys8rNP0xRHw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: XrYpyn/CqzNp1XuoAUmmQA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: NNL2IlESgXfHN1SOcNleWA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: JQHfwL7pbmw3hU1g+odiEw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: tUCFbwgwiOXvHgp9xG6duw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: cvcvhjpSYeZKPAEUM833rg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: 91QmU0uYj+R+p1aiGtE14A
+name: Generic PLA @System
+condition: (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 3}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: iI3NGCis5O4pw9HH1ITzsQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: Yf/vMg7iDXvjos0Hl81mEA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: tkgqOu9wH+a/3fCblpKk9g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: i9YsdrfKsacTlHdoflAzSw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: bwjXVB3cdt4noDANparggQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: V8THlXyi7kqFnNaTOzoZQw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: aqB1eQiigBt5DkzE5vuOvQ
+name: Generic PLA Silk @System
+condition: (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa CORE One L" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa CORE One L HF" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa MINI" and tool.nozzle_diameter == 0.25) or (printer.model == "Prusa MINI" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MINI" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MINI" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa MINI IS" and tool.nozzle_diameter == 0.25) or (printer.model == "Prusa MINI IS" and tool.nozzle_diameter
+  == 0.4) or (printer.model == "Prusa MINI IS" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MINI IS" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa MK3.5" and tool.nozzle_diameter == 0.25) or (printer.model == "Prusa MK3.5" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK3.5" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK3.5" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa MK3S" and tool.nozzle_diameter == 0.25) or (printer.model == "Prusa MK3S" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK3S" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK3S" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa MK4" and tool.nozzle_diameter == 0.25) or (printer.model == "Prusa MK4" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter
+  == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa XL" and tool.nozzle_diameter == 0.25) or (printer.model == "Prusa XL" and tool.nozzle_diameter == 0.3) or (printer.model == "Prusa XL" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa XL" and tool.nozzle_diameter == 0.5) or (printer.model == "Prusa XL" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa XL" and tool.nozzle_diameter == 0.8) or (printer.model == "Prusa XL 5T" and tool.nozzle_diameter == 0.25 and printer.tool_count == 5) or (printer.model == "Prusa XL 5T" and tool.nozzle_diameter == 0.3 and printer.tool_count == 5) or (printer.model == "Prusa XL 5T" and tool.nozzle_diameter == 0.4 and printer.tool_count == 5) or (printer.model == "Prusa XL 5T" and tool.nozzle_diameter == 0.5 and printer.tool_count == 5) or (printer.model == "Prusa XL 5T" and tool.nozzle_diameter == 0.6 and
+  printer.tool_count == 5) or (printer.model == "Prusa XL 5T" and tool.nozzle_diameter == 0.8 and printer.tool_count == 5)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 7.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.5
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 3}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ZnPcWoPUp6wFJg3UfYO69A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: i58FV39WeHGPtc3E7T7SRg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: tr3Z807qTlnFPAgiwmODRw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: yEmrBBoNlUkAbK3Xz41jXA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: TLfAvxU1J+IUKhaOTr2kYQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: MIk9ofvefw8g1Iz+Sa0Huw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45

@@ -1,0 +1,104 @@
+kind: vendor
+id: Phrozen
+name: Phrozen
+version: 2.4.0+orca.02.04.00.06
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Phrozen Arco
+  base_model: Phrozen Arco
+  printer_configs_order:
+  - Phrozen-Arco-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: Phrozen Arco
+id: Phrozen Arco
+model:
+  base_model: Phrozen Arco
+  model: Phrozen Arco
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Phrozen Arco_buildplate_model.stl
+  bed_texture: Phrozen Arco_buildplate_texture.svg
+  thumbnail: Phrozen Arco_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Phrozen-Arco-0-4-nozzle
+name: Phrozen Arco 0.4 nozzle
+printer: Phrozen Arco
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

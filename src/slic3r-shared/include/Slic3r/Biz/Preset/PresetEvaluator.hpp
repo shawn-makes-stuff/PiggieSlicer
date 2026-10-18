@@ -56,6 +56,8 @@ private:
         Domain::Preset::FeatureValueMap features;
         SourceLocation last_node_location;
         std::optional<std::string> user_file;
+        // Keys set by a user preset itself (not inherited); they win over built-in values
+        std::set<std::string> user_keys;
 
         bool has_same_values(const EvalPresetContext& rhs) const;
     };

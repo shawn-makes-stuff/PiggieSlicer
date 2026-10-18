@@ -1,0 +1,301 @@
+kind: printer
+id: nls/eRUrCm0gDCwp0w8pBQ
+variants:
+- condition: printer.model == "Vzbot 330 AWD"
+  name: Vzbot 330 AWD
+  id: pfAy5D23XqPDKVHjrbumJA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: A4Da7TswFp1fsg+bAstS1A
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Vzbot
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 45
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;DSLR_SNAPSHOT
+        TIMELAPSE_TAKE_FRAME
+      end_gcode: "G91; //rel pos\nG1 E-5 f2000\nG1 Z10 F600 ; lift nozzle 10mm/s\nG1 E-29 f600\nM104 S0\nM140 S0 ; turn off bed\n\nM107\nG90\nG0 X117 Y200  F6000; move to back\nM84     ; disable motors\nDSLR_SNAPSHOT\nRSCS_off\n\nexhaustfan_on\nTIMELAPSE_RENDER\n\nG4 P60000 ; //Dwell for 1min\nM107 \nexhaustfan_off\n\nG4 P120000\n\npower_off ; //this is with moonraker"
+      machine_max_acceleration_e:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_extruding:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_retracting:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_travel:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_x:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_y:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_z:
+      - 1000.0
+      - 500.0
+      machine_max_jerk_e:
+      - 0.0
+      - 0.0
+      machine_max_jerk_x:
+      - 0.0
+      - 0.0
+      machine_max_jerk_y:
+      - 0.0
+      - 0.0
+      machine_max_jerk_z:
+      - 0.0
+      - 0.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 2000.0
+      - 2000.0
+      machine_max_feedrate_y:
+      - 2000.0
+      - 2000.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 15.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: "BED_MESH_PROFILE LOAD=default \nM190 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp \nG28; \nG1 X2 Y2 Z0 F9000  ; move to corner \nM109 S[first_layer_temperature] ; set nozzle temp \nG1 Z0.2 F300 ; raise nozzle to 0.2\nG92 E0.0 ; reset extruder distance position\nG1 X60.0 E9.0 F1000.0 ; intro line\nG1 X100.0 E21.5 F1000.0 ; intro line\nG0 Z2\n\nG92 E0.0 ; reset extruder distance position"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x330
+      - '0x330'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.5
+    id: b/v93uN3m96L1J700CARkw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Vzbot
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 45
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;DSLR_SNAPSHOT
+        TIMELAPSE_TAKE_FRAME
+      end_gcode: "G91; //rel pos\nG1 E-5 f2000\nG1 Z10 F600 ; lift nozzle 10mm/s\nG1 E-29 f600\nM104 S0\nM140 S0 ; turn off bed\n\nM107\nG90\nG0 X117 Y200  F6000; move to back\nM84     ; disable motors\nDSLR_SNAPSHOT\nRSCS_off\n\nexhaustfan_on\nTIMELAPSE_RENDER\n\nG4 P60000 ; //Dwell for 1min\nM107 \nexhaustfan_off\n\nG4 P120000\n\npower_off ; //this is with moonraker"
+      machine_max_acceleration_e:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_extruding:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_retracting:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_travel:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_x:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_y:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_z:
+      - 1000.0
+      - 500.0
+      machine_max_jerk_e:
+      - 0.0
+      - 0.0
+      machine_max_jerk_x:
+      - 0.0
+      - 0.0
+      machine_max_jerk_y:
+      - 0.0
+      - 0.0
+      machine_max_jerk_z:
+      - 0.0
+      - 0.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 2000.0
+      - 2000.0
+      machine_max_feedrate_y:
+      - 2000.0
+      - 2000.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 15.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: "BED_MESH_PROFILE LOAD=default \nM190 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp \nG28; \nG1 X2 Y2 Z0 F9000  ; move to corner \nM109 S[first_layer_temperature] ; set nozzle temp \nG1 Z0.2 F300 ; raise nozzle to 0.2\nG92 E0.0 ; reset extruder distance position\nG1 X60.0 E9.0 F1000.0 ; intro line\nG1 X100.0 E21.5 F1000.0 ; intro line\nG0 Z2\n\nG92 E0.0 ; reset extruder distance position"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x330
+      - '0x330'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: +zbLhNpLbpZqhtL1+g1y+g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Vzbot
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 45
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;DSLR_SNAPSHOT
+        TIMELAPSE_TAKE_FRAME
+      end_gcode: "G91; //rel pos\nG1 E-5 f2000\nG1 Z10 F600 ; lift nozzle 10mm/s\nG1 E-29 f600\nM104 S0\nM140 S0 ; turn off bed\n\nM107\nG90\nG0 X117 Y200  F6000; move to back\nM84     ; disable motors\nDSLR_SNAPSHOT\nRSCS_off\n\nexhaustfan_on\nTIMELAPSE_RENDER\n\nG4 P60000 ; //Dwell for 1min\nM107 \nexhaustfan_off\n\nG4 P120000\n\npower_off ; //this is with moonraker"
+      machine_max_acceleration_e:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_extruding:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_retracting:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_travel:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_x:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_y:
+      - 50000.0
+      - 50000.0
+      machine_max_acceleration_z:
+      - 1000.0
+      - 500.0
+      machine_max_jerk_e:
+      - 0.0
+      - 0.0
+      machine_max_jerk_x:
+      - 0.0
+      - 0.0
+      machine_max_jerk_y:
+      - 0.0
+      - 0.0
+      machine_max_jerk_z:
+      - 0.0
+      - 0.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 2000.0
+      - 2000.0
+      machine_max_feedrate_y:
+      - 2000.0
+      - 2000.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 15.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: "BED_MESH_PROFILE LOAD=default \nM190 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp \nG28; \nG1 X2 Y2 Z0 F9000  ; move to corner \nM109 S[first_layer_temperature] ; set nozzle temp \nG1 Z0.2 F300 ; raise nozzle to 0.2\nG92 E0.0 ; reset extruder distance position\nG1 X60.0 E9.0 F1000.0 ; intro line\nG1 X100.0 E21.5 F1000.0 ; intro line\nG0 Z2\n\nG92 E0.0 ; reset extruder distance position"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x330
+      - '0x330'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

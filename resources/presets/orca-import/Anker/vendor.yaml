@@ -1,0 +1,299 @@
+kind: vendor
+id: Anker
+name: Anker
+version: 2.4.0+orca.02.04.00.06
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_025_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Anker M5
+  base_model: Anker M5
+  printer_configs_order:
+  - Anker-M5-0-2-nozzle
+  - Anker-M5-0-25-nozzle
+  - Anker-M5-0-4-nozzle
+  - Anker-M5-0-6-nozzle
+- label: Anker M5 All-Metal Hot End
+  base_model: Anker M5 All-Metal Hot End
+  printer_configs_order:
+  - Anker-M5-All-Metal-0-2-nozzle
+  - Anker-M5-All-Metal-0-25-nozzle
+  - Anker-M5-All-Metal-0-4-nozzle
+  - Anker-M5-All-Metal-0-6-nozzle
+- label: Anker M5C
+  base_model: Anker M5C
+  printer_configs_order:
+  - Anker-M5C-0-2-nozzle
+  - Anker-M5C-0-25-nozzle
+  - Anker-M5C-0-4-nozzle
+  - Anker-M5C-0-6-nozzle
+---
+kind: printer
+technology: FFF
+name: Anker M5
+id: Anker M5
+model:
+  base_model: Anker M5
+  model: Anker M5
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_025_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: M5-CE-bed.stl
+  bed_texture: M5-CE-texture.svg
+  thumbnail: Anker M5_cover.png
+---
+kind: printer
+technology: FFF
+name: Anker M5 All-Metal Hot End
+id: Anker M5 All-Metal Hot End
+model:
+  base_model: Anker M5 All-Metal Hot End
+  model: Anker M5 All-Metal Hot End
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_025_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: M5-CE-bed.stl
+  bed_texture: M5-CE-texture.svg
+  thumbnail: Anker M5 All-Metal Hot End_cover.png
+---
+kind: printer
+technology: FFF
+name: Anker M5C
+id: Anker M5C
+model:
+  base_model: Anker M5C
+  model: Anker M5C
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_025_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: M5C-CE-bed.stl
+  bed_texture: M5-CE-texture.svg
+  thumbnail: Anker M5C_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.25'
+name: 0.25 nozzle
+condition: printer.supports_025_nozzle
+features:
+  nozzle_diameter:
+    default: 0.25
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Anker-M5-0-2-nozzle
+name: Anker M5 0.2 nozzle
+printer: Anker M5
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5-0-25-nozzle
+name: Anker M5 0.25 nozzle
+printer: Anker M5
+tools:
+- tool: '0.25'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5-0-4-nozzle
+name: Anker M5 0.4 nozzle
+printer: Anker M5
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5-0-6-nozzle
+name: Anker M5 0.6 nozzle
+printer: Anker M5
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5-All-Metal-0-2-nozzle
+name: Anker M5 All-Metal 0.2 nozzle
+printer: Anker M5 All-Metal Hot End
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5-All-Metal-0-25-nozzle
+name: Anker M5 All-Metal 0.25 nozzle
+printer: Anker M5 All-Metal Hot End
+tools:
+- tool: '0.25'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5-All-Metal-0-4-nozzle
+name: Anker M5 All-Metal 0.4 nozzle
+printer: Anker M5 All-Metal Hot End
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5-All-Metal-0-6-nozzle
+name: Anker M5 All-Metal 0.6 nozzle
+printer: Anker M5 All-Metal Hot End
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5C-0-2-nozzle
+name: Anker M5C 0.2 nozzle
+printer: Anker M5C
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5C-0-25-nozzle
+name: Anker M5C 0.25 nozzle
+printer: Anker M5C
+tools:
+- tool: '0.25'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5C-0-4-nozzle
+name: Anker M5C 0.4 nozzle
+printer: Anker M5C
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anker-M5C-0-6-nozzle
+name: Anker M5C 0.6 nozzle
+printer: Anker M5C
+tools:
+- tool: '0.6'
+sheet: high_temp_plate

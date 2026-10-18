@@ -155,7 +155,7 @@ void propagate_line_node_remove(const LineNode &line_node) {
 }
 
 // Filter out short extrusions that could create vibrations.
-static std::vector<Lines> filter_vibrating_extrusions(const std::vector<Lines> &lines_sections) {
+std::vector<Lines> filter_vibrating_extrusions(const std::vector<Lines> &lines_sections) {
     // Initialize all line nodes.
     std::vector<LineNodes> line_nodes_sections(lines_sections.size());
     for (const Lines &lines_section : lines_sections) {

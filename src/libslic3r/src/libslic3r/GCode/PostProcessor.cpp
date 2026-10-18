@@ -370,6 +370,8 @@ static Domain::FullPrintStatistics get_full_statistics(
     result.total_used_filament_cm3 = sum(filament_statistics.used_cm3);
     result.total_used_filament_g = sum(filament_statistics.used_g);
     result.total_filament_cost   = sum(filament_statistics.used_cost);
+    // Orca: the printer's time cost is part of the total cost
+    result.total_filament_cost  += float(extra_statistics.time_cost * basic_statistics.normal_mode_time.time / 3600.);
 
     result.total_wipe_tower_cost = static_cast<float>(extra_statistics.total_wipe_tower_cost);
     result.total_used_filament_for_wipe_tower_mm =
@@ -472,7 +474,8 @@ public:
     ) :
         m_config(config),
         m_result(result),
-        m_warning_callback(warning_callback)
+        m_warning_callback(warning_callback),
+        m_backtrace_T{ config.preheat_time, config.preheat_steps }
     {
         apply_config();
         setup_filament_data();
@@ -499,8 +502,8 @@ private:
     FilamentData m_filament_data;
 
     WarningCallback m_warning_callback{ nullptr };
-    // Backtrace data for Tx gcode lines
-    static const Backtrace s_BACKTRACE_T;
+    // Backtrace data for Tx gcode lines (preheat_time, preheat_steps)
+    const Backtrace m_backtrace_T;
 
     void apply_config() {
         for (size_t i = 0; i < TIME_MODES_COUNT; ++i) {
@@ -560,6 +563,15 @@ private:
                 continue;
             }
 
+            // Orca: the inline print time / used filament placeholders
+            if (line.find('@') != std::string::npos) {
+                std::string replaced = line.substr(0, line.size() - (!line.empty() && line.back() == '\n' ? 1 : 0));
+                if (replace_inline_placeholders(replaced, extruders)) {
+                    m_editing_items.push_back({ EditingType::Replacement, i, { replaced } });
+                    continue;
+                }
+            }
+
             // replace placeholder lines
             std::vector<std::string> new_lines = process_placeholders(line, extruders, extra_print_statistics);
             if (!new_lines.empty()) {
@@ -603,7 +615,7 @@ private:
                     }
                     processed = true;
                 }
-                max_backtrace_time = std::max(max_backtrace_time, s_BACKTRACE_T.time);
+                max_backtrace_time = std::max(max_backtrace_time, m_backtrace_T.time);
                 if (processed)
                     continue;
             }
@@ -712,6 +724,42 @@ private:
         default:                { assert(false); break; }
         }
         return {};
+    }
+
+    // Orca GCodeProcessor process_inline_placeholders: print_time_total_sec / _day / _hour / _minute / _sec
+    // and used_filament_length (m, all extruded filament as in the statistics)
+    bool replace_inline_placeholders(std::string& gcode_line, const std::vector<Extruder>& extruders) const
+    {
+        const double total_sec    = std::max(0.f, m_config.time_machines[size_t(TimeMode::Normal)].time);
+        const int    seconds      = int(total_sec);
+        const int    day_seconds  = seconds % 86400;
+        double       filament_mm  = 0.;
+        if (const auto* stats = std::get_if<Domain::BasicPrintStatistics>(&m_result.print_statistics)) {
+            for (const Extruder& extruder : extruders)
+                if (const auto it = stats->volumes_per_extruder.find(uint8_t(extruder.id()));
+                    it != stats->volumes_per_extruder.end() && extruder.filament_crossection() > 0)
+                    filament_mm += it->second / extruder.filament_crossection();
+        } else if (const auto* full = std::get_if<Domain::FullPrintStatistics>(&m_result.print_statistics)) {
+            filament_mm = full->total_used_filament_mm;
+        }
+        const std::pair<Tags, std::string> values[] = {
+            {Tags::Print_Time_Total_Sec_Placeholder, fmt::format("{:.2f}", total_sec)},
+            {Tags::Print_Time_Day_Placeholder,       std::to_string(seconds / 86400)},
+            {Tags::Print_Time_Hour_Placeholder,      std::to_string(day_seconds / 3600)},
+            {Tags::Print_Time_Minute_Placeholder,    std::to_string((day_seconds % 3600) / 60)},
+            {Tags::Print_Time_Sec_Placeholder,       std::to_string(day_seconds % 60)},
+            {Tags::Used_Filament_Length_Placeholder, fmt::format("{:.2f}", filament_mm / 1000.)},
+        };
+        bool processed = false;
+        for (const auto& [tag, value] : values) {
+            const std::string_view placeholder = reserved_tag(tag);
+            for (size_t pos = gcode_line.find(placeholder); pos != std::string::npos;
+                 pos = gcode_line.find(placeholder, pos + value.size())) {
+                gcode_line.replace(pos, placeholder.size(), value);
+                processed = true;
+            }
+        }
+        return processed;
     }
 
     // replace placeholder lines with the proper final value
@@ -908,14 +956,14 @@ private:
     void insert_M104_lines(size_t lines_counter, const std::string& cmd,
         std::function<void(size_t, const std::vector<float>&)> line_inserter,
         std::function<void(size_t, const std::string&)> line_replacer) {
-        const float time_step = s_BACKTRACE_T.time_step();
+        const float time_step = m_backtrace_T.time_step();
         const size_t base_rev_it_dist = m_result.gcode().size() - lines_counter; // distance from the current gcode line to the end of gcode
         auto base_gcode_rev_it = m_result.gcode().rbegin() + base_rev_it_dist; // reverse iterator to the current gcode line
         auto base_times_rev_it = m_gcode_times.rbegin() + base_rev_it_dist; // reverse iterator to the current gcode line times
 
         size_t rev_it_dist = 0; // distance from the current gcode line of the starting point of the backtrace
         float last_time_insertion = 0.0f; // used to avoid inserting two lines at the same time
-        for (unsigned int i = 0; i < s_BACKTRACE_T.steps; ++i) {
+        for (unsigned int i = 0; i < m_backtrace_T.steps; ++i) {
             const float backtrace_time_i = float(i + 1) * time_step;
             const float time_threshold_i = m_times[size_t(TimeMode::Normal)] - backtrace_time_i;
             auto gcode_rev_it = base_gcode_rev_it + rev_it_dist;
@@ -952,8 +1000,6 @@ private:
         }
     }
 };
-
-const PostProcessor::Backtrace PostProcessor::s_BACKTRACE_T = { 120.0f, 10 };
 
 ProcessorResult post_process(
     const PostProcessorConfig& config,

@@ -43,11 +43,14 @@ public:
         const Biz::PrintToolItem& data,
         Biz::PrintToolConfigBoxInteractor& cbi,
         Biz::IConfigBoxSetter& cbi_setter,
-        Biz::ProjectInteractor& project_interactor
+        Biz::ProjectInteractor& project_interactor,
+        bool orca_layout = false
     );
 
     void navigate_to_item(const Domain::ConfigItem* config_item) override;
     void clear_navigation() override;
+    /// Re-filters the rows after the settings visibility changed (Orca's layout).
+    void refresh_mode();
 
 private:
     void on_data_update() override;
@@ -63,6 +66,10 @@ private:
     Yoga::Text* m_label{nullptr};
     Domain::ConfigItemDef::OptionGroup m_option_group{Domain::ConfigItemDef::OptionGroup::Unknown};
     Domain::ConfigItemDef::Category m_category{Domain::ConfigItemDef::Category::Unknown};
+    // Orca's layout (the sidebar): the group is Domain::orca_layout_groups()[m_orca_group] and the
+    // rows are filtered by the settings visibility; otherwise 3.0's category and option group
+    bool m_orca_layout{false};
+    uint16_t m_orca_group{0};
 };
 
 } // namespace Slic3r::App

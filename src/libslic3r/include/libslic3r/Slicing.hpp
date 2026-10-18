@@ -155,7 +155,9 @@ Domain::ZHeightPairs layer_height_profile_from_ranges(
 // The object layers are based at z=0, ignoring the raft layers.
 Domain::LayerZRanges generate_object_layers(
     const SlicingParameters& slicing_params,
-    const Domain::ZHeightPairs& layer_height_profile
+    const Domain::ZHeightPairs& layer_height_profile,
+    // Orca precise_z_height: the last layers adjusted to end at the object height
+    bool precise_z_height = false
 );
 
 } // namespace Slic3r

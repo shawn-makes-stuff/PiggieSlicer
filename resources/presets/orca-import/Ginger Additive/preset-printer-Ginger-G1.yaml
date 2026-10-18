@@ -1,0 +1,395 @@
+kind: printer
+id: mtVPXil6kSJSPcSIaLN7YA
+variants:
+- condition: printer.model == "Ginger G1"
+  name: Ginger G1
+  id: xFPoaD20stuXYVtCnoQxcg
+  variants:
+  - condition: tool.nozzle_diameter == 1.2
+    id: v2U5MhVqjXZzM4DyXWsg+w
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 1.50mm Standard @Ginger G1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 100
+      extruder_clearance_radius: 200
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 1000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 2500.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 30.0
+      - 2.5
+      machine_max_jerk_x:
+      - 7.0
+      - 9.0
+      machine_max_jerk_y:
+      - 7.0
+      - 9.0
+      machine_max_jerk_z:
+      - 7.0
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 500.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: START_PRINT BED_TEMPERATURE=[first_layer_bed_temperature] KAMP_LEVELING=1 PURGE_LAYER_HEIGHT=2 PURGE_PARKING_SPEED=10000 PURGE_LENGHT=500 PURGE_SPEED=500 PURGE_MATERIAL_QUANTITY=10000 EXTRUDER_TEMPERATURE=[temperature] EXTRUDER_TEMPERATURE_INITIAL_LAYER=[first_layer_temperature] PRESSURE_ADVANCE=0.2 PRESSURE_ADVANCE_SMOOTH_TIME=0.5
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 1000x0
+      - 1000x1000
+      - '0x1000'
+      max_print_height: 1000
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 50x50/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 3
+    id: n3C+R/SxDnefg2EnKpf/nA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 1.50mm Standard @Ginger G1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 100
+      extruder_clearance_radius: 200
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 1000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 2500.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 30.0
+      - 2.5
+      machine_max_jerk_x:
+      - 7.0
+      - 9.0
+      machine_max_jerk_y:
+      - 7.0
+      - 9.0
+      machine_max_jerk_z:
+      - 7.0
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 500.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: START_PRINT BED_TEMPERATURE=[first_layer_bed_temperature] KAMP_LEVELING=1 PURGE_LAYER_HEIGHT=2 PURGE_PARKING_SPEED=10000 PURGE_LENGHT=500 PURGE_SPEED=500 PURGE_MATERIAL_QUANTITY=10000 EXTRUDER_TEMPERATURE=[temperature] EXTRUDER_TEMPERATURE_INITIAL_LAYER=[first_layer_temperature] PRESSURE_ADVANCE=0.2 PRESSURE_ADVANCE_SMOOTH_TIME=0.5
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 1000x0
+      - 1000x1000
+      - '0x1000'
+      max_print_height: 1000
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 50x50/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 5
+    id: rl4H7kQaEHm3RJ0Y9EhGJw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 1.50mm Standard @Ginger G1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 100
+      extruder_clearance_radius: 200
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 1000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 2500.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 30.0
+      - 2.5
+      machine_max_jerk_x:
+      - 7.0
+      - 9.0
+      machine_max_jerk_y:
+      - 7.0
+      - 9.0
+      machine_max_jerk_z:
+      - 7.0
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 500.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: START_PRINT BED_TEMPERATURE=[first_layer_bed_temperature] KAMP_LEVELING=1 PURGE_LAYER_HEIGHT=2 PURGE_PARKING_SPEED=10000 PURGE_LENGHT=500 PURGE_SPEED=500 PURGE_MATERIAL_QUANTITY=10000 EXTRUDER_TEMPERATURE=[temperature] EXTRUDER_TEMPERATURE_INITIAL_LAYER=[first_layer_temperature] PRESSURE_ADVANCE=0.2 PRESSURE_ADVANCE_SMOOTH_TIME=0.5
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 1000x0
+      - 1000x1000
+      - '0x1000'
+      max_print_height: 1000
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 50x50/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 8
+    id: fpWW54oqq7e+hUXc7IY2AQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 1.50mm Standard @Ginger G1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 100
+      extruder_clearance_radius: 200
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 1000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 2500.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 2500.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 30.0
+      - 2.5
+      machine_max_jerk_x:
+      - 7.0
+      - 9.0
+      machine_max_jerk_y:
+      - 7.0
+      - 9.0
+      machine_max_jerk_z:
+      - 7.0
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 500.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: START_PRINT BED_TEMPERATURE=[first_layer_bed_temperature] KAMP_LEVELING=1 PURGE_LAYER_HEIGHT=2 PURGE_PARKING_SPEED=10000 PURGE_LENGHT=500 PURGE_SPEED=500 PURGE_MATERIAL_QUANTITY=10000 EXTRUDER_TEMPERATURE=[temperature] EXTRUDER_TEMPERATURE_INITIAL_LAYER=[first_layer_temperature] PRESSURE_ADVANCE=0.2 PRESSURE_ADVANCE_SMOOTH_TIME=0.5
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 1000x0
+      - 1000x1000
+      - '0x1000'
+      max_print_height: 1000
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 50x50/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'

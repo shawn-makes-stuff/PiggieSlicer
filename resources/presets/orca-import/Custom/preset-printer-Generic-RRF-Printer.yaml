@@ -1,0 +1,113 @@
+kind: printer
+id: WuW5GDmkmDRejWgln8nhdQ
+variants:
+- condition: printer.model == "Generic RRF Printer"
+  name: Generic RRF Printer
+  id: +Olrf2cY7KoDHM//8Y1GZw
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: qGs1vRLnGSDsDTCFweu0aQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @MyRRF
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+1, max_print_height)} F720 ; Move print head up{endif}
+        G1 X0 Y200 F3600 ; park
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+49, max_print_height)} F720 ; Move print head further up{endif}
+        M221 S100 ; reset flow
+        M900 K0 ; reset LA
+        M104 S0 ; turn off temperature
+        M140 S0 ; turn off heatbed
+        M107 ; turn off fan
+        M84 ; disable motors
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: "; Prime Filament Sensor for Runout\nM581 P1 T2 S-1 R0\nM950 J1 C\"nil\" ; Input 1 e0 Filament Sensor \nM591 D0 P2 C\"e0stop\" S1 ; Filament Runout Sensor\n\nM83  ; extruder relative mode\n\nM140 S[first_layer_bed_temperature] ; set bed temp\nM109 S140 ; Set extruder temp 140C before bed level\nM190 S[first_layer_bed_temperature] ; wait for bed temp\n\n;G28 W\nG32 ; Levels Z Tilt and probes Z=0\nG29 S0 ; mesh bed leveling\nG1 X0 Y0 Z2 F2000\nM109 S[first_layer_temperature] ; wait for extruder temp\n\nG1 X10 Y-7 Z0.3 F1000.0 ; go outside print area\nG92 E0.0\nG1 Z0.2 E8 ; Purge Bubble\nG1 X60.0 E9.0  F1000.0 ; intro line\nG1 X100.0 E12.5  F1000.0 ; intro line\nG92 E0.0"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x250
+      - '0x250'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

@@ -1,6 +1,10 @@
 #pragma once
 
+#include <optional>
+#include <set>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <tl/expected.hpp>
 
@@ -110,6 +114,20 @@ public:
     PresetInteractor(PresetInteractor&&) = default;
 
     void load_preset_bundle(const IO::BundlePaths& paths);
+
+    /// The printers the user added (vendor id + printer template id, added_printer_key): only these
+    /// are built and evaluated by load_preset_bundle (docs/design/STARTUP_FIX.md). nullopt builds
+    /// every template of every vendor (the CLI, and the one migration start of an older setup).
+    void set_added_printers(std::optional<std::set<std::string>> added_printers);
+    static std::string added_printer_key(const std::string& vendor_id, const std::string& template_id);
+    /// The added_printer_key of the loaded printers with a system printer preset among preset_ids
+    /// (what the favourites-filtered printer list showed before the added list existed).
+    std::set<std::string> added_printers_with_presets(const std::set<std::string>& preset_ids) const;
+    /// The system printer presets evaluated for a printer config (e.g. one just added).
+    std::vector<std::string> system_printer_preset_ids(const std::string& hw_config_id) const;
+    /// Selects the selected printer's default print and that print's default material in every
+    /// slot (as a new project of that printer starts), e.g. after the Welcome picker.
+    void select_printer_defaults();
     void save_user_preset(
         Domain::Preset::PresetKind kind,
         size_t slot_index
@@ -251,6 +269,36 @@ public:
      * so this would invalidate Project in a BackupStore
      */
     bool select_printer_sheet(const std::string& id, bool user = false);
+
+    /**
+     * @brief Whether a generic external multi-material unit can be attached to given tool
+     * of the selected printer: an FFF printer's tool with no vendor feeder (e.g. Prusa MMU3)
+     * attached.
+     */
+    bool can_attach_external_mmu(size_t tool_index) const;
+    /// Filament presets installed with the selected printer (printer definition's
+    /// default_materials, Orca's machine_model default_materials), as the short names the material
+    /// list shows (text before "@"); empty when it names none.
+    std::vector<std::string> default_material_names() const;
+    /// Slot count of the external unit attached to given tool of the selected printer, if any.
+    std::optional<uint32_t> external_mmu_slot_count(size_t tool_index) const;
+    /**
+     * @brief Attaches the generic external multi-material unit with given slot count
+     * (clamped to 2-64) to given tool of the selected printer, or detaches it when
+     * slot_count is empty. The filament list follows the new slot count.
+     *
+     * @param user - set this to true if action came from user (e.g. clicking a button)
+     * so this would invalidate Project in a BackupStore
+     * @return false when not allowed (see can_attach_external_mmu()) or when the new
+     * configuration has no valid presets.
+     */
+    bool set_external_mmu(size_t tool_index, std::optional<uint32_t> slot_count, bool user = false);
+    /**
+     * @brief Adds (delta > 0) or removes (delta < 0) filament slots of the external unit on
+     * given tool: a tool without a unit gets a 2-slot unit, and going below 2 slots detaches it
+     * (the sidebar's filament [+]/[-] buttons).
+     */
+    bool change_external_mmu_slots(size_t tool_index, int delta, bool user = false);
 
     using ConfigItemModifyFn = std::function<void(Domain::ConfigItem&)>;
 
@@ -774,6 +822,11 @@ public:
 
     void discard_selected_printer_preset_changes();
     void discard_selected_print_preset_changes();
+    /// Orca's "Delete preset" (Tab::delete_preset) for the selected printer, print or material
+    /// (slot_index) preset when it is the user's own: its file is removed and the default one is
+    /// selected (else the first). Other projects using it keep a project copy. False when it is
+    /// not a user preset.
+    bool delete_selected_user_preset(Domain::Preset::PresetKind kind, size_t slot_index = 0);
     void discard_selected_tool_print_preset_changes(size_t tool_index);
     void discard_selected_tool_material_preset_changes(size_t slot_index);
 
@@ -996,6 +1049,7 @@ private:
     Domain::Workbench& m_workbench;
     BackupStore& m_backup_store;
     IO::BundlePaths m_bundle_paths;
+    std::optional<std::set<std::string>> m_added_printers;
 
     PresetItemObservableList m_printer_presets;
     PresetItemObservableList m_print_presets;

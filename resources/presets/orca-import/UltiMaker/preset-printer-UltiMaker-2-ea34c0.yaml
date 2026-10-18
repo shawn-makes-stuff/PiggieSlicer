@@ -1,0 +1,430 @@
+kind: printer
+id: Od88RrcO5orVZd4HXxfvIg
+variants:
+- condition: printer.model == "UltiMaker 2"
+  name: UltiMaker 2
+  id: HXYOHkK2Z2M1k8t/Qw1LVg
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: tCJLJpyUxqSk6HMeFCXR+Q
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.15mm Standard @UltiMaker 2
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |
+        ; # # # # # # START Footer
+        G91; relative coordinates
+        ;G1 E-1 F1200; retract the filament
+        G1 Z+15  X-10 Y-10 E-7  F6000; move Z a bit
+        ; G1 X-10 Y-10 F6000; move XY a bit
+        G1 E-5.5 F300; retract the filament
+        G28 X0 Y0; move X/Y to min endstops, so the head is out of the way
+        M104 S0; extruder heater off
+        M140 S0; heated bed heater off (if you have it)
+        M84; disable motors
+        ; # # # # # # END Footer
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_retracting:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_y:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.013
+      - 0.0
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 40.0
+      - 40.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M0
+      start_gcode: |-
+        ; # # # # # # START Header
+        G21; metric values
+        G90; absolute positioning
+        M82 ; set extruder to absolute mode
+        M107; start with the fan off
+
+        M140 S[first_layer_bed_temperature[initial_extruder]]; start bed heating
+
+        G28 X0 Y0 Z0; move X/Y/Z to endstops
+        G1 X1 Y6 F15000; move X/Y to start position
+        G1 Z35 F9000; move Z to start position
+
+        ; Wait for bed and nozzle temperatures
+        M190 S{custom_parameter_filament_hot_plate_temp_initial_layer[0] - 5}; wait for bed temperature - 5
+        M140 S[first_layer_bed_temperature[initial_extruder]]; continue bed heating
+        M109 S[first_layer_temperature]; wait for nozzle temperature
+
+        ; Purge and prime
+        M83; set extruder to relative mode
+        G92 E0; reset extrusion distance
+        G0 X0 Y1 F10000
+        G1 F150 E20 ; compress the bowden tube
+        G1 E-8 F1200
+        G0 X30 Y1 F5000
+        G0 F1200 Z{first_layer_height/2}; Cut the connection to priming blob
+        G0 X100 F10000; disconnect with the prime blob
+        G0 X50; Avoid the metal clip holding the Ultimaker glass plate
+        G0 Z0.2 F720
+        G1 E8 F1200
+        G1 X80 E3 F1000; intro line 1
+        G1 X110 E4 F1000 ; intro line 2
+        G1 X140 F600; drag filament to decompress bowden tube
+        G1 X100 F3200; wipe backwards a bit
+        G1 X150 F3200; back to where there is no plastic: avoid dragging
+        G92 E0; reset extruder reference
+        M82; set extruder to absolute mode
+
+        ; # # # # # # END Header
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 223x0
+      - 223x223
+      - '0x223'
+      max_print_height: 205
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: gTbH+IJtBoFhQPK+8SxNmA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.15mm Standard @UltiMaker 2 0.6 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |
+        ; # # # # # # START Footer
+        G91; relative coordinates
+        ;G1 E-1 F1200; retract the filament
+        G1 Z+15  X-10 Y-10 E-7  F6000; move Z a bit
+        ; G1 X-10 Y-10 F6000; move XY a bit
+        G1 E-5.5 F300; retract the filament
+        G28 X0 Y0; move X/Y to min endstops, so the head is out of the way
+        M104 S0; extruder heater off
+        M140 S0; heated bed heater off (if you have it)
+        M84; disable motors
+        ; # # # # # # END Footer
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_retracting:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_y:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.013
+      - 0.0
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 40.0
+      - 40.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M0
+      start_gcode: |-
+        ; # # # # # # START Header
+        G21; metric values
+        G90; absolute positioning
+        M82 ; set extruder to absolute mode
+        M107; start with the fan off
+
+        M140 S[first_layer_bed_temperature[initial_extruder]]; start bed heating
+
+        G28 X0 Y0 Z0; move X/Y/Z to endstops
+        G1 X1 Y6 F15000; move X/Y to start position
+        G1 Z35 F9000; move Z to start position
+
+        ; Wait for bed and nozzle temperatures
+        M190 S{custom_parameter_filament_hot_plate_temp_initial_layer[0] - 5}; wait for bed temperature - 5
+        M140 S[first_layer_bed_temperature[initial_extruder]]; continue bed heating
+        M109 S[first_layer_temperature]; wait for nozzle temperature
+
+        ; Purge and prime
+        M83; set extruder to relative mode
+        G92 E0; reset extrusion distance
+        G0 X0 Y1 F10000
+        G1 F150 E20 ; compress the bowden tube
+        G1 E-8 F1200
+        G0 X30 Y1 F5000
+        G0 F1200 Z{first_layer_height/2}; Cut the connection to priming blob
+        G0 X100 F10000; disconnect with the prime blob
+        G0 X50; Avoid the metal clip holding the Ultimaker glass plate
+        G0 Z0.2 F720
+        G1 E8 F1200
+        G1 X80 E3 F1000; intro line 1
+        G1 X110 E4 F1000 ; intro line 2
+        G1 X140 F600; drag filament to decompress bowden tube
+        G1 X100 F3200; wipe backwards a bit
+        G1 X150 F3200; back to where there is no plastic: avoid dragging
+        G92 E0; reset extruder reference
+        M82; set extruder to absolute mode
+
+        ; # # # # # # END Header
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 223x0
+      - 223x223
+      - '0x223'
+      max_print_height: 205
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: +6TYSRlBYrUR/2u2dsZKgA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @UltiMaker 2 0.8 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |
+        ; # # # # # # START Footer
+        G91; relative coordinates
+        ;G1 E-1 F1200; retract the filament
+        G1 Z+15  X-10 Y-10 E-7  F6000; move Z a bit
+        ; G1 X-10 Y-10 F6000; move XY a bit
+        G1 E-5.5 F300; retract the filament
+        G28 X0 Y0; move X/Y to min endstops, so the head is out of the way
+        M104 S0; extruder heater off
+        M140 S0; heated bed heater off (if you have it)
+        M84; disable motors
+        ; # # # # # # END Footer
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_retracting:
+      - 1500.0
+      - 1500.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_y:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.013
+      - 0.0
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 40.0
+      - 40.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M0
+      start_gcode: |-
+        ; # # # # # # START Header
+        G21; metric values
+        G90; absolute positioning
+        M82 ; set extruder to absolute mode
+        M107; start with the fan off
+
+        M140 S[first_layer_bed_temperature[initial_extruder]]; start bed heating
+
+        G28 X0 Y0 Z0; move X/Y/Z to endstops
+        G1 X1 Y6 F15000; move X/Y to start position
+        G1 Z35 F9000; move Z to start position
+
+        ; Wait for bed and nozzle temperatures
+        M190 S{custom_parameter_filament_hot_plate_temp_initial_layer[0] - 5}; wait for bed temperature - 5
+        M140 S[first_layer_bed_temperature[initial_extruder]]; continue bed heating
+        M109 S[first_layer_temperature]; wait for nozzle temperature
+
+        ; Purge and prime
+        M83; set extruder to relative mode
+        G92 E0; reset extrusion distance
+        G0 X0 Y1 F10000
+        G1 F150 E20 ; compress the bowden tube
+        G1 E-8 F1200
+        G0 X30 Y1 F5000
+        G0 F1200 Z{first_layer_height/2}; Cut the connection to priming blob
+        G0 X100 F10000; disconnect with the prime blob
+        G0 X50; Avoid the metal clip holding the Ultimaker glass plate
+        G0 Z0.2 F720
+        G1 E8 F1200
+        G1 X80 E3 F1000; intro line 1
+        G1 X110 E4 F1000 ; intro line 2
+        G1 X140 F600; drag filament to decompress bowden tube
+        G1 X100 F3200; wipe backwards a bit
+        G1 X150 F3200; back to where there is no plastic: avoid dragging
+        G92 E0; reset extruder reference
+        M82; set extruder to absolute mode
+
+        ; # # # # # # END Header
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 223x0
+      - 223x223
+      - '0x223'
+      max_print_height: 205
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'

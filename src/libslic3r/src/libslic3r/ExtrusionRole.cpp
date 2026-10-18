@@ -23,8 +23,10 @@ GCodeExtrusionRole extrusion_role_to_gcode_extrusion_role(ExtrusionRole role)
     if (role == ExtrusionRole::TopSolidInfill)      return GCodeExtrusionRole::TopSolidInfill;
     if (role == ExtrusionRole::Ironing)             return GCodeExtrusionRole::Ironing;
     if (role == ExtrusionRole::BridgeInfill)        return GCodeExtrusionRole::BridgeInfill;
+    if (role == ExtrusionRole::InternalBridgeInfill) return GCodeExtrusionRole::InternalBridgeInfill;
     if (role == ExtrusionRole::GapFill)             return GCodeExtrusionRole::GapFill;
     if (role == ExtrusionRole::Skirt)               return GCodeExtrusionRole::Skirt;
+    if (role == ExtrusionRole::Brim)                return GCodeExtrusionRole::Brim;
     if (role == ExtrusionRole::SupportMaterial)     return GCodeExtrusionRole::SupportMaterial;
     if (role == ExtrusionRole::SupportMaterialInterface) return GCodeExtrusionRole::SupportMaterialInterface;
     if (role == ExtrusionRole::WipeTower)           return GCodeExtrusionRole::WipeTower;
@@ -45,11 +47,13 @@ std::string gcode_extrusion_role_to_string(GCodeExtrusionRole role)
         case GCodeExtrusionRole::Ironing                      : return L("Ironing");
         case GCodeExtrusionRole::BridgeInfill                 : return L("Bridge infill");
         case GCodeExtrusionRole::GapFill                      : return L("Gap fill");
-        case GCodeExtrusionRole::Skirt                        : return L("Skirt/Brim");
+        case GCodeExtrusionRole::Skirt                        : return L("Skirt");
         case GCodeExtrusionRole::SupportMaterial              : return L("Support material");
         case GCodeExtrusionRole::SupportMaterialInterface     : return L("Support material interface");
         case GCodeExtrusionRole::WipeTower                    : return L("Wipe tower");
         case GCodeExtrusionRole::Custom                       : return L("Custom");
+        case GCodeExtrusionRole::InternalBridgeInfill         : return L("Internal bridge infill");
+        case GCodeExtrusionRole::Brim                         : return L("Brim");
         default                             : assert(false);
     }
     return {};

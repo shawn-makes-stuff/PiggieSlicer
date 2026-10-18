@@ -3,7 +3,34 @@
 
 set(SLIC3R_APP_NAME "PiggieSlicer")
 set(SLIC3R_APP_KEY "PiggieSlicer")
+# PiggieSlicer's own version: the ONE place to change it. Everything user-visible (splash,
+# Welcome screen, --version, window title, file properties) is derived from it below.
+set(PIGGIESLICER_VERSION "0.0.1-alpha")
+
+# Version of the PrusaSlicer base. Stays as-is: it goes into G-code / 3MF headers, the
+# preset updater's vendor-index compatibility check and the settings folder name.
 set(SLIC3R_VERSION "3.0.0-alpha12")
-set(SLIC3R_BUILD_ID "PiggieSlicer-${SLIC3R_VERSION}+UNKNOWN")
-set(SLIC3R_RC_VERSION "3,0,0,0")
-set(SLIC3R_RC_VERSION_DOTS "3.0.0.0")
+
+# Derived from PIGGIESLICER_VERSION:
+#   PIGGIESLICER_VERSION_DISPLAY  "0.0.1-alpha" -> "0.0.1 Alpha"
+#   SLIC3R_RC_VERSION(_DOTS)      Windows numeric version "0,0,1,0" / "0.0.1.0"
+string(REGEX REPLACE "^([0-9.]+).*$" "\\1" _piggie_numbers "${PIGGIESLICER_VERSION}")
+string(REGEX REPLACE "^[0-9.]+-?" "" _piggie_suffix "${PIGGIESLICER_VERSION}")
+if (_piggie_suffix)
+    string(SUBSTRING "${_piggie_suffix}" 0 1 _piggie_first)
+    string(SUBSTRING "${_piggie_suffix}" 1 -1 _piggie_rest)
+    string(TOUPPER "${_piggie_first}" _piggie_first)
+    set(PIGGIESLICER_VERSION_DISPLAY "${_piggie_numbers} ${_piggie_first}${_piggie_rest}")
+else ()
+    set(PIGGIESLICER_VERSION_DISPLAY "${_piggie_numbers}")
+endif ()
+string(REPLACE "." ";" _piggie_parts "${_piggie_numbers}")
+list(LENGTH _piggie_parts _piggie_count)
+while (_piggie_count LESS 4)
+    list(APPEND _piggie_parts 0)
+    list(LENGTH _piggie_parts _piggie_count)
+endwhile ()
+list(JOIN _piggie_parts "," SLIC3R_RC_VERSION)
+list(JOIN _piggie_parts "." SLIC3R_RC_VERSION_DOTS)
+
+set(SLIC3R_BUILD_ID "PiggieSlicer-${PIGGIESLICER_VERSION}+UNKNOWN")

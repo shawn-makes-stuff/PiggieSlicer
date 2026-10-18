@@ -1,0 +1,447 @@
+kind: vendor
+id: Custom
+name: Custom
+version: 2.4.0+orca.02.04.00.08
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Generic Belt Printer
+  base_model: Generic Belt Printer
+  printer_configs_order:
+  - MyBeltPrinter-0-2-nozzle
+  - MyBeltPrinter-0-4-nozzle
+  - MyBeltPrinter-0-6-nozzle
+  - MyBeltPrinter-0-8-nozzle
+- label: Generic Klipper Printer
+  base_model: Generic Klipper Printer
+  printer_configs_order:
+  - MyKlipper-0-2-nozzle
+  - MyKlipper-0-4-nozzle
+  - MyKlipper-0-6-nozzle
+  - MyKlipper-0-8-nozzle
+- label: Generic Marlin Printer
+  base_model: Generic Marlin Printer
+  printer_configs_order:
+  - MyMarlin-0-4-nozzle
+- label: Generic RRF Printer
+  base_model: Generic RRF Printer
+  printer_configs_order:
+  - MyRRF-0-4-nozzle
+- label: Generic Repetier Printer
+  base_model: Generic Repetier Printer
+  printer_configs_order:
+  - MyRepetier-0-4-nozzle
+- label: Generic ToolChanger Printer
+  base_model: Generic ToolChanger Printer
+  printer_configs_order:
+  - MyToolChanger-0-2-nozzle
+  - MyToolChanger-0-4-nozzle
+  - MyToolChanger-0-6-nozzle
+  - MyToolChanger-0-8-nozzle
+---
+kind: printer
+technology: FFF
+name: Generic Belt Printer
+id: Generic Belt Printer
+model:
+  base_model: Generic Belt Printer
+  model: Generic Belt Printer
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Custom_350_bed.stl
+  bed_texture: orcaslicer_bed_texture.svg
+  thumbnail: Generic Belt Printer_cover.png
+---
+kind: printer
+technology: FFF
+name: Generic Klipper Printer
+id: Generic Klipper Printer
+model:
+  base_model: Generic Klipper Printer
+  model: Generic Klipper Printer
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: orcaslicer_bed_texture.svg
+  thumbnail: Generic Klipper Printer_cover.png
+---
+kind: printer
+technology: FFF
+name: Generic Marlin Printer
+id: Generic Marlin Printer
+model:
+  base_model: Generic Marlin Printer
+  model: Generic Marlin Printer
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: orcaslicer_bed_texture.svg
+  thumbnail: Generic Marlin Printer_cover.png
+---
+kind: printer
+technology: FFF
+name: Generic RRF Printer
+id: Generic RRF Printer
+model:
+  base_model: Generic RRF Printer
+  model: Generic RRF Printer
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: orcaslicer_bed_texture.svg
+  thumbnail: Generic RRF Printer_cover.png
+---
+kind: printer
+technology: FFF
+name: Generic Repetier Printer
+id: Generic Repetier Printer
+model:
+  base_model: Generic Repetier Printer
+  model: Generic Repetier Printer
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: orcaslicer_bed_texture.svg
+  thumbnail: Generic Repetier Printer_cover.png
+---
+kind: printer
+technology: FFF
+name: Generic ToolChanger Printer
+id: Generic ToolChanger Printer
+model:
+  base_model: Generic ToolChanger Printer
+  model: Generic ToolChanger Printer
+tool_count: 5
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Custom_350_bed.stl
+  bed_texture: orcaslicer_bed_texture.svg
+  thumbnail: Generic ToolChanger Printer_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: MyBeltPrinter-0-2-nozzle
+name: MyBeltPrinter 0.2 nozzle
+printer: Generic Belt Printer
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyBeltPrinter-0-4-nozzle
+name: MyBeltPrinter 0.4 nozzle
+printer: Generic Belt Printer
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyBeltPrinter-0-6-nozzle
+name: MyBeltPrinter 0.6 nozzle
+printer: Generic Belt Printer
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyBeltPrinter-0-8-nozzle
+name: MyBeltPrinter 0.8 nozzle
+printer: Generic Belt Printer
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyKlipper-0-2-nozzle
+name: MyKlipper 0.2 nozzle
+printer: Generic Klipper Printer
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyKlipper-0-4-nozzle
+name: MyKlipper 0.4 nozzle
+printer: Generic Klipper Printer
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyKlipper-0-6-nozzle
+name: MyKlipper 0.6 nozzle
+printer: Generic Klipper Printer
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyKlipper-0-8-nozzle
+name: MyKlipper 0.8 nozzle
+printer: Generic Klipper Printer
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyMarlin-0-4-nozzle
+name: MyMarlin 0.4 nozzle
+printer: Generic Marlin Printer
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyRRF-0-4-nozzle
+name: MyRRF 0.4 nozzle
+printer: Generic RRF Printer
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyRepetier-0-4-nozzle
+name: MyRepetier 0.4 nozzle
+printer: Generic Repetier Printer
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyToolChanger-0-2-nozzle
+name: MyToolChanger 0.2 nozzle
+printer: Generic ToolChanger Printer
+tool_count: 5
+tools:
+- tool: '0.2'
+  features:
+    extruder_index: 0
+- tool: '0.2'
+  features:
+    extruder_index: 1
+- tool: '0.2'
+  features:
+    extruder_index: 2
+- tool: '0.2'
+  features:
+    extruder_index: 3
+- tool: '0.2'
+  features:
+    extruder_index: 4
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyToolChanger-0-4-nozzle
+name: MyToolChanger 0.4 nozzle
+printer: Generic ToolChanger Printer
+tool_count: 5
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+- tool: '0.4'
+  features:
+    extruder_index: 2
+- tool: '0.4'
+  features:
+    extruder_index: 3
+- tool: '0.4'
+  features:
+    extruder_index: 4
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyToolChanger-0-6-nozzle
+name: MyToolChanger 0.6 nozzle
+printer: Generic ToolChanger Printer
+tool_count: 5
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+- tool: '0.6'
+  features:
+    extruder_index: 2
+- tool: '0.6'
+  features:
+    extruder_index: 3
+- tool: '0.6'
+  features:
+    extruder_index: 4
+sheet: high_temp_plate
+---
+kind: printer_config
+id: MyToolChanger-0-8-nozzle
+name: MyToolChanger 0.8 nozzle
+printer: Generic ToolChanger Printer
+tool_count: 5
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+- tool: '0.8'
+  features:
+    extruder_index: 2
+- tool: '0.8'
+  features:
+    extruder_index: 3
+- tool: '0.8'
+  features:
+    extruder_index: 4
+sheet: high_temp_plate

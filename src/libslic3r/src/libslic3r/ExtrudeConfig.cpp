@@ -22,11 +22,15 @@ ExtrudeConfig::ExtrudeConfig(const Domain::ConfigView& config) :
         config.get<std::vector<Domain::FloatOrPercentage>>("external_perimeter_speed")
     },
     bridge_speed{config.get<std::vector<double>>("bridge_speed")},
+    internal_bridge_speed{config.get<std::vector<Domain::FloatOrPercentage>>("internal_bridge_speed")},
+    internal_bridge_flow{config.get<double>("internal_bridge_flow")},
+    brim_flow_ratio{config.get<double>("brim_flow_ratio")},
     gap_fill_speed{config.get<std::vector<double>>("gap_fill_speed")},
     retract_speed{config.get<std::vector<double>>("retract_speed")},
     retract_lift{config.get<std::vector<double>>("retract_lift")},
     retract_lift_above{config.get<std::vector<double>>("retract_lift_above")},
     retract_lift_below{config.get<std::vector<double>>("retract_lift_below")},
+    retract_lift_enforce{config.get<std::vector<Domain::RetractLiftEnforce>>("retract_lift_enforce")},
     retract_length{config.get<std::vector<double>>("retract_length")},
     retract_before_travel{config.get<std::vector<double>>("retract_before_travel")},
     travel_max_lift{config.get<std::vector<double>>("travel_max_lift")},
@@ -37,11 +41,17 @@ ExtrudeConfig::ExtrudeConfig(const Domain::ConfigView& config) :
     travel_short_distance_acceleration{config.get<double>("travel_short_distance_acceleration")},
     max_volumetric_speed{config.get<std::vector<double>>("max_volumetric_speed")},
     filament_max_volumetric_speed{config.get<std::vector<double>>("filament_max_volumetric_speed")},
+    top_fill_pattern{config.get<Domain::InfillPattern>("top_fill_pattern")},
+    bottom_fill_pattern{config.get<Domain::InfillPattern>("bottom_fill_pattern")},
+    internal_solid_infill_pattern{config.get<Domain::InfillPattern>("internal_solid_infill_pattern")},
+    filament_adaptive_volumetric_speed{config.get<std::vector<bool>>("filament_adaptive_volumetric_speed")},
+    volumetric_speed_coefficients{config.get<std::vector<std::string>>("volumetric_speed_coefficients")},
     filament_infill_max_crossing_speed{
         config.get<std::vector<double>>("filament_infill_max_crossing_speed")
     },
     filament_infill_max_speed{config.get<std::vector<double>>("filament_infill_max_speed")},
     enable_dynamic_overhang_speeds{config.get<std::vector<bool>>("enable_dynamic_overhang_speeds")},
+    slowdown_for_curled_perimeters{config.get<std::vector<bool>>("slowdown_for_curled_perimeters")},
     overhang_speed_0{config.get<std::vector<Domain::FloatOrPercentage>>("overhang_speed_0")},
     overhang_speed_1{config.get<std::vector<Domain::FloatOrPercentage>>("overhang_speed_1")},
     overhang_speed_2{config.get<std::vector<Domain::FloatOrPercentage>>("overhang_speed_2")},
@@ -68,6 +78,8 @@ ExtrudeConfig::ExtrudeConfig(const Domain::ConfigView& config) :
     support_material_interface_speed{
         config.get<Domain::FloatOrPercentage>("support_material_interface_speed")
     },
+    small_support_perimeter_speed{config.get<Domain::FloatOrPercentage>("small_support_perimeter_speed")},
+    small_support_perimeter_threshold{config.get<double>("small_support_perimeter_threshold")},
     over_bridge_speed{config.get<std::vector<Domain::FloatOrPercentage>>("over_bridge_speed")},
     top_solid_infill_speed{
         config.get<std::vector<Domain::FloatOrPercentage>>("top_solid_infill_speed")
@@ -106,7 +118,38 @@ ExtrudeConfig::ExtrudeConfig(const Domain::ConfigView& config) :
         config.get<bool>("only_retract_when_crossing_perimeters")
     },
     avoid_crossing_perimeters{config.get<bool>("avoid_crossing_perimeters")},
-    avoid_crossing_curled_overhangs{config.get<bool>("avoid_crossing_curled_overhangs")}
+    avoid_crossing_curled_overhangs{config.get<bool>("avoid_crossing_curled_overhangs")},
+    skirt_speed{config.get<double>("skirt_speed")},
+    enable_overhang_bridge_fan{config.get<std::vector<bool>>("enable_overhang_bridge_fan")},
+    overhang_fan_speed{config.get<std::vector<int>>("overhang_fan_speed")},
+    overhang_fan_threshold{config.get<std::vector<Domain::OverhangFanThreshold>>("overhang_fan_threshold")},
+    scarf_joint_speed{config.get<Domain::FloatOrPercentage>("scarf_joint_speed")},
+    scarf_joint_flow_ratio{config.get<double>("scarf_joint_flow_ratio")},
+    default_jerk{config.get<double>("default_jerk")},
+    outer_wall_jerk{config.get<double>("outer_wall_jerk")},
+    inner_wall_jerk{config.get<double>("inner_wall_jerk")},
+    infill_jerk{config.get<double>("infill_jerk")},
+    top_surface_jerk{config.get<double>("top_surface_jerk")},
+    initial_layer_jerk{config.get<double>("initial_layer_jerk")},
+    travel_jerk{config.get<double>("travel_jerk")},
+    initial_layer_travel_jerk{config.get<Domain::FloatOrPercentage>("initial_layer_travel_jerk")},
+    initial_layer_travel_acceleration{config.get<Domain::FloatOrPercentage>("initial_layer_travel_acceleration")},
+    default_junction_deviation{config.get<double>("default_junction_deviation")},
+    support_material_interface_fan_speed{config.get<std::vector<int>>("support_material_interface_fan_speed")},
+    ironing_fan_speed{config.get<std::vector<int>>("ironing_fan_speed")},
+    slow_down_layers{config.get<int>("slow_down_layers")},
+    set_other_flow_ratios{config.get<bool>("set_other_flow_ratios")},
+    print_flow_ratio{config.get<double>("print_flow_ratio")},
+    top_solid_infill_flow_ratio{config.get<double>("top_solid_infill_flow_ratio")},
+    outer_wall_flow_ratio{config.get<double>("outer_wall_flow_ratio")},
+    inner_wall_flow_ratio{config.get<double>("inner_wall_flow_ratio")},
+    overhang_flow_ratio{config.get<double>("overhang_flow_ratio")},
+    sparse_infill_flow_ratio{config.get<double>("sparse_infill_flow_ratio")},
+    internal_solid_infill_flow_ratio{config.get<double>("internal_solid_infill_flow_ratio")},
+    gap_fill_flow_ratio{config.get<double>("gap_fill_flow_ratio")},
+    support_flow_ratio{config.get<double>("support_flow_ratio")},
+    support_interface_flow_ratio{config.get<double>("support_interface_flow_ratio")},
+    first_layer_flow_ratio{config.get<double>("first_layer_flow_ratio")}
 {}
 
 } // namespace Slic3r::Biz::Slicing

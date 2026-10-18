@@ -42,6 +42,7 @@ protected:
     void calculate_size();
 
     void render_debug_overlay();
+    void close_top_popup();
 
 protected:
     LoopEvents m_loop_events;

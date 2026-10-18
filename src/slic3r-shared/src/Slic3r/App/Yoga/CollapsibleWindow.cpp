@@ -71,18 +71,45 @@ void CollapsibleWindow::set_collapsed(bool collapse)
     if (m_collapsed) {
         Item::set_flex_grow(0);
     } else if (m_set_flex_grow) {
-        Item::set_flex_grow(1);
+        Item::set_flex_grow(m_set_flex_grow);
     }
+    if (m_flex_basis)
+        Item::set_flex_basis(m_collapsed ? std::nullopt : m_flex_basis);
 
     if (m_callbacks.collapsed_changed) {
         m_callbacks.collapsed_changed(m_collapsed);
     }
 }
 
+void CollapsibleWindow::set_header_visible(bool visible)
+{
+    m_header_row->set_visible(visible);
+    m_separator->set_visible(visible && !m_collapsed);
+}
+
 void CollapsibleWindow::set_flex_grow(float flex)
 {
     Item::set_flex_grow(flex);
     m_set_flex_grow = flex;
+}
+
+void CollapsibleWindow::set_flex_basis(std::optional<float> flex_basis)
+{
+    m_flex_basis = flex_basis;
+    if (!m_collapsed)
+        Item::set_flex_basis(flex_basis);
+}
+
+Item* CollapsibleWindow::header_spacer()
+{
+    if (m_header_spacer == nullptr) {
+        m_label->set_flex_grow(0);
+        std::unique_ptr<Item> spacer = std::make_unique<Item>();
+        m_header_spacer              = spacer.get();
+        m_header_spacer->set_flex_grow(1);
+        m_header_row->insert(std::move(spacer), *m_header_row->index_of(m_label) + 1);
+    }
+    return m_header_spacer;
 }
 
 Item* CollapsibleWindow::content() const

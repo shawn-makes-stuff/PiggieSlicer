@@ -75,6 +75,24 @@ MaterialSettingsDialog::MaterialSettingsDialog(
         );
     };
 
+    // Orca's delete button (Tab::delete_preset), for the user's own presets
+    m_delete_button = add_footer_button(_u8L("Delete preset"));
+    m_delete_button->callbacks().action = [this]
+    {
+        App::AppServices::instance().dialog_manager().show_yesno_dialog(
+            _u8L("Delete Preset"),
+            _u8L("Are you sure you want to delete the selected preset?"),
+            [this, slot = current_tab_index()](bool yes)
+            {
+                if (yes)
+                    m_project_interactor.preset_interactor().delete_selected_user_preset(
+                        Domain::Preset::PresetKind::FdmMaterial,
+                        slot
+                    );
+            }
+        );
+    };
+
     on_reset();
 }
 
@@ -184,6 +202,11 @@ void MaterialSettingsDialog::update_ui_state(const Domain::ConfigItem* changed_i
         m_material_cbi_list.at(current_tab_index())
     );
     m_revert_button->set_visible(cbi.config_box_overridable_list().lock()->is_dirty());
+    const auto& materials = m_project_interactor.preset_interactor().selected_printer_preset().materials;
+    m_delete_button->set_visible(
+        current_tab_index() < materials.size()
+        && materials[current_tab_index()].origin == Domain::Preset::PresetOrigin::User
+    );
 
     m_config_tabs.at(current_tab_index())->dirty_categorizer->invalidate();
     if (changed_item) {

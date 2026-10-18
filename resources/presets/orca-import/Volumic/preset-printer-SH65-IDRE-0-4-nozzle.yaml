@@ -1,0 +1,106 @@
+kind: printer
+id: G9iLohpfT9N6Nd3DmLmWnQ
+variants:
+- condition: printer.model == "SH65 IDRE (0.4 nozzle)"
+  name: SH65 IDRE (0.4 nozzle)
+  id: /9eoeuQwX+rPykrJBVOHNQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4 and printer.tool_count == 2
+    id: Id3NDuhQ0hnzkkLdZXnYGw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: Performance 150 - 0.15mm
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 40
+      extruder_clearance_radius: 40
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: TIMELAPSE_TAKE_FRAME
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 0.0
+      - 0.0
+      machine_max_acceleration_extruding:
+      - 0.0
+      - 0.0
+      machine_max_acceleration_retracting:
+      - 0.0
+      - 0.0
+      machine_max_acceleration_travel:
+      - 0.0
+      - 0.0
+      machine_max_acceleration_x:
+      - 4500.0
+      - 4500.0
+      - 4500.0
+      - 4500.0
+      machine_max_acceleration_y:
+      - 4500.0
+      - 4500.0
+      - 4500.0
+      - 4500.0
+      machine_max_acceleration_z:
+      - 50.0
+      - 50.0
+      - 50.0
+      - 50.0
+      machine_max_jerk_e:
+      - 0.0
+      - 0.0
+      machine_max_jerk_x:
+      - 0.0
+      - 0.0
+      machine_max_jerk_y:
+      - 0.0
+      - 0.0
+      machine_max_jerk_z:
+      - 0.0
+      - 0.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 0.0
+      - 0.0
+      machine_max_feedrate_x:
+      - 0.0
+      - 0.0
+      machine_max_feedrate_y:
+      - 0.0
+      - 0.0
+      machine_max_feedrate_z:
+      - 0.0
+      - 0.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: START_PRINT BED=[first_layer_bed_temperature] EXTRUDER={first_layer_temperature[0]} EXTRUDER1={first_layer_temperature[1]}
+      parking_pos_retraction: 92
+      bed_shape:
+      - 11x0
+      - 613x0
+      - 613x300
+      - 11x300
+      max_print_height: 280
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

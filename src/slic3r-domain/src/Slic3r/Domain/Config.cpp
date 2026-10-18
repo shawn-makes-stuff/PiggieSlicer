@@ -312,22 +312,6 @@ std::vector<std::string> ConfigBox::diff_keys(const ConfigBox& other) const
     return result;
 }
 
-static std::vector<size_t> get_tool_slot_counts(const Preset::HwPrinterConfig& hw_config)
-{
-    std::vector<size_t> counts;
-    for (size_t i{}; i < hw_config.tool_count; ++i) {
-        size_t count{1};
-        for (const auto& [address, feeder] : hw_config.feeders) {
-            ASSERT(!address.empty());
-            if (address.front() == static_cast<uint8_t>(i)) {
-                count += feeder.slot_count - 1;
-            }
-        }
-        counts.push_back(count);
-    }
-    return counts;
-}
-
 static BoxOrBoxesVector
 spread_feeders(const BoxOrBoxesVector& boxes, const Preset::HwPrinterConfig& hw_config)
 {
@@ -346,7 +330,7 @@ spread_feeders(const BoxOrBoxesVector& boxes, const Preset::HwPrinterConfig& hw_
             ASSERT(boxes.size() == hw_config.tools.size());
 
             BoxRefs spread_boxes;
-            const std::vector<std::size_t> tool_slot_counts{get_tool_slot_counts(hw_config)};
+            const std::vector<std::size_t> tool_slot_counts{hw_config.tool_slot_counts()};
             for (std::size_t tool_index{}; tool_index < hw_config.tools.size(); ++tool_index) {
                 const BoxRef box_ref{boxes.at(tool_index)};
                 spread_boxes.resize(spread_boxes.size() + tool_slot_counts.at(tool_index), box_ref);
@@ -514,21 +498,34 @@ squash_boxes(const BoxOrBoxesVector& boxes, std::size_t material_slot_count)
 }
 
 static void
-ensure_slot_parity(std::map<std::string, ConfigValueAndDef>& squashed_boxes, const std::size_t size)
+ensure_slot_parity(std::map<std::string, ConfigValueAndDef>& squashed_boxes, const Preset::HwPrinterConfig& hw_config)
 {
+    const std::size_t size{hw_config.material_slot_count()};
     for (auto& [_, item] : squashed_boxes) {
         if (!item.def || !item.def->require_tool_parity) {
             continue;
         }
 
         item.value.visit(overloaded{
-            [size]<typename T>(std::vector<T>& vector)
+            [size, &hw_config]<typename T>(std::vector<T>& vector)
             {
                 if (vector.size() == size) {
                     return;
                 }
-                ASSERT(vector.size() == 1);
-                vector.resize(size, vector.front());
+                if (vector.size() == 1) {
+                    vector.resize(size, vector.front());
+                    return;
+                }
+                // A per-tool value (e.g. extruder_offset) of a multi-tool printer whose tools have
+                // feeders: each material slot takes the value of the tool feeding it, as Orca maps
+                // extruder values to filaments through filament_map.
+                ASSERT(vector.size() == hw_config.tool_count);
+                const std::vector<size_t> tool_slot_counts{hw_config.tool_slot_counts()};
+                std::vector<T> spread;
+                for (std::size_t tool_index{}; tool_index < tool_slot_counts.size(); ++tool_index) {
+                    spread.insert(spread.end(), tool_slot_counts[tool_index], vector[tool_index]);
+                }
+                vector = std::move(spread);
             },
             []<typename T>(const T& v)
             { PANIC("Only types of std::vector<T> can have require_tool_parity set to true"); }});
@@ -797,13 +794,22 @@ static void resolve_float_or_percentages(
 {
     for (auto& [key, value] : values) {
         const ConfigItemDef* def{find_def(key, printer_technology)};
-        if (!def) {
+        // without ratio_over the percentage is resolved where the setting is used (e.g. Orca's scarf
+        // joint speed, a percentage of the speed of the wall it is on)
+        if (!def || def->ratio_over.empty()) {
             continue;
         }
 
         value.visit(Domain::overloaded{
             [&](FloatOrPercentage& value)
             {
+                // a scalar over a parent that is still per tool (e.g. wipe_speed over travel_speed)
+                // waits for the parent's compatibility rule: finalize() resolves it in a second pass
+                if (value.is_percentage()) {
+                    const ConfigValue& parent{values.at(def->ratio_over)};
+                    if (!parent.holds_alternative<double>() && !parent.holds_alternative<FloatOrPercentage>())
+                        return;
+                }
                 value = resolve_float_or_percentage_scalar(
                     key,
                     ConfigValue{value},
@@ -895,7 +901,7 @@ static std::vector<double> get_nozzle_diameters(const Domain::Preset::HwPrinterC
 {
     std::vector<double> result;
 
-    const std::vector<std::size_t> slot_counts{get_tool_slot_counts(hw_config)};
+    const std::vector<std::size_t> slot_counts{hw_config.tool_slot_counts()};
     ASSERT(slot_counts.size() == hw_config.tools.size());
 
     for (std::size_t i{}; i < hw_config.tools.size(); ++i) {
@@ -1022,7 +1028,7 @@ SquashedConfig::SquashedConfig(
             ConfigValueAndDef{ConfigValue{get_nozzle_high_flows(hw_config)}, std::nullopt, nullptr};
     }
 
-    ensure_slot_parity(squashed_boxes, hw_config.material_slot_count());
+    ensure_slot_parity(squashed_boxes, hw_config);
 
     expand_parameters(squashed_boxes);
 
@@ -1267,6 +1273,8 @@ void ConfigView::finalize() {
         m_full_config->extruder_candidates(),
         m_full_config->hw_config().technology
     );
+    // the scalars over per tool parents, now that the compatibility rules made the parents scalar
+    resolve_float_or_percentages(m_values, m_full_config->hw_config().technology);
 
     m_finalized = true;
 

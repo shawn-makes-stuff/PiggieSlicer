@@ -13,6 +13,7 @@
 #include "Slic3r/Domain/TemplateUtils.hpp"
 
 #include <algorithm>
+#include <cctype>
 
 using namespace Slic3r::Biz::libpgcode;
 using namespace Slic3r::App::libvgcode;
@@ -112,6 +113,7 @@ void FdmViewerWrapper::render_imgui()
 static void set_pregcode_extrusion_role_colors(FdmViewerWrapper& wrapper)
 {
     wrapper.set_extrusion_role_color(GCodeExtrusionRole::Skirt,                    ColorRGB(0.5f, 1.0f, 0.5f));
+    wrapper.set_extrusion_role_color(GCodeExtrusionRole::Brim,                     ColorRGB(0.5f, 1.0f, 0.5f));
     wrapper.set_extrusion_role_color(GCodeExtrusionRole::ExternalPerimeter,        ColorRGB(1.0f, 1.0f, 0.0f));
     wrapper.set_extrusion_role_color(GCodeExtrusionRole::SupportMaterial,          ColorRGB(0.5f, 1.0f, 0.5f));
     wrapper.set_extrusion_role_color(GCodeExtrusionRole::SupportMaterialInterface, ColorRGB(0.5f, 1.0f, 0.5f));
@@ -483,6 +485,52 @@ void FdmViewerWrapper::set_layers_range(Interval::value_type min, Interval::valu
 {
     m_viewer.set_layers_range(min, max);
     update_slider_gcode();
+}
+
+bool FdmViewerWrapper::find_gcode_text(const std::string& text)
+{
+    const uint32_t lines = m_gcode_window_data.lines_count();
+    const size_t vertices = m_viewer.vertices_count();
+    if (text.empty() || lines == 0 || vertices == 0)
+        return false;
+
+    auto lower = [](std::string_view s) {
+        std::string out(s);
+        std::transform(out.begin(), out.end(), out.begin(), [](unsigned char c) { return char(std::tolower(c)); });
+        return out;
+    };
+    const std::string needle = lower(text);
+    // gcode ids are 1-based line numbers (GCodeDisplay shows line_at(id - 1))
+    const uint32_t current = m_viewer.current_vertex().gcode_id;
+    std::optional<uint32_t> found;
+    for (uint32_t step = 1; step <= lines && !found; ++step) {
+        const uint32_t line = (current + step - 1) % lines; // 0-based, the line after the current
+        if (lower(m_gcode_window_data.raw_line(line)).find(needle) != std::string::npos)
+            found = line + 1;
+    }
+    if (!found)
+        return false;
+
+    // the first move at or after that line (vertices are in G-code order)
+    size_t vertex = 0;
+    while (vertex < vertices && m_viewer.vertex_at(vertex).gcode_id < *found)
+        ++vertex;
+    if (vertex == vertices)
+        vertex = vertices - 1;
+
+    // its layer on the layers slider (the moves slider follows), then the move on the moves slider
+    const int layer = int(m_viewer.vertex_at(vertex).layer_id);
+    if (m_slider_layers->lower_pos() > layer)
+        m_slider_layers->set_lower_pos(layer);
+    m_slider_layers->set_higher_pos(layer);
+    const auto& values = m_slider_gcode->slider_values(); // vertex id + 1 per position
+    for (size_t pos = 0; pos < values.size(); ++pos) {
+        if (size_t(values[pos]) >= vertex + 1) {
+            m_slider_gcode->set_higher_pos(int(pos));
+            break;
+        }
+    }
+    return true;
 }
 
 void FdmViewerWrapper::set_range_colors_popup_type(ViewType type)

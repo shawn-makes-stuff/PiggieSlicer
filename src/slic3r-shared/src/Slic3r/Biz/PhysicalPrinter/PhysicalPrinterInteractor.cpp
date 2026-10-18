@@ -10,6 +10,7 @@
 #include "Slic3r/Biz/Platform/JobManager/JobManager.hpp"
 #include "Slic3r/Biz/I18N/I18N.hpp"
 #include "Slic3r/Domain/Preset/HwConfig.hpp"
+#include "Slic3r/Domain/GCodeFlavor.hpp"
 
 #include "Slic3r/Log.hpp"
 
@@ -262,6 +263,40 @@ void PhysicalPrinterInteractor::save_new_printer()
 void PhysicalPrinterInteractor::on_dialog_button_add_new()
 {
     select_default();
+}
+
+void PhysicalPrinterInteractor::edit_network_printer_for_current()
+{
+    const Domain::Preset::HwPrinterConfig& current = m_preset_interactor.current_printer_config();
+    auto fits = [&current](const PhysicalPrinterConfig& printer)
+    {
+        return std::holds_alternative<PrinterUpload>(printer.payload)
+            && is_physical_printer_compatible(printer, current);
+    };
+    if (fits(m_observable_list.at(m_selected_index))) {
+        return;
+    }
+    for (size_t index = 0; index < m_observable_list.size(); ++index) {
+        if (fits(m_observable_list.at(index))) {
+            select_uuid(m_observable_list.at(index).uuid);
+            return;
+        }
+    }
+    on_dialog_button_add_new();
+
+    // a new one starts with the host Orca would use (its machine host_type: Klipper printers talk to
+    // Moonraker, which the filament sync also needs); others keep the first type
+    PhysicalPrinterConfig& draft = m_storage.dummy();
+    if (draft.host.empty()) {
+        PrinterUpload upload;
+        if (const auto* existing = std::get_if<PrinterUpload>(&draft.payload))
+            upload = *existing;
+        const bool klipper =
+            m_preset_interactor.selected_printer_preset().printer.config_box().items.opt("gcode_flavor")
+                .get<Domain::GCodeFlavor>() == Domain::GCodeFlavor::gcfKlipper;
+        upload.type  = klipper ? Domain::PrintHostType::Moonraker : Domain::PrintHostType::PrusaLink;
+        draft.payload = upload;
+    }
 }
 
 bool PhysicalPrinterInteractor::is_filesystem_export_selected() const

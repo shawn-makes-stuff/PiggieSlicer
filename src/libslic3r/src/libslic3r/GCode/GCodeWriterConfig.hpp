@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Slic3r/Domain/GCodeFlavor.hpp"
+#include "Slic3r/Domain/Percentage.hpp"
 #include "libslic3r/ConfigViews.hpp"
 
 namespace Slic3r::Biz::Slicing {
@@ -16,6 +17,12 @@ struct GCodeWriterConfig
     bool supports_separate_travel_acceleration{};
     unsigned int max_acceleration{};
     unsigned int max_travel_acceleration{};
+    // Orca: jerk limits (0 = none) and Klipper's accel_to_decel
+    double max_jerk_x{};
+    double max_jerk_y{};
+    bool accel_to_decel_enable{};
+    bool manual_filament_change{};
+    double accel_to_decel_factor{};
     double max_junction_deviation{};
 
     bool gcode_comments{};
@@ -23,6 +30,7 @@ struct GCodeWriterConfig
     bool use_relative_e_distances{};
     bool use_firmware_retraction{};
     double travel_speed{};
+    Domain::FloatOrPercentage initial_layer_travel_speed{}; // over travel_speed, on the first layer
     double travel_speed_z{};
     std::vector<double> filament_diameter{};
     std::vector<double> filament_density{};

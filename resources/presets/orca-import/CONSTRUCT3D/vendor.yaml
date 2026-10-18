@@ -1,0 +1,144 @@
+kind: vendor
+id: CONSTRUCT3D
+name: CONSTRUCT3D
+version: 2.4.0+orca.02.04.00.04
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Construct 1
+  base_model: Construct 1
+  printer_configs_order:
+  - Construct-1-0-4-nozzle
+- label: Construct 1 XL
+  base_model: Construct 1 XL
+  printer_configs_order:
+  - Construct-1-XL-0-6-nozzle
+---
+kind: printer
+technology: FFF
+name: Construct 1
+id: Construct 1
+model:
+  base_model: Construct 1
+  model: Construct 1
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: construct_1_buildplate_model.stl
+  thumbnail: Construct 1_cover.png
+---
+kind: printer
+technology: FFF
+name: Construct 1 XL
+id: Construct 1 XL
+model:
+  base_model: Construct 1 XL
+  model: Construct 1 XL
+tool_count: 1
+features:
+  supports_06_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: construct_1_xl_buildplate_model.stl
+  thumbnail: Construct 1 XL_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Construct-1-0-4-nozzle
+name: Construct 1 0.4 nozzle
+printer: Construct 1
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Construct-1-XL-0-6-nozzle
+name: Construct 1 XL 0.6 nozzle
+printer: Construct 1 XL
+tools:
+- tool: '0.6'
+sheet: high_temp_plate

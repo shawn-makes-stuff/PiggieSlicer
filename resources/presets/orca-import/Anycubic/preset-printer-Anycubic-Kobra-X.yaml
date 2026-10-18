@@ -1,0 +1,234 @@
+kind: printer
+id: k2klkg8Sqz4oiY6/Vr0SLw
+variants:
+- condition: printer.model == "Anycubic Kobra X"
+  name: Anycubic Kobra X
+  id: 0b2xj9UpCQxIU4nMSPfeQQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: GMDCggju5WZ+sHmpg+3irQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      change_extrusion_role_gcode: ''
+      toolchange_gcode: |-
+        ; FLUSH_START
+        ;@2026-04-03 17:46:45 3+n换料gcode，包括7=3+4，19=3+4×4
+        ;_GP_INLINE_ESTIMATED_PRINTING_TIME_PLACEHOLDER
+        ;;; SET_VELOCITY_LIMIT VELOCITY=350 ACCEL=10000
+        ;;; G1 E-2 F4800
+        ;;; G1 Z{toolchange_z+0.6} F1800
+        ;;; M106 S0
+        ;;; G1 X265 F21000
+        ;;; M400 P370
+        ;;; G1 X277.5 F600
+        ;;; G1 E-2 F300
+        ;;; M400 P361
+        ;;; G1 Z{toolchange_z+3} F1200
+        ;;; G1 X0 F21000
+        ;;; G1 X-17.5 F5250
+        ;;; M400 P1569
+
+        {local minimal_extrude_ = 5.0}
+        {if one_of(filament_type[current_extruder], "TPU", "PVA")}
+        {local minimal_extrude_ = 8.0}
+        {endif}
+        ;;; G1 E{minimal_extrude_} F300
+        ;;; G1 E-33 F600
+
+        { local curr_t = current_extruder; local next_t = next_extruder;}
+        { local tab_step_time_   = (0, 850, 1350, 850, 850, 0, 1350, 1350, 1350, 1350, 0, 850, 850, 1350, 850, 0)};
+        { if (0 <= curr_t && curr_t < 3) then local step_from_=curr_t else local step_from_=3 endif}; from {step_from_}
+        { if (0 <= next_t && next_t < 3) then local step_into_=next_t else local step_into_=3 endif}; from {step_into_}
+        ;;; M400 P{tab_step_time_[step_from_ * 4 + step_into_]}
+
+
+        T[next_extruder]
+
+        ;;; G1 E8 F300
+        ;;; M400 P3643
+        ;;; G1 E13 F1200
+        ;;; M400 P1000
+
+        {local flush_length_= flush_length}
+        {local loops_=max(1,int((flush_length_-70+150) / 150))}
+        {local extrude_length_=flush_length_ / loops_}
+        {local EXTRUDE_SPEED_ = 5 * 60}
+        {local UNWIND_SPEED_ = 20 *60}
+        {local index_ = 0}
+
+        { if (loops_ > 0)  }
+        { local loops_ = loops_ - 1}
+        { local index_ = index_ + 1}
+        ; {index_} + {loops_}
+        ;;; M106 S0
+        ;;; M400 P1000
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; M400 P{extrude_length_/0.03}
+        ;;; G1 E0.000001
+        ;;; M106 S255
+        ;;; M400 P2005
+        ;;; G1 E-2 F{UNWIND_SPEED_}
+        ;;; M400 P414
+        {endif}
+        { if (loops_ > 0)  }
+        { loops_ = loops_ - 1}
+        { index_ = index_ + 1}
+        ; {index_} + {loops_}
+        ;;; M106 S0
+        ;;; M400 P1000
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; M400 P{extrude_length_/0.03}
+        ;;; M106 S255
+        ;;; M400 P2005
+        ;;; G1 E-2 F{UNWIND_SPEED_}
+        ;;; M400 P414
+        {endif}
+        { if (loops_ > 0)  }
+        { loops_ = loops_ - 1}
+        { index_ = index_ + 1}
+        ; {index_} + {loops_}
+        ;;; M106 S0
+        ;;; M400 P1000
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.18} F{EXTRUDE_SPEED_}
+        ;;; G1 E{extrude_length_*0.02} F{EXTRUDE_SPEED_}
+        ;;; M400 P{extrude_length_/0.03}
+        ;;; M106 S255
+        ;;; M400 P2005
+        ;;; G1 E-2 F{UNWIND_SPEED_}
+        ;;; M400 P414
+        {endif}
+
+        ; G1 X{x_after_toolchange} Y{y_after_toolchange} F12000
+        ; G1 Z{toolchange_z} F1200
+        ;;; G1 E2 F1800
+        ; SET_VELOCITY_LIMIT VELOCITY=450 ACCEL=10000
+        ;;; M400 P0
+        ;_GP_INLINE_ESTIMATED_PRINTING_TIME_PLACEHOLDER
+        ; FLUSH_END
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      enable_filament_ramming: false
+      extra_loading_move: 0
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ; AFTER_LAYER_CHANGE [layer_num] @ [layer_z]mm
+      end_gcode: |-
+        M400
+        M140 S0 ; turn off heatbed
+        M104 S0 ; turn off temperature
+        M107;turn off fan
+        M84; disable motors
+        ; disable stepper motors
+      machine_max_acceleration_e:
+      - 6500.0
+      - 6500.0
+      machine_max_acceleration_extruding:
+      - 6500.0
+      - 6500.0
+      machine_max_acceleration_retracting:
+      - 6500.0
+      - 6500.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_y:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_z:
+      - 1000.0
+      - 1000.0
+      machine_max_jerk_e:
+      - 1.0
+      - 1.0
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 20.0
+      - 20.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 250.0
+      - 250.0
+      machine_max_feedrate_x:
+      - 450.0
+      - 450.0
+      machine_max_feedrate_y:
+      - 450.0
+      - 450.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M600
+      start_gcode: |-
+        G9111 bedTemp=[first_layer_bed_temperature] extruderTemp=[first_layer_temperature[initial_tool]]
+        M117
+        ; print_bed_min = {print_bed_min[0]},{print_bed_min[1]}
+        ; print_bed_max = {print_bed_max[0]},{print_bed_max[1]}
+        ; print_bed_size = {print_bed_size[0]},{print_bed_size[1]}
+        ; first_layer_print_min = {first_layer_print_min[0]},{first_layer_print_min[1]}
+        ; first_layer_print_max = {first_layer_print_max[0]},{first_layer_print_max[1]}
+        ; first_layer_print_size = {first_layer_print_size[0]},{first_layer_print_size[1]}
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 260x0
+      - 260x260
+      - '0x260'
+      max_print_height: 260
+      printer_notes: ''
+      between_objects_gcode: ''
+      purge_in_prime_tower: false
+      single_extruder_multi_material: true
+      support_air_filtration: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 230x110/PNG

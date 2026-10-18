@@ -1,0 +1,1718 @@
+kind: filament
+id: gZBaFbuFP2rRaC2vhOIiPw
+name: Generic ABS @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 10
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 243
+  first_layer_temperature: 248
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: m/+gv1D2N4VvzAoYuicSqw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: FpovNEF7XKDtQfLIEichKg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: 3/kUvxeSIIhK6Nu5r9kGzg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 108
+- condition: sheet.type == "Textured PEI Plate"
+  id: S1XWpxXXXVMRmYhQXELa4w
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: TUxEBLzf3n2SAFqD54c/bg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 0oAZfvSTRceDqpZPDWuXHQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: XMCkF2WU+LGBfH0j42Qh0Q
+name: Generic ABS BigNozzle @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 10
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 265
+  first_layer_temperature: 270
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 9RL3XWQ5KDYyavRpbp5aLw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: bhNiTdbqGnMfBBJhpSS6PQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: XJ02egBH8z0XjFo6gSl62Q
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 108
+- condition: sheet.type == "Textured PEI Plate"
+  id: U48wk59aBCvW4FmIKeqBRw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: mYHi3YEnKz9FIbfW4hUNkw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: L85JnDamNhBe5+fFUXnBCw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: cWY9vGlq5qfvLgQcALTbkg
+name: Generic ASA @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 10
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.1
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.93
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 19
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.033
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Y+qSHbKKqDsVVYUivTetkQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 8NApDGUor8IO2LiEdwjsiA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: o1tVEdzThCypBtiFzfgrTg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: qJwQAgeXqjVuwTEEu4Blxw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: Q3iExVmLm2D1kbilJr1xCA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: oaTNcbQZRb2JJtIkh6LvqA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: SHeb1veZOxoVD26e2ikOTA
+name: Generic ASA BigNozzle @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 10
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.92
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 19
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 265
+  first_layer_temperature: 270
+  pressure_advance_value: 0.033
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: JxVIg2iB16Ykl9jdsGRoKQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: PHeNuKkaLHDvYE0xfTJu3A
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: AORQiaNGX7sduDtn787O0Q
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 108
+- condition: sheet.type == "Textured PEI Plate"
+  id: 0Fud5sUImjY0LkQ/qDCewg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: QOzCSSzxgm5mzGM2H90B/g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: NGvttr4/MfHv5zOQoD0Ciw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: qpkabQfIjuMIWVsM2dBDHg
+name: Generic PA @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.045
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: d+F+8o5H3pcuuV5ZduKgoQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: GGHBrity/uSHtBWGrdNchA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: qtVNAMmNdTh4cY4OvLJ/1g
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: qegHR49QFQiEslU5Ie+WaQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: n7cshqLfw41gB52zsu1cuw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: /VadoKyLa40EvsGrxbOs2g
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: x3msQvDZmyZasEAG5dc0TQ
+name: Generic PA-CF @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.045
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: wVdIPNyi2IlWqRNuBisu4A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: iG1ehUmdm+asbtA9PRodVQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: ZRmUW0RkAUYhX2aSCKp+yQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: oCEbrUEaJsM8Z7EHYxbpVQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: 7thMyHEdt4MF1X4f/0Reeg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: aPHF+wHCcZXXxRrEl1z3Xw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: oOuv96caKXuD19r453x1eA
+name: Generic PC @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.93
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 16
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.045
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: EEBAmFgK2QT1l9q7rQmIow
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 4O1KDMc5/FUYCQvVp8HnRw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: B2Pd665z0f2C09xD1aQ3VQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: fCMA86zjfUvERdYgTTjtKg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: E3uEMId9mGzP3TmUaZksMA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: r7ObFS6PTWofNdv99xkEEw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: D8Bx25770V4L9x+KzQw3hg
+name: Generic PCTG @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.29
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.93
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PCTG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 260
+  pressure_advance_value: 0.045
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: L1IVKtxFxoiNHPOhWR30KQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: AzaCzBBnyocIFMgYgJA6Bg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: nLv5Zt9dsr+78gswYzUrnA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: bbcX14ZBUb6jWAsRzVHTEg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: siT3kO2TXsdir+J5XOIMtw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: cDmehnWWJqTd16WsD9NMjg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: w7WBWE9POgLFFara9fcFVA
+name: Generic PCTG BigNozzle @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 30
+  max_fan_speed: 50
+  min_fan_speed: 15
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.29
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.92
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PCTG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 275
+  first_layer_temperature: 280
+  pressure_advance_value: 0.045
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: V4cHtesHlIW4FwPWI2G8sA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: nOlK69S73MCiXl2ej+dl8A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 4cJzF0PWRuCnEwDJqdMmJA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: xb3O5CdzR/RIPHv4hhI3mA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: 6MabKeK6NYoj4rJ7U8Z3Sw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: hYY4AixaCIr5V9u2OJl4wQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 5usugDkXWa5UVwnvE0yRDQ
+name: Generic PETG @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 10
+  max_fan_speed: 100
+  min_fan_speed: 40
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 11
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 235
+  first_layer_temperature: 240
+  pressure_advance_value: 0.045
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: aous5S+l8C8+ZO7Eul//Qg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: ktt8PZTiUWP+JY1S0YXqcw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: XVQnBcxmJXb0XGVv/tMeXg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: bFmbyYeTPr/sXOSLrzJ4jg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: nmWo14wGIvx+9OnD/Xuwcw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: EPrd6AW7IwmUgRTH2U4LEg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: nlLQaWNC9iTQ8P//J7CSAw
+name: Generic PETG BigNozzle @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 10
+  max_fan_speed: 90
+  min_fan_speed: 40
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.92
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 260
+  pressure_advance_value: 0.045
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: DGoKqFA0iMUtzY8e/YpEYA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: UfWMEALDAmL63B3dKd2qjA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: bhyPZgLLDRo4R7R59C4r8A
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: fKR7cLvcYTiVhsBhw/01Uw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: yU0q4tWE6s+DJ3t2keiY8w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: BIo/gK5Hg4GIiPABrhqm1w
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: 1NEU1FXBywiIs4NR4+GQhw
+name: Generic PLA @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.92
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 20
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 200
+  first_layer_temperature: 205
+  pressure_advance_value: 0.05
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Feqfb2sp4nUH01nWbOxC1Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: 5mzrdMPZ3su9OcdX6ysrrg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: FzOPw0dKHrF1L49Am1FS2Q
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: YMHsSMznQ6089gJMv679tQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: iQDKh1mtDrkxzJRthMhkKw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: IHiKgE4IKtv1LnNZYeKOTA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: 4lVQv2CuShqHn4OkEmaPCA
+name: Generic PLA BigNozzle @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 20
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 235
+  first_layer_temperature: 230
+  pressure_advance_value: 0.05
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: BmAa8qZ4w69//yO9FK+dhw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: yIeNvUn448SsHNrdmiHF7Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: o0gSRYvDPA4wXywZiu3cvQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 5k2wVsP7v+EEEaF0z5hmEA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: hQU52CiynjdtPfgsvy8+/Q
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: JSChFhah00AwfShOiDI4UA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: YOQ7d0n6s6gqu6oKMbG22g
+name: Generic PLA-CF @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.92
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 205
+  first_layer_temperature: 210
+  pressure_advance_value: 0.05
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 7
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +cEsyJbbtMD9jcQ1iL4M7g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: o5s3BJclmAaK/AlbL8HNDg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: B1tx25BQ0ubr0Ong3aQ/iA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: yR/KiTqtF7UGcdnSh8IlpA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: 5nk7EevfQSemptJOsF9fJg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: d1heQ6n91KGgiAADd9dHfw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: WYJVDQbQU2kqPpJ3QqyoRw
+name: Generic PVA @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 6
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: true
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PVA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 7
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: cfxnwKt/OaMEYmhS/dZkbg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: gs/QBWA3E4HgGqXPIk/hSg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: uBlo4C86nxnRSxrGvOhZFA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: qhO8ujvGyortKweupb/Lsw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: ce0pBXvQ/inAQTxtJwbEhQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 2ecBBM2NJL+v+TiedhKaxg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 52dhp5soNyrnn0JgfWr6hg
+name: Generic TPU @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 3.2
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.1
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: s8J1spvqJKoTMYMHjF/jrw
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: BuSuKBLf5AuXzDp9CAvA2w
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: F9E5qJdkZoUeUdsDmr9h9A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: aygjYMUVgwLNWvU/FnpABA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: NoeRA4nO1zsgnYkEQNIRBQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: z61u2FvClgLo2mN366nrxg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: E2ERTSZUXrqUOpqTbcqbRQ
+name: Generic TPU BigNozzle @RatRig
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 3.2
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  retract_lift: 0
+  full_fan_speed_layer: 0
+  temperature: 245
+  first_layer_temperature: 240
+  pressure_advance_value: 0.1
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: f7CGV+pJXukJQHx2Kk4gPA
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: xHdZX82fto6UJ5CMbPBc8Q
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: KRv1KSAYcvUZejpa2LHh8g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: xA1TuKRW/GnHG24D/XAz2A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: jxUXb/JPWhNyrDSexFSsxA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: I8vFqVRcXKdoSsCW/MdnDg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: sOLEHOWMhn6ZuQohDsYLCQ
+name: RatRig PunkFil ABS
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 7
+  max_fan_speed: 60
+  min_fan_speed: 30
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25.5
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.92
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 40
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: RatRig
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.022
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 50
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: gYE8oVVFayLyIn1bP6QTWA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: EnD1Rz0HyksKFBeIc42LtA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: wOrfdtxgAXGFXywyuS/s2w
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: 9mRTw5MfDxlL6xZniK9yTQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: 9WRJx4zZNjRpeGJ1S1O5nw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: NJYGddwgjZdrqkuWH+1RkA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 8hItAOcHvhup0h/878aQFw
+name: RatRig PunkFil PETG
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 8
+  max_fan_speed: 60
+  min_fan_speed: 30
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.5
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.93
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 40
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: RatRig
+  full_fan_speed_layer: 0
+  temperature: 235
+  first_layer_temperature: 235
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 50
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 5nitSudCI/L182JJWEPPNQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: Ywb9IiqN1kGsqnkq1Tndow
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: gsFmeL2Sx/uuOOMgmJV36g
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: em0oq41fNRFk4SrPwWcaUQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: TsRLbMwb0ASFNrvtmGRWuA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: tEmkkTSxADxV3tDFmDIfeA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: ftz9vKhCP2ypMU3jdTqitg
+name: RatRig PunkFil PETG CF
+condition: (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Cast" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 3 200" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 3 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 300" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 400" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.4) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.5) or (printer.model == "RatRig V-Core 4 HYBRID 500" and tool.nozzle_diameter == 0.6) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model
+  == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 300" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 400" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.5 and printer.tool_count == 2) or (printer.model == "RatRig V-Core 4 IDEX 500" and tool.nozzle_diameter == 0.6 and printer.tool_count == 2) or (printer.model == "RatRig V-Minion" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 10
+  max_fan_speed: 30
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 48
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.93
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 20
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG-CF10
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: RatRig
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.038
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 30
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: bKKoMGGWegNF2b/TGWbuNQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: A9O822LCtziKaaAzTCwerg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: jINAtGz7rbUl9/eGmnJzmw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: vYOfyxHuKgGS4kAZf2ircA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: CNP+6+PaaZ5U4miA+QiMpw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: +emUuq2BERRnK4qy10LJ0g
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70

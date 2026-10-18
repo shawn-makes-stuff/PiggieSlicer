@@ -1,0 +1,492 @@
+kind: vendor
+id: Meltingplot
+name: Meltingplot
+version: 2.4.0+orca.02.04.00.01
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    supports_1_nozzle:
+      default: false
+      user_editable: false
+    supports_12_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Meltingplot CHX 350
+  base_model: Meltingplot CHX 350
+  printer_configs_order:
+  - Meltingplot-CHX-350-0-4-nozzle
+  - Meltingplot-CHX-350-0-6-nozzle
+  - Meltingplot-CHX-350-0-8-nozzle
+  - Meltingplot-CHX-350-1-0-nozzle
+  - Meltingplot-CHX-350-1-2-nozzle
+- label: Meltingplot MBL 133
+  base_model: Meltingplot MBL 133
+  printer_configs_order:
+  - Meltingplot-MBL-133-0-4-nozzle
+  - Meltingplot-MBL-133-0-6-nozzle
+  - Meltingplot-MBL-133-0-8-nozzle
+  - Meltingplot-MBL-133-1-0-nozzle
+  - Meltingplot-MBL-133-1-2-nozzle
+- label: Meltingplot MBL 136
+  base_model: Meltingplot MBL 136
+  printer_configs_order:
+  - Meltingplot-MBL-136-0-4-nozzle
+  - Meltingplot-MBL-136-0-6-nozzle
+  - Meltingplot-MBL-136-0-8-nozzle
+  - Meltingplot-MBL-136-1-0-nozzle
+  - Meltingplot-MBL-136-1-2-nozzle
+- label: Meltingplot MBL 308
+  base_model: Meltingplot MBL 308
+  printer_configs_order:
+  - Meltingplot-MBL-308-0-4-nozzle
+  - Meltingplot-MBL-308-0-6-nozzle
+  - Meltingplot-MBL-308-0-8-nozzle
+  - Meltingplot-MBL-308-1-0-nozzle
+  - Meltingplot-MBL-308-1-2-nozzle
+- label: Meltingplot MBL 480
+  base_model: Meltingplot MBL 480
+  printer_configs_order:
+  - Meltingplot-MBL-480-0-4-nozzle
+  - Meltingplot-MBL-480-0-6-nozzle
+  - Meltingplot-MBL-480-0-8-nozzle
+  - Meltingplot-MBL-480-1-0-nozzle
+  - Meltingplot-MBL-480-1-2-nozzle
+---
+kind: printer
+technology: FFF
+name: Meltingplot CHX 350
+id: Meltingplot CHX 350
+model:
+  base_model: Meltingplot CHX 350
+  model: Meltingplot CHX 350
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_12_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: chx350-printbed.stl
+  bed_texture: chx350-texture.svg
+  thumbnail: Meltingplot CHX 350_cover.png
+---
+kind: printer
+technology: FFF
+name: Meltingplot MBL 133
+id: Meltingplot MBL 133
+model:
+  base_model: Meltingplot MBL 133
+  model: Meltingplot MBL 133
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_12_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: mbl133-printbed.stl
+  bed_texture: mbl-133-texture.svg
+  thumbnail: Meltingplot MBL 133_cover.png
+---
+kind: printer
+technology: FFF
+name: Meltingplot MBL 136
+id: Meltingplot MBL 136
+model:
+  base_model: Meltingplot MBL 136
+  model: Meltingplot MBL 136
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_12_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: mbl136-printbed.stl
+  bed_texture: mbl-136-texture.svg
+  thumbnail: Meltingplot MBL 136_cover.png
+---
+kind: printer
+technology: FFF
+name: Meltingplot MBL 308
+id: Meltingplot MBL 308
+model:
+  base_model: Meltingplot MBL 308
+  model: Meltingplot MBL 308
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_12_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: mbl308-printbed.stl
+  bed_texture: mbl-308-texture.svg
+  thumbnail: Meltingplot MBL 308_cover.png
+---
+kind: printer
+technology: FFF
+name: Meltingplot MBL 480
+id: Meltingplot MBL 480
+model:
+  base_model: Meltingplot MBL 480
+  model: Meltingplot MBL 480
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_12_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: mbl480-printbed.stl
+  bed_texture: mbl-480-texture.svg
+  thumbnail: Meltingplot MBL 480_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: tool
+technology: FFF
+id: '1.0'
+name: 1.0 nozzle
+condition: printer.supports_1_nozzle
+features:
+  nozzle_diameter:
+    default: 1.0
+---
+kind: tool
+technology: FFF
+id: '1.2'
+name: 1.2 nozzle
+condition: printer.supports_12_nozzle
+features:
+  nozzle_diameter:
+    default: 1.2
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Meltingplot-CHX-350-0-4-nozzle
+name: Meltingplot CHX 350 0.4 nozzle
+printer: Meltingplot CHX 350
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-CHX-350-0-6-nozzle
+name: Meltingplot CHX 350 0.6 nozzle
+printer: Meltingplot CHX 350
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-CHX-350-0-8-nozzle
+name: Meltingplot CHX 350 0.8 nozzle
+printer: Meltingplot CHX 350
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-CHX-350-1-0-nozzle
+name: Meltingplot CHX 350 1.0 nozzle
+printer: Meltingplot CHX 350
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-CHX-350-1-2-nozzle
+name: Meltingplot CHX 350 1.2 nozzle
+printer: Meltingplot CHX 350
+tools:
+- tool: '1.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-133-0-4-nozzle
+name: Meltingplot MBL 133 0.4 nozzle
+printer: Meltingplot MBL 133
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-133-0-6-nozzle
+name: Meltingplot MBL 133 0.6 nozzle
+printer: Meltingplot MBL 133
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-133-0-8-nozzle
+name: Meltingplot MBL 133 0.8 nozzle
+printer: Meltingplot MBL 133
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-133-1-0-nozzle
+name: Meltingplot MBL 133 1.0 nozzle
+printer: Meltingplot MBL 133
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-133-1-2-nozzle
+name: Meltingplot MBL 133 1.2 nozzle
+printer: Meltingplot MBL 133
+tools:
+- tool: '1.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-136-0-4-nozzle
+name: Meltingplot MBL 136 0.4 nozzle
+printer: Meltingplot MBL 136
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-136-0-6-nozzle
+name: Meltingplot MBL 136 0.6 nozzle
+printer: Meltingplot MBL 136
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-136-0-8-nozzle
+name: Meltingplot MBL 136 0.8 nozzle
+printer: Meltingplot MBL 136
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-136-1-0-nozzle
+name: Meltingplot MBL 136 1.0 nozzle
+printer: Meltingplot MBL 136
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-136-1-2-nozzle
+name: Meltingplot MBL 136 1.2 nozzle
+printer: Meltingplot MBL 136
+tools:
+- tool: '1.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-308-0-4-nozzle
+name: Meltingplot MBL 308 0.4 nozzle
+printer: Meltingplot MBL 308
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-308-0-6-nozzle
+name: Meltingplot MBL 308 0.6 nozzle
+printer: Meltingplot MBL 308
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-308-0-8-nozzle
+name: Meltingplot MBL 308 0.8 nozzle
+printer: Meltingplot MBL 308
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-308-1-0-nozzle
+name: Meltingplot MBL 308 1.0 nozzle
+printer: Meltingplot MBL 308
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-308-1-2-nozzle
+name: Meltingplot MBL 308 1.2 nozzle
+printer: Meltingplot MBL 308
+tools:
+- tool: '1.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-480-0-4-nozzle
+name: Meltingplot MBL 480 0.4 nozzle
+printer: Meltingplot MBL 480
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-480-0-6-nozzle
+name: Meltingplot MBL 480 0.6 nozzle
+printer: Meltingplot MBL 480
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-480-0-8-nozzle
+name: Meltingplot MBL 480 0.8 nozzle
+printer: Meltingplot MBL 480
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-480-1-0-nozzle
+name: Meltingplot MBL 480 1.0 nozzle
+printer: Meltingplot MBL 480
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Meltingplot-MBL-480-1-2-nozzle
+name: Meltingplot MBL 480 1.2 nozzle
+printer: Meltingplot MBL 480
+tools:
+- tool: '1.2'
+sheet: high_temp_plate

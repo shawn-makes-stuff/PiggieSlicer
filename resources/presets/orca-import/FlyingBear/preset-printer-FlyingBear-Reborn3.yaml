@@ -1,0 +1,104 @@
+kind: printer
+id: NZOxG7GpYVRc/BETbMQ6KA
+variants:
+- condition: printer.model == "FlyingBear Reborn3"
+  name: FlyingBear Reborn3
+  id: eaKjEozG3OyEgKFb+F0MeQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: eHhmMJ2g1w1n0aAhR4oxvw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @FlyingBear Reborn3
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: ";R3_V1.1.0-20241115\n\nM140 S[first_layer_bed_temperature[initial_extruder]] \nM104 S135\nG28\nG4 P200\nM190 S[first_layer_bed_temperature[initial_extruder]] \nZ_TILT_ADJUST\nG90\nG1 X150 Y150 F3000\nG28 Z\nG1 X50 Y-4 F2500\nM109 S[first_layer_temperature]\nM190 S[first_layer_bed_temperature[initial_extruder]] \nPRINT_START"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 300x0
+      - 300x300
+      - '0x300'
+      max_print_height: 350
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

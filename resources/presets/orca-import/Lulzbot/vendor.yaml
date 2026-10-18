@@ -1,0 +1,235 @@
+kind: vendor
+id: Lulzbot
+name: Lulzbot
+version: 2.4.0+orca.02.04.00.06
+features:
+  printer:
+    supports_05_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.5
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Lulzbot Mini 1
+  base_model: Lulzbot Mini 1
+  printer_configs_order:
+  - Lulzbot-Mini-1-0-5-nozzle
+- label: Lulzbot Taz 4 or 5
+  base_model: Lulzbot Taz 4 or 5
+  printer_configs_order:
+  - Lulzbot-Taz-4-or-5-0-5-nozzle
+- label: Lulzbot Taz 6
+  base_model: Lulzbot Taz 6
+  printer_configs_order:
+  - Lulzbot-Taz-6-0-5-nozzle
+- label: Lulzbot Taz Pro Dual
+  base_model: Lulzbot Taz Pro Dual
+  printer_configs_order:
+  - Lulzbot-Taz-Pro-Dual-0-5-nozzle
+- label: Lulzbot Taz Pro S
+  base_model: Lulzbot Taz Pro S
+  printer_configs_order:
+  - Lulzbot-Taz-Pro-S-0-5-nozzle
+---
+kind: printer
+technology: FFF
+name: Lulzbot Mini 1
+id: Lulzbot Mini 1
+model:
+  base_model: Lulzbot Mini 1
+  model: Lulzbot Mini 1
+tool_count: 1
+features:
+  supports_05_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: lulzbot_logo.svg
+  thumbnail: Lulzbot Mini 1_cover.png
+---
+kind: printer
+technology: FFF
+name: Lulzbot Taz 4 or 5
+id: Lulzbot Taz 4 or 5
+model:
+  base_model: Lulzbot Taz 4 or 5
+  model: Lulzbot Taz 4 or 5
+tool_count: 1
+features:
+  supports_05_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: taz_4_or_5_build_plate.stl
+  bed_texture: lulzbot_logo.svg
+  thumbnail: Lulzbot Taz 4 or 5_cover.png
+---
+kind: printer
+technology: FFF
+name: Lulzbot Taz 6
+id: Lulzbot Taz 6
+model:
+  base_model: Lulzbot Taz 6
+  model: Lulzbot Taz 6
+tool_count: 1
+features:
+  supports_05_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: taz_6_build_plate.stl
+  bed_texture: lulzbot_logo.svg
+  thumbnail: Lulzbot Taz 6_cover.png
+---
+kind: printer
+technology: FFF
+name: Lulzbot Taz Pro Dual
+id: Lulzbot Taz Pro Dual
+model:
+  base_model: Lulzbot Taz Pro Dual
+  model: Lulzbot Taz Pro Dual
+tool_count: 2
+features:
+  supports_05_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: taz_pro_dual_build_plate.stl
+  bed_texture: Taz_Pro_Dual_printbed.svg
+  thumbnail: Lulzbot Taz Pro Dual_cover.png
+---
+kind: printer
+technology: FFF
+name: Lulzbot Taz Pro S
+id: Lulzbot Taz Pro S
+model:
+  base_model: Lulzbot Taz Pro S
+  model: Lulzbot Taz Pro S
+tool_count: 1
+features:
+  supports_05_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: taz_pro_dual_build_plate.stl
+  bed_texture: lulzbot_logo.svg
+  thumbnail: Lulzbot Taz Pro S_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.5'
+name: 0.5 nozzle
+condition: printer.supports_05_nozzle
+features:
+  nozzle_diameter:
+    default: 0.5
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Lulzbot-Mini-1-0-5-nozzle
+name: Lulzbot Mini 1 0.5 nozzle
+printer: Lulzbot Mini 1
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Lulzbot-Taz-4-or-5-0-5-nozzle
+name: Lulzbot Taz 4 or 5 0.5 nozzle
+printer: Lulzbot Taz 4 or 5
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Lulzbot-Taz-6-0-5-nozzle
+name: Lulzbot Taz 6 0.5 nozzle
+printer: Lulzbot Taz 6
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Lulzbot-Taz-Pro-Dual-0-5-nozzle
+name: Lulzbot Taz Pro Dual 0.5 nozzle
+printer: Lulzbot Taz Pro Dual
+tool_count: 2
+tools:
+- tool: '0.5'
+  features:
+    extruder_index: 0
+- tool: '0.5'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Lulzbot-Taz-Pro-S-0-5-nozzle
+name: Lulzbot Taz Pro S 0.5 nozzle
+printer: Lulzbot Taz Pro S
+tools:
+- tool: '0.5'
+sheet: high_temp_plate

@@ -77,6 +77,8 @@ void to_json(
         {"material_favorite_presets", app_settings_advanced.material_favorite_presets},
         {"recent_projects", app_settings_advanced.recent_projects}
     };
+    if (app_settings_advanced.added_printers)
+        json_value["added_printers"] = *app_settings_advanced.added_printers;
 }
 
 void from_json(
@@ -89,6 +91,8 @@ void from_json(
     json_value.at("material_favorite_presets")
         .get_to(app_settings_advanced.material_favorite_presets);
     json_value.at("recent_projects").get_to(app_settings_advanced.recent_projects);
+    if (json_value.contains("added_printers"))
+        app_settings_advanced.added_printers = json_value.at("added_printers").get<std::set<std::string>>();
 
     // validate recent_projects
     std::erase_if(

@@ -1,9 +1,11 @@
 #include "Slic3r/App/Config/PrintToolSubcategoryItem.hpp"
 
 #include <Slic3r/Domain/Config.hpp>
+#include <Slic3r/Domain/OrcaLayout.hpp>
 
 #include "Slic3r/App/Yoga/Text.hpp"
 #include "Slic3r/App/Imgui/ImguiExtension.hpp"
+#include "Slic3r/App/Config/PrintTabListView.hpp"
 
 #include "Slic3r/Biz/PrintToolConfigBoxInteractor.hpp"
 #include "Slic3r/Biz/PrintToolConfigObservableList.hpp"
@@ -13,17 +15,34 @@ using namespace Slic3r::App::Yoga;
 
 namespace Slic3r::App {
 
+namespace {
+
+std::string group_label(const Domain::ConfigItemDef& def, bool orca_layout)
+{
+    if (orca_layout) {
+        const Domain::OrcaLayoutGroup& group = Domain::orca_layout_groups()[def.orca_group];
+        if (!group.label.empty())
+            return Biz::_u8(std::string(group.label));
+        return Biz::_u8(Domain::ConfigItemDef::translate_option_group(group.option_group));
+    }
+    return Biz::_u8(Domain::ConfigItemDef::translate_option_group(def.option_group));
+}
+
+} // namespace
+
 PrintToolSubcategoryItem::PrintToolSubcategoryItem(
     size_t index,
     const Biz::PrintToolItem& data,
     Biz::PrintToolConfigBoxInteractor& cbi,
     Biz::IConfigBoxSetter& cbi_setter,
-    Biz::ProjectInteractor& project_interactor
+    Biz::ProjectInteractor& project_interactor,
+    bool orca_layout
 ) :
     Biz::DataObserver<Biz::PrintToolItem>(index, data),
     m_cbi(cbi),
     m_cbi_setter(cbi_setter),
-    m_rows_filter_list(std::make_shared<Biz::ObservableListSortFilter<Biz::PrintToolItem>>())
+    m_rows_filter_list(std::make_shared<Biz::ObservableListSortFilter<Biz::PrintToolItem>>()),
+    m_orca_layout(orca_layout)
 {
     set_object_name("PrintToolSubcategoryItem");
     set_orientation(Orientation::Vertical);
@@ -34,17 +53,17 @@ PrintToolSubcategoryItem::PrintToolSubcategoryItem(
     set_padding(Paddings(20.f, 20.f, 20.f, 0.f));
 
     m_label = emplace_back<Text>(
-        Biz::_u8(
-            Domain::ConfigItemDef::translate_option_group(m_state->print_item->def().option_group)
-        ),
+        group_label(m_state->print_item->def(), m_orca_layout),
         Render::ImguiFontType::Bold
     );
 
     m_rows_filter_list->set_filter_fn(
         [this](const Biz::PrintToolItem& item) -> bool
         {
-            return item.print_item->def().option_group == m_option_group
-                && item.print_item->def().category == m_category;
+            const Domain::ConfigItemDef& def = item.print_item->def();
+            if (m_orca_layout)
+                return def.orca_group == m_orca_group && is_shown_in_mode(def);
+            return def.option_group == m_option_group && def.category == m_category;
         }
     );
     // also group by row_group
@@ -65,8 +84,12 @@ PrintToolSubcategoryItem::PrintToolSubcategoryItem(
         }
     );
     m_rows_filter_list->set_sort_fn(
-        [](const Biz::PrintToolItem& lhs, const Biz::PrintToolItem& rhs)
-        { return lhs.print_item->def().order < rhs.print_item->def().order; }
+        [this](const Biz::PrintToolItem& lhs, const Biz::PrintToolItem& rhs)
+        {
+            if (m_orca_layout)
+                return lhs.print_item->def().orca_order < rhs.print_item->def().orca_order;
+            return lhs.print_item->def().order < rhs.print_item->def().order;
+        }
     );
 
     m_rows_filter_list->set_source_model(m_cbi.observable_list());
@@ -105,20 +128,22 @@ void PrintToolSubcategoryItem::clear_navigation()
 
 void PrintToolSubcategoryItem::on_data_update()
 {
-    m_label->set_text(
-        Biz::_u8(
-            Domain::ConfigItemDef::translate_option_group(m_state->print_item->def().option_group)
-        )
-    );
+    const Domain::ConfigItemDef& def = m_state->print_item->def();
+    m_label->set_text(group_label(def, m_orca_layout));
 
-    const Domain::ConfigItemDef::OptionGroup option_group = m_state->print_item->def().option_group;
-    const Domain::ConfigItemDef::Category category        = m_state->print_item->def().category;
-
-    if (option_group != m_option_group || m_category != category) {
-        m_option_group = option_group;
-        m_category     = category;
+    if (def.option_group != m_option_group || m_category != def.category
+        || def.orca_group != m_orca_group)
+    {
+        m_option_group = def.option_group;
+        m_category     = def.category;
+        m_orca_group   = def.orca_group;
         m_rows_filter_list->invalidate();
     }
+}
+
+void PrintToolSubcategoryItem::refresh_mode()
+{
+    m_rows_filter_list->invalidate();
 }
 
 void PrintToolSubcategoryItem::on_index_update()

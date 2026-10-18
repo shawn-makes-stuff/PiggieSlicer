@@ -89,6 +89,9 @@ enum class ErrorCode
     HwConfigLessMaterialsThanTools,
     NoHwConfigTools,
     FailedToParseCustomParameters,
+    InvalidAdaptivePressureAdvanceModel, // each line: PA, flow rate, acceleration (PA < 2 < flow < acceleration)
+    InvalidSmallAreaFlowCompensationModel, // lengths from 0 increasing, factors increasing to 1
+    PerObjectSkirtsOverlapInSequentialPrint, // Orca: a per object skirt shared by objects printed one by one
     FatalError,
 
     // FDM
@@ -135,6 +138,7 @@ enum class WarningCode
     WipeTowerNozzleDiameterDiffer,
     SupportNozzleDiameterDiffer,
     SupportsTurnedOff,
+    PreciseZHeightWithWipeTower, // Orca: precise Z height and the prime tower may cause slicing errors
     StabilityIssues, // _u8L("Detected print stability issues:\n%1%")
     EmptyLayers,
     CustomGCodeReservedKeywords,

@@ -25,6 +25,8 @@ public:
 
     bool closable() const;
     void set_closable(bool closable);
+    /// Same as the close button (Esc)
+    void request_close();
 
     size_t current_tab_index() const;
     void set_current_tab(size_t current_index);

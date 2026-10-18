@@ -1,0 +1,288 @@
+kind: vendor
+id: iQ
+name: iQ
+version: 2.4.0+orca.02.04.00.05
+features:
+  printer:
+    supports_025_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.25
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: TiQ2
+  base_model: TiQ2
+  printer_configs_order:
+  - iQ-TiQ2-0-25-Nozzle
+  - iQ-TiQ2-0-4-Nozzle
+  - iQ-TiQ2-0-6-Nozzle
+  - iQ-TiQ2-0-8-Nozzle
+- label: TiQ8
+  base_model: TiQ8
+  printer_configs_order:
+  - iQ-TiQ8-0-25-Nozzle
+  - iQ-TiQ8-0-4-Nozzle
+  - iQ-TiQ8-0-6-Nozzle
+  - iQ-TiQ8-0-8-Nozzle
+---
+kind: printer
+technology: FFF
+name: TiQ2
+id: TiQ2
+model:
+  base_model: TiQ2
+  model: TiQ2
+tool_count: 2
+features:
+  supports_025_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: TiQ2.stl
+  bed_texture: TiQ2_texture.svg
+  thumbnail: TiQ2_cover.png
+---
+kind: printer
+technology: FFF
+name: TiQ8
+id: TiQ8
+model:
+  base_model: TiQ8
+  model: TiQ8
+tool_count: 2
+features:
+  supports_025_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: TiQ8.stl
+  bed_texture: TiQ8_texture.svg
+  thumbnail: TiQ8_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.25'
+name: 0.25 nozzle
+condition: printer.supports_025_nozzle
+features:
+  nozzle_diameter:
+    default: 0.25
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: iQ-TiQ2-0-25-Nozzle
+name: iQ TiQ2 0.25 Nozzle
+printer: TiQ2
+tool_count: 2
+tools:
+- tool: '0.25'
+  features:
+    extruder_index: 0
+- tool: '0.25'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: iQ-TiQ2-0-4-Nozzle
+name: iQ TiQ2 0.4 Nozzle
+printer: TiQ2
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: iQ-TiQ2-0-6-Nozzle
+name: iQ TiQ2 0.6 Nozzle
+printer: TiQ2
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: iQ-TiQ2-0-8-Nozzle
+name: iQ TiQ2 0.8 Nozzle
+printer: TiQ2
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: iQ-TiQ8-0-25-Nozzle
+name: iQ TiQ8 0.25 Nozzle
+printer: TiQ8
+tool_count: 2
+tools:
+- tool: '0.25'
+  features:
+    extruder_index: 0
+- tool: '0.25'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: iQ-TiQ8-0-4-Nozzle
+name: iQ TiQ8 0.4 Nozzle
+printer: TiQ8
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: iQ-TiQ8-0-6-Nozzle
+name: iQ TiQ8 0.6 Nozzle
+printer: TiQ8
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: iQ-TiQ8-0-8-Nozzle
+name: iQ TiQ8 0.8 Nozzle
+printer: TiQ8
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate

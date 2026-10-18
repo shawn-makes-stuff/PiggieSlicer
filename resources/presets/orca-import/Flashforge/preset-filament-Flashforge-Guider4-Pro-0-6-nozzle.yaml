@@ -1,0 +1,2447 @@
+kind: filament
+id: +pfLPn4dIiA+2bJxcXV6sQ
+name: Flashforge ABS Basic @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 35
+  max_fan_speed: 60
+  min_fan_speed: 25
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:ABS
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: xKa40bXe+K70JolCHYOpDg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: pI4eokuM6jvRFTri2ZDQwg
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "High Temp Plate"
+  id: HumwU2q5RgWA1Wpj97vkiQ
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured PEI Plate"
+  id: 7zbQ5XXh7eM79u/eNoLT/w
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured Cool Plate"
+  id: qrNjQC029gH/4Bk6KSzbnQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Supertack Plate"
+  id: iJJRyL0Y0GfGkiTJ5NKQlA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: eUkik+W1ehWB1OmFXp/gsg
+name: Flashforge ABS-CF @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 35
+  max_fan_speed: 60
+  min_fan_speed: 25
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 15
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:ABS
+  filament_toolchange_delay: 0
+  filament_type: ABS-CF
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: aUDHnIIuCfw4yyEj22/lsg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: M/3zR/3J1z4FUVeMr2gCJg
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "High Temp Plate"
+  id: NZKQdZoU9DZdBoQOnO1xeg
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured PEI Plate"
+  id: CIFrJIo0Iood1uFPAMwLCg
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured Cool Plate"
+  id: NLvXpEE0kvscBqpFhLC1qw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Supertack Plate"
+  id: rrP5vLUDp60G3p6JiTMQ/Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: zoKf+vlpQsvoXO7ji2YGSg
+name: Flashforge ASA Basic @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 35
+  max_fan_speed: 60
+  min_fan_speed: 25
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:ASA
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Vuul2ZOaLS9VkJOxpk5wUQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: ZJ8f2SCa1Afd5aE0JhR1og
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "High Temp Plate"
+  id: +vms/ABRKvKyW6U6Mr2SmQ
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured PEI Plate"
+  id: FbiFl9XRqLG9kvT7e4AxgQ
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured Cool Plate"
+  id: ncaPl2wlR8PobktpkrilPw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Supertack Plate"
+  id: aJ4j++0VmNjBgNgZVumEzw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: sPGSbWKkgcyM2QnLnyTWZw
+name: Flashforge HIPS @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 35
+  max_fan_speed: 60
+  min_fan_speed: 25
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:HIPS
+  filament_toolchange_delay: 0
+  filament_type: HIPS
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 5EMu874oD/bJpC2uMHRpjw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: dJwWkxCcwcnsKIlHlpPsMQ
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "High Temp Plate"
+  id: v2cE9iER2Zuq2eOt41FHrQ
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured PEI Plate"
+  id: Rc2DfQB8fRmaSuYz5JCV6A
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 115
+- condition: sheet.type == "Textured Cool Plate"
+  id: dKRj7g8rMvOH/VS4wLzvkw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Supertack Plate"
+  id: rAMPO2dKWGKEQfgTMfe8Dw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: XvwhNyT6Zu4tbrMbZ08pUQ
+name: Flashforge HS PETG @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 65
+  min_fan_speed: 30
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25
+  filament_density: 1.28
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PETG
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 245
+  pressure_advance_value: 0.042
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: qAeMW3kpIW0pAFLUPipFyw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 2++7BIMQg9wn5qKsW+ouvg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: y0D1FO1qsbPP0QbUGk8MxQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: Rki/9relddgjNMg1wKYjIA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: TnCnskSQ+3HoWsaI1Xmm1g
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Supertack Plate"
+  id: 7Sxyc4f5Hss/o3TfFBAXWQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: StfSvuO/Bxs88oFv8Eo/Qw
+name: Flashforge HS PLA @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 28
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 205
+  first_layer_temperature: 205
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: d/ebxkal4nhmHObNwf0AwA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: 51aZya569JjHEd5XuDewOg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: CzTBpeDqEybjr6uHfOLBEQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: cpvLaXSu7Y9psuNHo1pZ5g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: bmxT5A0dt9EGghsqV4AGZw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: b2ZZ2+4zv/IhBHUxCQud9g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Y6u2t6t4g1wMnS0QSUmvTQ
+name: Flashforge HS PLA Burnt Ti@FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 28
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 200
+  first_layer_temperature: 205
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: XWGd6VEzi6RbhBl/UuTv6g
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: wtal/nl5wma95X8icZOA2g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: Ac18n+xwbBkQUzS/gf4heA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: rUWkeJhxfBnqFu7ffSrVzg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: ODUszG5fWuiIFxRv3Yfn0A
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: FYQLNPOPDL9KO/Bb2fBuEw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: EyacHvuEqsz8w8ivbpDGhA
+name: Flashforge PC @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PC
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 275
+  first_layer_temperature: 265
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: rUUW5kxQpWQYeivuAh4Esg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 7idq1uvQkQYYu4Sz0e5v6w
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: yJTmXtxNmN1+tuJSX/pmzg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: ehr1lFvgiW5vKDFqCyyBxA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: yUp8vaN+QhzGA+yRo0WUBQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Supertack Plate"
+  id: hVhQts++YQI9EOjVM81Pfg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: H6S90BNfu5zFCnoMRcyxhQ
+name: Flashforge PETG Pro @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 65
+  min_fan_speed: 30
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25
+  filament_density: 1.28
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PETG
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 245
+  pressure_advance_value: 0.042
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 6BU8hkzRTwdADyKmLYQdwg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Ve56hIHoT36rdwvMne/ZhA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: 6YIBGLRGeBt4j2pKW/C5cQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: VZBtg8oVEmwP8+U3ALNrtQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: Kx+PZvBP9SY7IGBXUPuUbw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Supertack Plate"
+  id: 2oAho4O2Zu6GFkFyCoou/g
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: FaxAhm2VGfpeth2lysfkjQ
+name: Flashforge PETG Transparent @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 65
+  min_fan_speed: 30
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25
+  filament_density: 1.28
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PETG
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 245
+  pressure_advance_value: 0.042
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: WZ4owmvkmflcOE5EdABGpg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Bymvpf5NtWZLWBRMEWCrdg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: 6gsPCz82kUCxz33zFez//g
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: UzxxvvXanNR7bPLAp5guHA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: 3sIlY3kEA5ZqOk6IIP0ypg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Supertack Plate"
+  id: ygYyKR/BXrt+QO76RYD0Lw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: /xzIaoV9xFVUEcJjoiG+3w
+name: Flashforge PETG-CF @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 65
+  min_fan_speed: 30
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 25
+  filament_density: 1.28
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.92
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PETG
+  filament_toolchange_delay: 0
+  filament_type: PETG-CF
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.042
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +Qo2PyNfir3mkbDsGEZtkg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Nr6je4xZuFXCj0XUIEpM8Q
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: N6tmOt6USDr+8Ht7zKOpHA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: uxkB5iA2OkgkQH3dpHlKJg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: klb/zMJ/k29HY8BfX+nqYQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Supertack Plate"
+  id: hZfYTiRhQIz9iUpqeCGvxg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: hWDjkpJgVhJZFFS9R6C7+A
+name: Flashforge PLA Basic @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: R23A567rbrtvTy8IfKZKBg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: YS32hfRttnuSCN0Bgf2vtQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: Pd6DNnhVf2bDgtH44Rzajw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: Vx2/NAffc5OnVen1rB5AbA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: O9GB/h3DruXQzFW1oKsSTg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: NX7L1oeDEBOPsXumt7eA9Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: CptKVD5Ht3JDNThwvEGPrw
+name: Flashforge PLA Color Change @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 0ygm2f9WOTxAox7nN9qLeg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: LOSUPjJFZRk99orGYTz0wQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: QLLh1sbynmTeph51ALiGvg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 2zobSFtqezdy/D5Y98FqzA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: IEr8lvnv0jhSfNxaI8sZpQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: QKLK7Ght//JBk4oDK6Aa3w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: hwdgUB8oi8kB1mTnzAlv+w
+name: Flashforge PLA Galaxy @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 200
+  first_layer_temperature: 205
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: qD0sJ5bv4YXOwhapdnUuKA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: V3APv4/dYZGVzXD51EL4Sg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: 5bSVrXH33y1nRgDTXa5sxA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 0wzD/kw5g6Io1OFg594NvA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: CcXw4ZFtobI3KKbfGPsDhA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: SXUuK3lTJ53Ayoc7rccZ3w
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: vDA66+CImCRY0YnV1krd1A
+name: Flashforge PLA Matte @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 205
+  first_layer_temperature: 205
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: J0SHiYuGMzAMPbCcVInHgQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: r1yOKXcCbE+7QF5jMAVGFQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: yHPoSTROPYtW2nAj8KwtuA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: k0BQRVxI+Q9KtQ7Tsrdj4g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: Pa1whDKCjJ//rv6QjrO2YA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: esYv36Bh34qhLTEoW5VFNQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: uTjeC4wPxZ3PiS32WBm1hg
+name: Flashforge PLA Metal @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 205
+  first_layer_temperature: 205
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: oicZ9J3q4qbefmwSVXuENQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: Kzr/KnCDpjtByZJGTfRKcA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: ltzoDE6LRyMH9apHjImTnA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: THBjgX15Ro6ZpiS5z/xioQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: eJq9LaJtf1iW+rYkAYs4Aw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: KRSrBi3XDzyJg+vX2w7qGg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: FNw7TLjOvjp3pQqUvjBjHw
+name: Flashforge PLA Pro @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 205
+  first_layer_temperature: 205
+  pressure_advance_value: 0.028
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 4zYP0G46NgYqnpyMiB64xA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: suG110PVHSG0eIpqiapW2g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: 8In45d+u59iXE/JalIPt6g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: EkTUmYH46Lz3aOju1gbyCw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: i0r5RaOO0z8mlWIkqs/qeg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: XmkTd+Cpp6KG5LhFpr2FjA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: x5hWlDeeUvmqa+Ri38UkCA
+name: Flashforge PLA Silk @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.32
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 20
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 225
+  first_layer_temperature: 225
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ewvY+0l4tCJW6BoGSxrvPg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: ksbVT7IoEB8LtYiZITlgnA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: 90jABzRaR9PgO/G6iXbsWA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: hX7G+aqIf895/HpNsMW7kQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: ZocJwmWuRoDvSbOmS4z6og
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: aCiVXAOMBdoaWlqpKqe+YA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: X3aC3k4LWOy6HF3tXBOyIQ
+name: Flashforge PLA Sparkle @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 25
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:PLA
+
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: gyaQDfH7BNMUywfqW6jVxw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: zKSoiMb6Uy1gWSRdl5DVAA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: D/A7dod4Q9CS0E0Unue/Mg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: RaL+r0Bf2DCfDtYQBQshZw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: IiNcbAScsC+YvcvxTwuKEA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: hFiTlw+TqAyMg6m2rnhqoQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: wCbkNb5uSmhUvf4wIoVKfg
+name: Flashforge PLA-CF @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PLA
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 210
+  first_layer_temperature: 205
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: VkYksYqiH0LoBc+YekIzRQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: KW7Z/jc5EVjvfSJnXLZD+w
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: 08wdZpt6md8Q2whfXpZ9SQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: dAkKTTji43tpnh5l0NeHTQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: POpRzOZrLc5i+OQDD0848w
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: BqGbgrXefO2/xpbPQeiayQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 287zh5dVAeAqSsimnZWhkQ
+name: Flashforge PPS @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 5
+  max_fan_speed: 50
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 175
+  filament_density: 1.36
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PPS
+  filament_toolchange_delay: 0
+  filament_type: PPS
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 315
+  first_layer_temperature: 320
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 5
+  min_print_speed: 12
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: FG+OhRgRwZSEi81I12/5Bw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: O2o4UhchA1SPXZOYR5FxVw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: xWq/hAnOGHLbYI3dgKZyjg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: D9vhxJGWKIalyj+MV/MbHA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: yFkOT6n0U7D+pKqJekQE+g
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Supertack Plate"
+  id: KdMc2zbAIIMAlx/IAsck9Q
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: OwTaJw4nkUzbKGDLAPRNIA
+name: Flashforge PPS-CF @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 5
+  max_fan_speed: 40
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 175
+  filament_density: 1.3
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PPS
+  filament_toolchange_delay: 0
+  filament_type: PPS-CF
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 315
+  first_layer_temperature: 315
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 5
+  min_print_speed: 12
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 4tc5vZLe+UmTUXmIvf9rsg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Q/RaBjjjFf4TiP7RxIzpJw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: wP+DYEK30KC43xDXZ/G6cw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: 6x9zX4/ME/2JkBEPKEU5ZQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: XMKBQAkLg+5eddp+UAzMhA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Supertack Plate"
+  id: t3un11wDnpdorql7PmPmew
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: GuWhXiWn9MQ/bKPWyoXBUg
+name: Flashforge TPU 65D @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:TPU
+
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: lWhaLP7D+g01PH7+1HYugA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: qN0Kkmf98hnIzxoG4UdMmg
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "High Temp Plate"
+  id: LRjwJFL8paGxE1RXZoQnJg
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "Textured PEI Plate"
+  id: ra8bpZSLobNxVu3edc5hFQ
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "Textured Cool Plate"
+  id: oFGuLVjZYrDZOavycQ33Ew
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: ZGBzC0gSamuu7n76qJsdoQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: PZlKJMv5Wee5M6BdRde/aw
+name: Flashforge TPU 95A @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |+
+    ; filament start gcode
+    ;right_extruder_material:TPU
+
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 40
+  filament_vendor: Flashforge
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.025
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: P8LG1HdWm68D5LprCP3rXg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: su2CFdqi8rWm4FVmMVV+AQ
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "High Temp Plate"
+  id: ec1+8ySH/m15EIINJiDnoQ
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "Textured PEI Plate"
+  id: JWgJPzHqipDwDrzG+DXscQ
+  values:
+    bed_temperature: 50
+    first_layer_bed_temperature: 50
+- condition: sheet.type == "Textured Cool Plate"
+  id: VO45b7IXfs5uunsKRDllIg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: KufdaOs2oAUNf6GamocAtA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: dA6h4ZO4TLCh4mHyQkwokg
+name: FusRock PAHT @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.15
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PA
+  filament_toolchange_delay: 0
+  filament_type: PAHT
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: FusRock
+  full_fan_speed_layer: 0
+  temperature: 275
+  first_layer_temperature: 275
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: pHpV1tOANp2uwD2QRpAzQg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 0IU9nIuEfXJRQu4Ar3UosQ
+  values:
+    bed_temperature: 75
+    first_layer_bed_temperature: 75
+- condition: sheet.type == "High Temp Plate"
+  id: zOh3yCDGms56jI15K4a5BQ
+  values:
+    bed_temperature: 75
+    first_layer_bed_temperature: 75
+- condition: sheet.type == "Textured PEI Plate"
+  id: kpR3ojg51Ja8uarXYlWcFg
+  values:
+    bed_temperature: 75
+    first_layer_bed_temperature: 75
+- condition: sheet.type == "Textured Cool Plate"
+  id: iu5OWQs0g13Sq+pWpQAGOg
+  values:
+    bed_temperature: 75
+    first_layer_bed_temperature: 75
+- condition: sheet.type == "Supertack Plate"
+  id: 1VGE88troaKUzfucGtRySA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: DLa/6Hw6gFJjigWTnq1H1g
+name: FusRock PAHT-CF @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 15
+  max_fan_speed: 40
+  min_fan_speed: 15
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 300
+  filament_density: 1.15
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PA
+  filament_toolchange_delay: 0
+  filament_type: PAHT-CF
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: FusRock
+  full_fan_speed_layer: 0
+  temperature: 295
+  first_layer_temperature: 295
+  pressure_advance_value: 0.04
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: V2sc3rxYQR0rU/2fTsJ86w
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: oQNukuEHk3skfXzwocI71Q
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: icnmaaT+xky6fTFNVygqew
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: y8yTAN55VPxc3s/9TYbupw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: t3G/eGYJp4UBibkqK7wM3Q
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Supertack Plate"
+  id: QunoTq0qLqh7bFoPQchNsw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: xjF7MVXbkSjRzyPgXiKW3g
+name: FusRock PET-CF @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 300
+  filament_density: 1.3
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PET
+  filament_toolchange_delay: 0
+  filament_type: PET-CF
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: FusRock
+  full_fan_speed_layer: 0
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.04
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: NusLDMDyHocav9KT4wP76A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: IvXMPBAJyMTUhDTE+zw6Cg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: f1oRhLk+OTmC+3Szu07P6Q
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: eDydU8ZHf/rQVZ0+XxQbpw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: X+800k6pxOU9cO6nU38Weg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Supertack Plate"
+  id: z9PBEVBdw1Rprl58Pgk11w
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: +t6Vnj8mAdk2hOKVH9uEjw
+name: Generic PET @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 20
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 300
+  filament_density: 1.3
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PET
+  filament_toolchange_delay: 0
+  filament_type: PET
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.04
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: m5Rb7LvThW1q4VYZkyZ3/g
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 1NZQqmVYaUFEWBsJDfjvAw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: DghmkJroxMLMp/0Fq/cj9A
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: 4S+UXefBHsh6/l67gROgVA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: RZc04XlHFkDP2IgCb7cuTw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Supertack Plate"
+  id: MWckUXgo1YpnfWOupZ6oOA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+---
+kind: filament
+id: xOIRGYSeIrBN4zW4syCWow
+name: Polymaker CoPA @FF G4P 0.6 nozzle
+condition: (printer.model == "Flashforge Guider4 Pro 0.6 nozzle" and tool.nozzle_diameter == 0.6)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 2
+  filament_colour: ''
+  pressure_advance: enabled
+  fan_below_layer_time: 50
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.15
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |-
+    ; filament start gcode
+    ;right_extruder_material:PA
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 35
+  filament_unloading_speed_start: 40
+  filament_vendor: Polymaker
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.03
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 10
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 40}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 8uKLtVeBtDXY4GOr+N33Kw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: h//CsuQMRux+27N2k0FjlA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "High Temp Plate"
+  id: vha12YnWaZIL6pWIf1dXhQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: lGSpBRkIk2TUN4x0IUE1Ig
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: lSmU03atza8zxk+dJ3kf7w
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Supertack Plate"
+  id: N5Zrvw1E7lg6jeKi/WziBA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60

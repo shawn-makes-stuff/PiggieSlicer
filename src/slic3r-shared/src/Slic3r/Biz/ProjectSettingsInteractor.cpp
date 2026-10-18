@@ -1,5 +1,7 @@
 #include "Slic3r/Biz/ProjectSettingsInteractor.hpp"
 
+#include "libslic3r/GCode/FlushVolCalc.hpp"
+
 #include "Slic3r/Biz/Algorithms/Color.hpp"
 #include "Slic3r/Biz/Preset/IPresetChangedListener.hpp"
 #include "Slic3r/Domain/ConfigContainer.hpp"
@@ -285,6 +287,88 @@ void ProjectSettingsInteractor::load_and_reconcile(
     store_and_notify(config_container_id, std::move(colors));
 }
 
+namespace {
+
+std::vector<std::string> hex_colors(const std::vector<Domain::ColorRGB>& colors)
+{
+    std::vector<std::string> ret;
+    for (const Domain::ColorRGB& color : colors)
+        ret.push_back(Algorithms::Color::encode_color(color));
+    return ret;
+}
+
+size_t slot_count(const Domain::ConfigContainer& cc)
+{
+    return size_t(cc.selected_preset().hw_config.material_slot_count());
+}
+
+bool printer_purges_by_colour(const Domain::ConfigContainer& cc)
+{
+    return cc.selected_preset().printer.config_box().items.opt("wiping_volumes_by_colour").get<bool>();
+}
+
+} // namespace
+
+std::vector<double> ProjectSettingsInteractor::wiping_volumes(Domain::SelectionId config_container_id) const
+{
+    for (const auto& [proj_id, project] : m_workbench.projects()) {
+        const Domain::ConfigContainer* cc = project.find_config_container(config_container_id);
+        if (!cc)
+            continue;
+        const size_t n = slot_count(*cc);
+        const auto& items = cc->project_settings().items;
+        const auto matrix = items.opt("wiping_volumes_matrix").get<std::vector<double>>();
+        // same choice as WipeTower::extract_wipe_volumes
+        if (items.opt("wiping_volumes_use_custom_matrix").get<bool>() && matrix.size() == n * n)
+            return matrix;
+        if (printer_purges_by_colour(*cc))
+            return wiping_volumes_from_colours(config_container_id);
+        const double purging =
+            cc->selected_preset().printer.config_box().items.opt("multimaterial_purging").get<double>();
+        std::vector<double> ret(n * n, purging);
+        for (size_t i = 0; i < n; ++i)
+            ret[i * n + i] = 0.;
+        return ret;
+    }
+    return {};
+}
+
+std::vector<double> ProjectSettingsInteractor::wiping_volumes_from_colours(
+    Domain::SelectionId config_container_id
+) const
+{
+    std::vector<std::string> colors = hex_colors(get_colors(config_container_id));
+    for (const auto& [proj_id, project] : m_workbench.projects()) {
+        if (const Domain::ConfigContainer* cc = project.find_config_container(config_container_id)) {
+            colors.resize(slot_count(*cc), "#808080"); // one colour per material slot
+            break;
+        }
+    }
+    const std::vector<float> volumes = FlushVolCalc::calc_flush_volumes(colors);
+    return std::vector<double>(volumes.begin(), volumes.end());
+}
+
+void ProjectSettingsInteractor::set_wiping_volumes(
+    Domain::SelectionId config_container_id,
+    std::vector<double> volumes
+)
+{
+    for (auto& [proj_id, project] : m_workbench.projects()) {
+        Domain::ConfigContainer* cc = project.find_config_container(config_container_id);
+        if (!cc)
+            continue;
+        cc->project_settings().items.opt("wiping_volumes_matrix").set(volumes);
+        cc->project_settings().items.opt("wiping_volumes_use_custom_matrix").set(true);
+        // re-slice like a colour change does (ProjectInteractor::on_colors_changed)
+        const auto rgb_colors = get_colors(config_container_id);
+        invoke_listeners<IColorsChangedListener>(
+            [&](auto* listener)
+            { listener->on_colors_changed(proj_id, config_container_id, rgb_colors); }
+        );
+        return;
+    }
+}
+
 void ProjectSettingsInteractor::store_and_notify(
     Domain::SelectionId config_container_id,
     std::vector<std::string> colors
@@ -295,7 +379,30 @@ void ProjectSettingsInteractor::store_and_notify(
         if (!cc)
             continue;
 
-        cc->project_settings().items.opt("extruder_colour").set(colors);
+        // Orca (Sidebar::auto_calc_flushing_volumes): a filament's new colour recalculates its row and
+        // column of the purge matrix; the other pairs (and the user's edits to them) are kept
+        auto& items = cc->project_settings().items;
+        const auto old_colors = hex_colors(get_colors(config_container_id));
+        items.opt("extruder_colour").set(colors);
+        const size_t n = slot_count(*cc);
+        auto new_colors = hex_colors(get_colors(config_container_id));
+        new_colors.resize(n, "#808080");
+
+        auto matrix    = items.opt("wiping_volumes_matrix").get<std::vector<double>>();
+        if (items.opt("wiping_volumes_use_custom_matrix").get<bool>() && matrix.size() == n * n
+            && printer_purges_by_colour(*cc))
+        {
+            const std::vector<float> by_colour = FlushVolCalc::calc_flush_volumes(new_colors);
+            for (size_t slot = 0; slot < n; ++slot) {
+                if (slot < old_colors.size() && old_colors[slot] == new_colors[slot])
+                    continue;
+                for (size_t other = 0; other < n; ++other) {
+                    matrix[slot * n + other] = by_colour[slot * n + other];
+                    matrix[other * n + slot] = by_colour[other * n + slot];
+                }
+            }
+            items.opt("wiping_volumes_matrix").set(matrix);
+        }
 
         const auto rgb_colors = hex_colors_to_rgb(colors);
 

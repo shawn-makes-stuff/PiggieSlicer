@@ -269,6 +269,8 @@ private:
 
 
 	bool   m_semm               = true; // Are we using a single extruder multimaterial printer?
+    // Orca: ram, cool and park the filament on a SEMM toolchange (off for units that unload themselves).
+    bool   m_enable_filament_ramming = true;
     bool   m_switch_filament_monitoring = false;
     bool   m_enable_pressure_advance_during_ramming = false;
     Domain::Vec2f m_wipe_tower_pos; 			// Left front corner of the wipe tower in mm.

@@ -1,0 +1,378 @@
+kind: vendor
+id: Pragostroj
+name: Pragostroj
+version: 1.0.1+orca.01.00.01.00
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_05_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    supports_1_nozzle:
+      default: false
+      user_editable: false
+    supports_12_nozzle:
+      default: false
+      user_editable: false
+    supports_16_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: KINARB 1HB
+  base_model: KINARB 1HB
+  printer_configs_order:
+  - KINARB-1HB-0-4-nozzle
+  - KINARB-1HB-0-5-nozzle
+  - KINARB-1HB-0-6-nozzle
+  - KINARB-1HB-0-8-nozzle
+  - KINARB-1HB-1-0-nozzle
+  - KINARB-1HB-1-2-nozzle
+  - KINARB-1HB-1-6-nozzle
+- label: KINARB 2HB
+  base_model: KINARB 2HB
+  printer_configs_order:
+  - KINARB-2HB-0-4-nozzle
+  - KINARB-2HB-0-5-nozzle
+  - KINARB-2HB-0-6-nozzle
+  - KINARB-2HB-0-8-nozzle
+  - KINARB-2HB-1-0-nozzle
+  - KINARB-2HB-1-2-nozzle
+  - KINARB-2HB-1-6-nozzle
+---
+kind: printer
+technology: FFF
+name: KINARB 1HB
+id: KINARB 1HB
+model:
+  base_model: KINARB 1HB
+  model: KINARB 1HB
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_12_nozzle:
+    default: true
+  supports_16_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  thumbnail: KINARB 1HB_cover.png
+---
+kind: printer
+technology: FFF
+name: KINARB 2HB
+id: KINARB 2HB
+model:
+  base_model: KINARB 2HB
+  model: KINARB 2HB
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_12_nozzle:
+    default: true
+  supports_16_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  thumbnail: KINARB 2HB_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.5'
+name: 0.5 nozzle
+condition: printer.supports_05_nozzle
+features:
+  nozzle_diameter:
+    default: 0.5
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: tool
+technology: FFF
+id: '1.0'
+name: 1.0 nozzle
+condition: printer.supports_1_nozzle
+features:
+  nozzle_diameter:
+    default: 1.0
+---
+kind: tool
+technology: FFF
+id: '1.2'
+name: 1.2 nozzle
+condition: printer.supports_12_nozzle
+features:
+  nozzle_diameter:
+    default: 1.2
+---
+kind: tool
+technology: FFF
+id: '1.6'
+name: 1.6 nozzle
+condition: printer.supports_16_nozzle
+features:
+  nozzle_diameter:
+    default: 1.6
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: KINARB-1HB-0-4-nozzle
+name: KINARB 1HB 0.4 nozzle
+printer: KINARB 1HB
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-1HB-0-5-nozzle
+name: KINARB 1HB 0.5 nozzle
+printer: KINARB 1HB
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-1HB-0-6-nozzle
+name: KINARB 1HB 0.6 nozzle
+printer: KINARB 1HB
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-1HB-0-8-nozzle
+name: KINARB 1HB 0.8 nozzle
+printer: KINARB 1HB
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-1HB-1-0-nozzle
+name: KINARB 1HB 1.0 nozzle
+printer: KINARB 1HB
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-1HB-1-2-nozzle
+name: KINARB 1HB 1.2 nozzle
+printer: KINARB 1HB
+tools:
+- tool: '1.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-1HB-1-6-nozzle
+name: KINARB 1HB 1.6 nozzle
+printer: KINARB 1HB
+tools:
+- tool: '1.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-2HB-0-4-nozzle
+name: KINARB 2HB 0.4 nozzle
+printer: KINARB 2HB
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-2HB-0-5-nozzle
+name: KINARB 2HB 0.5 nozzle
+printer: KINARB 2HB
+tool_count: 2
+tools:
+- tool: '0.5'
+  features:
+    extruder_index: 0
+- tool: '0.5'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-2HB-0-6-nozzle
+name: KINARB 2HB 0.6 nozzle
+printer: KINARB 2HB
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-2HB-0-8-nozzle
+name: KINARB 2HB 0.8 nozzle
+printer: KINARB 2HB
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-2HB-1-0-nozzle
+name: KINARB 2HB 1.0 nozzle
+printer: KINARB 2HB
+tool_count: 2
+tools:
+- tool: '1.0'
+  features:
+    extruder_index: 0
+- tool: '1.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-2HB-1-2-nozzle
+name: KINARB 2HB 1.2 nozzle
+printer: KINARB 2HB
+tool_count: 2
+tools:
+- tool: '1.2'
+  features:
+    extruder_index: 0
+- tool: '1.2'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: KINARB-2HB-1-6-nozzle
+name: KINARB 2HB 1.6 nozzle
+printer: KINARB 2HB
+tool_count: 2
+tools:
+- tool: '1.6'
+  features:
+    extruder_index: 0
+- tool: '1.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate

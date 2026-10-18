@@ -41,6 +41,9 @@ add_executable(${_TEST_NAME}_tests
 	test_trianglemesh.cpp
 	)
 target_link_libraries(${_TEST_NAME}_tests test_common slic3r-shared)
+if (MSVC AND SLIC3R_RELEASE_DEBUG_SYMBOLS)
+    target_link_options(${_TEST_NAME}_tests PRIVATE "$<$<CONFIG:RELEASE>:/DEBUG>")
+endif()
 set_property(TARGET ${_TEST_NAME}_tests PROPERTY FOLDER "tests")
 target_compile_definitions(${_TEST_NAME}_tests PUBLIC CATCH_CONFIG_ENABLE_BENCHMARKING)
 

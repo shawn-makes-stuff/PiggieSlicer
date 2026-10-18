@@ -1,0 +1,441 @@
+kind: vendor
+id: Vivedino
+name: Vivedino
+version: 2.4.0+orca.02.04.00.13
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Troodon 2.0 - Klipper
+  base_model: Troodon 2.0 - Klipper
+  printer_configs_order:
+  - Troodon-2-0-Klipper-0-4-nozzle
+- label: Troodon 2.0 - RRF
+  base_model: Troodon 2.0 - RRF
+  printer_configs_order:
+  - Troodon-2-0-RRF-0-4-nozzle
+- label: Xplorer Dual Gantry
+  base_model: Xplorer Dual Gantry
+  printer_configs_order:
+  - Xplorer-Dual-Gantry-0-4-nozzle
+  - Xplorer-Dual-Gantry-0-6-nozzle
+  - Xplorer-Dual-Gantry-0-8-nozzle
+- label: Xplorer IDEX
+  base_model: Xplorer IDEX
+  printer_configs_order:
+  - Xplorer-IDEX-0-4-nozzle
+  - Xplorer-IDEX-0-6-nozzle
+  - Xplorer-IDEX-0-8-nozzle
+- label: Xplorer IQEX
+  base_model: Xplorer IQEX
+  printer_configs_order:
+  - Xplorer-IQEX-0-4-nozzle
+  - Xplorer-IQEX-0-6-nozzle
+  - Xplorer-IQEX-0-8-nozzle
+- label: Xplorer Single
+  base_model: Xplorer Single
+  printer_configs_order:
+  - Xplorer-Single-0-4-nozzle
+  - Xplorer-Single-0-6-nozzle
+  - Xplorer-Single-0-8-nozzle
+---
+kind: printer
+technology: FFF
+name: Troodon 2.0 - Klipper
+id: Troodon 2.0 - Klipper
+model:
+  base_model: Troodon 2.0 - Klipper
+  model: Troodon 2.0 - Klipper
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: OrcaSlicer-Troodon2-Bed-Texture.png
+  thumbnail: Troodon 2.0 - Klipper_cover.png
+---
+kind: printer
+technology: FFF
+name: Troodon 2.0 - RRF
+id: Troodon 2.0 - RRF
+model:
+  base_model: Troodon 2.0 - RRF
+  model: Troodon 2.0 - RRF
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: OrcaSlicer-Troodon2-Bed-Texture.png
+  thumbnail: Troodon 2.0 - RRF_cover.png
+---
+kind: printer
+technology: FFF
+name: Xplorer Dual Gantry
+id: Xplorer Dual Gantry
+model:
+  base_model: Xplorer Dual Gantry
+  model: Xplorer Dual Gantry
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Xplorer_buildplate_model.stl
+  bed_texture: Xplorer_bed_texture_dualgantry.svg
+  thumbnail: Xplorer Dual Gantry_cover.png
+---
+kind: printer
+technology: FFF
+name: Xplorer IDEX
+id: Xplorer IDEX
+model:
+  base_model: Xplorer IDEX
+  model: Xplorer IDEX
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Xplorer_buildplate_model.stl
+  bed_texture: Xplorer_bed_texture_idex.svg
+  thumbnail: Xplorer IDEX_cover.png
+---
+kind: printer
+technology: FFF
+name: Xplorer IQEX
+id: Xplorer IQEX
+model:
+  base_model: Xplorer IQEX
+  model: Xplorer IQEX
+tool_count: 4
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Xplorer_buildplate_model.stl
+  bed_texture: Xplorer_bed_texture_iqex.svg
+  thumbnail: Xplorer IQEX_cover.png
+---
+kind: printer
+technology: FFF
+name: Xplorer Single
+id: Xplorer Single
+model:
+  base_model: Xplorer Single
+  model: Xplorer Single
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: Xplorer_buildplate_model.stl
+  thumbnail: Xplorer Single_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Troodon-2-0-Klipper-0-4-nozzle
+name: Troodon 2.0 Klipper 0.4 nozzle
+printer: Troodon 2.0 - Klipper
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Troodon-2-0-RRF-0-4-nozzle
+name: Troodon 2.0 RRF 0.4 nozzle
+printer: Troodon 2.0 - RRF
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-Dual-Gantry-0-4-nozzle
+name: Xplorer Dual Gantry 0.4 nozzle
+printer: Xplorer Dual Gantry
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-Dual-Gantry-0-6-nozzle
+name: Xplorer Dual Gantry 0.6 nozzle
+printer: Xplorer Dual Gantry
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-Dual-Gantry-0-8-nozzle
+name: Xplorer Dual Gantry 0.8 nozzle
+printer: Xplorer Dual Gantry
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-IDEX-0-4-nozzle
+name: Xplorer IDEX 0.4 nozzle
+printer: Xplorer IDEX
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-IDEX-0-6-nozzle
+name: Xplorer IDEX 0.6 nozzle
+printer: Xplorer IDEX
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-IDEX-0-8-nozzle
+name: Xplorer IDEX 0.8 nozzle
+printer: Xplorer IDEX
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-IQEX-0-4-nozzle
+name: Xplorer IQEX 0.4 nozzle
+printer: Xplorer IQEX
+tool_count: 4
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+- tool: '0.4'
+  features:
+    extruder_index: 2
+- tool: '0.4'
+  features:
+    extruder_index: 3
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-IQEX-0-6-nozzle
+name: Xplorer IQEX 0.6 nozzle
+printer: Xplorer IQEX
+tool_count: 4
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+- tool: '0.6'
+  features:
+    extruder_index: 2
+- tool: '0.6'
+  features:
+    extruder_index: 3
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-IQEX-0-8-nozzle
+name: Xplorer IQEX 0.8 nozzle
+printer: Xplorer IQEX
+tool_count: 4
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+- tool: '0.8'
+  features:
+    extruder_index: 2
+- tool: '0.8'
+  features:
+    extruder_index: 3
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-Single-0-4-nozzle
+name: Xplorer Single 0.4 nozzle
+printer: Xplorer Single
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-Single-0-6-nozzle
+name: Xplorer Single 0.6 nozzle
+printer: Xplorer Single
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Xplorer-Single-0-8-nozzle
+name: Xplorer Single 0.8 nozzle
+printer: Xplorer Single
+tools:
+- tool: '0.8'
+sheet: high_temp_plate

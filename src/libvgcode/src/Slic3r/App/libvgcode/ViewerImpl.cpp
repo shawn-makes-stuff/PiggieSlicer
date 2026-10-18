@@ -93,7 +93,9 @@ static const std::array<ColorRGB, GCODE_EXTRUSION_ROLES_COUNT> DEFAULT_EXTRUSION
     { 0.00f, 1.00f, 0.00f }, // SupportMaterial
     { 0.00f, 0.50f, 0.00f }, // SupportMaterialInterface
     { 0.70f, 0.89f, 0.67f }, // WipeTower
-    { 0.37f, 0.82f, 0.58f }  // Custom
+    { 0.37f, 0.82f, 0.58f }, // Custom
+    { 0.30f, 0.50f, 0.73f }, // InternalBridgeInfill (Orca)
+    { 0.00f, 0.23f, 0.43f }  // Brim (Orca)
 }};
 
 static const std::array<ColorRGB, OPTION_TYPES_COUNT> DEFAULT_OPTIONS_COLORS{{
@@ -581,6 +583,7 @@ void ViewerImpl::load(ViewerInputData&& gcode_data)
             // updates calculation for center of gravity
             if (v.type == MoveType::Extrude &&
                 v.extrusion_role != GCodeExtrusionRole::Skirt &&
+                v.extrusion_role != GCodeExtrusionRole::Brim &&
                 v.extrusion_role != GCodeExtrusionRole::SupportMaterial &&
                 v.extrusion_role != GCodeExtrusionRole::SupportMaterialInterface &&
                 v.extrusion_role != GCodeExtrusionRole::WipeTower &&

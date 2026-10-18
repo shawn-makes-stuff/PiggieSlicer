@@ -20,10 +20,12 @@
 #include "Slic3r/Domain/Types.hpp"
 #include "Slic3r/Domain/VirtualExtruder.hpp"
 
+#include "libslic3r/Brim.hpp"
 #include "libslic3r/ConfigViews.hpp"
 #include "libslic3r/ExtrusionEntityCollection.hpp"
 #include "libslic3r/Fill/FillAdaptive.hpp"
 #include "libslic3r/Fill/FillLightning.hpp"
+#include "libslic3r/Fill/FillTpmsAdaptive.hpp"
 #include "libslic3r/Flow.hpp"
 #include "libslic3r/GCode/ToolOrdering.hpp"
 #include "libslic3r/GCode/WipeTower.hpp"
@@ -324,10 +326,25 @@ public:
     Domain::coord_t 			 height() const         { return m_size.z(); }
 
     bool                         has_brim() const       {
-        return this->config().get<Domain::BrimType>("brim_type") != Domain::BrimType::NoBrim
-            && this->config().get<double>("brim_width") > 0.
+        const Domain::BrimType brim_type = this->config().get<Domain::BrimType>("brim_type");
+        return ((brim_type != Domain::BrimType::NoBrim && this->config().get<double>("brim_width") > 0.) || brim_type == Domain::BrimType::AutoBrim)
             && ! this->has_raft();
     }
+
+    // Orca groupedVolumeSlices: the model parts connected over the layers, with the first layer slices of each group
+    struct VolumeGroupSlices {
+        std::vector<Domain::ObjectID> volume_ids;
+        Domain::ExPolygons            slices;
+    };
+    const std::vector<VolumeGroupSlices>& first_layer_volume_groups() const { return m_first_layer_volume_groups; }
+    // Orca separated_infills: the bounding box of each connected body over all its layers
+    const std::vector<BoundingBox>& separated_body_bboxes() const { return m_separated_body_bboxes; }
+    // Orca: the radial field of the adaptive TPMS infill in the given mode, null without
+    const TpmsRadialField* tpms_radial_field(Domain::TpmsAdaptiveMode mode) const { return m_tpms_radial_fields[size_t(mode)].get(); }
+    // Orca _transform_hole_to_polyholes
+    void                         transform_hole_to_polyholes();
+    // Orca make_overhang_printable
+    void                         apply_conical_overhang();
 
     // This is the *total* layer count (including support layers)
     // this value is not supposed to be compared with Layer::id
@@ -443,12 +460,16 @@ private:
     void discover_horizontal_shells();
     void combine_infill();
     void _generate_support_material();
-    std::pair<FillAdaptive::OctreePtr, FillAdaptive::OctreePtr> prepare_adaptive_infill_data(
-        const std::vector<std::pair<const Surface*, float>>& surfaces_w_bottom_z) const;
+    FillAdaptive::RegionOctrees prepare_adaptive_infill_data(
+        const std::vector<std::pair<const Surface*, const Layer*>>& surfaces_w_layer) const;
     FillLightning::GeneratorPtr prepare_lightning_infill_data();
+    // Orca: the radial fields of the adaptive TPMS infill, one for each mode in use
+    TpmsRadialFields prepare_tpms_radial_fields() const;
 
     // XYZ in scaled coordinates
     Domain::Vec3crd							m_size;
+    // Orca: the first layer volume groups, for the auto brim
+    std::vector<VolumeGroupSlices>          m_first_layer_volume_groups;
     PrintObjectConfigView                   m_config;
     // Translation in Z + Rotation + Scaling / Mirroring.
     Domain::Transform3d                     m_trafo = Domain::Transform3d::Identity();
@@ -470,8 +491,10 @@ private:
     // so that next call to make_perimeters() performs a union() before computing loops
     bool                    				m_typed_slices = false;
 
-    std::pair<FillAdaptive::OctreePtr, FillAdaptive::OctreePtr> m_adaptive_fill_octrees;
+    FillAdaptive::RegionOctrees m_adaptive_fill_octrees;
+    std::vector<BoundingBox>    m_separated_body_bboxes;
     FillLightning::GeneratorPtr m_lightning_generator;
+    TpmsRadialFields m_tpms_radial_fields;
 };
 
 
@@ -662,8 +685,23 @@ public:
     // If zero, then the print is empty and the print shall not be executed.
     unsigned int                num_object_instances() const;
 
+    // All the skirts and all the brims.
     const ExtrusionEntityCollection& skirt() const { return m_skirt; }
     const ExtrusionEntityCollection& brim() const { return m_brim; }
+    // Orca: a skirt and the brims of the object instances it goes around (all of them for a combined skirt). A brim is
+    // of an instance, or of the instances whose brims touch (combine_brims).
+    struct SkirtBrimGroup {
+        struct Brim {
+            ExtrusionEntityCollection     brim;
+            std::vector<ObjectInstanceID> instances;
+        };
+        ExtrusionEntityCollection     skirt;
+        std::vector<ObjectInstanceID> instances;
+        std::vector<Brim>             brims;
+    };
+    const std::vector<SkirtBrimGroup>& skirt_brim_groups() const { return m_skirt_brim_groups; }
+    // Orca: a per object skirt goes around more than one instance (the instances are too close).
+    bool                has_shared_per_object_skirt() const { return m_has_shared_per_object_skirt; }
     // Convex hull of the 1st layer extrusions, for bed leveling and placing the initial purge line.
     // It encompasses the object extrusions, support extrusions, skirt, brim, wipe tower.
     // It does NOT encompass user extrusions generated by custom G-code,
@@ -717,6 +755,11 @@ public:
     // Ordered collections of extrusion paths to build skirt loops and brim.
     ExtrusionEntityCollection               m_skirt;
     ExtrusionEntityCollection               m_brim;
+    // Orca: the skirt / brim groups, the brims and their areas per object instance
+    std::vector<SkirtBrimGroup>             m_skirt_brim_groups;
+    std::map<ObjectInstanceID, ExtrusionEntityCollection> m_brim_by_instance;
+    std::map<ObjectInstanceID, Domain::ExPolygons>        m_brim_areas_by_instance;
+    bool                                    m_has_shared_per_object_skirt{ false };
     // Convex hull of the 1st layer extrusions.
     // It encompasses the object extrusions, support extrusions, skirt, brim, wipe tower.
     // It does NOT encompass user extrusions generated by custom G-code,

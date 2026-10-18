@@ -47,7 +47,8 @@ LogicalPrinterSettingsButton::LogicalPrinterSettingsButton(
 
     on_data_update();
 
-    set_visible_cog(true);
+    // no "Show printer settings" in the printer list: the sidebar's printer cog opens them
+    set_visible_cog(false);
 }
 
 const Biz::Preset::PresetItem& LogicalPrinterSettingsButton::preset_item() const
@@ -84,7 +85,7 @@ void LogicalPrinterSettingsButton::on_data_update()
 
 void LogicalPrinterSettingsButton::update_btns_visibility()
 {
-    m_cog_btn->set_visible(hovered() || m_cog_btn->hovered() || m_favorite_button->hovered());
+    m_cog_btn->set_visible(false);
 }
 
 void LogicalPrinterSettingsButton::update_favorite_state()
@@ -113,10 +114,9 @@ void LogicalPrinterSettingsButton::update_selected()
             m_preset_interactor.printer_presets().selected_index()
         );
 
-    set_checked(
-        selected_preset.id == m_state->id
-        && selected_preset.hw_printer_config_id == m_state->hw_printer_config_id
-    );
+    const bool selected = selected_preset.id == m_state->id
+        && selected_preset.hw_printer_config_id == m_state->hw_printer_config_id;
+    set_checked(selected);
 }
 
 void LogicalPrinterSettingsButton::on_list_selection_changed(Domain::SelectionId new_selection)

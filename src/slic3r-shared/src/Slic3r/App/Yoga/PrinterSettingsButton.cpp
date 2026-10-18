@@ -17,6 +17,8 @@ PrinterSettingsButton::PrinterSettingsButton(const std::string& tooltip) : Recta
     m_icon->set_fill_mode(Icon::FillMode::PreservedAspectCentered);
     m_icon->set_aspect_ratio(1);
     m_icon->set_width(64_fpx);
+    // room around the printer picture (Orca: 10 px on the thumbnail)
+    m_icon->set_margin({10_fpx, 6_fpx, 10_fpx, 6_fpx});
 
     m_texts_wrapper = emplace_back<Item>();
     m_texts_wrapper->set_orientation(Orientation::Vertical);

@@ -1,0 +1,410 @@
+kind: printer
+id: hxdyaFirTmjCvO7XeGqlZA
+variants:
+- condition: printer.model == "UltiMaker S5"
+  name: UltiMaker S5
+  id: 41xWNSCxYO5KhyXjDwJezA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4 and printer.tool_count == 2
+    id: G2v7U2flCSi59Df1S+eZpw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: |-
+        ; Set temps to avoid oozing
+        M104 T{previous_extruder} S{old_filament_temp - 5}
+        M104 T{next_extruder} S{new_filament_temp}
+        ; Change to next extruder
+        T{next_extruder}
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.18mm Standard @UltiMaker S5
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: 0
+      extruder_clearance_height: 60
+      extruder_clearance_radius: 61
+      extruder_offset:
+      - '0x0'
+      - '0x22'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |
+        ; Move toolhead out of the way
+        G28 X Y
+
+        M204 S3000; reset accel
+        M107; fan off
+
+        ; heaters off
+        M104 S0
+        M104 T0 S0
+        M104 T1 S0
+        M140 S0
+
+        ; disable motors
+        M84
+
+
+        M82 ;absolute extrusion mode
+
+        ;End of Gcode
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_retracting:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_travel:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_x:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_y:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.013
+      - 0.0
+      machine_max_feedrate_e:
+      - 120.0
+      - 120.0
+      - 120.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M0
+      start_gcode: |-
+        ; NOTE: Do NOT remove the following header. It is necessary for the UM printer to not crash.
+        ;START_OF_HEADER
+        ;HEADER_VERSION:0.1
+        ;FLAVOR:Griffin
+        ;GENERATOR.NAME:OrcaSlicer
+        ;GENERATOR.VERSION:5.11.0
+        ;GENERATOR.BUILD_DATE:2016-06-23
+        ;TARGET_MACHINE.NAME:[printer_model]
+        {if is_extruder_used[0]};EXTRUDER_TRAIN.0.INITIAL_TEMPERATURE:{first_layer_temperature[0]}
+        ;EXTRUDER_TRAIN.0.MATERIAL.VOLUME_USED:{extruded_volume[0]}
+        ;EXTRUDER_TRAIN.0.MATERIAL.GUID:506c9f0d-e3aa-4bd4-b2d2-23e2425b1aa9
+        ;EXTRUDER_TRAIN.0.NOZZLE.DIAMETER:{nozzle_diameter[0]}
+        ;EXTRUDER_TRAIN.0.NOZZLE.NAME:AA {nozzle_diameter[0]}{endif}
+        {if is_extruder_used[1]};EXTRUDER_TRAIN.1.INITIAL_TEMPERATURE:{first_layer_temperature[1]}
+        ;EXTRUDER_TRAIN.1.MATERIAL.VOLUME_USED:{extruded_volume[1]}
+        ;EXTRUDER_TRAIN.1.MATERIAL.GUID:506c9f0d-e3aa-4bd4-b2d2-23e2425b1aa9
+        ;EXTRUDER_TRAIN.1.NOZZLE.DIAMETER:{nozzle_diameter[1]}
+        ;EXTRUDER_TRAIN.1.NOZZLE.NAME:AA {nozzle_diameter[1]}{endif}
+        ;BUILD_PLATE.INITIAL_TEMPERATURE:[first_layer_bed_temperature[initial_extruder]]
+        ;BUILD_VOLUME.TEMPERATURE:28
+        ;PRINT.TIME:2
+        ;PRINT.SIZE.MIN.X:{first_layer_print_min[0]}
+        ;PRINT.SIZE.MIN.Y:{first_layer_print_min[1]}
+        ;PRINT.SIZE.MIN.Z:{first_layer_height}
+        ;PRINT.SIZE.MAX.X:{first_layer_print_max[0]}
+        ;PRINT.SIZE.MAX.Y:{first_layer_print_max[1]}
+        ;PRINT.SIZE.MAX.Z:{int(total_layer_count * first_layer_height)}
+        ;END_OF_HEADER
+        T[initial_extruder]
+
+        M82 ;absolute extrusion mode
+        G92 E0
+        M190 S[first_layer_bed_temperature[initial_extruder]] ; Wait for bed temp
+        M104 T[initial_extruder] S[first_layer_temperature[initial_extruder]] ; Heat extruder
+        M109 T[initial_extruder] S[first_layer_temperature[initial_extruder]] ; Wait for extruder temp
+
+
+        ; Set the settings we removed in the post-processing (orcaslicer generated header).
+        M73 P0 R0 ;TODO change the R value into the total minutes of print
+        M201 X[machine_max_acceleration_x] Y[machine_max_acceleration_y] Z[machine_max_acceleration_z] E[machine_max_acceleration_e] ; accel
+        M203 X[machine_max_feedrate_x] Y[machine_max_feedrate_y] Z[machine_max_feedrate_z] E[machine_max_feedrate_e] ; max speed
+        M204 S[machine_max_acceleration_extruding] ; starting accel
+        M204 P[machine_max_acceleration_extruding] R[machine_max_acceleration_retracting] T[machine_max_acceleration_travel]
+        M205 X[machine_max_jerk_x] Y[machine_max_jerk_y] Z[machine_max_jerk_z] E[machine_max_jerk_e] ; jerk limits
+
+        M107; start with the fan off
+
+        {if is_extruder_used[0]}T0
+        ; Prime blob for left extruder
+        G0 F9000 X4 Y6 Z2
+        G280 ; g280 is UM-specific
+        G1 F2700 E-6.5 ;retract{endif}
+
+        {if is_extruder_used[1]}T1
+        ; Prime blob for right extruder
+        G0 F9000 X-4 Y6 Z2
+        G280 ; g280 is UM-specific
+        G1 F2700 E-6.5 ;retract
+        {if initial_extruder == 0}T0{endif}{endif}
+
+
+
+        M82; set extruder to absolute mode
+
+        ; End of the start gcode sequence.
+        ;LAYER_COUNT:[total_layer_count]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x240
+      - '0x240'
+      max_print_height: 300
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4 and printer.tool_count == 1
+    id: 5SKZwtLZy5N9K522evZeFg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: |-
+        ; Set temps to avoid oozing
+        M104 T{previous_extruder} S{old_filament_temp - 5}
+        M104 T{next_extruder} S{new_filament_temp}
+        ; Change to next extruder
+        T{next_extruder}
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.18mm Standard @UltiMaker S5
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: 0
+      extruder_clearance_height: 60
+      extruder_clearance_radius: 61
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |
+        ; Move toolhead out of the way
+        G28 X Y
+
+        M204 S3000; reset accel
+        M107; fan off
+
+        ; heaters off
+        M104 S0
+        M104 T0 S0
+        M104 T1 S0
+        M140 S0
+
+        ; disable motors
+        M84
+
+
+        M82 ;absolute extrusion mode
+
+        ;End of Gcode
+      machine_max_acceleration_e:
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_retracting:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_travel:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_x:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_y:
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.013
+      - 0.0
+      machine_max_feedrate_e:
+      - 120.0
+      - 120.0
+      - 120.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M0
+      start_gcode: |-
+        ; NOTE: Do NOT remove the following header. It is necessary for the UM printer to not crash.
+        ;START_OF_HEADER
+        ;HEADER_VERSION:0.1
+        ;FLAVOR:Griffin
+        ;GENERATOR.NAME:OrcaSlicer
+        ;GENERATOR.VERSION:5.11.0
+        ;GENERATOR.BUILD_DATE:2016-06-23
+        ;TARGET_MACHINE.NAME:[printer_model]
+        ;EXTRUDER_TRAIN.0.INITIAL_TEMPERATURE:{first_layer_temperature[0]}
+        ;EXTRUDER_TRAIN.0.MATERIAL.VOLUME_USED:{extruded_volume[0]}
+        ;EXTRUDER_TRAIN.0.MATERIAL.GUID:506c9f0d-e3aa-4bd4-b2d2-23e2425b1aa9
+        ;EXTRUDER_TRAIN.0.NOZZLE.DIAMETER:{nozzle_diameter[0]}
+        ;EXTRUDER_TRAIN.0.NOZZLE.NAME:AA {nozzle_diameter[0]}
+        ;BUILD_PLATE.INITIAL_TEMPERATURE:[first_layer_bed_temperature[initial_extruder]]
+        ;BUILD_VOLUME.TEMPERATURE:28
+        ;PRINT.TIME:2
+        ;PRINT.SIZE.MIN.X:{first_layer_print_min[0]}
+        ;PRINT.SIZE.MIN.Y:{first_layer_print_min[1]}
+        ;PRINT.SIZE.MIN.Z:{first_layer_height}
+        ;PRINT.SIZE.MAX.X:{first_layer_print_max[0]}
+        ;PRINT.SIZE.MAX.Y:{first_layer_print_max[1]}
+        ;PRINT.SIZE.MAX.Z:{int(total_layer_count * first_layer_height)}
+        ;END_OF_HEADER
+        T[initial_extruder]
+
+        M82 ;absolute extrusion mode
+        G92 E0
+        M190 S[first_layer_bed_temperature[initial_extruder]] ; Wait for bed temp
+        M104 T[initial_extruder] S[first_layer_temperature[initial_extruder]] ; Heat extruder
+        M109 T[initial_extruder] S[first_layer_temperature[initial_extruder]] ; Wait for extruder temp
+
+        ; Set the settings we removed in the post-processing (orcaslicer generated header).
+        M73 P0 R0 ;TODO change the R value into the total minutes of print
+        M201 X[machine_max_acceleration_x] Y[machine_max_acceleration_y] Z[machine_max_acceleration_z] E[machine_max_acceleration_e] ; accel
+        M203 X[machine_max_feedrate_x] Y[machine_max_feedrate_y] Z[machine_max_feedrate_z] E[machine_max_feedrate_e] ; max speed
+        M204 S[machine_max_acceleration_extruding] ; starting accel
+        M204 P[machine_max_acceleration_extruding] R[machine_max_acceleration_retracting] T[machine_max_acceleration_travel]
+        M205 X[machine_max_jerk_x] Y[machine_max_jerk_y] Z[machine_max_jerk_z] E[machine_max_jerk_e] ; jerk limits
+
+        M107; start with the fan off
+
+        ; Prime blob for left extruder
+        G0 F9000 X4 Y6 Z2
+        G280 ; g280 is UM-specific
+        G1 F2700 E-6.5 ;retract
+
+        M82; set extruder to absolute mode
+
+        ; End of the start gcode sequence.
+        ;LAYER_COUNT:[total_layer_count]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x240
+      - '0x240'
+      max_print_height: 300
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'

@@ -1,0 +1,138 @@
+kind: printer
+id: RSJOh4l2xPTC6M0F2L5g9Q
+variants:
+- condition: printer.model == "Anycubic i3 Mega S"
+  name: Anycubic i3 Mega S
+  id: ABA7pi2jrCPzz/4C2thmng
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: 5D31G29vQ7E3+Op+Ay6dxQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |+
+        ;BEFORE_LAYER_CHANGE
+        G92 E0.0
+        ;[layer_z]
+
+      change_extrusion_role_gcode: ''
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      enable_filament_ramming: true
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G1 E-1.0 F2100 ; retract
+        G92 E0.0
+        G1 X0{if max_layer_z < max_print_height} Z{z_offset+min(max_layer_z+30, max_print_height)}{endif} E-34.0 F{travel_speed*60} ; move print head up & retract filament
+        G4 ; wait
+        M104 S0 ; turn off temperature
+        M140 S0 ; turn off heatbed
+        M107 ; turn off fan
+        G1 X0 Y105 F{travel_speed*60} ; park print head
+        M84 ; disable motors
+      machine_max_acceleration_e:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_extruding:
+      - 1250.0
+      - 1250.0
+      machine_max_acceleration_retracting:
+      - 1250.0
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_x:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 60.0
+      - 60.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.013
+      - 0.0
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 8.0
+      - 8.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: |-
+        G90 ; use absolute coordinates
+        M83 ; extruder relative mode
+        M204 P[machine_max_acceleration_extruding] R[machine_max_acceleration_retracting] T[machine_max_acceleration_travel]
+        M104 S[first_layer_temperature] ; set extruder temp
+        M140 S[first_layer_bed_temperature[initial_extruder]] ; set bed temp
+        G28 ; home all
+        G1 Y1.0 Z0.3 F{travel_speed*60} ; move print head up
+        M190 S[first_layer_bed_temperature[initial_extruder]] ; wait for bed temp
+        M109 S[first_layer_temperature] ; wait for extruder temp
+        G92 E0.0
+        ; initial load
+        G1 X205.0 E19 F1000
+        G1 Y1.6
+        G1 X5.0 E19 F1000
+        G92 E0.0
+        ; intro line
+        G1 Y2.0 Z0.2 F1000
+        G1 X65.0 E9.0 F1000
+        G1 X105.0 E12.5 F1000
+        G92 E0.0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 210x0
+      - 210x210
+      - '0x210'
+      max_print_height: 205
+      printer_notes: ''
+      between_objects_gcode: ''
+      purge_in_prime_tower: true
+      single_extruder_multi_material: true
+      support_air_filtration: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG

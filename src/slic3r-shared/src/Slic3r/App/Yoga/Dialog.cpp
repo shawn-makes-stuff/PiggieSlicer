@@ -82,6 +82,12 @@ bool Dialog::closable() const
     return m_closable;
 }
 
+void Dialog::request_close()
+{
+    if (m_closable)
+        close_action();
+}
+
 void Dialog::set_closable(bool closable)
 {
     if (m_closable != closable) {

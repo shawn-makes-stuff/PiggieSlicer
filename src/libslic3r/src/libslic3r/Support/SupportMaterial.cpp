@@ -15,6 +15,7 @@
 
 #include "Slic3r/Domain/TriangleSelector.hpp"
 #include "libslic3r/ClipperUtils.hpp"
+#include "libslic3r/HwConfigUtils.hpp"
 #include "libslic3r/ExtrusionEntityCollection.hpp"
 #include "libslic3r/Layer.hpp"
 #include "libslic3r/Print.hpp"
@@ -1034,7 +1035,7 @@ namespace SupportMaterialInternal {
             for (const ExtrusionEntity *ee2 : static_cast<const ExtrusionEntityCollection*>(ee)->entities) {
                 assert(! ee2->is_collection());
                 assert(! ee2->is_loop());
-                if (ee2->role() == ExtrusionRole::BridgeInfill)
+                if (ee2->role() == ExtrusionRole::BridgeInfill || ee2->role() == ExtrusionRole::InternalBridgeInfill)
                     return true;
             }
         }
@@ -1232,8 +1233,8 @@ static inline std::tuple<Polygons, Polygons, Polygons, float> detect_overhangs(
                 (threshold_rad > 0. ? 
                     // Overhang defined by an angle.
                     float(scale_(lower_layer.height / tan(threshold_rad))) :
-                    // Overhang defined by half the extrusion width.
-                    0.5f * fw);
+                    // Orca support_threshold_overlap: overhang defined by the overlap (50%: half the extrusion width).
+                    fw - float(scale_(object_config.get<Domain::FloatOrPercentage>("support_threshold_overlap").get_abs_value(unscale<double>(fw)))));
             // Overhang polygons for this layer and region.
             Polygons diff_polygons;
             Polygons layerm_polygons = to_polygons(layerm->slices().surfaces);
@@ -1311,6 +1312,10 @@ static inline std::tuple<Polygons, Polygons, Polygons, float> detect_overhangs(
 
             if (diff_polygons.empty())
                 continue;
+
+            // Orca support_expansion: expand (+) or shrink (-) the normal support
+            if (const double support_expansion = object_config.get<double>("support_expansion"); support_expansion != 0.)
+                diff_polygons = expand(diff_polygons, float(scale_(support_expansion)), SUPPORT_SURFACES_OFFSET_PARAMETERS);
 
             #ifdef SLIC3R_DEBUG
             Slic3r::SVG::export_expolygons(
@@ -1673,6 +1678,193 @@ static void merge_contact_layers(const SlicingParameters &slicing_params, double
 // Generate top contact layers supporting overhangs.
 // For a soluble interface material synchronize the layer heights with the object, otherwise leave the layer height undefined.
 // If supports over bed surface only are requested, don't generate contact layers over an object.
+// Orca overlaps (ClipperUtils): whether two sets of expolygons share any area
+static bool overlaps(const ExPolygons &expolys1, const ExPolygons &expolys2)
+{
+    return ! intersection_ex(expolys1, expolys2).empty();
+}
+
+// Orca support_remove_small_overhang: the overhang clusters (Orca OverhangCluster)
+struct OverhangCluster {
+    std::map<int, std::vector<ExPolygon*>> layer_overhangs;
+    ExPolygons merged_overhangs_dilated;
+    int min_layer = 10000000;
+    int max_layer = 0;
+    coordf_t offset_scaled = 0;
+    bool is_cantilever = false;
+    bool is_sharp_tail = false;
+    bool is_small_overhang = false;
+
+    OverhangCluster(ExPolygon* overhang, int layer_nr, coordf_t offset_scaled) {
+        this->offset_scaled = offset_scaled;
+        insert(overhang, layer_nr);
+    }
+
+    void insert(ExPolygon* overhang_new, int layer_nr) {
+        if (layer_overhangs.find(layer_nr) != layer_overhangs.end()) {
+            layer_overhangs[layer_nr].push_back(overhang_new);
+        }
+        else {
+            layer_overhangs.emplace(layer_nr, std::vector<ExPolygon*>{ overhang_new });
+        }
+        ExPolygons overhang_dilated = offset_scaled > EPSILON ? offset_ex(*overhang_new, offset_scaled) : ExPolygons{ *overhang_new };
+        if (!overhang_dilated.empty())
+            merged_overhangs_dilated = union_ex(merged_overhangs_dilated, overhang_dilated);
+        min_layer = std::min(min_layer, layer_nr);
+        max_layer = std::max(max_layer, layer_nr);
+    }
+
+    int height() {
+        return max_layer - min_layer + 1;
+    }
+
+    bool intersects(const ExPolygon& overhang_new, int layer_nr) {
+        if (layer_nr < 1)
+            return false;
+
+        //auto it = layer_overhangs.find(layer_nr - 1);
+        //if (it == layer_overhangs.end())
+        //    return false;
+        //ExPolygons overhangs_lower;
+        //for (ExPolygon* poly : it->second) {
+        //    overhangs_lower.push_back(*poly);
+        //}
+        if (layer_nr<min_layer - 1 || layer_nr>max_layer + 1)
+            return false;
+        const ExPolygons overhang_dilated = offset_ex(overhang_new, offset_scaled);
+        return overlaps(overhang_dilated, merged_overhangs_dilated);
+    }
+};
+
+static OverhangCluster* add_overhang(std::vector<OverhangCluster>& clusters, ExPolygon* overhang, int layer_nr, coordf_t offset_scaled) {
+    OverhangCluster* cluster = nullptr;
+    bool found = false;
+    for (int i = 0; i < clusters.size(); i++) {
+        auto cluster_i = &clusters[i];
+        if (cluster_i->intersects(*overhang, layer_nr)) {
+            cluster_i->insert(overhang, layer_nr);
+            cluster = cluster_i;
+            break;
+        }
+    }
+    if (!cluster) {
+        cluster = &clusters.emplace_back(overhang, layer_nr, offset_scaled);
+    }
+    return cluster;
+};
+
+// Orca's sharp tail and cantilever thresholds
+static const double length_thresh_well_supported  = scale_(6);                                                     // min: 6mm
+static const double area_thresh_well_supported    = length_thresh_well_supported * length_thresh_well_supported;  // min: 6x6=36mm^2
+static const double sharp_tail_max_support_height = 16.f;
+
+// Orca support_remove_small_overhang: the overhang islands of the clusters too small to need support, which are neither
+// sharp tails (islands starting in the air, and the small islands growing on them) nor cantilevers (overhangs reaching
+// more than 3 mm from their base).
+static std::vector<ExPolygons> small_overhangs(const PrintObject &object, const std::vector<Polygons> &overhangs, const size_t layer_id_start,
+                                               const coordf_t extrusion_width)
+{
+    const size_t             num_layers = overhangs.size();
+    std::vector<ExPolygons>  overhangs_per_layers(num_layers);
+    std::vector<ExPolygons>  sharp_tails(num_layers), cantilevers(num_layers);
+    std::vector<std::vector<float>> sharp_tails_height(num_layers);
+    const coordf_t           extrusion_width_scaled = scale_(extrusion_width);
+    for (size_t layer_id = layer_id_start; layer_id < num_layers; ++ layer_id) {
+        const Layer &layer = *object.get_layer(int(layer_id));
+        overhangs_per_layers[layer_id] = union_ex(overhangs[layer_id]);
+        if (layer.lower_layer == nullptr || layer.regions().empty())
+            continue;
+        const Layer &lower_layer = *layer.lower_layer;
+        const float  fw          = float(layer.regions().front()->flow(frExternalPerimeter).scaled_width());
+        // 1. sharp tails: islands with nothing below
+        ExPolygons lower_layer_expolys;
+        for (const ExPolygon &expoly : lower_layer.lslices)
+            if (! offset_ex(expoly, -fw / 2).empty())
+                lower_layer_expolys.emplace_back(expoly);
+        for (const ExPolygon &expoly : layer.lslices) {
+            if (offset_ex(expoly, -0.5 * fw).empty())
+                continue;
+            if (! overlaps(offset_ex(expoly, 0.5 * fw), lower_layer_expolys) &&
+                Algorithms::ExPolygon::area(expoly) < area_thresh_well_supported && ! offset_ex(expoly, -0.1 * fw).empty()) {
+                sharp_tails[layer_id].emplace_back(expoly);
+                sharp_tails_height[layer_id].emplace_back(float(layer.height));
+            }
+        }
+        // 2. sharp tails: small islands growing on a sharp tail below
+        const ExPolygons         &lower_layer_sharptails        = sharp_tails[layer_id - 1];
+        const std::vector<float> &lower_layer_sharptails_height = sharp_tails_height[layer_id - 1];
+        for (const ExPolygon &expoly : layer.lslices) {
+            bool  is_sharp_tail = false;
+            float accum_height  = float(layer.height);
+            do {
+                ExPolygons supported_by_lower = intersection_ex(ExPolygons{ expoly }, lower_layer_sharptails);
+                if (supported_by_lower.empty())
+                    break;
+                const Point size = BB::sizes(get_extents(supported_by_lower));
+                if (size.x() > length_thresh_well_supported && size.y() > length_thresh_well_supported)
+                    break;
+                for (size_t i = 0; i < lower_layer_sharptails_height.size(); ++ i)
+                    if (overlaps(ExPolygons{ lower_layer_sharptails[i] }, ExPolygons{ expoly })) {
+                        accum_height += lower_layer_sharptails_height[i];
+                        break;
+                    }
+                if (accum_height > sharp_tail_max_support_height)
+                    break;
+                ExPolygons new_overhang_expolys = diff_ex(ExPolygons{ expoly }, lower_layer_sharptails);
+                const Point size_diff = BB::sizes(get_extents(new_overhang_expolys)) - BB::sizes(get_extents(lower_layer_sharptails));
+                if ((size_diff.x() > scale_(5) && size_diff.y() > scale_(5)) || ! offset_ex(new_overhang_expolys, -5.0 * extrusion_width_scaled).empty())
+                    break;
+                is_sharp_tail = true;
+            } while (0);
+            if (is_sharp_tail && std::find(sharp_tails[layer_id].begin(), sharp_tails[layer_id].end(), expoly) == sharp_tails[layer_id].end()) {
+                sharp_tails[layer_id].emplace_back(expoly);
+                sharp_tails_height[layer_id].emplace_back(accum_height);
+            }
+        }
+        // cantilevers: overhangs whose farthest point is more than 3 mm from their base
+        for (const ExPolygon &poly : overhangs_per_layers[layer_id]) {
+            const Polygons cluster_boundary = Algorithms::ExPolygon::to_polygons(intersection_ex(ExPolygons{ poly }, offset_ex(lower_layer.lslices, fw + scale_(0.1))));
+            if (cluster_boundary.empty())
+                continue;
+            double dist_max = 0;
+            for (const Point &pt : poly.contour.points) {
+                double dist_pt = std::numeric_limits<double>::max();
+                for (const Polygon &ply : cluster_boundary)
+                    dist_pt = std::min(dist_pt, (point_projection(ply, pt) - pt).cast<double>().norm());
+                dist_max = std::max(dist_max, dist_pt);
+            }
+            if (dist_max > scale_(3))
+                cantilevers[layer_id].emplace_back(poly);
+        }
+    }
+
+    // group overhang clusters
+    std::vector<OverhangCluster> clusters;
+    for (size_t layer_id = layer_id_start; layer_id < num_layers; ++ layer_id)
+        for (ExPolygon &overhang : overhangs_per_layers[layer_id]) {
+            OverhangCluster *cluster = add_overhang(clusters, &overhang, int(layer_id), extrusion_width_scaled);
+            if (overlaps(ExPolygons{ overhang }, cantilevers[layer_id]))
+                cluster->is_cantilever = true;
+        }
+    std::vector<ExPolygons> removed(num_layers);
+    for (OverhangCluster &cluster : clusters) {
+        // 3. a sharp tail is kept
+        for (int layer_id = cluster.min_layer; layer_id <= cluster.max_layer && ! cluster.is_sharp_tail; ++ layer_id)
+            if (overlaps(sharp_tails[layer_id], cluster.merged_overhangs_dilated))
+                cluster.is_sharp_tail = true;
+        if (cluster.is_sharp_tail || cluster.is_cantilever)
+            continue;
+        // 2. the cluster is small
+        const Point bbox_sz = BB::sizes(get_extents(offset_ex(cluster.merged_overhangs_dilated, -1.0 * extrusion_width_scaled)));
+        if (bbox_sz.x() < 2 * extrusion_width_scaled || bbox_sz.y() < 2 * extrusion_width_scaled)
+            // 5. remove small overhangs
+            for (const auto &[layer_id, polys] : cluster.layer_overhangs)
+                for (const ExPolygon *poly : polys)
+                    removed[layer_id].emplace_back(*poly);
+    }
+    return removed;
+}
+
 SupportGeneratorLayersPtr PrintObjectSupportMaterial::top_contact_layers(
     const PrintObject &object, const std::vector<Polygons> &buildplate_covered, SupportGeneratorLayerStorage &layer_storage) const
 {
@@ -1698,21 +1890,71 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::top_contact_layers(
     // For each overhang layer, two supporting layers may be generated: One for the overhangs extruded with a bridging flow, 
     // and the other for the overhangs extruded with a normal flow.
     contact_out.assign(num_layers * 2, nullptr);
-    tbb::parallel_for(tbb::blocked_range<size_t>(this->has_raft() ? 0 : 1, num_layers),
-        [this, &object, &annotations, &layer_storage, &contact_out]
+    const size_t layer_id_start = this->has_raft() ? 0 : 1;
+    // the overhangs of the layers, to remove the small ones (Orca support_remove_small_overhang) before the contact layers
+    struct LayerOverhangs {
+        Polygons          overhang_polygons;
+        Polygons          contact_polygons;
+        Polygons          enforcer_polygons;
+        double            no_interface_offset { 0. };
+        SlicesMarginCache slices_margin;
+    };
+    std::vector<LayerOverhangs> layer_overhangs(num_layers);
+    tbb::parallel_for(tbb::blocked_range<size_t>(layer_id_start, num_layers),
+        [this, &object, &annotations, &layer_overhangs]
         (const tbb::blocked_range<size_t>& range) {
-            for (size_t layer_id = range.begin(); layer_id < range.end(); ++ layer_id) 
+            for (size_t layer_id = range.begin(); layer_id < range.end(); ++ layer_id)
             {
                 const Layer        &layer                = *object.layers()[layer_id];
                 Polygons            lower_layer_polygons = (layer_id == 0) ? Polygons() : Algorithms::ExPolygon::to_polygons(object.layers()[layer_id - 1]->lslices);
-                SlicesMarginCache   slices_margin;
-
-                auto [overhang_polygons, contact_polygons, enforcer_polygons, no_interface_offset] =
-                    detect_overhangs(layer, layer_id, lower_layer_polygons, *m_print_config, *m_object_config, annotations, slices_margin, m_support_params.gap_xy
+                LayerOverhangs     &out                  = layer_overhangs[layer_id];
+                std::tie(out.overhang_polygons, out.contact_polygons, out.enforcer_polygons, out.no_interface_offset) =
+                    detect_overhangs(layer, layer_id, lower_layer_polygons, *m_print_config, *m_object_config, annotations, out.slices_margin, m_support_params.gap_xy
                 #ifdef SLIC3R_DEBUG
                                     , iRun
                 #endif // SLIC3R_DEBUG
                         );
+            }
+        });
+
+    if (m_object_config->get<bool>("support_remove_small_overhang") && this->has_support()) {
+        std::vector<Polygons> overhangs(num_layers);
+        for (size_t layer_id = layer_id_start; layer_id < num_layers; ++ layer_id)
+            overhangs[layer_id] = layer_overhangs[layer_id].overhang_polygons;
+        // Orca: the default line width
+        const int    extruder        = std::max(1, m_object_config->get<int>("support_material_interface_extruder"));
+        const double nozzle_diameter = Biz::Slicing::get_nozzle_diameter(object.config().hw_config(), extruder - 1);
+        double       extrusion_width = object.config().get<std::vector<Domain::FloatOrPercentage>>("extrusion_width").at(extruder - 1).get_abs_value(nozzle_diameter);
+        if (extrusion_width <= 0.)
+            extrusion_width = Flow::auto_extrusion_width(frPerimeter, float(nozzle_diameter));
+        const std::vector<ExPolygons> removed = small_overhangs(object, overhangs, layer_id_start, extrusion_width);
+        for (size_t layer_id = layer_id_start; layer_id < num_layers; ++ layer_id)
+            if (! removed[layer_id].empty()) {
+                LayerOverhangs &l = layer_overhangs[layer_id];
+                // the contact islands supporting only the removed overhangs go with them
+                const ExPolygons kept = diff_ex(l.overhang_polygons, removed[layer_id]);
+                Polygons contacts;
+                for (ExPolygon &contact : union_ex(l.contact_polygons))
+                    if (! overlaps(ExPolygons{ contact }, removed[layer_id]) || overlaps(ExPolygons{ contact }, kept))
+                        append(contacts, Algorithms::ExPolygon::to_polygons(std::move(contact)));
+                l.overhang_polygons = Algorithms::ExPolygon::to_polygons(kept);
+                l.contact_polygons  = std::move(contacts);
+            }
+    }
+
+    tbb::parallel_for(tbb::blocked_range<size_t>(layer_id_start, num_layers),
+        [this, &object, &layer_storage, &contact_out, &layer_overhangs]
+        (const tbb::blocked_range<size_t>& range) {
+            for (size_t layer_id = range.begin(); layer_id < range.end(); ++ layer_id)
+            {
+                const Layer        &layer                = *object.layers()[layer_id];
+                Polygons            lower_layer_polygons = (layer_id == 0) ? Polygons() : Algorithms::ExPolygon::to_polygons(object.layers()[layer_id - 1]->lslices);
+                LayerOverhangs     &l                    = layer_overhangs[layer_id];
+                SlicesMarginCache  &slices_margin        = l.slices_margin;
+                Polygons           &overhang_polygons    = l.overhang_polygons;
+                Polygons           &contact_polygons     = l.contact_polygons;
+                Polygons           &enforcer_polygons    = l.enforcer_polygons;
+                const auto          no_interface_offset  = l.no_interface_offset;
 
                 // Now apply the contact areas to the layer where they need to be made.
                 if (! contact_polygons.empty() || ! overhang_polygons.empty()) {

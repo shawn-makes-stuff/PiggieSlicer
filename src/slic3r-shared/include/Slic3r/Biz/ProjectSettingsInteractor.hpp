@@ -38,6 +38,18 @@ public:
     std::vector<Domain::ColorRGB> get_colors(Domain::SelectionId config_container_id) const;
 
     /**
+     * @brief Purging volumes (mm3, [from * n + to], n = material slots) the wipe tower uses for the
+     * config container, before the filament purge multiplier: the custom matrix when one is set and
+     * fits the slot count, else the defaults (from the colours when the printer's
+     * wiping_volumes_by_colour is on, else multimaterial_purging) - Orca's flushing volumes.
+     */
+    std::vector<double> wiping_volumes(Domain::SelectionId config_container_id) const;
+    /// The volumes from the filament colours (Orca's "Auto-calculate", FlushVolCalc).
+    std::vector<double> wiping_volumes_from_colours(Domain::SelectionId config_container_id) const;
+    /// Stores the matrix as the project's custom one (the slicer then uses it) and re-slices.
+    void set_wiping_volumes(Domain::SelectionId config_container_id, std::vector<double> volumes);
+
+    /**
      * @brief User explicitly picked a color for a slot.
      *
      * Stores the color in ProjectSettings. Passing an empty string 

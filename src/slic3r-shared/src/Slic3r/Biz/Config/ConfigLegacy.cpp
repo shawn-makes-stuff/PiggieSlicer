@@ -466,6 +466,19 @@ static bool convert_new_to_old(const Domain::ConfigItem& item, Slic3rLegacy::Con
     return true;
 }
 
+// external_perimeters_first was replaced by the wall order (Orca wall_sequence): true is Outer/Inner.
+static const char *wall_sequence_from_external_perimeters_first(bool external_perimeters_first)
+{
+    return external_perimeters_first ? "outer wall/inner wall" : "inner wall/outer wall";
+}
+
+static bool legacy_bool_at(const Slic3rLegacy::ConfigOption *opt, int filament_id)
+{
+    if (opt->type() == Slic3rLegacy::coBools)
+        return static_cast<const Slic3rLegacy::ConfigOptionBools*>(opt)->get_at(std::max(filament_id, 0));
+    return opt->getBool();
+}
+
 static void fill_config_box_from_legacy(
     const Slic3rLegacy::DynamicPrintConfig& cfg,
     Domain::ConfigBox& box,
@@ -480,6 +493,8 @@ static void fill_config_box_from_legacy(
         bool is_filament_override = std::ranges::find(legacy.overrides, old_key) != legacy.overrides.end();
         ASSERT(! is_filament_override || boost::starts_with(old_key, legacy.override_prefix));
         std::string new_key(old_key.begin() + (is_filament_override ? legacy.override_prefix.size() : 0), old_key.end()); // trim prefix
+        if (new_key == "external_perimeters_first")
+            new_key = "wall_sequence";
 
         const auto [item_ptr, new_is_override]{box.find(new_key)};
         if (!item_ptr) {
@@ -491,6 +506,16 @@ static void fill_config_box_from_legacy(
 
         const Slic3rLegacy::ConfigOption* opt = cfg.option(old_key);
         ConfigItem& item{*item_ptr};
+
+        if (new_key == "wall_sequence" && old_key != "wall_sequence") {
+            // read from external_perimeters_first
+            EnumWrapper enum_wrapper{item.get<EnumWrapper>()};
+            enum_wrapper.set_string(wall_sequence_from_external_perimeters_first(legacy_bool_at(opt, filament_id)));
+            item.set(enum_wrapper);
+            if (!opt->is_nil() && new_is_override)
+                box.overrides.enable(new_key);
+            continue;
+        }
 
         if (is_filament_override) {
             if (box.location != legacy.override_box_type
@@ -854,6 +879,29 @@ std::string serialize_as_legacy_config(
     std::unique_ptr<Slic3rLegacy::DynamicPrintConfig> cfg_old(Slic3rLegacy::DynamicPrintConfig::new_from_defaults_keys(legacy_data.keys));
     for (const std::string& key : cfg_old->keys()) {
         Slic3rLegacy::ConfigOption* opt = cfg_old->option(key);
+
+        if (key == "external_perimeters_first") {
+            // written from the wall order: Outer/Inner is true
+            for (const auto& [box, filament_id] : boxes) {
+                const ConfigItem* item{box->items.find("wall_sequence")};
+                if (!item && box->overrides.find("wall_sequence") && box->overrides.get("wall_sequence"))
+                    item = box->overrides.find("wall_sequence");
+                if (!item)
+                    continue;
+                const bool outer_first = item->get<EnumWrapper>().get_string() == "outer wall/inner wall";
+                if (opt->type() == Slic3rLegacy::coBools) {
+                    auto& values = static_cast<Slic3rLegacy::ConfigOptionBools*>(opt)->values;
+                    if (filament_id == -1)
+                        std::fill(values.begin(), values.end(), outer_first);
+                    else {
+                        values.resize(std::max<size_t>(values.size(), filament_id + 1));
+                        values[filament_id] = outer_first;
+                    }
+                } else
+                    static_cast<Slic3rLegacy::ConfigOptionBool*>(opt)->value = outer_first;
+            }
+            continue;
+        }
 
         for (const auto& [box, filament_id] : boxes) {
             const ConfigItem* item{box->items.find(key)};

@@ -111,6 +111,23 @@ PrinterAdvancedSettingsDialog::PrinterAdvancedSettingsDialog(
         m_project_interactor->preset_interactor()
             .save_user_preset(Domain::Preset::PresetKind::FdmPrinter, 0);
     };
+
+    // Orca's delete button (Tab::delete_preset), for the user's own presets
+    m_delete_button = add_footer_button(_u8L("Delete preset"));
+    m_delete_button->callbacks().action = [this]
+    {
+        App::AppServices::instance().dialog_manager().show_yesno_dialog(
+            _u8L("Delete Preset"),
+            _u8L("Are you sure you want to delete the selected preset?"),
+            [this](bool yes)
+            {
+                if (yes)
+                    m_project_interactor->preset_interactor().delete_selected_user_preset(
+                        Domain::Preset::PresetKind::FdmPrinter
+                    );
+            }
+        );
+    };
 }
 
 void PrinterAdvancedSettingsDialog::on_list_selection_changed(Domain::SelectionId new_selection)
@@ -153,6 +170,10 @@ void PrinterAdvancedSettingsDialog::update_ui_state(const Domain::ConfigItem* ch
     m_revert_button->set_visible(
         m_project_interactor->preset_interactor().printer_cbi().config_box_list().lock()->is_dirty()
     );
+    m_delete_button->set_visible(
+        m_project_interactor->preset_interactor().selected_printer_preset().printer.origin
+        == Domain::Preset::PresetOrigin::User
+    );
 
     auto& category_page_transformer = m_config_tabs.front()->category_page_transformer;
     Domain::PrinterTechnology pt =
@@ -177,7 +198,7 @@ void PrinterAdvancedSettingsDialog::update_ui_state(const Domain::ConfigItem* ch
 
 void PrinterAdvancedSettingsDialog::close_action()
 {
-    m_navigator.set_opened_dialog(m_logical_printer_settings_dialog);
+    m_navigator.set_opened_dialog(nullptr);
 }
 
 } // namespace Slic3r::App

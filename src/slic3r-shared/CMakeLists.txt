@@ -392,6 +392,10 @@ set(SLIC3R_SHARED_FILES
         include/Slic3r/App/Config/PrintToolSubcategoryItem.hpp
         src/Slic3r/App/Config/PrintToolSubcategoryItem.cpp
         src/Slic3r/App/Config/PrintToolSubcategoryListView.cpp
+        include/Slic3r/App/Config/PrintTabListView.hpp
+        src/Slic3r/App/Config/PrintTabListView.cpp
+        include/Slic3r/App/FlushingVolumesDialog.hpp
+        src/Slic3r/App/FlushingVolumesDialog.cpp
         include/Slic3r/App/Config/PrintToolRowItem.hpp
         src/Slic3r/App/Config/PrintToolRowItem.cpp
         include/Slic3r/App/Config/PrintToolFavoritesItem.hpp
@@ -1578,6 +1582,9 @@ if(SLIC3R_BUILD_TESTS)
     target_include_directories(slic3r-shared-tests PRIVATE test src)
 
     target_link_libraries(slic3r-shared-tests PRIVATE slic3r-shared slic3r-test-utils Catch2::Catch2)
+    if (MSVC AND SLIC3R_RELEASE_DEBUG_SYMBOLS)
+        target_link_options(slic3r-shared-tests PRIVATE "$<$<CONFIG:RELEASE>:/DEBUG>")
+    endif()
 
     if (SLIC3R_ENABLE_FORMAT_STEP)
         add_dependencies(slic3r-shared-tests OCCTWrapper)

@@ -295,8 +295,6 @@ Render::Icon MenuBuilder::item_icon(UniversalMenuItemName menu_item_name)
         return Render::Icon::Search;
     case MenuItemName::Arrange:
         return Render::Icon::AllBeds;
-    case MenuItemName::Preferences:
-        return Render::Icon::Cog;
     case MenuItemName::FileMenu:
     case MenuItemName::NewProject:
         return Render::Icon::NewBtnIcon;

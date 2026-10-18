@@ -65,6 +65,10 @@ PrintToolRowItem::PrintToolRowItem(
     set_fill(IM_COL32_BLACK_TRANS);
     set_border_width(2);
     set_border_color(IM_COL32_BLACK_TRANS);
+    // room between the search highlight and the label / input (as ConfigRowItem); the negative
+    // margin keeps the rows aligned with the rest of the page
+    set_padding(Paddings(6.f, 0.f));
+    set_margin(Margins(-6.f, 0.f));
     set_gap(4_fpx);
     set_object_name("PrintToolRowItem");
     set_align_items(YGAlignFlexStart);
@@ -99,7 +103,8 @@ PrintToolRowItem::~PrintToolRowItem()
 void PrintToolRowItem::navigate_to_item(const Domain::ConfigItem* config_item)
 {
     if (config_item && m_state->print_item->name() == config_item->name()) {
-        set_border_color(m_theme->color_imgui(Platform::Color::AccentTertiary));
+        // the active tab's colour (subdued piggie pink), as ConfigRowItem
+        set_border_color(m_theme->color_imgui(Platform::Color::Button, Platform::ColorGroup::Active));
         if (m_main_button) {
             m_main_button->set_checked(true);
         }

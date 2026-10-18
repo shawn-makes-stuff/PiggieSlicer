@@ -1,6 +1,7 @@
 #include "Slic3r/App/Plater/SidebarPlaterActionButtons.hpp"
 
 #include "Slic3r/App/DisplayStrings.hpp"
+#include "Slic3r/App/Preview/SidebarAutoReslice.hpp"
 #include "Slic3r/App/Yoga/LayoutButton.hpp"
 #include "Slic3r/App/Imgui/ImguiExtension.hpp"
 
@@ -45,6 +46,9 @@ void SidebarPlaterActionButtons::on_init(Biz::ProjectInteractor* project_interac
 
     init_physical_printer_ui();
 
+    // Prepare is where the changes are made: the auto-reslice toggle lives above Slice
+    m_auto_reslice = m_buttons_layout->emplace_back<Preview::SidebarAutoReslice>(*project_interactor);
+
     auto layout_bottom = m_buttons_layout->emplace_back<Item>();
     layout_bottom->set_orientation(Orientation::Horizontal);
 
@@ -68,6 +72,7 @@ void SidebarPlaterActionButtons::on_selected_bed_instances_changed(
 )
 {
     update_slice_button(bed_selection);
+    m_auto_reslice->apply();
 }
 
 struct BedStatus

@@ -1,0 +1,940 @@
+kind: vendor
+id: Anycubic
+name: Anycubic
+version: 2.4.0+orca.02.04.00.09
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_025_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: 4Max
+  base_model: Anycubic 4Max
+  printer_configs_order:
+  - Anycubic-4Max-Pro
+  - Anycubic-4Max-Pro-2
+- label: Chiron
+  base_model: Anycubic Chiron
+  printer_configs_order:
+  - Anycubic-Chiron
+- label: Kobra
+  base_model: Anycubic Kobra
+  printer_configs_order:
+  - Anycubic-Kobra
+  - Anycubic-Kobra-Max
+  - Anycubic-Kobra-Neo
+  - Anycubic-Kobra-Plus
+  - Anycubic-Kobra-X
+- label: Kobra 2
+  base_model: Anycubic Kobra 2
+  printer_configs_order:
+  - Anycubic-Kobra-2
+  - Anycubic-Kobra-2-Max
+  - Anycubic-Kobra-2-Neo
+  - Anycubic-Kobra-2-Plus
+  - Anycubic-Kobra-2-Pro
+- label: Kobra 3
+  base_model: Anycubic Kobra 3
+  printer_configs_order:
+  - Anycubic-Kobra-3
+  - Anycubic-Kobra-3-Max
+  - Anycubic-Kobra-3-V2
+- label: Kobra S1
+  base_model: Anycubic Kobra S1
+  printer_configs_order:
+  - Anycubic-Kobra-S1
+  - Anycubic-Kobra-S1-Max
+- label: Predator
+  base_model: Anycubic Predator
+  printer_configs_order:
+  - Anycubic-Predator
+- label: Vyper
+  base_model: Anycubic Vyper
+  printer_configs_order:
+  - Anycubic-Vyper
+- label: i3
+  base_model: Anycubic i3
+  printer_configs_order:
+  - Anycubic-i3-Mega-S
+---
+kind: printer
+technology: FFF
+name: Anycubic 4Max Pro
+id: Anycubic 4Max Pro
+model:
+  base_model: Anycubic 4Max
+  model: Anycubic 4Max Pro
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_4maxpro_buildplate_model.stl
+  bed_texture: anycubic_4maxpro_buildplate_texture.svg
+  thumbnail: Anycubic 4Max Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic 4Max Pro 2
+id: Anycubic 4Max Pro 2
+model:
+  base_model: Anycubic 4Max
+  model: Anycubic 4Max Pro 2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_4maxpro2_buildplate_model.stl
+  bed_texture: anycubic_4maxpro2_buildplate_texture.svg
+  thumbnail: Anycubic 4Max Pro 2_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Chiron
+id: Anycubic Chiron
+model:
+  base_model: Anycubic Chiron
+  model: Anycubic Chiron
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_chiron_buildplate_model.stl
+  bed_texture: anycubic_chiron_buildplate_texture.svg
+  thumbnail: Anycubic Chiron_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra
+id: Anycubic Kobra
+model:
+  base_model: Anycubic Kobra
+  model: Anycubic Kobra
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_kobra_buildplate_model.stl
+  bed_texture: anycubic_kobra_buildplate_texture.svg
+  thumbnail: Anycubic Kobra_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra 2
+id: Anycubic Kobra 2
+model:
+  base_model: Anycubic Kobra 2
+  model: Anycubic Kobra 2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_kobra2_buildplate_model.stl
+  bed_texture: anycubic_kobra2_buildplate_texture.svg
+  thumbnail: Anycubic Kobra 2_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra 2 Max
+id: Anycubic Kobra 2 Max
+model:
+  base_model: Anycubic Kobra 2
+  model: Anycubic Kobra 2 Max
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra 2 Max 0.4 nozzle
+- Generic ABS @System
+- Generic TPU @System
+visual:
+  bed_model: Anycubic Kobra 2 Max_buildplate_model.stl
+  bed_texture: Anycubic Kobra 2 Max_buildplate_texture.svg
+  thumbnail: Anycubic Kobra 2 Max_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra 2 Neo
+id: Anycubic Kobra 2 Neo
+model:
+  base_model: Anycubic Kobra 2
+  model: Anycubic Kobra 2 Neo
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra 2 Neo 0.4 nozzle
+visual:
+  bed_model: Anycubic Kobra 2 Neo_buildplate_model.stl
+  bed_texture: Anycubic Kobra 2 Neo_buildplate_texture.svg
+  thumbnail: Anycubic Kobra 2 Neo_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra 2 Plus
+id: Anycubic Kobra 2 Plus
+model:
+  base_model: Anycubic Kobra 2
+  model: Anycubic Kobra 2 Plus
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra 2 Plus 0.4 nozzle
+- Generic ABS @System
+- Generic TPU @System
+visual:
+  bed_model: Anycubic Kobra 2 Plus_buildplate_model.stl
+  bed_texture: Anycubic Kobra 2 Plus_buildplate_texture.svg
+  thumbnail: Anycubic Kobra 2 Plus_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra 2 Pro
+id: Anycubic Kobra 2 Pro
+model:
+  base_model: Anycubic Kobra 2
+  model: Anycubic Kobra 2 Pro
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra 2 Pro 0.4 nozzle
+- Generic ABS @System
+- Generic TPU @System
+visual:
+  bed_model: Anycubic Kobra 2 Pro_buildplate_model.stl
+  bed_texture: Anycubic Kobra 2 Pro_buildplate_texture.svg
+  thumbnail: Anycubic Kobra 2 Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra 3
+id: Anycubic Kobra 3
+model:
+  base_model: Anycubic Kobra 3
+  model: Anycubic Kobra 3
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra 3 0.4 nozzle
+- Anycubic PLA SE @Anycubic Kobra 3 0.4 nozzle
+- Anycubic PLA High Speed @Anycubic Kobra 3 0.4 nozzle
+- Generic ABS @Anycubic Kobra 3 0.4 nozzle
+- Anycubic PETG @Anycubic Kobra 3 0.4 nozzle
+- Generic TPU @Anycubic Kobra 3 0.4 nozzle
+- Anycubic PLA+ @Anycubic Kobra 3 0.4 nozzle
+- Anycubic PLA Matte @Anycubic Kobra 3 0.4 nozzle
+- Anycubic PLA Glow @Anycubic Kobra 3 0.4 nozzle
+- Anycubic PLA Slik @Anycubic Kobra 3 0.4 nozzle
+- Anycubic ASA @Anycubic Kobra 3 0.4 nozzle
+- Anycubic PLA @Anycubic Kobra 3 0.2 nozzle
+- Anycubic PLA @Anycubic Kobra 3 0.6 nozzle
+- Anycubic PLA @Anycubic Kobra 3 0.8 nozzle
+visual:
+  bed_model: Anycubic Kobra 3_buildplate_model.stl
+  bed_texture: Anycubic Kobra 3_buildplate_texture.svg
+  thumbnail: Anycubic Kobra 3_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra 3 Max
+id: Anycubic Kobra 3 Max
+model:
+  base_model: Anycubic Kobra 3
+  model: Anycubic Kobra 3 Max
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic PLA @Anycubic Kobra 3 Max 0.6 nozzle
+- Anycubic PLA @Anycubic Kobra 3 Max 0.8 nozzle
+- Anycubic PLA High Speed @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic PLA Luminous @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic PLA Matte @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic PLA Silk @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic PLA+ @Anycubic Kobra 3 Max 0.4 nozzle
+- Generic PLA @Anycubic
+- Generic PLA Silk @System
+- Anycubic ABS @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic ABS @Anycubic Kobra 3 Max 0.6 nozzle
+- Anycubic ABS @Anycubic Kobra 3 Max 0.8 nozzle
+- Anycubic ASA @Anycubic Kobra 3 Max 0.6 nozzle
+- Anycubic ASA @Anycubic Kobra 3 Max 0.8 nozzle
+- Anycubic PEBA 95A @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic PETG @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic PETG @Anycubic Kobra 3 Max 0.6 nozzle
+- Anycubic PETG @Anycubic Kobra 3 Max 0.8 nozzle
+- Anycubic TPU @Anycubic Kobra 3 Max 0.4 nozzle
+- Anycubic TPU @Anycubic Kobra 3 Max 0.6 nozzle
+- Anycubic TPU @Anycubic Kobra 3 Max 0.8 nozzle
+- Generic ABS @Anycubic
+- Generic PETG @Anycubic
+- Generic PETG Basic @Anycubic Kobra 3 Max 0.4 nozzle
+- Generic TPU @Anycubic
+visual:
+  bed_model: Anycubic Kobra 3 Max_buildplate_model.stl
+  bed_texture: Anycubic Kobra 3 Max_buildplate_texture.svg
+  thumbnail: Anycubic Kobra 3 Max_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra 3 V2
+id: Anycubic Kobra 3 V2
+model:
+  base_model: Anycubic Kobra 3
+  model: Anycubic Kobra 3 V2
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra 3 V2 0.2 nozzle
+- Anycubic PLA @Anycubic Kobra 3 V2 0.4 nozzle
+- Anycubic PLA @Anycubic Kobra 3 V2 0.6 nozzle
+- Anycubic PLA @Anycubic Kobra 3 V2 0.8 nozzle
+visual:
+  bed_model: Anycubic Kobra 3 V2_buildplate_model.stl
+  bed_texture: Anycubic Kobra 3 V2_buildplate_texture.svg
+  thumbnail: Anycubic Kobra 3 V2_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra Max
+id: Anycubic Kobra Max
+model:
+  base_model: Anycubic Kobra
+  model: Anycubic Kobra Max
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_kobramax_buildplate_model.stl
+  bed_texture: anycubic_kobramax_buildplate_texture.svg
+  thumbnail: Anycubic Kobra Max_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra Neo
+id: Anycubic Kobra Neo
+model:
+  base_model: Anycubic Kobra
+  model: Anycubic Kobra Neo
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic PLA @Anycubic
+- Anycubic PLA @Anycubic Kobra Neo 0.4 nozzle
+visual:
+  bed_model: Anycubic Kobra Neo_buildplate_model.stl
+  bed_texture: Anycubic Kobra Neo_buildplate_texture.svg
+  thumbnail: Anycubic Kobra Neo_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra Plus
+id: Anycubic Kobra Plus
+model:
+  base_model: Anycubic Kobra
+  model: Anycubic Kobra Plus
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_kobraplus_buildplate_model.stl
+  bed_texture: anycubic_kobraplus_buildplate_texture.svg
+  thumbnail: Anycubic Kobra Plus_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra S1
+id: Anycubic Kobra S1
+model:
+  base_model: Anycubic Kobra S1
+  model: Anycubic Kobra S1
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra S1 0.4 nozzle
+- Anycubic PLA High Speed @Anycubic Kobra S1 0.4 nozzle
+- Anycubic PLA Silk @Anycubic Kobra S1 0.4 nozzle
+- Anycubic PETG @Anycubic Kobra S1 0.4 nozzle
+- Anycubic PLA+ @Anycubic Kobra S1 0.4 nozzle
+- Anycubic ASA @Anycubic Kobra S1 0.4 nozzle
+- Anycubic ABS @Anycubic Kobra S1 0.4 nozzle
+- Anycubic ASA @Anycubic Kobra S1 0.4 nozzle
+- Anycubic PETG @Anycubic Kobra S1 0.4 nozzle
+- Anycubic TPU @Anycubic Kobra S1 0.4 nozzle
+- Anycubic PLA+ @Anycubic Kobra S1 0.4 nozzle
+visual:
+  bed_model: Anycubic Kobra S1_buildplate_model.stl
+  bed_texture: Anycubic Kobra S1_buildplate_texture.svg
+  thumbnail: Anycubic Kobra S1_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra S1 Max
+id: Anycubic Kobra S1 Max
+model:
+  base_model: Anycubic Kobra S1
+  model: Anycubic Kobra S1 Max
+tool_count: 1
+features:
+  supports_025_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra S1 Max 0.4 nozzle
+- Anycubic PLA @Anycubic Kobra S1 Max 0.25 nozzle
+- Anycubic PLA @Anycubic Kobra S1 Max 0.6 nozzle
+- Anycubic PLA @Anycubic Kobra S1 Max 0.8 nozzle
+visual:
+  bed_model: Anycubic Kobra S1 Max_buildplate_model.stl
+  bed_texture: Anycubic Kobra S1 Max_buildplate_texture.svg
+  thumbnail: Anycubic Kobra S1 Max_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Kobra X
+id: Anycubic Kobra X
+model:
+  base_model: Anycubic Kobra
+  model: Anycubic Kobra X
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Anycubic PLA @Anycubic Kobra X 0.4 nozzle
+visual:
+  bed_model: Anycubic Kobra X_buildplate_model.stl
+  bed_texture: Anycubic Kobra X_buildplate_texture.svg
+  thumbnail: Anycubic Kobra X_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Predator
+id: Anycubic Predator
+model:
+  base_model: Anycubic Predator
+  model: Anycubic Predator
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+- Generic PLA @System
+visual:
+  bed_model: Anycubic Predator_buildplate_model.stl
+  bed_texture: Anycubic Predator_buildplate_texture.svg
+  thumbnail: Anycubic Predator_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic Vyper
+id: Anycubic Vyper
+model:
+  base_model: Anycubic Vyper
+  model: Anycubic Vyper
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_vyper_buildplate_model.stl
+  bed_texture: anycubic_vyper_buildplate_texture.svg
+  thumbnail: Anycubic Vyper_cover.png
+---
+kind: printer
+technology: FFF
+name: Anycubic i3 Mega S
+id: Anycubic i3 Mega S
+model:
+  base_model: Anycubic i3
+  model: Anycubic i3 Mega S
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Generic ABS @Anycubic
+- Generic PLA @Anycubic
+- Generic PLA-CF @Anycubic
+- Generic PETG @Anycubic
+- Generic TPU @Anycubic
+- Generic ASA @Anycubic
+- Generic PC @Anycubic
+- Generic PVA @Anycubic
+- Generic PA @Anycubic
+- Generic PA-CF @Anycubic
+visual:
+  bed_model: anycubic_i3megas_buildplate_model.stl
+  bed_texture: anycubic_i3megas_buildplate_texture.svg
+  thumbnail: Anycubic i3 Mega S_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.25'
+name: 0.25 nozzle
+condition: printer.supports_025_nozzle
+features:
+  nozzle_diameter:
+    default: 0.25
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Anycubic-4Max-Pro
+name: Anycubic 4Max Pro
+printer: Anycubic 4Max Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-4Max-Pro-2
+name: Anycubic 4Max Pro 2
+printer: Anycubic 4Max Pro 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Chiron
+name: Anycubic Chiron
+printer: Anycubic Chiron
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra
+name: Anycubic Kobra
+printer: Anycubic Kobra
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-2
+name: Anycubic Kobra 2
+printer: Anycubic Kobra 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-2-Max
+name: Anycubic Kobra 2 Max
+printer: Anycubic Kobra 2 Max
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-2-Neo
+name: Anycubic Kobra 2 Neo
+printer: Anycubic Kobra 2 Neo
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-2-Plus
+name: Anycubic Kobra 2 Plus
+printer: Anycubic Kobra 2 Plus
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-2-Pro
+name: Anycubic Kobra 2 Pro
+printer: Anycubic Kobra 2 Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-3
+name: Anycubic Kobra 3
+printer: Anycubic Kobra 3
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-3-Max
+name: Anycubic Kobra 3 Max
+printer: Anycubic Kobra 3 Max
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-3-V2
+name: Anycubic Kobra 3 V2
+printer: Anycubic Kobra 3 V2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-Max
+name: Anycubic Kobra Max
+printer: Anycubic Kobra Max
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-Neo
+name: Anycubic Kobra Neo
+printer: Anycubic Kobra Neo
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-Plus
+name: Anycubic Kobra Plus
+printer: Anycubic Kobra Plus
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-S1
+name: Anycubic Kobra S1
+printer: Anycubic Kobra S1
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-S1-Max
+name: Anycubic Kobra S1 Max
+printer: Anycubic Kobra S1 Max
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Kobra-X
+name: Anycubic Kobra X
+printer: Anycubic Kobra X
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Predator
+name: Anycubic Predator
+printer: Anycubic Predator
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-Vyper
+name: Anycubic Vyper
+printer: Anycubic Vyper
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Anycubic-i3-Mega-S
+name: Anycubic i3 Mega S
+printer: Anycubic i3 Mega S
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

@@ -1,0 +1,563 @@
+kind: printer
+id: bxw7zQ3QAk/fLqgo2f22SA
+variants:
+- condition: printer.model == "Prusa MK3S"
+  name: Prusa MK3S
+  id: aM8jcB7hu0gojnIT+1EyOA
+  variants:
+  - condition: tool.nozzle_diameter == 0.25
+    id: ET/2iL9bJwGaiDzXCA0KZw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Speed @MK3S 0.25
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+1, max_print_height)} F720 ; Move print head up{endif}
+        G1 X0 Y200 F3600 ; park
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+49, max_print_height)} F720 ; Move print head further up{endif}
+        G4 ; wait
+        M221 S100 ; reset flow
+        M900 K0 ; reset LA
+        {if print_settings_id=~/.*(DETAIL @MK3S|QUALITY @MK3S|@0.25 nozzle MK3).*/}M907 E538 ; reset extruder motor current{endif}
+        M104 S0 ; turn off temperature
+        M140 S0 ; turn off heatbed
+        M107 ; turn off fan
+        M84 ; disable motors
+        ; max_layer_z = [max_layer_z]
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 2500.0
+      - 2500.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.02
+      - 0.0
+      machine_max_feedrate_e:
+      - 120.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        M862.3 P "MK3S" ; printer model check
+        M862.1 P[nozzle_diameter] ; nozzle diameter check
+        M115 U3.13.0 ; tell printer latest fw version
+        G90 ; use absolute coordinates
+        M83 ; extruder relative mode
+        M104 S[first_layer_temperature] ; set extruder temp
+        M140 S[first_layer_bed_temperature] ; set bed temp
+        M190 S[first_layer_bed_temperature] ; wait for bed temp
+        M109 S[first_layer_temperature] ; wait for extruder temp
+        G28 W ; home all without mesh bed level
+        G80 ; mesh bed leveling
+        {if filament_settings_id[initial_tool]=~/.*Prusament PA11.*/}
+        G1 Z0.3 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E9 F1000 ; intro line
+        G1 X100 E9 F1000 ; intro line
+        {else}
+        G1 Z0.2 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E9 F1000 ; intro line
+        G1 X100 E12.5 F1000 ; intro line
+        {endif}
+        G92 E0
+        M221 S{if layer_height<0.075}100{else}95{endif}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x210
+      - '0x210'
+      max_print_height: 210
+      printer_notes: |
+        Don't remove the following keywords! These keywords are used in the "compatible printer" condition of the print and filament profiles to link the particular print and filament profiles to this printer profile.
+        PRINTER_VENDOR_PRUSA3D
+        PRINTER_MODEL_MK3
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 160x120/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: OecILB1myYOjAKRijHCjzg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Speed @MK3S 0.4
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+1, max_print_height)} F720 ; Move print head up{endif}
+        G1 X0 Y200 F3600 ; park
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+49, max_print_height)} F720 ; Move print head further up{endif}
+        G4 ; wait
+        M221 S100 ; reset flow
+        M900 K0 ; reset LA
+        {if print_settings_id=~/.*(DETAIL @MK3S|QUALITY @MK3S|@0.25 nozzle MK3).*/}M907 E538 ; reset extruder motor current{endif}
+        M104 S0 ; turn off temperature
+        M140 S0 ; turn off heatbed
+        M107 ; turn off fan
+        M84 ; disable motors
+        ; max_layer_z = [max_layer_z]
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 2500.0
+      - 2500.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.02
+      - 0.0
+      machine_max_feedrate_e:
+      - 120.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        M862.3 P "MK3S" ; printer model check
+        M862.1 P[nozzle_diameter] ; nozzle diameter check
+        M115 U3.13.0 ; tell printer latest fw version
+        G90 ; use absolute coordinates
+        M83 ; extruder relative mode
+        M104 S[first_layer_temperature] ; set extruder temp
+        M140 S[first_layer_bed_temperature] ; set bed temp
+        M190 S[first_layer_bed_temperature] ; wait for bed temp
+        M109 S[first_layer_temperature] ; wait for extruder temp
+        G28 W ; home all without mesh bed level
+        G80 ; mesh bed leveling
+        {if filament_settings_id[initial_tool]=~/.*Prusament PA11.*/}
+        G1 Z0.3 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E9 F1000 ; intro line
+        G1 X100 E9 F1000 ; intro line
+        {else}
+        G1 Z0.2 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E9 F1000 ; intro line
+        G1 X100 E12.5 F1000 ; intro line
+        {endif}
+        G92 E0
+        M221 S{if layer_height<0.075}100{else}95{endif}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x210
+      - '0x210'
+      max_print_height: 210
+      printer_notes: |
+        Don't remove the following keywords! These keywords are used in the "compatible printer" condition of the print and filament profiles to link the particular print and filament profiles to this printer profile.
+        PRINTER_VENDOR_PRUSA3D
+        PRINTER_MODEL_MK3
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 160x120/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: 2YRHrxTapN4shW12GhGVbQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Quality @MK3S 0.6
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+1, max_print_height)} F720 ; Move print head up{endif}
+        G1 X0 Y200 F3600 ; park
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+49, max_print_height)} F720 ; Move print head further up{endif}
+        G4 ; wait
+        M221 S100 ; reset flow
+        M900 K0 ; reset LA
+        {if print_settings_id=~/.*(DETAIL @MK3S|QUALITY @MK3S|@0.25 nozzle MK3).*/}M907 E538 ; reset extruder motor current{endif}
+        M104 S0 ; turn off temperature
+        M140 S0 ; turn off heatbed
+        M107 ; turn off fan
+        M84 ; disable motors
+        ; max_layer_z = [max_layer_z]
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 2500.0
+      - 2500.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.02
+      - 0.0
+      machine_max_feedrate_e:
+      - 120.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        M862.3 P "MK3S" ; printer model check
+        M862.1 P[nozzle_diameter] ; nozzle diameter check
+        M115 U3.13.0 ; tell printer latest fw version
+        G90 ; use absolute coordinates
+        M83 ; extruder relative mode
+        M104 S[first_layer_temperature] ; set extruder temp
+        M140 S[first_layer_bed_temperature] ; set bed temp
+        M190 S[first_layer_bed_temperature] ; wait for bed temp
+        M109 S[first_layer_temperature] ; wait for extruder temp
+        G28 W ; home all without mesh bed level
+        G80 ; mesh bed leveling
+        {if filament_settings_id[initial_tool]=~/.*Prusament PA11.*/}
+        G1 Z0.3 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E9 F1000 ; intro line
+        G1 X100 E9 F1000 ; intro line
+        {else}
+        G1 Z0.2 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E9 F1000 ; intro line
+        G1 X100 E12.5 F1000 ; intro line
+        {endif}
+        G92 E0
+        M221 S{if layer_height<0.075}100{else}95{endif}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x210
+      - '0x210'
+      max_print_height: 210
+      printer_notes: |
+        Don't remove the following keywords! These keywords are used in the "compatible printer" condition of the print and filament profiles to link the particular print and filament profiles to this printer profile.
+        PRINTER_VENDOR_PRUSA3D
+        PRINTER_MODEL_MK3
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 160x120/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: m8LuCL0mtmP2jU7/PX7R6g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.15mm Detail @MK3S 0.8
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+1, max_print_height)} F720 ; Move print head up{endif}
+        G1 X0 Y200 F3600 ; park
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+49, max_print_height)} F720 ; Move print head further up{endif}
+        G4 ; wait
+        M221 S100 ; reset flow
+        M900 K0 ; reset LA
+        {if print_settings_id=~/.*(DETAIL @MK3S|QUALITY @MK3S|@0.25 nozzle MK3).*/}M907 E538 ; reset extruder motor current{endif}
+        M104 S0 ; turn off temperature
+        M140 S0 ; turn off heatbed
+        M107 ; turn off fan
+        M84 ; disable motors
+        ; max_layer_z = [max_layer_z]
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 2500.0
+      - 2500.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.02
+      - 0.0
+      machine_max_feedrate_e:
+      - 120.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        M862.3 P "MK3S" ; printer model check
+        M862.1 P[nozzle_diameter] ; nozzle diameter check
+        M115 U3.13.0 ; tell printer latest fw version
+        G90 ; use absolute coordinates
+        M83 ; extruder relative mode
+        M104 S[first_layer_temperature] ; set extruder temp
+        M140 S[first_layer_bed_temperature] ; set bed temp
+        M190 S[first_layer_bed_temperature] ; wait for bed temp
+        M109 S[first_layer_temperature] ; wait for extruder temp
+        G28 W ; home all without mesh bed level
+        G80 ; mesh bed leveling
+        {if filament_settings_id[initial_tool]=~/.*Prusament PA11.*/}
+        G1 Z0.3 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E9 F1000 ; intro line
+        G1 X100 E9 F1000 ; intro line
+        {else}
+        G1 Z0.2 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E9 F1000 ; intro line
+        G1 X100 E12.5 F1000 ; intro line
+        {endif}
+        G92 E0
+        M221 S{if layer_height<0.075}100{else}95{endif}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x210
+      - '0x210'
+      max_print_height: 210
+      printer_notes: |
+        Don't remove the following keywords! These keywords are used in the "compatible printer" condition of the print and filament profiles to link the particular print and filament profiles to this printer profile.
+        PRINTER_VENDOR_PRUSA3D
+        PRINTER_MODEL_MK3
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 160x120/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

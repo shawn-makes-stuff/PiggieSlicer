@@ -37,6 +37,8 @@ MaterialSettingsButton::MaterialSettingsButton(
     Unit height = 1.5_rem;
     set_checkable(true);
     set_height(height);
+    // two per row in the sidebar's filament section
+    set_width_percent(48.f);
     set_flex_shrink(0);
     set_allow_overlap(true);
 
@@ -45,9 +47,11 @@ MaterialSettingsButton::MaterialSettingsButton(
 
     Item* text_index = emplace_back<Text>(std::to_string(index + 1));
     text_index->set_self_align(YGAlignCenter);
+    m_index_text = text_index;
 
-    emplace_back<Separator>(Orientation::Vertical)
-        ->set_fill(m_theme->color_imgui(Platform::Color::WindowBg));
+    Separator* index_separator = emplace_back<Separator>(Orientation::Vertical);
+    index_separator->set_fill(m_theme->color_imgui(Platform::Color::WindowBg));
+    m_index_separator = index_separator;
 
     m_color_marker = emplace_back<ColorPickerButton>();
     m_color_marker->set_height(16);
@@ -91,8 +95,9 @@ MaterialSettingsButton::MaterialSettingsButton(
 
     m_cog_btn->callbacks().hovered_changed = [this](bool) { update_cog_visibility(); };
 
-    emplace_back<Separator>(Orientation::Vertical)
-        ->set_fill(m_theme->color_imgui(Platform::Color::WindowBg));
+    Separator* nozzle_separator = emplace_back<Separator>(Orientation::Vertical);
+    nozzle_separator->set_fill(m_theme->color_imgui(Platform::Color::WindowBg));
+    m_nozzle_separator = nozzle_separator;
 
     m_nozzle_btn =
         emplace_back<LayoutButton>(std::string{}, Render::Icon::None, _u8L("Change nozzle size"));
@@ -130,6 +135,15 @@ void MaterialSettingsButton::set_color(const ImColor& color)
 void MaterialSettingsButton::set_nozzle(const std::string& nozzle)
 {
     m_nozzle_btn->set_label(nozzle);
+    // which nozzle a filament feeds only matters with several nozzles (Orca shows none otherwise)
+    const auto& hw_config  = m_project_interactor.preset_interactor().selected_printer_preset().hw_config;
+    const bool multi_tool  = hw_config.tool_count > 1;
+    m_nozzle_btn->set_visible(multi_tool);
+    m_nozzle_separator->set_visible(multi_tool);
+    // the slot number (tool number in the G-code) only tells several filaments apart
+    const bool multi_slot = hw_config.material_slot_count() > 1;
+    m_index_text->set_visible(multi_slot);
+    m_index_separator->set_visible(multi_slot);
 }
 
 void MaterialSettingsButton::on_data_update()
@@ -185,7 +199,7 @@ void MaterialSettingsButton::on_hw_item_selection_changed(
 {
     if (m_project_interactor.selected_project_id() == project_id
         && m_project_interactor.selected_config_container_id() == config_container_id
-        && type == Biz::Preset::HwItemType::ToolItem)
+        && (type == Biz::Preset::HwItemType::ToolItem || type == Biz::Preset::HwItemType::FeederItem))
     {
         const auto& hw_config =
             m_project_interactor.preset_interactor().selected_printer_preset().hw_config;
@@ -262,7 +276,8 @@ void MaterialSettingsButton::hovered_updated_internal()
 
 void MaterialSettingsButton::update_cog_visibility()
 {
-    m_cog_btn->set_visible(this->hovered() || m_cog_btn->hovered());
+    // always shown: colour, name and the filament settings button (Orca's edit button)
+    m_cog_btn->set_visible(true);
 }
 
 void MaterialSettingsButton::on_preset_value_changed(

@@ -4,10 +4,12 @@
 #include "Slic3r/App/Preview/LegendWindow.hpp"
 #include "Slic3r/App/Preview/DoubleSliderForLayers.hpp"
 #include "Slic3r/App/Preview/DoubleSliderForGCode.hpp"
-#include "Slic3r/App/Preview/SidebarAutoReslice.hpp"
 #include "Slic3r/App/Preview/SidebarPreviewActionButtons.hpp"
 #include "Slic3r/App/InvalidDataDialog.hpp"
 #include "Slic3r/App/SidebarStackLayout.hpp"
+#include "Slic3r/App/SidebarBed.hpp"
+#include "Slic3r/App/ObjectListWindow.hpp"
+#include "Slic3r/App/Yoga/Window.hpp"
 
 using namespace Slic3r::App::Yoga;
 
@@ -29,7 +31,6 @@ PreviewRenderLayout::PreviewRenderLayout(
     std::unique_ptr<DoubleSliderForLayers> double_slider_layers,
     std::unique_ptr<DoubleSliderForLayers> sla_double_slider_layers,
     std::unique_ptr<DoubleSliderForGcode> double_slider_gcode,
-    std::unique_ptr<SidebarAutoReslice> sidebar_auto_reslice,
     std::unique_ptr<NumberEntryDialog> numbers_entry_dialog,
     std::unique_ptr<InvalidDataDialog> invalid_data_dialog,
     std::unique_ptr<CrashedProjectsDialog> crashed_projects_dialog,
@@ -54,7 +55,6 @@ PreviewRenderLayout::PreviewRenderLayout(
     m_double_slider_layers(std::move(double_slider_layers)),
     m_sla_double_slider_layers(std::move(sla_double_slider_layers)),
     m_double_slider_gcode(std::move(double_slider_gcode)),
-    m_sidebar_auto_reslice(std::move(sidebar_auto_reslice)),
     m_sidebar_action_buttons(std::move(sidebar_action_buttons)),
     m_invalid_data_dialog(std::move(invalid_data_dialog))
 {}
@@ -72,11 +72,6 @@ void PreviewRenderLayout::init()
 void PreviewRenderLayout::init_left_column()
 {
     AbstractRenderLayout::init_left_column();
-
-    m_layout_left_column->append(m_legend.release());
-    m_legend->set_visible(false);
-    m_legend->collapsible_window_callbacks().collapsed_changed = [this](bool collapsed)
-    { update_left_separator_enable(); };
 }
 
 void PreviewRenderLayout::init_middle_column()
@@ -98,14 +93,23 @@ void PreviewRenderLayout::init_right_column()
 {
     AbstractRenderLayout::init_right_column();
 
-    m_layout_sidebar_stack_layout->insert_item(
-        SidebarStackLayout::ItemType::GCode,
-        m_gcode_window.release()
-    );
-    m_gcode_window->set_visible(false);
+    // the preview's sidebar shows the print, not its settings (Orca's preview): the G-code
+    // viewer, the sliced info and the legend above the export; printer, filaments and process
+    // are the Prepare tab's
+    m_sidebar_bed->set_visible(false);
+    m_layout_sidebar_stack_layout->set_visible(false);
+
+    m_layout_right_column->append(m_gcode_window.release());
+    m_gcode_window->set_visible(false); // shown with G-code (PreviewRenderModule::render)
     m_gcode_window->set_flex_grow(1);
 
-    m_layout_right_column->append(m_sidebar_auto_reslice.release());
+    // Orca's print summary as its own panel
+    m_sliced_info = m_layout_right_column->emplace_back<SlicedInfoWindow>();
+    m_sliced_info->set_visible(false); // shown with G-code (PreviewRenderModule::render)
+    m_sliced_info->set_flex_shrink(0);
+
+    m_layout_right_column->append(m_legend.release());
+    m_legend->set_visible(false);
 
     m_layout_right_column->append(m_sidebar_action_buttons.release());
 }

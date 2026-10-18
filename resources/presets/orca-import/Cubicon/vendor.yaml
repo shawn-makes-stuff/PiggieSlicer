@@ -1,0 +1,161 @@
+kind: vendor
+id: Cubicon
+name: Cubicon
+version: 2.4.0+orca.02.04.00.08
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Cubicon xCeler-I
+  base_model: Cubicon xCeler-I
+  printer_configs_order:
+  - Cubicon-xCeler-I-0-4-nozzle
+- label: Cubicon xCeler-Mini
+  base_model: Cubicon xCeler-Mini
+  printer_configs_order:
+  - Cubicon-xCeler-Mini-0-4-nozzle
+- label: Cubicon xCeler-Plus
+  base_model: Cubicon xCeler-Plus
+  printer_configs_order:
+  - Cubicon-xCeler-Plus-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: Cubicon xCeler-I
+id: Cubicon xCeler-I
+model:
+  base_model: Cubicon xCeler-I
+  model: Cubicon xCeler-I
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: Cubicon xCeler-I_bed_texture.svg
+  thumbnail: Cubicon xCeler-I_cover.png
+---
+kind: printer
+technology: FFF
+name: Cubicon xCeler-Mini
+id: Cubicon xCeler-Mini
+model:
+  base_model: Cubicon xCeler-Mini
+  model: Cubicon xCeler-Mini
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: Cubicon xCeler-I_bed_texture.svg
+  thumbnail: Cubicon xCeler-Mini_cover.png
+---
+kind: printer
+technology: FFF
+name: Cubicon xCeler-Plus
+id: Cubicon xCeler-Plus
+model:
+  base_model: Cubicon xCeler-Plus
+  model: Cubicon xCeler-Plus
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: Cubicon xCeler-I_bed_texture.svg
+  thumbnail: Cubicon xCeler-Plus_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Cubicon-xCeler-I-0-4-nozzle
+name: Cubicon xCeler-I 0.4 nozzle
+printer: Cubicon xCeler-I
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Cubicon-xCeler-Mini-0-4-nozzle
+name: Cubicon xCeler-Mini 0.4 nozzle
+printer: Cubicon xCeler-Mini
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Cubicon-xCeler-Plus-0-4-nozzle
+name: Cubicon xCeler-Plus 0.4 nozzle
+printer: Cubicon xCeler-Plus
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

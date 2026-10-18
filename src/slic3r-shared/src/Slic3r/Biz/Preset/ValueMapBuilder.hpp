@@ -147,6 +147,16 @@ void append_print_values(Expr::ValueMap& values, const Domain::ConfigBox& print_
 
 void append_tool_values(Expr::ValueMap& values, const Domain::Preset::HwToolConfig& tool);
 
+/// feeder.* values of given feeder (none when nullptr).
+void append_feeder_values(Expr::ValueMap& values, const Domain::Preset::HwFeederConfig* feeder);
+
+/// feeder.* values of the feeder attached to given tool.
+void append_tool_feeder_values(
+    Expr::ValueMap& values,
+    const Domain::Preset::HwPrinterConfig& printer,
+    size_t tool_index
+);
+
 void append_sheet_values(Expr::ValueMap& values, const Domain::Preset::HwSheetConfig& sheet);
 
 } // namespace Slic3r::Biz::Preset

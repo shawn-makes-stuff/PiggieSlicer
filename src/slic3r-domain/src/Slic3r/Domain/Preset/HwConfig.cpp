@@ -3,6 +3,7 @@
 #include "Slic3r/Assert.hpp"
 #include "Slic3r/Log.hpp"
 
+#include <algorithm>
 #include <charconv>
 #include <ranges>
 
@@ -303,6 +304,33 @@ std::string suggest_name(const HwPrinterConfig& cfg, const VendorData& vendor_da
     return ss.str();
 }
 
+std::vector<size_t> HwPrinterConfig::tool_slot_counts() const
+{
+    std::vector<size_t> counts;
+    for (size_t i{}; i < tool_count; ++i) {
+        size_t count{1};
+        for (const auto& [address, feeder] : feeders) {
+            ASSERT(!address.empty());
+            if (address.front() == static_cast<uint8_t>(i)) {
+                count += feeder.slot_count - 1;
+            }
+        }
+        counts.push_back(count);
+    }
+    return counts;
+}
+
+size_t HwPrinterConfig::tool_of_material_slot(size_t slot) const
+{
+    const std::vector<size_t> counts = tool_slot_counts();
+    for (size_t tool = 0; tool < counts.size(); ++tool) {
+        if (slot < counts[tool])
+            return tool;
+        slot -= counts[tool];
+    }
+    return counts.empty() ? 0 : counts.size() - 1;
+}
+
 size_t HwPrinterConfig::material_slot_count() const
 {
     size_t count = tool_count;
@@ -431,6 +459,71 @@ bool HwPrinterConfig::has_same_values(const HwPrinterConfig& other) const
         && tools == other.tools
         && feeders == other.feeders
         && sheet == other.sheet;
+}
+
+bool is_external_mmu(const HwFeederConfig& feeder)
+{
+    return feeder.id == EXTERNAL_MMU_FEEDER_ID;
+}
+
+const HwFeederConfig* find_tool_feeder(const HwPrinterConfig& printer, size_t tool_index)
+{
+    const auto it = printer.feeders.find(Address{static_cast<uint8_t>(tool_index)});
+    return it == printer.feeders.end() ? nullptr : &it->second;
+}
+
+const HwFeederConfig* find_external_mmu(const HwPrinterConfig& printer, size_t tool_index)
+{
+    const HwFeederConfig* feeder = find_tool_feeder(printer, tool_index);
+    return feeder != nullptr && is_external_mmu(*feeder) ? feeder : nullptr;
+}
+
+bool has_external_mmu(const HwPrinterConfig& printer)
+{
+    return std::ranges::any_of(printer.feeders | std::views::values, is_external_mmu);
+}
+
+HwFeederConfigDef external_mmu_feeder_def()
+{
+    return HwFeederConfigDef{
+        .id         = EXTERNAL_MMU_FEEDER_ID,
+        .name       = "Multi-material unit",
+        .technology = PrinterTechnology::FFF,
+        .type       = FeederType::MMU,
+        // Offered for every tool without a vendor feeder (PresetInteractor::can_attach_external_mmu).
+        .condition  = std::nullopt,
+        .model      = {.model = EXTERNAL_MMU_BASE_MODEL, .base_model = EXTERNAL_MMU_BASE_MODEL},
+        .features   = {},
+        .slot_count = uint8_t(EXTERNAL_MMU_DEFAULT_SLOTS)
+    };
+}
+
+void add_external_mmu_feeder_def(VendorData& vendor_data)
+{
+    vendor_data.defs[PrinterTechnology::FFF].technology = PrinterTechnology::FFF;
+    vendor_data.defs[PrinterTechnology::FFF].feeders.try_emplace(
+        EXTERNAL_MMU_FEEDER_ID,
+        external_mmu_feeder_def()
+    );
+}
+
+HwFeederConfig make_external_mmu_feeder(uint32_t slot_count, const VendorData& vendor_data)
+{
+    const HwFeederConfigDef* def = vendor_data.find_feeder_config_def_by_id(EXTERNAL_MMU_FEEDER_ID);
+    const HwFeederConfigDef fallback = external_mmu_feeder_def();
+    if (def == nullptr)
+        def = &fallback;
+
+    FeatureValueMap features = build_features(vendor_data.info.features.feeder);
+    override_features(features, def->features);
+
+    return HwFeederConfig{
+        .id         = def->id,
+        .type       = def->type,
+        .model      = def->model,
+        .slot_count = std::clamp(slot_count, EXTERNAL_MMU_MIN_SLOTS, EXTERNAL_MMU_MAX_SLOTS),
+        .features   = features
+    };
 }
 
 MaterialIterator

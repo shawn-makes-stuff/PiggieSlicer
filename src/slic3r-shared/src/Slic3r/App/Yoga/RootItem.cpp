@@ -1,6 +1,8 @@
 #include "Slic3r/App/Yoga/RootItem.hpp"
 
+#include "Slic3r/App/Yoga/Dialog.hpp"
 #include "Slic3r/App/Yoga/Popup.hpp"
+#include "Slic3r/App/Yoga/Tooltip.hpp"
 #include "Slic3r/Biz/Platform/PlatformServices.hpp"
 
 #include <imgui_internal.h>
@@ -97,6 +99,15 @@ void RootItem::root_render(const SizeInfo& size_info)
 
     render_item_end({}, size);
 
+    // Esc closes the top dialog like Orca's dialogs; not while a field is edited (Esc reverts it)
+    // or a plain ImGui popup such as a combo list is on top (it closes that)
+    const ImGuiContext& g = *ImGui::GetCurrentContext();
+    const bool plain_popup_on_top = !g.OpenPopupStack.empty()
+        && (g.OpenPopupStack.back().Window == nullptr
+            || !(g.OpenPopupStack.back().Window->Flags & ImGuiWindowFlags_Modal));
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape, false) && !ImGui::IsAnyItemActive() && !plain_popup_on_top)
+        close_top_popup();
+
     for_each_popup_reconcile([&](Popup& popup) { popup.render({}, size); });
 
     render_debug_overlay();
@@ -107,6 +118,20 @@ void RootItem::root_render(const SizeInfo& size_info)
         // OR
         // Some item called set_style_dirty in render()
         Biz::Platform::PlatformServices::instance().render_request_handler().request_render();
+    }
+}
+
+void RootItem::close_top_popup()
+{
+    for (auto it = m_popups.rbegin(); it != m_popups.rend(); ++it) {
+        Popup* popup = *it;
+        if (!popup->opened() || dynamic_cast<Tooltip*>(popup))
+            continue;
+        if (auto* dialog = dynamic_cast<Dialog*>(popup))
+            dialog->request_close();
+        else
+            popup->close();
+        return;
     }
 }
 

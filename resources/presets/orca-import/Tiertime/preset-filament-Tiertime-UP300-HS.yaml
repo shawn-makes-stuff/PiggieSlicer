@@ -1,0 +1,3080 @@
+kind: filament
+id: 4ExeiDua0fVYsi46Zogp/w
+name: Generic ABS @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 20
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 15
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: xQqTbZpoZnlWsBn5uWKkhw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: MEeJ/fwrfVMTNganUEBR6g
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: h6RVnPNaW1Bgn6gA3WJjjw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: SMPGX+M+QH1rILUgccq9yA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: lCiVF5aWmn8DVZIAlQO3aw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: IEr6fOGu03AZrpKWQHM5jQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: BzjtFLybkShs4vLQ32Bbjw
+name: Generic ASA @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: EG7j/U8/+KVHA8ZO6nqHRw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: OenSuoBcT94hJMpvOMgmMg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: wPgKWXXpMmOtLkK8IrTHyA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: RBkKPxD+4QeEeja/YeO3Aw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: /9anfWqaQMQt4VgpsOOQVQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: kcyxS0j0pAkJMtdWMaDKig
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: OGaMhTr1ibL+gjPx8HiRlQ
+name: Generic BVOH @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 69.99
+  filament_density: 1.13
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(first_layer_bed_temperature[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S50\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: BVOH
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Wo+4I+paGiIbPhRoNtKNBg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Engineering Plate"
+  id: g7t+a9KanzroJaIaHHJsmA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: HEZg8U+lOzy41JnInc3aiQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: RnGz2BhKg4YlX2BRCU+A3Q
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: zBDZ+UANPC5NRZ3E0dDXwg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: VBRwB6Csf4bJSoXexGkewg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: k15SkE2PbXBSrwuJ0yNJzg
+name: Generic EVA @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 21.99
+  filament_density: 0.94
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(first_layer_bed_temperature[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S50\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: EVA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 210
+  first_layer_temperature: 210
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: K0ZkwRJNBttwejdHmzdXdw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: 3MZHhDb1P72gEafehYJTLg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: oM6qY1M5C/1ITYKeZT/UBA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: oO5ZWonyzeM4nlGM7LPeLg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: LwiBZhMJlSIliif7DmJLtA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: akWDEdKG/HcKt7BlqEcuAg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: RAUTZM5Hl0EhkgRSFSnd8Q
+name: Generic HIPS @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 10
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 22.99
+  filament_density: 1.06
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: HIPS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 6
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: BHfG+flEgWXdBhcsWrpEHg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 2A+o18h6jV4XbgZZ0P12PQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: 7KvS50V5LjgdM6lRF88/0g
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: gfIX384AzAIIfrzpME3isg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: vrgfdxGwGA6hC6CO2NyynQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: xdHJqrtoeZMcZcXPQJwafg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: UPk/Sp/OcTM7ohnk/1oCww
+name: Generic PA @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 65
+  max_fan_speed: 85
+  min_fan_speed: 40
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: onQUkAADiNyAQ9x+oAVXdQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 3Waes1txLM/kPzDe558GyA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: +pG3cjmWd6eSCpMZTTOX4g
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: CBPHL/ODlZTJc3LOuX+s0Q
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: 4vA21NcbPtgwzidD1BuQsQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: S4/FYCK3QABOSmQ0aDgzkA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: goDY9KMoX/CanOgceXLaRA
+name: Generic PA-CF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 2
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Bw1/0DVvlHkvcIrscABC4A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: cECrel7S/EfaTzArri28iQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: 8W1ryppNVlTWXGo1HIijLg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: URGmqYdk3+ygoanHAZqiIg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: dZp6rcsGHubkTsV13qWH+w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: ctEO+uV/S5Q5fb8qi4rU2A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: KkSFezRqdNobgjxcLe+YEA
+name: Generic PC @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: AKPzofIVyi1xEAjnsoWlIw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Y4LT/5P00ntl9BrrORpimA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: abrDS+tGMPF9U/1FWhBuJg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: Mum03Tqp/nAabYIQ2zenvQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: gTBVrwwR50vyHZYseHA2Hg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: hfh2q/fHwG8uK05i9TKHQQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 2fXwxmWM/tmFW8teRhPtcQ
+name: Generic PCTG @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 28.99
+  filament_density: 1.29
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if (bed_temperature[current_extruder] >80)||(first_layer_bed_temperature[current_extruder] >80)}M106 P3 S255\n{elsif (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PCTG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: BsdVx6vBtzNrLj8nZUU4Bg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 7BcCdft1Z9TNfupbp9k52Q
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: RemDqOX7DME6VDcLNHhB0w
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: eDRqzd3X5e4Kt3e4ONV4VA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: 7n533KOSJtcAoQ1tEfv/GA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: sLieY30loe3l23dGuQ1kZQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: PoeejbH04QXw2y8ZcL7w+g
+name: Generic PE @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 40.99
+  filament_density: 0.95
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(first_layer_bed_temperature[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S50\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PE
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 210
+  first_layer_temperature: 210
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: uF/ywHlFLXo4zFrHw8cUyw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: HxbB0oyPB8Uz4LKOu0W5Tg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: XKvEcC4+pK2iEsyoPUVOqg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: YgDgxrhF6JXE74NoA2Z3kw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: G41iEsjWEHTWolNMl1dTyA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: TnzoPUarK4BKmrTLJGEMBA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 4BkmWwGf+YH4xIwM36sPgw
+name: Generic PE-CF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 65.99
+  filament_density: 0.95
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(first_layer_bed_temperature[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S50\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PE-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 210
+  first_layer_temperature: 210
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: uPO3ABIGReP5/1G0Z6Yowg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: KDPcaD5yez/lusupCaLTsQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 41GxgRRhbh55DZsynCerAg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: Z8oqClk7U8cyImiKst/s/g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: uB6U0ivCwjkXHinpQ7yrrA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: GnUREMeSl4AmpQk6QPchaA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: ZEYs/cqQq27EPODETYNJTg
+name: Generic PETG @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 90
+  min_fan_speed: 40
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if (bed_temperature[current_extruder] >80)||(first_layer_bed_temperature[current_extruder] >80)}M106 P3 S255\n{elsif (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Qbzyfpp4hXXH5z5153HHeA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: d7lAs0U/qWMq5mqIIptHNA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: eigu4vrbv22saiEUoxA/fQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: h1FRa64A9clRcTE+m9jAYA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: x7VU+tNPJRJMs+2oXBjO2w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: IcovMAyTtNXhFLho/iIMug
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 1NZiu2xLRlVvAfeTTcujjA
+name: Generic PETG-CF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 5
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 11.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if (bed_temperature[current_extruder] >80)||(first_layer_bed_temperature[current_extruder] >80)}M106 P3 S255\n{elsif (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PETG-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 6
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: j3uRRFcqk9vUdd8COETvag
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: m+bVk1luYDfMqZibgIVqTg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: EvYpzZW51OfhlODZ3SqAVA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: MrhehHhrVxK2d+SJzUsJrA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: sclfPmbLxE9YzNg/COaJXA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: oC23lxZ37mDV3+nSVAwm3Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: kyBVCkw01jD/Gkzd0mLnvg
+name: Generic PHA @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 27.99
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PHA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 3gskIG3UtH+y6YuaTzfRhg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: dEWNUQWnJfSl2nohw3YnbQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 3ROxkxx9BPHT24wf5Z4J6g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: iEUAFgHYinZVEPnD5yORiQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: pwtQS8wB+ypwbNcos/D//w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: u1KmZLs6qZEmx7q0PIfk8A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: isbHM9oKSUwQvF7LvWq3uw
+name: Generic PLA @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif};Prevent PLA from jamming\n\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 0qutcUaNJDFVizDZo62CVw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: pr+pAsrwSVFIQrQMPOG9dg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: KKNi0cjEfJdkhAniMAZ/SA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: YBBUF5EzyZ6xSxjjO75VkQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: iJ+BaPRKSTTJVAw5KCgCpA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: rmJCwAd9+dhicJLGMKY7nA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: t+qbz6ambFrIYLVYANFAog
+name: Generic PLA High Speed @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n;{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n;{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n;{endif}\n\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 5gP06WONFM8ub0vA+PF7cg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: qHj7ve8VBfYg5b59ylL+/Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: jB+s0zirNu+9nDWSJGZ63Q
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: XYqN+Nch8gXs2n6daSFjVw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: AzVf4BW7gKC0k1L9UyDMMw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: KwR15PEx638dnvyt17RzIw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 2PFhu3LLAnjS3zXCbPptwQ
+name: Generic PLA Silk @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 7.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.5
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif};Prevent PLA from jamming\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 6/zOHsHKTxlsekAZpuuRTQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: TZWNTAiVjD9Ig7KkTR9sAg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: BNmAf2BB7+Fb4jfTpRuo4g
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: la/p+7ZiAAM3lPHjgrpIpA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: e4Eetoh1GM0h5KIz0i2Mxw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: A55uABQrycJlYc1Q1u6gtQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: G3l5pM48uou72T2V4n83Qw
+name: Generic PLA-CF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 80
+  max_fan_speed: 80
+  min_fan_speed: 60
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(first_layer_bed_temperature[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S50\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 7
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: P/m7AB0k0NIfaY0ARmXfDQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: Wsfqebz6i+ELjdTDtGDQlw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: HOYEaYiICXZ9prvUM5vy9A
+  values:
+    bed_temperature: 65
+    first_layer_bed_temperature: 65
+- condition: sheet.type == "Textured PEI Plate"
+  id: IXt0hnZ6KAh4R+Qefb4o2Q
+  values:
+    bed_temperature: 65
+    first_layer_bed_temperature: 65
+- condition: sheet.type == "Textured Cool Plate"
+  id: wbRnD8JevKGRbz4/F7TKJg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: qgZlSToJPKYvRACfyrQyjA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: kJVS/QnJcSauR/B25wjyCw
+name: Generic PP @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 0.93
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PP
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 235
+  first_layer_temperature: 235
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: TbI8ONJaO/GvNzFnp9SLPA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: ktdPR4emLnvLYQ/LvCRoCQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 3cBbuj9am8rQEy9ht4LUig
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: kcf1IXE8jZCcNx0u6fg26Q
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: f5p68ibG5uvmXXgrVHKzfQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: LQbcuroMRgbM149xY0daSQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: LXmEoPZRJLHX29NdHNU1wQ
+name: Generic PP-CF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 77.99
+  filament_density: 1.01
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PP-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 235
+  first_layer_temperature: 235
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: FwppLRPJ81OuyINtdEmKzQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: LLi6zDM5PPpR9dgn2cNaHg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: zah4z02YeOKNkmrtbXHqcw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: Y4xaKJNVEu2NrKN/wWmrUw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: rGRloEFhp5gYN12TaEFblg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Rio4O1UCzkAquWM5onzAyw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 488rVLWzMAmW+EEkMgiIuA
+name: Generic PP-GF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 59.99
+  filament_density: 1.05
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PP-GF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 235
+  first_layer_temperature: 235
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: czUus2T6SUY3GF7bmgoQkA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: 5NwrvBs7BjFY4/rW4uAsgg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: HJwNT7e4U/kLkrWMFMPl/A
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: eKKtrV2Jx10ngA2Z0baShA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: XaL7yDihjcHcoV9WcgNTXA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 4vFhBAwiVh+D3qBN1NAPlw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: EG2euS/HwOWWJsJWCrNPrQ
+name: Generic PPA-CF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 35
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.17
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: QocDUQWCKCeV2hq09INWlQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 1ZDz7fTTA9v9YDKbPeqYiA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: n/P6jgjw1D0L7mWjikV93Q
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: 0FsXsqDCk85S14yPXZMhgw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: lKy8GC6Ad7N6UD1s5Xi6WQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: gxY/mnh32Iyz526cmCnh7g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: CU9BnolU7JC2XLX3HLNtRA
+name: Generic PPA-GF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.17
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPA-GF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 290
+  first_layer_temperature: 290
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: rAaOQkq+wjtzJMvuvamE1A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: rDAqvozs605WEZjq3GoS+w
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: H6OeXiYK73QyK9g1p3GFyQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: oYgQYKf6BVmsdfVwNFsN4w
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: DjpRHf090EIkFHQBxk85sw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: jIfh9ROEoVsrH0yoXwOkGA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: zsa9p4pngVVdIRx1OPqWwQ
+name: Generic PPS @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 50
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 0
+  filament_density: 1.36
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 4
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 320
+  first_layer_temperature: 320
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: oREybJHu0WeZGPFkfSsNaA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: F3dTE1Wxy+mJP6HFtbUQWw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: U6m7uD/oG5dsEMwUeUIhXQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: sYfphMKaUgomP+InQxMjVw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: V9SdJmLeEsRTJ7fXeGsPKw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: L6B/kKcn2Xm2HO+oTsPDxQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Uq+VTJpQ3F/kljxFvQ8Ywg
+name: Generic PPS-CF @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 60
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 0
+  filament_density: 1.3
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PPS-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 320
+  first_layer_temperature: 320
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: B3dyfD44Ht+cLA7BP02mjQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: I+y3VGsvyi1L7lVIyeG74A
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: 0MyVlKjsAOieyAWTN0/l6A
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: aL3ZtlhqfJF/yPrTR0e3bA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: wMoHmn20WppNGoOfymybhw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: dycjOteHxd4j6hHF5fswsg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 8aldMaxJrv7GB8ijQmSnBw
+name: Generic PVA @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: true
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PVA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 7
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Zs1I4yJmjqKjJdSl4ewdKA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: Ie4G5yk3vWcHPx49D9byow
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: YjzCO6fvCz7F/8hCH2Bx6A
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: GArur5VgaJu6wJcgLhNwqQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: BY5wQIVzXhQRrBVloBtN5w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 29NV/2z9HqOk4cojPEShdA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: LbUmUfyz2veEfbx1/WPgbw
+name: Generic SBS @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 15
+  filament_density: 1.02
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 23
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif};Prevent PLA from jamming\n\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: SBS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 235
+  first_layer_temperature: 235
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: lf8EwG4ZaFRHSCZ0+XD9Qw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Engineering Plate"
+  id: hd8mAlEsNlBQBmOk8ximag
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: UW1cMC3ixZFN9aSvQP0+HQ
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: 2jKgvKzIwoUYY92qBPLGuw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: ab0TDvNB783RbidBTGQuGQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 7F8TjLtVANvXZ0XmlHrLWw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 9uEaGL1o5mksxm7oNHu6Ow
+name: Generic TPU @Tiertime 300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 2
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if (bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S255\n{elsif (bed_temperature[current_extruder] >30)||(first_layer_bed_temperature[current_extruder] >30)}M106 P3 S180\n{endif} \n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 5rElcPiEF7E30ZElbOZMew
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: jxaxqltVEvGzPooFmThmdw
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: jWOOQDWPplF+sADtWqh6Cw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: sDmkOOAgSh/6de45/mPEVg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: Cceo6D2jRenPgMcc9/MOaw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: rlAxyDCOOQyc1tzvYHZrmA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Vmig2OmQsmjJSAuPK0xkBw
+name: Tiertime ABS@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 16
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: n2z77IsnAbxeyzz7M4RPag
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: LJhGdRI4KVhCtdTClbpYyg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: /ZiVj1+eR0RiAWJNO48wTg
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: iLgXoFpfM8L5EKVEZaw6kw
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: 6dEJKxdZrFRUPHKLobAggQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: MXCYHUhk7hAjn4KHmevrFQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: FirmEUWNcy3AnILOraivtQ
+name: Tiertime ASA@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 35
+  min_fan_speed: 25
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 31.99
+  filament_density: 1.05
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: oWMz+yQRf9fMeA7c9qBlVA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: /7WIPjmlxbE8lFCklBiP6g
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "High Temp Plate"
+  id: 0pSmDc5p6mgc6qWnw+/6MQ
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured PEI Plate"
+  id: 0ZQp6jb8Eco9PmTptdTa/Q
+  values:
+    bed_temperature: 90
+    first_layer_bed_temperature: 90
+- condition: sheet.type == "Textured Cool Plate"
+  id: CbQnmwFnSpnKd5LhHjCQtQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: KxQNI2VV+aKS9isBW/uzHg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: EfshkL2svSFZ3RWuLzuf4w
+name: Tiertime PA6-CF@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 79.99
+  filament_density: 1.1
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.96
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PA6-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 275
+  first_layer_temperature: 275
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": true, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 4hxRhmSSoiGy/QCJk8E4aQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: sZ3ppVq1LH9acAOM6jSqQg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: iixDWSQqJojO3+vaqn+Lvg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: fBOfvTrsB89Ow52bzrRbLg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: ha40JQchD+qkDcG1kJJSlQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Ggha7vpQc8hYE9rcBcObJg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: J8YZiBr5u5GWONrGwkB+jw
+name: Tiertime PC@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 39.99
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 18
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; Filament gcode\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: cTzabphUqzH1i0DlsPA4eQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: C7pESnTKvxmxkrO14hQl8Q
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: w7bRe/VVguMw1RaVLpCtsw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: tFbh7UldMCgojLmlqfZwEQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: NyY6xoh/Je6mhbYO/ts2NA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: uwMmZZo3z8VxDy6xSMszbg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: sUXWjJeRyJquQaZvX/eGnw
+name: Tiertime PET-CF@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 5
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 84.99
+  filament_density: 1.29
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if (bed_temperature[current_extruder] >80)||(first_layer_bed_temperature[current_extruder] >80)}M106 P3 S255\n{elsif (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PET-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 270
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Ydy/ipQDFDFzhxydIZa81Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: tFiZLi5hOCaWWrGw11X/BA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "High Temp Plate"
+  id: oBl0TBpl7UOCJOqpfgZ7sw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: rBmRyJAj72HDVPPD6yg4DQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: jwyixi5COjEyhXBcv2XcRQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: TjvzW26sVYJ9lxlC76KgkA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: KqQzuCK8X9J1H2UzXpf0Kw
+name: Tiertime PETG@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 40
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 13
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if (bed_temperature[current_extruder] >80)||(first_layer_bed_temperature[current_extruder] >80)}M106 P3 S255\n{elsif (bed_temperature[current_extruder] >60)||(first_layer_bed_temperature[current_extruder] >60)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: /009banp/8cCIFnVdJyWZg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: phmG5QE53EgNAlKXs1sGQw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "High Temp Plate"
+  id: HXEhqkV+/0vOpYcX2nvhBg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured PEI Plate"
+  id: 5ZlVd1GKUTX5hjiOtSl/Kg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+- condition: sheet.type == "Textured Cool Plate"
+  id: AA+5HHSKNVnBTogN3CEYpw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: yGmH+jSk5eLIlOV04LTncA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: r5am0yAVyCrssraPMCTERA
+name: Tiertime PLA-CF@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 34.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 15
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(first_layer_bed_temperature[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(first_layer_bed_temperature[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S50\n{endif}\nM142 P1 R35 S40\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: uOeSg77dbnZaXm+wkw/d3g
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: YRPc1cWjSqHQTua41tbEKw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: x9b4q04ScK1FIKFba17vhQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: toL5gon9Iyf+QSormGfy+g
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: ucFZypFd3VfQTbF2/9QCJA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: nuJTbl1CrsFwmQsXwTRbzg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: Vr9s6i0RhnlOpZkHFPDTMA
+name: Tiertime PLA@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 24.99
+  filament_density: 1.26
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 21
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n;{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n;{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n;{endif}\n\n;{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\n;M106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n;{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: yF7V79mtsgWjJ0oI5hOVwQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: uGBsRji3fzWfL70ltpr5Fg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: ADd1vOsrp7G87IbUxKju5g
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: WBJJT0A3HvXAkMspBPRVEQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: l/Br2Z+znB+pU88OL3dcSg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: zRMrRK9V7KWNagKyHrJfzA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: wZUc0p6sARCNitGKkPK9/A
+name: Tiertime PVA@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 79.98
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 6
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: true
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >45)||(first_layer_bed_temperature[current_extruder] >45)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: PVA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 7
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: yCZF0NHfL49vUmj4L9v7fA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: 1aTsALbLUbzN4nWzp/E8IQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: NmWOpvMTw+h+khSk4c1bhQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: sVaa5aKQBYwBphnz+ZOU/g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: feX19aCu8Z91szG65NMVhg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 2EQp7RSYTydKyMv6M0GqpA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: dycA/Gv4y4ayG41ajv/DBg
+name: Tiertime TPU 95A@300HS
+condition: (printer.model == "Tiertime UP300 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.4) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.6) or (printer.model == "Tiertime UP600 HS" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 41.99
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n;M106 P3 S0\n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 2
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: "; filament start gcode\n{if  (bed_temperature[current_extruder] >35)||(first_layer_bed_temperature[current_extruder] >35)}M106 P3 S255\n{elsif(bed_temperature[current_extruder] >30)||(first_layer_bed_temperature[current_extruder] >30)}M106 P3 S180\n{endif}\n\n{if custom_parameter_filament_activate_air_filtration[current_extruder] && custom_parameter_printer_support_air_filtration}\nM106 P3 S{int(custom_parameter_filament_during_print_exhaust_fan_speed[current_extruder] / 100.0 * 255)} \n{endif}"
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Tiertime
+  full_fan_speed_layer: 0
+  temperature: 230
+  first_layer_temperature: 230
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 4vq21d3hN/o1Zwoq58W7HQ
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: OIz7CopD/wpxK0BBmhQ4eg
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: XYJVxXj0hbrvHkPx4hUeFA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: ieHBTu2q1zuAW6RN5Hg94Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: RwXs73dQ1w/5PcaY2UsGIA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 6ClkKIB4H/S1Smard9k3qA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35

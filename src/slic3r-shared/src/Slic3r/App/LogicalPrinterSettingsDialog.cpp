@@ -62,7 +62,9 @@ LogicalPrinterSettingsDialog::LogicalPrinterSettingsDialog(
     m_preset_favorite_filter->set_filter_fn(
         [this](const Biz::Preset::PresetItem& item) -> bool
         {
-            return m_only_favorites_button->checked() ?
+            // Orca lists the user's own printers with the installed ones
+            return m_only_favorites_button->checked()
+                    && item.origin != Domain::Preset::PresetOrigin::User ?
                 AppServices::instance()
                     .app_config()
                     .app_settings_advanced()
@@ -351,15 +353,88 @@ void LogicalPrinterSettingsDialog::create_page_list()
         dlg_manager.show_diff_dialog(m_project_interactor.preset_interactor());
     };
 
-    m_printer_add_dialog->attach_to_item(content_item(), Position::Left);
+    m_printer_add_dialog->attach_to_item(content_item(), Position::Right);
     m_printer_add_dialog->callbacks().printer_added = [this]
     { m_preset_favorite_filter->invalidate(); };
 
-    m_add_printer_button = row->emplace_back<LayoutButton>(_u8L("Add printer"));
-    m_add_printer_button->set_content_padding({7_fpx, 2_fpx});
+    Item* add_remove_row = row->emplace_back<Item>();
+    add_remove_row->set_gap(5_fpx);
+    m_add_printer_button = add_remove_row->emplace_back<LayoutButton>(std::string{}, Render::Icon::Plus);
+    m_add_printer_button->set_tooltip(_u8L("Add printer"));
+    m_add_printer_button->set_width(30_fpx);
     m_add_printer_button->set_height(30_fpx);
+    m_add_printer_button->set_content_padding(5_fpx);
     m_add_printer_button->callbacks().action = [this] { m_printer_add_dialog->open(); };
     m_add_printer_button->set_visible(only_favorites);
+
+    m_remove_printer_button = add_remove_row->emplace_back<LayoutButton>(std::string{}, Render::Icon::DeleteBtnIcon);
+    m_remove_printer_button->set_tooltip(_u8L("Remove printer"));
+    m_remove_printer_button->set_width(30_fpx);
+    m_remove_printer_button->set_height(30_fpx);
+    m_remove_printer_button->set_content_padding(5_fpx);
+    m_remove_printer_button->callbacks().action = [this]
+    {
+        const bool user = m_project_interactor.preset_interactor().selected_printer_preset().printer.origin
+            == Domain::Preset::PresetOrigin::User;
+        AppServices::instance().dialog_manager().show_yesno_dialog(
+            _u8L("Remove printer"),
+            user ? _u8L("Are you sure you want to delete the selected printer preset?")
+                 : _u8L("Are you sure you want to remove the selected printer?"),
+            [this](bool yes)
+            {
+                if (yes)
+                    remove_selected_printer();
+            }
+        );
+    };
+}
+
+// Orca's "Select/Remove printers": the selected printer leaves the list (it is no longer built at
+// start-up; the picker adds it again) after another listed printer is selected. A user printer
+// preset is deleted.
+void LogicalPrinterSettingsDialog::remove_selected_printer()
+{
+    Biz::Preset::PresetInteractor& preset_interactor = m_project_interactor.preset_interactor();
+    if (preset_interactor.selected_printer_preset().printer.origin == Domain::Preset::PresetOrigin::User) {
+        preset_interactor.delete_selected_user_preset(Domain::Preset::PresetKind::FdmPrinter);
+    } else {
+        const std::string hw_config_id{preset_interactor.selected_printer_preset().hw_config.id};
+        const Domain::Preset::HwPrinterConfig& config = preset_interactor.get_printer_config(hw_config_id).first.get();
+        const std::optional<std::string> added_key = config.template_id ?
+            std::optional{Biz::Preset::PresetInteractor::added_printer_key(config.vendor_id, *config.template_id)} :
+            std::nullopt;
+
+        bool switched = false;
+        for (size_t i = 0; i < m_printer_list_view->list_item_count() && !switched; ++i) {
+            const Biz::Preset::PresetItem& item = m_printer_list_view->item_at(i)->preset_item();
+            if (item.hw_printer_config_id == hw_config_id
+                || !Biz::Preset::PresetSelectionCheck::can_select_printer_preset(
+                    preset_interactor, item.hw_printer_config_id, item.id))
+                continue;
+            preset_interactor.select_printer_preset(item.hw_printer_config_id, item.id, true);
+            switched = true;
+        }
+        if (!switched)
+            return;
+
+        AppSettingsAdvanced& settings = AppServices::instance().app_config().app_settings_advanced();
+        for (const std::string& preset_id : preset_interactor.system_printer_preset_ids(hw_config_id))
+            settings.printer_favorite_presets.erase(preset_id);
+        if (settings.added_printers && added_key)
+            settings.added_printers->erase(*added_key);
+        AppServices::instance().app_config().save();
+        m_preset_favorite_filter->invalidate();
+    }
+    m_project_interactor.undo_provider().take_snapshot(UndoSnapshotType::SelectPrinterPreset);
+    update_remove_printer_button();
+}
+
+// a system printer can be removed while another one is listed
+void LogicalPrinterSettingsDialog::update_remove_printer_button()
+{
+    const bool user = m_project_interactor.preset_interactor().selected_printer_preset().printer.origin
+        == Domain::Preset::PresetOrigin::User;
+    m_remove_printer_button->set_enabled(user || m_printer_list_view->list_item_count() > 1);
 }
 
 void LogicalPrinterSettingsDialog::create_page_settings()
@@ -428,7 +503,7 @@ void LogicalPrinterSettingsDialog::create_page_settings()
         Biz::_u8L("Selected nozzles cannot be used together on any layer height.")
     );
 
-    m_advanced_dialog->attach_to_item(content_item(), Position::Left);
+    m_advanced_dialog->attach_to_item(content_item(), Position::Right);
 
     LayoutButton* button_advanced_setting =
         m_page_settings->emplace_back<LayoutButton>(_u8L("Advanced settings"), Render::Icon::Cog);
@@ -439,6 +514,7 @@ void LogicalPrinterSettingsDialog::create_page_settings()
         if (m_advanced_dialog->opened()) {
             m_navigator.set_opened_dialog(this);
         } else {
+            m_advanced_dialog->attach_to_item(content_item(), Position::Right);
             m_navigator.set_opened_dialog(m_advanced_dialog);
         }
     };
@@ -471,6 +547,7 @@ void LogicalPrinterSettingsDialog::on_about_to_show()
 {
     m_stack_layout->set_current_index(0);
     update_warning();
+    update_remove_printer_button();
 }
 
 void LogicalPrinterSettingsDialog::update_settings_data()
@@ -503,7 +580,7 @@ void LogicalPrinterSettingsDialog::update_color_mix_visibility()
     m_color_mix_button->set_visible(can_mix_colors);
 
     if (!can_mix_colors && m_color_mix_dialog->opened()) {
-        m_navigator.set_opened_dialog(this);
+        m_navigator.set_opened_dialog(nullptr); // opened on its own (SidebarBed)
     }
 }
 

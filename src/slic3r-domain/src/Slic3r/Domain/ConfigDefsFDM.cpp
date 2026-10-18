@@ -1,6 +1,7 @@
 #include "Slic3r/Domain/ConfigDefsFDM.hpp"
 #include "Slic3r/Domain/ConfigCommon.hpp"
 #include "Slic3r/Domain/ConfigDefUtils.hpp"
+#include "Slic3r/Domain/OrcaLayout.hpp"
 
 #include "Slic3r/Domain/GCodeFlavor.hpp"
 #include "Slic3r/Domain/Types.hpp"
@@ -304,6 +305,266 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = 0;
     def->init_fn = init_with(0.);
 
+    def = defs.add("internal_bridge_angle", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Internal bridge infill direction");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Internal Bridging angle override. If left to zero, the bridging angle will be calculated "
+                     "automatically for each specific bridge. Otherwise the provided angle will be used according to: - "
+                     "The absolute coordinates - The absolute coordinates + Model rotation: If Align directions to model "
+                     "is enabled - The optimal automatic angle + this value: If 'Relative Bridge Angle' is enabled Use "
+                     "180° for zero absolute angle.");
+    def->units = {L("°")};
+    def->min = 0;
+    def->max = 180;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("relative_bridge_angle", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Relative bridge angle");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("When enabled, the bridge angle values are added to the automatically calculated bridge direction "
+                     "instead of overriding it.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("bridge_density", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("External bridge density");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Controls the density (spacing) of external bridge lines. Theoretically, 100% means a solid bridge, "
+                     "but due to the tendency of bridge extrusions to sag, 100% may not be sufficient. - Higher than 100% "
+                     "density (Recommended Max 125%): - Pros: Produces smoother bridge surfaces, as overlapping lines "
+                     "provide additional support during printing. - Cons: Can cause overextrusion, which may reduce lower "
+                     "and upper surface quality and increase the risk of warping. - Lower than 100% density (Min 10%): - "
+                     "Pros: Can create a string-like first layer. Faster and with better cooling because there is more "
+                     "space for air to circulate around the extruded bridge. - Cons: May lead to sagging and poorer "
+                     "surface finish.");
+    def->units = {L("%")};
+    def->min = 10;
+    def->max = 125;
+    def->init_fn = init_with(Percentage{100.});
+
+    def = defs.add("internal_bridge_density", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Internal bridge density");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Controls the density (spacing) of internal bridge lines. Internal bridges act as intermediate "
+                     "support between sparse infill and top solid infill and can strongly affect top surface quality. - "
+                     "Higher than 100% density (Recommended Max 125%): - Pros: Improves internal bridge strength and "
+                     "support under top layers, reducing sagging and improving top-surface finish. - Cons: Increases "
+                     "material use and print time; excessive density may cause overextrusion and internal stresses. - "
+                     "Lower than 100% density (Min 10%): - Pros: Can reduce pillowing and improve cooling (more airflow "
+                     "through the bridge), and may speed up printing. - Cons: May reduce internal support, increasing the "
+                     "risk of sagging and top surface defects. This option works particularly well when combined with the "
+                     "second internal bridge over infill option to improve bridging further before solid infill is "
+                     "extruded.");
+    def->units = {L("%")};
+    def->min = 10;
+    def->max = 125;
+    def->init_fn = init_with(Percentage{100.});
+
+    def = defs.add("internal_bridge_flow", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Internal bridge flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This value governs the thickness of the internal bridge layer. This is the first layer over sparse "
+                     "infill so increasing it may increase strength and upper layer quality. Values above 1.0: Increase "
+                     "the amount of material while maintaining line spacing. This can improve line contact and strength. "
+                     "Values below 1.0: Reduce the amount of material while adjusting line spacing to maintain contact. "
+                     "This can improve sagging. The actual bridge flow used is calculated by multiplying this value with "
+                     "the filament flow ratio, and if set, the object's flow ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("enable_extra_bridge_layer", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Extra bridge layers (beta)");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 9;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("This option enables the generation of an extra bridge layer over internal and/or external bridges. "
+                     "Extra bridge layers help improve bridge appearance and reliability, as the solid infill is better "
+                     "supported. This is especially useful in fast printers, where the bridge and solid infill speeds "
+                     "vary greatly. The extra bridge layer results in reduced pillowing on top surfaces, as well as "
+                     "reduced separation of the external bridge layer from its surrounding perimeters. It is generally "
+                     "recommended to set this to at least 'External bridge only', unless specific issues with the sliced "
+                     "model are found. Options: 1. Disabled - does not generate second bridge layers. This is the default "
+                     "and is set for compatibility purposes 2. External bridge only - generates second bridge layers for "
+                     "external-facing bridges only. Please note that small bridges that are shorter or narrower than the "
+                     "set number of perimeters will be skipped as they would not benefit from a second bridge layer. If "
+                     "generated, the second bridge layer will be extruded parallel to the first bridge layer to reinforce "
+                     "the bridge strength 3. Internal bridge only - generates second bridge layers for internal bridges "
+                     "over sparse infill only. Please note that the internal bridges count towards the top shell layer "
+                     "count of your model. The second internal bridge layer will be extruded as close to perpendicular to "
+                     "the first as possible. If multiple regions in the same island, with varying bridge angles are "
+                     "present, the last region of that island will be selected as the angle reference 4. Apply to all - "
+                     "generates second bridge layers for both internal and external-facing bridges");
+    def->init_fn = init_with(
+        EnableExtraBridgeLayer::Disabled,
+        {{int(EnableExtraBridgeLayer::Disabled), "disabled", L("Disabled")},
+         {int(EnableExtraBridgeLayer::ExternalBridgeOnly), "external_bridge_only", L("External bridge only")},
+         {int(EnableExtraBridgeLayer::InternalBridgeOnly), "internal_bridge_only", L("Internal bridge only")},
+         {int(EnableExtraBridgeLayer::ApplyToAll), "apply_to_all", L("Apply to all")}}
+    );
+
+    def = defs.add("dont_filter_internal_bridges", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Filter out small internal bridges");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("This option can help reduce pillowing on top surfaces in heavily slanted or curved models. By "
+                     "default, small internal bridges are filtered out and the internal solid infill is printed directly "
+                     "over the sparse infill. This works well in most cases, speeding up printing without too much "
+                     "compromise on top surface quality. However, in heavily slanted or curved models, especially where "
+                     "too low a sparse infill density is used, this may result in curling of the unsupported solid "
+                     "infill, causing pillowing. Enabling limited filtering or no filtering will print internal bridge "
+                     "layer over slightly unsupported internal solid infill. The options below control the sensitivity of "
+                     "the filtering, i.e. they control where internal bridges are created: 1. Filter - enables this "
+                     "option. This is the default behavior and works well in most cases 2. Limited filtering - creates "
+                     "internal bridges on heavily slanted surfaces while avoiding unnecessary bridges. This works well "
+                     "for most difficult models 3. No filtering - creates internal bridges on every potential internal "
+                     "overhang. This option is useful for heavily slanted top surface models; however, in most cases, it "
+                     "creates too many unnecessary bridges.");
+    def->init_fn = init_with(
+        InternalBridgeFilter::Disabled,
+        {{int(InternalBridgeFilter::Disabled), "disabled", L("Filter")},
+         {int(InternalBridgeFilter::Limited), "limited", L("Limited filtering")},
+         {int(InternalBridgeFilter::NoFilter), "nofilter", L("No filtering")}}
+    );
+
+    def = defs.add("sparse_infill_rotate_template", typeid(std::string));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Sparse infill rotation template");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 12;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Rotate the sparse infill direction per layer using a template of angles. Enter comma-separated "
+                     "degrees (e.g., '0,30,60,90'). Angles are applied in order by layer and repeat when the list ends. "
+                     "Advanced syntax is supported: '+5' rotates +5° every layer; '+5#5' rotates +5° every 5 layers. See "
+                     "the Wiki for details. When a template is set, the standard infill direction setting is ignored. "
+                     "Note: some infill patterns (e.g., Gyroid) control rotation themselves; use with care.");
+    def->units = {L("°")};
+    def->init_fn = init_with(std::string());
+
+    def = defs.add("extra_solid_infills", typeid(std::string));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Insert solid layers");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 14;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Insert solid infill at specific layers. Use N to insert every Nth layer, N#K to insert K consecutive solid "
+                     "layers every N layers (K is optional, e.g. '5#' equals '5#1'), or a comma-separated list (e.g. 1,7,9) to "
+                     "insert at explicit layers. Layers are 1-based.");
+    def->init_fn = init_with(std::string());
+
+    def = defs.add("solid_infill_rotate_template", typeid(std::string));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Solid infill rotation template");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 13;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This parameter adds a rotation of solid infill direction to each layer according to the specified "
+                     "template. The template is a comma-separated list of angles in degrees, e.g. '0,90'. The first angle "
+                     "is applied to the first layer, the second angle to the second layer, and so on. If there are more "
+                     "layers than angles, the angles will be repeated. Note that not all solid infill patterns support "
+                     "rotation.");
+    def->units = {L("°")};
+    def->init_fn = init_with(std::string());
+
+    def = defs.add("align_infill_direction_to_model", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Align directions to model");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 14;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Aligns infill, bridge, ironing, and top/bottom surface directions to follow the model's orientation "
+                     "on the build plate. When enabled, these directions rotate together with the model so the printed "
+                     "features keep their intended orientation relative to the part, preserving optimal strength and "
+                     "surface characteristics regardless of how the model is placed.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("counterbore_hole_bridging", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Bridge counterbore holes");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 11;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("This option creates bridges for counterbore holes, allowing them to be printed without support. "
+                     "Available modes include: 1. None: No bridge is created 2. Partially Bridged: Only a part of the "
+                     "unsupported area will be bridged 3. Sacrificial Layer: A full sacrificial bridge layer is created");
+    def->init_fn = init_with(
+        CounterboreHoleBridging::None,
+        {{int(CounterboreHoleBridging::None), "none", L("None")},
+         {int(CounterboreHoleBridging::PartiallyBridge), "partiallybridge", L("Partially bridged")},
+         {int(CounterboreHoleBridging::SacrificialLayer), "sacrificiallayer", L("Sacrificial layer")}}
+    );
+
+    def = defs.add("thick_internal_bridges", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Thick internal bridges");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 8;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("If enabled, internal bridge extrusion uses a line height equal to the nozzle diameter. This "
+                     "increases internal bridge strength and reliability when printed over sparse infill, but may worsen "
+                     "appearance. If disabled, internal bridges may look better but can be less reliable over sparse "
+                     "infill.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("elefant_foot_layers_density", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Elephant foot layers density");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 22;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Density of internal solid infill for Elephant foot layers compensation. The initial value for the "
+                     "second layer is set. Subsequent layers become linearly denser by the height specified in "
+                     "elefant_foot_compensation_layers.");
+    def->units = {L("%")};
+    def->min = 50;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{100.});
+
     def = defs.add("bridge_fan_speed", typeid(int));
     def->location = Filament;
     def->label = L("Bridges fan speed");
@@ -374,6 +635,22 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = 0;
     def->init_fn = init_with(60.);
 
+    def = defs.add("internal_bridge_speed", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object, Volume };
+    def->label = L("Internal");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_SupportAndBridges;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 1;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Speed of internal bridges. If the value is expressed as a percentage, it will be calculated based "
+                     "on the bridge_speed. Default value is 150%.");
+    def->units = {L("mm/s"), L("%")};
+    def->min = 1;
+    // a percentage of the (per tool) bridge speed: resolved in GCodeGenerator::_extrude
+    def->full_label = L("Internal bridges");
+    def->init_fn = init_with(FloatOrPercentage(Percentage{150.}));
+
     def = defs.add("over_bridge_speed", typeid(FloatOrPercentage));
     def->location = Print;
     def->overrides_in = Locations{ Tool, Object, Volume };
@@ -400,6 +677,33 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->gui_type = ConfigItemDef::GUIType::checkbox;
     def->tooltip    = L("This setting enables dynamic speed control on overhangs.");
     def->init_fn = init_with(false);
+
+    def = defs.add("slowdown_for_curled_perimeters", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object, Volume };
+    def->label = L("Slow down for curled perimeters");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_DynamicOverhangSpeed;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this option to slow down printing in areas where perimeters may have curled upwards. For "
+                     "example, additional slowdown will be applied when printing overhangs on sharp corners like the "
+                     "front of the Benchy hull, reducing curling which compounds over multiple layers. It is generally "
+                     "recommended to have this option switched on unless your printer cooling is powerful enough or the "
+                     "print speed is slow enough that perimeter curling does not happen. If printing with a high external "
+                     "perimeter speed, this parameter may introduce wall artifacts when slowing down, due to the "
+                     "potentially large variance in print speeds causing the extruder to be unable to keep up with the "
+                     "requested flow change. Root cause of these artifacts is most likely PA tuning being slightly off, "
+                     "especially when combined with a high PA smooth time. Recommendations when enabling this option: 1. "
+                     "Reduce Pressure Advance smooth time to 0.015 - 0.02 so the extruder reacts quickly to the speed "
+                     "changes. 2. Increase the minimum print speeds to limit the magnitude of the slowdown and reduce the "
+                     "variance between fast and slow segments. 3. If artifacts still appear, enable Extrusion Rate "
+                     "Smoothing (ERS) to further smooth the flow transitions. Note: When this option is enabled, overhang "
+                     "perimeters are treated like overhangs, meaning the overhang speed is applied even if the "
+                     "overhanging perimeter is part of a bridge. For example, when the perimeters are 100% overhanging, "
+                     "with no wall supporting them from underneath, the 75% overhang speed will be applied, limited by "
+                     "the bridge speed.");
+    def->init_fn = init_with(true);
 
     // TRN PrintSettings : "Dynamic overhang speed"
     auto overhang_speed_setting_description = L("Overhang size is expressed as a percentage of overlap of the extrusion with the previous layer: "
@@ -560,8 +864,89 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
         {{int(BrimType::NoBrim), "no_brim", L("No brim")},
          {int(BrimType::OuterOnly), "outer_only", L("Outer brim only")},
          {int(BrimType::InnerOnly), "inner_only", L("Inner brim only")},
-         {int(BrimType::OuterAndInner), "outer_and_inner", L("Outer and inner brim")}}
+         {int(BrimType::OuterAndInner), "outer_and_inner", L("Outer and inner brim")},
+         {int(BrimType::BrimEars), "brim_ears", L("Mouse ear")},
+         {int(BrimType::AutoBrim), "auto_brim", L("Auto")}}
     );
+
+    def = defs.add("brim_ears_max_angle", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Brim ear max angle");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Brim;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Maximum angle to let a brim ear appear. If set to 0, no brim will be created. If set to ~180, brim "
+                     "will be created on everything but straight sections.");
+    def->units = {L("°")};
+    def->min = 0;
+    def->max = 180;
+    def->init_fn = init_with(125.);
+
+    def = defs.add("brim_ears_detection_length", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Brim ear detection radius");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Brim;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 11;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The geometry will be decimated before detecting sharp angles. This parameter indicates the minimum "
+                     "length of the deviation for the decimation. 0 to deactivate.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("brim_ears_outer_only", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Brim ears outer only");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Brim;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 12;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Generate mouse ears only on the outer contour of the model, excluding holes and enclosed sections.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("brim_flow_ratio", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Brim flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Brim;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 13;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for brims. The actual brim flow used is calculated by "
+                     "multiplying this value by the filament flow ratio, and if set, the object's flow ratio. Note: The "
+                     "resulting value will not be affected by the first-layer flow ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("brim_use_efc_outline", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Brim follows compensated outline");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Brim;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 14;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("When enabled, the brim is aligned with the first-layer perimeter geometry after Elephant Foot "
+                     "Compensation is applied. This option is intended for cases where Elephant Foot Compensation "
+                     "significantly alters the first-layer footprint. If your current setup already works well, enabling "
+                     "it may be unnecessary and can cause the brim to fuse with upper layers.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("combine_brims", typeid(bool));
+    def->location = Print;
+    def->label = L("Combine brims");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Brim;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 15;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Combine multiple brims into one when they are close to each other. This can improve brim adhesion.");
+    def->init_fn = init_with(false);
 
     def = defs.add("brim_separation", typeid(double));
     def->location = Print;
@@ -620,6 +1005,32 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def = defs.add("compatible_prints_condition_cummulative", typeid(std::vector<std::string>));
     def->init_fn = SET_DEFAULT( new ConfigOptionStrings());
     def->cli = ConfigOptionDef::nocli;*/
+
+    def = defs.add("print_order", typeid(EnumWrapper));
+    def->location = Print;
+    def->label = L("Intra-layer order");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_SlicingStrategy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Order in which object instances are visited within a single layer, which controls how much travel "
+                     "is spent moving between them. Default: nearest-neighbor chaining, refined with 2-opt and crossing "
+                     "removal. A good general choice. As object list: instances are printed in the same order as the "
+                     "object list, without any path optimization. Use it when you need a predictable, manually controlled "
+                     "order. Best of all (shortest path): every strategy is evaluated and the shortest one is used. The "
+                     "object instance order is decided once for the whole print, while the ordering of individual islands "
+                     "is decided per layer, so different layers may end up using different strategies. Slightly slower to "
+                     "slice. Snake: serpentine row-by-row traversal, refined with 2-opt. Well suited to regular grids of "
+                     "many small parts. With multiple filaments or tools in the same layer, minimizing tool changes takes "
+                     "priority: objects are grouped by filament first and this setting only orders the instances within "
+                     "each filament group, so the overall sequence may not look like the shortest path across the plate.");
+    def->init_fn = init_with(
+        PrintOrder::Default,
+        {{int(PrintOrder::Default), "default", L("Default")},
+         {int(PrintOrder::AsObjectList), "as_obj_list", L("As object list")},
+         {int(PrintOrder::BestOfStrategies), "best_of", L("Best of all (shortest path)")},
+         {int(PrintOrder::Snake), "snake", L("Snake")}}
+    );
 
     def = defs.add("complete_objects", typeid(bool));
     def->location = Print;
@@ -849,7 +1260,8 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
          {int(InfillPattern::ipConcentric), "concentric", L("Concentric")},
          {int(InfillPattern::ipHilbertCurve), "hilbertcurve", L("Hilbert Curve")},
          {int(InfillPattern::ipArchimedeanChords), "archimedeanchords", L("Archimedean Chords")},
-         {int(InfillPattern::ipOctagramSpiral), "octagramspiral", L("Octagram Spiral")}}
+         {int(InfillPattern::ipOctagramSpiral), "octagramspiral", L("Octagram Spiral")},
+         {int(InfillPattern::ipSpiralInset), "spiralinset", L("Spiral Inset")}}
     );
 
     def = defs.add("bottom_fill_pattern", typeid(EnumWrapper));
@@ -872,8 +1284,217 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
          {int(InfillPattern::ipConcentric), "concentric", L("Concentric")},
          {int(InfillPattern::ipHilbertCurve), "hilbertcurve", L("Hilbert Curve")},
          {int(InfillPattern::ipArchimedeanChords), "archimedeanchords", L("Archimedean Chords")},
-         {int(InfillPattern::ipOctagramSpiral), "octagramspiral", L("Octagram Spiral")}}
+         {int(InfillPattern::ipOctagramSpiral), "octagramspiral", L("Octagram Spiral")},
+         {int(InfillPattern::ipSpiralInset), "spiralinset", L("Spiral Inset")}}
     );
+
+    def = defs.add("small_area_infill_flow_compensation", typeid(bool));
+    def->location = Print;
+    def->label = L("Small area flow compensation (beta)");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Reduce the flow of short solid infill lines (rectilinear and monotonic patterns) following the model "
+                     "below, against over-extruded small areas.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("small_area_infill_flow_compensation_model", typeid(std::string));
+    def->location = Print;
+    def->label = L("Flow Compensation Model");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Flow Compensation Model, used to adjust the flow for small infill areas. The model is expressed as "
+                     "a comma separated pair of values for extrusion length and flow correction factor. Each pair is on a "
+                     "separate line, followed by a semicolon, in the following format: \"1.234, 5.678;\"");
+    def->multiline = true;
+    def->full_width = true;
+    def->height = 10;
+    def->init_fn = init_with(std::string{"0,0\n0.2,0.4444\n0.4,0.6145\n0.6,0.7059\n0.8,0.7619\n1.5,0.8571\n2,0.8889\n3,0.9231\n5,0.9520\n10,1"});
+
+    def = defs.add("detect_narrow_internal_solid_infill", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Detect narrow internal solid infills");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 13;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("This option will auto-detect narrow internal solid infill areas. If enabled, the concentric pattern "
+                     "will be used for the area to speed up printing. Otherwise, the rectilinear pattern will be used by "
+                     "default.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("internal_solid_infill_pattern", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Internal solid infill pattern");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 2;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Line pattern of internal solid infill. if the detect narrow internal solid infill be enabled, the "
+                     "concentric pattern will be used for the small area.");
+    def->init_fn = init_with(
+        InfillPattern::ipEnsuring,
+        {{int(InfillPattern::ipRectilinear), "rectilinear", L("Rectilinear")},
+         {int(InfillPattern::ipMonotonic), "monotonic", L("Monotonic")},
+         {int(InfillPattern::ipMonotonicLines), "monotoniclines", L("Monotonic Lines")},
+         {int(InfillPattern::ipAlignedRectilinear), "alignedrectilinear", L("Aligned Rectilinear")},
+         {int(InfillPattern::ipConcentric), "concentric", L("Concentric")},
+         {int(InfillPattern::ipHilbertCurve), "hilbertcurve", L("Hilbert Curve")},
+         {int(InfillPattern::ipArchimedeanChords), "archimedeanchords", L("Archimedean Chords")},
+         {int(InfillPattern::ipOctagramSpiral), "octagramspiral", L("Octagram Spiral")},
+         {int(InfillPattern::ipEnsuring), "ensuring", L("Ensuring")},
+         {int(InfillPattern::ipSpiralInset), "spiralinset", L("Spiral Inset")}}
+    );
+
+    def = defs.add("top_surface_density", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Top surface density");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Density of top surface layer. A value of 100% creates a fully solid, smooth top layer. Reducing "
+                     "this value results in a textured top surface, according to the chosen top surface pattern. A value "
+                     "of 0% will result in only the walls on the top layer being created. Intended for aesthetic or "
+                     "functional purposes, not to fix issues such as over-extrusion.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{100.});
+
+    def = defs.add("top_surface_fill_order", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Top surface fill order");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral "
+                     "Inset, Archimedean Chords, Octagram Spiral). Outward starts at the center of the surface, so any "
+                     "excess material is pushed towards the edge where it is least visible. Inward starts at the edge and "
+                     "ends with the tight curves at the center. Default uses shortest-path ordering, which may run in "
+                     "either direction.");
+    def->init_fn = init_with(
+        SurfaceFillOrder::Default,
+        {{int(SurfaceFillOrder::Default), "default", L("Default")},
+         {int(SurfaceFillOrder::Outward), "outward", L("Outward")},
+         {int(SurfaceFillOrder::Inward), "inward", L("Inward")}}
+    );
+
+    def = defs.add("bottom_surface_fill_order", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Bottom surface fill order");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 8;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral "
+                     "Inset, Archimedean Chords, Octagram Spiral). Inward starts each surface with the wider outer "
+                     "curves, which improves first layer adhesion on build plates where the tight curves at the center "
+                     "may not stick. Outward starts at the center, pushing any excess material towards the edge. Default "
+                     "uses shortest-path ordering, which may run in either direction.");
+    def->init_fn = init_with(
+        SurfaceFillOrder::Default,
+        {{int(SurfaceFillOrder::Default), "default", L("Default")},
+         {int(SurfaceFillOrder::Outward), "outward", L("Outward")},
+         {int(SurfaceFillOrder::Inward), "inward", L("Inward")}}
+    );
+
+    def = defs.add("center_of_surface_pattern", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Center surface pattern on");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 9;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Chooses where the centering point of centered top/bottom surface patterns (Archimedean Chords, "
+                     "Octagram Spiral) is placed. - Each Surface: centers the pattern on every individual surface region, "
+                     "so each island is symmetric on its own. - Each Model: centers the pattern on each connected body. "
+                     "Parts that touch or overlap share one center; parts detached from the rest each get their own. - "
+                     "Each Assembly: uses a single shared center for the whole object or assembly.");
+    def->init_fn = init_with(
+        CenterOfSurfacePattern::EachSurface,
+        {{int(CenterOfSurfacePattern::EachSurface), "each_surface", L("Each Surface")},
+         {int(CenterOfSurfacePattern::EachModel), "each_model", L("Each Model")},
+         {int(CenterOfSurfacePattern::EachAssembly), "each_assembly", L("Each Assembly")}}
+    );
+
+    def = defs.add("top_surface_expansion", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Top surface expansion");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Expands the top surfaces by this distance to connect distinct top surfaces and fill gaps. Useful "
+                     "for cases where the top surface is interrupted by a raised feature, such as text on a plane. "
+                     "Expanding it removes the holes beneath these features and creates a continuous path with a better "
+                     "finish for printing on top. The expansion is applied to the original top surface, before any other "
+                     "processing such as bridging or overhang detection.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("top_surface_expansion_margin", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Top expansion wall margin");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 11;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Using “Top surface expansion” may cause a surface that did not previously touch the model's outer "
+                     "walls to now do so. This can cause contraction marks (such as the hull line) on the outer walls. By "
+                     "adding a small margin, this contraction will not occur directly on the walls, thereby preventing a "
+                     "visible mark.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 10;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("top_surface_expansion_direction", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Top expansion direction");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 12;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Direction in which the top surface expansion grows. - Inward grows into the holes and gaps left by "
+                     "features rising from the middle of a top surface. - Outward grows the outer edge of the surface, "
+                     "connecting surfaces separated by features that can divide a surface, such as a lattice pattern. - "
+                     "Inward and Outward does both.");
+    def->init_fn = init_with(
+        TopSurfaceExpansionDirection::InwardAndOutward,
+        {{int(TopSurfaceExpansionDirection::InwardAndOutward), "inward_and_outward", L("Inward and Outward")},
+         {int(TopSurfaceExpansionDirection::Inward), "inward", L("Inward")},
+         {int(TopSurfaceExpansionDirection::Outward), "outward", L("Outward")}}
+    );
+
+    def = defs.add("bottom_surface_density", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Bottom surface density");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_SurfacePatterns;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Density of the bottom surface layer. Intended for aesthetic or functional purposes, not to fix "
+                     "issues such as over-extrusion. WARNING: Lowering this value may negatively affect bed adhesion.");
+    def->units = {L("%")};
+    def->min = 10;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{100.});
 
     def = defs.add("external_perimeter_extrusion_width", typeid(FloatOrPercentage));
     def->location = Print;
@@ -908,17 +1529,31 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->init_fn = init_with(FloatOrPercentage(Percentage{50.}));
     def->ratio_over = "perimeter_speed";
 
-    def = defs.add("external_perimeters_first", typeid(bool));
+    // Orca wall_sequence; replaces 3.0's external_perimeters_first (read into it from old configs)
+    def = defs.add("wall_sequence", typeid(EnumWrapper));
     def->location = Print;
     def->overrides_in = Locations{ Tool, Object, Volume };
-    def->label = L("External perimeters first");
+    def->label = L("Walls printing order");
     def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
     def->category = ConfigItemDef::Category::Print_WallsPerimeters;
     def->order = 0;
-    def->gui_type = ConfigItemDef::GUIType::checkbox;
-    def->tooltip = L("Print contour perimeters from the outermost one to the innermost one "
-                   "instead of the default inverse order.");
-    def->init_fn = init_with(false);
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Print sequence of the internal (inner) and external (outer) walls.\n\n"
+                     "Use Inner/Outer for best overhangs. This is because the overhanging walls can adhere to a neighbouring perimeter while printing. "
+                     "However, this option results in slightly reduced surface quality as the external perimeter is deformed by being squashed to the internal perimeter.\n\n"
+                     "Use Inner/Outer/Inner for the best external surface finish and dimensional accuracy as the external wall is printed undisturbed from an internal perimeter. "
+                     "However, overhang performance will reduce as there is no internal perimeter to print the external wall against. "
+                     "This option requires a minimum of 3 walls to be effective as it prints the internal walls from the 3rd perimeter onwards first, "
+                     "then the external perimeter and, finally, the first internal perimeter. "
+                     "This option is recommended over the Outer/Inner option in most cases.\n\n"
+                     "Use Outer/Inner for the same external wall quality and dimensional accuracy benefits of Inner/Outer/Inner option. "
+                     "However, the Z seams will appear less consistent as the first extrusion of a new layer starts on a visible surface.");
+    def->init_fn = init_with(
+        WallSequence::InnerOuter,
+        {{int(WallSequence::InnerOuter), "inner wall/outer wall", L("Inner/Outer")},
+         {int(WallSequence::OuterInner), "outer wall/inner wall", L("Outer/Inner")},
+         {int(WallSequence::InnerOuterInner), "inner-outer-inner wall", L("Inner/Outer/Inner")}}
+    );
 
     def = defs.add("extra_perimeters", typeid(bool));
     def->location = Print;
@@ -998,6 +1633,19 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->units = {L("mm")};
     def->min = 0;
     def->init_fn = init_with(20.);
+
+    def = defs.add("extruder_clearance_height_to_lid", typeid(double));
+    def->location = Printer;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_SequentialPrintingLimits;
+    def->order = 2;
+    def->label = L("Height to lid");
+    def->tooltip = L("Distance from the nozzle tip to the lid. With 'Complete individual objects', only the last "
+                     "object printed may be taller. 0: no lid. Ignored for printers with a detailed extruder model.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(120.);
 
     def = defs.add("extruder_clearance_radius", typeid(double));
     def->location = Printer;
@@ -1127,6 +1775,27 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->units = {L("mm³/s")};
     def->min = 0;
     def->init_fn = init_with(0.);
+
+    def = defs.add("filament_adaptive_volumetric_speed", typeid(bool));
+    def->location = Filament;
+    def->label = L("Adaptive volumetric speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Overrides_PrintSpeedOverride;
+    def->category = ConfigItemDef::Category::Filament_Overrides;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("When enabled, the extrusion flow is limited by the smaller of the fitted value (calculated from "
+                     "line width and layer height) and the user-defined maximum flow. When disabled, only the "
+                     "user-defined maximum flow is applied. Note: Experimental and incomplete feature imported from BBS. "
+                     "Functional for some profiles that already have the variable saved.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("volumetric_speed_coefficients", typeid(std::string));
+    def->location = Filament;
+    def->label = L("Max volumetric speed multinomial coefficients");
+    def->category = ConfigItemDef::Category::Hidden;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Six coefficients of the fitted max volumetric speed: c0·h² + c1·w² + c2·h·w + c3·h + c4·w + c5 "
+                     "(h layer height, w line width).");
+    def->init_fn = init_with("");
 
     def = defs.add("filament_infill_max_speed", typeid(double));
     def->location = Filament;
@@ -1568,6 +2237,50 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->max = 360;
     def->init_fn = init_with(45.);
 
+    def = defs.add("solid_infill_direction", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Solid infill direction");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Angle for solid infill pattern, which controls the start or main direction of line.");
+    def->units = {L("°")};
+    def->min = 0;
+    def->max = 360;
+    def->init_fn = init_with(45.);
+
+    def = defs.add("top_layer_direction", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Top layer direction");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Fixed angle for the top solid infill and ironing lines. Set to -1 to follow the default solid "
+                     "infill direction.");
+    def->units = {L("°")};
+    def->min = -1;
+    def->max = 360;
+    def->init_fn = init_with(-1.);
+
+    def = defs.add("bottom_layer_direction", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Bottom layer direction");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Advanced;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Fixed angle for the bottom solid infill lines. Set to -1 to follow the default solid infill "
+                     "direction.");
+    def->units = {L("°")};
+    def->min = -1;
+    def->max = 360;
+    def->init_fn = init_with(-1.);
+
     def = defs.add("fill_density", typeid(Percentage));
     def->location = Print;
     def->overrides_in = Locations{ Tool, Object, Volume };
@@ -1598,6 +2311,338 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     };
     def->init_fn = init_with(Percentage{20.});
 
+    def = defs.add("lightning_overhang_angle", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Lightning overhang angle");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 2;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Maximum overhang angle for Lightning infill support propagation.");
+    def->units = {L("°")};
+    def->min = 5;
+    def->max = 85;
+    def->init_fn = init_with(45.);
+
+    def = defs.add("lightning_prune_angle", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Prune angle");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Controls how aggressively short or unsupported Lightning branches are pruned. This angle is "
+                     "converted internally to a per-layer distance.");
+    def->units = {L("°")};
+    def->min = 5;
+    def->max = 85;
+    def->init_fn = init_with(45.);
+
+    def = defs.add("lightning_straightening_angle", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Straightening angle");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Maximum straightening angle used to simplify Lightning branches.");
+    def->units = {L("°")};
+    def->min = 5;
+    def->max = 85;
+    def->init_fn = init_with(45.);
+
+    def = defs.add("infill_complete_top", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Fill pattern tops");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Choose this option if you want to completely fill in the tops of the infill pattern");
+    def->init_fn = init_with(false);
+
+    def = defs.add("lateral_lattice_angle_1", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Lateral lattice angle 1");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 8;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The angle of the first set of Lateral lattice elements in the Z direction. Zero is vertical.");
+    def->units = {L("°")};
+    def->min = -75;
+    def->max = 75;
+    def->init_fn = init_with(-45.);
+
+    def = defs.add("lateral_lattice_angle_2", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Lateral lattice angle 2");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 9;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The angle of the second set of Lateral lattice elements in the Z direction. Zero is vertical.");
+    def->units = {L("°")};
+    def->min = -75;
+    def->max = 75;
+    def->init_fn = init_with(45.);
+
+    def = defs.add("infill_overhang_angle", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Infill overhang angle");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The angle of the infill angled lines. 60° will result in a pure honeycomb.");
+    def->units = {L("°")};
+    def->min = 15;
+    def->max = 75;
+    def->init_fn = init_with(60.);
+
+    def = defs.add("tpms_adaptive", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Adaptive density (experimental)");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 11;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Grades the Gyroid and TPMS infill inside the object: its cells grow from the surface of the "
+                     "object towards its center. The sparse infill density is used at the surface and the interior "
+                     "density at the center.\n"
+                     "Distance warp, Smooth blend and Stepped shells follow the distance to the nearest surface, "
+                     "including the top and bottom, with the interior density at the point farthest from it:\n"
+                     " - Distance warp: one continuous pattern, stretched and sheared where the distance changes "
+                     "across directions, as in plates and long parts.\n"
+                     " - Smooth blend: the patterns of neighbouring densities blended into each other, with small "
+                     "loops where they meet.\n"
+                     " - Stepped shells: shells of the regular pattern at densities about 1.5 times apart, their "
+                     "lines joined along the shell boundaries.\n"
+                     " - Lobes: follows the 3D shape of the object, including its top and bottom. Every lobe, a part "
+                     "joined to the rest by a narrower neck, is graded towards its own center.\n"
+                     " - Normal Z, Y or X: follows the sections of the object normal to that axis, so the density "
+                     "does not change along it.");
+    def->init_fn = init_with(
+        TpmsAdaptiveMode::Disabled,
+        {{int(TpmsAdaptiveMode::Disabled), "disabled", L("Disabled")},
+         {int(TpmsAdaptiveMode::DistanceWarp), "distance_warp", L("Distance warp")},
+         {int(TpmsAdaptiveMode::SmoothBlend), "smooth_blend", L("Smooth blend")},
+         {int(TpmsAdaptiveMode::SteppedShells), "stepped_shells", L("Stepped shells")},
+         {int(TpmsAdaptiveMode::Lobes), "lobes", L("Lobes")},
+         {int(TpmsAdaptiveMode::NormalZ), "normal_z", L("Normal Z")},
+         {int(TpmsAdaptiveMode::NormalY), "normal_y", L("Normal Y")},
+         {int(TpmsAdaptiveMode::NormalX), "normal_x", L("Normal X")}}
+    );
+
+    def = defs.add("tpms_interior_density", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Interior density");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 12;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Density of the adaptive infill at the center of the object.");
+    def->units = {L("%")};
+    def->min = 1;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{5.});
+
+    def = defs.add("tpms_adaptive_gradient", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Adaptive gradient");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 13;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("How the density changes from the surface to the center of the object.\n"
+                     "Linear: the density changes at a constant rate.\n"
+                     "Quadratic: the density stays close to the sparse infill density near the surface and "
+                     "changes faster towards the center.\n"
+                     "Exponential: the density changes quickly just below the surface and levels off towards "
+                     "the center.");
+    def->init_fn = init_with(
+        TpmsAdaptiveGradient::Linear,
+        {{int(TpmsAdaptiveGradient::Linear), "linear", L("Linear")},
+         {int(TpmsAdaptiveGradient::Quadratic), "quadratic", L("Quadratic")},
+         {int(TpmsAdaptiveGradient::Exponential), "exponential", L("Exponential")}}
+    );
+
+    def = defs.add("gyroid_optimized", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Z-buckling bias optimization (experimental)");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 14;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Tightens the gyroid wave along the Z (vertical) axis at low infill density "
+                     "to shorten the effective vertical column length and improve Z-axis compression "
+                     "buckling resistance. Filament use is preserved. No effect at ~30% sparse infill "
+                     "density and above. Only applies when Sparse infill pattern is set to Gyroid.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("infill_shift_step", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Infill shift step");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 15;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This parameter adds a slight displacement to each layer of infill to create a cross texture.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 10;
+    def->init_fn = init_with(0.4);
+
+    def = defs.add("symmetric_infill_y_axis", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Symmetric infill Y axis");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 16;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("If the model has two parts that are symmetric about the Y axis, and you want these parts to have symmetric textures, please click this option on one of the parts.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("skin_infill_density", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Skin infill density");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 17;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The portion of the model's outer surface within a certain depth range is called the skin. This parameter is used to adjust the density of this section. When two regions have the same sparse infill settings but different skin densities, this area will not be split into two separate regions. Default is as same as infill density.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{25.});
+
+    def = defs.add("skeleton_infill_density", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Skeleton infill density");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 18;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The remaining part of the model contour after removing a certain depth from the surface is called the skeleton. This parameter is used to adjust the density of this section. When two regions have the same sparse infill settings but different skeleton densities, their skeleton areas will develop overlapping sections. Default is as same as infill density.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{25.});
+
+    def = defs.add("skin_infill_depth", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Skin infill depth");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 19;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The parameter sets the depth of skin.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(2.);
+
+    def = defs.add("infill_lock_depth", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Infill lock depth");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 20;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The parameter sets the overlapping depth between the interior and skin.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("skin_infill_line_width", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Skin line width");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 21;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Adjust the line width of the selected skin paths.");
+    def->ratio_over = "nozzle_diameter";
+    def->units = {L("mm"), L("%")};
+    def->min = 0;
+    def->init_fn = init_with(FloatOrPercentage(Percentage{100.}));
+
+    def = defs.add("skeleton_infill_line_width", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Skeleton line width");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 22;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Adjust the line width of the selected skeleton paths.");
+    def->ratio_over = "nozzle_diameter";
+    def->units = {L("mm"), L("%")};
+    def->min = 0;
+    def->init_fn = init_with(FloatOrPercentage(Percentage{100.}));
+
+    def = defs.add("separated_infills", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Separated infills");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 23;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Centers the internal infill of each part on itself, as if it were sliced on its own, instead of on the "
+                     "whole assembly. Parts that touch or overlap are treated as one body and share a center; separate parts "
+                     "(or distinct 3D objects) each get their own.\n"
+                     "Useful when an assembly groups several objects that should each keep a consistent, self-centered infill.\n"
+                     "Adaptive Cubic and Support Cubic always center each part on itself, and Lightning infill is generated for "
+                     "the whole object and is unaffected.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("fill_multiline", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Fill Multiline");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Using multiple lines for the infill pattern, if supported by infill pattern.");
+    def->min = 1;
+    def->max = 10;
+    def->init_fn = init_with(1);
+
+    def = defs.add("sparse_infill_smooth_factor", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Sparse infill smooth factor");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_DensityPattern;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Controls how strongly sparse infill corners are rounded. 0% keeps the original sharp path, while 100% produces the largest possible curves between adjacent infill lines.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{0.});
+
     def = defs.add("fill_pattern", typeid(EnumWrapper));
     def->location = Print;
     def->overrides_in = Locations{ Tool, Object, Volume };
@@ -1626,7 +2671,16 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
          {int(InfillPattern::ipAdaptiveCubic), "adaptivecubic", L("Adaptive Cubic")},
          {int(InfillPattern::ipSupportCubic), "supportcubic", L("Support Cubic")},
          {int(InfillPattern::ipLightning), "lightning", L("Lightning")},
-         {int(InfillPattern::ipZigZag), "zigzag", L("Zig Zag")}}
+         {int(InfillPattern::ipZigZag), "zigzag", L("Zig Zag")},
+         {int(InfillPattern::ip3DHoneycombClassic), "3dhoneycombclassic", L("3D Honeycomb (classic)")},
+         {int(InfillPattern::ipQuarterCubic), "quartercubic", L("Quarter Cubic")},
+         {int(InfillPattern::ipLateralLattice), "lateral-lattice", L("Lateral Lattice")},
+         {int(InfillPattern::ipLateralHoneycomb), "lateral-honeycomb", L("Lateral Honeycomb")},
+         {int(InfillPattern::ipCrossHatch), "crosshatch", L("Cross Hatch")},
+         {int(InfillPattern::ipTpmsD), "tpmsd", L("TPMS-D")},
+         {int(InfillPattern::ipTpmsFK), "tpmsfk", L("TPMS-FK")},
+         {int(InfillPattern::ipCrossZag), "crosszag", L("Cross Zag")},
+         {int(InfillPattern::ipLockedZag), "lockedzag", L("Locked Zag")}}
     );
 
     def = defs.add("first_layer_acceleration", typeid(double));
@@ -1902,7 +2956,9 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
         FuzzySkinType::None,
         {{int(FuzzySkinType::None), "none", L("None")},
          {int(FuzzySkinType::External), "external", L("Outside walls")},
-         {int(FuzzySkinType::All), "all", L("All walls")}}
+         {int(FuzzySkinType::All), "all", L("Outside walls and holes")},
+         {int(FuzzySkinType::Hole), "hole", L("Holes")},
+         {int(FuzzySkinType::AllWalls), "allwalls", L("All walls")}}
     );
 
     def = defs.add("fuzzy_skin_thickness", typeid(double));
@@ -1932,6 +2988,156 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->units = {L("mm")};
     def->min = 0;
     def->init_fn = init_with(0.8);
+
+    def = defs.add("fuzzy_skin_first_layer", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Apply fuzzy skin to first layer");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 3;
+    def->tooltip = L("Whether to apply fuzzy skin on the first layer.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("fuzzy_skin_mode", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Fuzzy skin generator mode");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 4;
+    def->tooltip = L("Fuzzy skin generation mode. Works only with Arachne! Displacement: Сlassic mode when the pattern is "
+                     "formed by shifting the nozzle sideways from the original path. Extrusion: The mode when the pattern "
+                     "formed by the amount of extruded plastic. This is the fast and straight algorithm without "
+                     "unnecessary nozzle shake that gives a smooth pattern. But it is more useful for forming loose walls "
+                     "in the entire they array. Combined: Joint mode [Displacement] + [Extrusion]. The appearance of the "
+                     "walls is similar to [Displacement] Mode, but it leaves no pores between the perimeters. Attention! "
+                     "The [Extrusion] and [Combined] modes works only the fuzzy_skin_thickness parameter not more than "
+                     "the thickness of printed loop. At the same time, the width of the extrusion for a particular layer "
+                     "should also not be below a certain level. It is usually equal 15-25%% of a layer height. Therefore, "
+                     "the maximum fuzzy skin thickness with a perimeter width of 0.4 mm and a layer height of 0.2 mm will "
+                     "be 0.4-(0.2*0.25)=±0.35mm! If you enter a higher parameter than this, the error Flow::spacing() "
+                     "will displayed, and the model will not be sliced. You can choose this number until this error is "
+                     "repeated.");
+    def->init_fn = init_with(
+        FuzzySkinMode::Displacement,
+        {{int(FuzzySkinMode::Displacement), "displacement", L("Displacement")},
+         {int(FuzzySkinMode::Extrusion), "extrusion", L("Extrusion")},
+         {int(FuzzySkinMode::Combined), "combined", L("Combined")}}
+    );
+
+    def = defs.add("fuzzy_skin_noise_type", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Fuzzy skin noise type");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 5;
+    def->tooltip = L("Noise type to use for fuzzy skin generation: Classic: Classic uniform random noise. Perlin: Perlin "
+                     "noise, which gives a more consistent texture. Billow: Similar to perlin noise, but clumpier. Ridged "
+                     "Multifractal: Ridged noise with sharp, jagged features. Creates marble-like textures. Voronoi: "
+                     "Divides the surface into voronoi cells, and displaces each one by a random amount. Creates a "
+                     "patchwork texture. Ripple: Uniform ripple pattern that ripples left and right of the original path. "
+                     "Repeating pattern, woven appearance.");
+    def->init_fn = init_with(
+        FuzzySkinNoiseType::Classic,
+        {{int(FuzzySkinNoiseType::Classic), "classic", L("Classic")},
+         {int(FuzzySkinNoiseType::Perlin), "perlin", L("Perlin")},
+         {int(FuzzySkinNoiseType::Billow), "billow", L("Billow")},
+         {int(FuzzySkinNoiseType::RidgedMulti), "ridgedmulti", L("Ridged Multifractal")},
+         {int(FuzzySkinNoiseType::Voronoi), "voronoi", L("Voronoi")},
+         {int(FuzzySkinNoiseType::Ripple), "ripple", L("Ripple")}}
+    );
+
+    def = defs.add("fuzzy_skin_scale", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Fuzzy skin feature size");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 6;
+    def->tooltip = L("The base size of the coherent noise features, in mm. Higher values will result in larger features.");
+    def->units = {L("mm")};
+    def->min = 0.1;
+    def->max = 500;
+    def->init_fn = init_with(1.0);
+
+    def = defs.add("fuzzy_skin_octaves", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Fuzzy Skin Noise Octaves");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 7;
+    def->tooltip = L("The number of octaves of coherent noise to use. Higher values increase the detail of the noise, but "
+                     "also increase computation time.");
+    def->min = 1;
+    def->max = 10;
+    def->init_fn = init_with(4);
+
+    def = defs.add("fuzzy_skin_persistence", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Fuzzy skin noise persistence");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 8;
+    def->tooltip = L("The decay rate for higher octaves of the coherent noise. Lower values will result in smoother noise.");
+    def->min = 0.01;
+    def->max = 1;
+    def->init_fn = init_with(0.5);
+
+    def = defs.add("fuzzy_skin_ripples_per_layer", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Number of ripples per layer");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 9;
+    def->tooltip = L("Controls how many full cycles of ripples will be added per layer.");
+    def->min = 1;
+    def->init_fn = init_with(15);
+
+    def = defs.add("fuzzy_skin_ripple_offset", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Ripple offset");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 10;
+    def->tooltip = L("Shifts the ripple phase forward along the print path by the specified percentage of a wavelength "
+                     "each layer period. - 0% keeps every layer identical. - 50% shifts the pattern by half a wavelength, "
+                     "effectively inverting the phase. - 100% shifts the pattern by a full wavelength, returning to the "
+                     "original phase. The shift is applied once every number of layers set by Layers between ripple "
+                     "offset, so layers within the same group are printed identically.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{50.});
+
+    def = defs.add("fuzzy_skin_layers_between_ripple_offset", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Layers between ripple offset");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_FuzzySkin;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 11;
+    def->tooltip = L("Specifies how many consecutive layers share the same ripple phase before the offset is applied. For "
+                     "example: - 1 = Layer 1 is printed with the base ripple pattern, then layer 2 is shifted by the "
+                     "configured offset, then layer 3 returns to the base pattern, and so on. - 3 = Layers 1 to 3 are "
+                     "printed with the base ripple pattern, then layers 4 to 6 are shifted by the configured offset, then "
+                     "layers 7 to 9 return to the base pattern, etc.");
+    def->min = 1;
+    def->init_fn = init_with(1);
 
     def = defs.add("gap_fill_enabled", typeid(bool));
     def->location = Print;
@@ -2037,6 +3243,41 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
                    " sequence to allow for rapid ramming feed rates and to overcome resistance when loading"
                    " a filament with an ugly shaped tip.");
     def->init_fn = init_with(false);
+
+    // Ported from OrcaSlicer (enable_filament_ramming). Off for external multi-material units
+    // whose firmware unloads the filament itself (e.g. with a filament cutter).
+    def = defs.add("enable_filament_ramming", typeid(bool));
+    def->location = Printer;
+    def->label = L("Enable filament ramming");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_SingleExtruderMMSetup_SingleExtruderMultimaterialParameters;
+    def->category = ConfigItemDef::Category::Printer_SingleExtruderMMSetup;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Ram, cool and park the filament on the wipe tower before a filament change. "
+                     "Turn this off when the multi-material unit unloads the filament itself.");
+    def->init_fn = init_with(true);
+
+    // Ported from OrcaSlicer's automatic flushing volume calculation.
+    def = defs.add("wiping_volumes_by_colour", typeid(bool));
+    def->location = Printer;
+    def->label = L("Purging volumes from filament colours");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_SingleExtruderMMSetup_SingleExtruderMultimaterialParameters;
+    def->category = ConfigItemDef::Category::Printer_SingleExtruderMMSetup;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Calculate the purging volume of each filament change from the colours of the "
+                     "two filaments, instead of using 'Purging volume'. "
+                     "The filament purge multiplier still applies.");
+    def->init_fn = init_with(false);
+
+    // Ported from OrcaSlicer (purge_in_prime_tower, PrintConfig.cpp).
+    def = defs.add("purge_in_prime_tower", typeid(bool));
+    def->location = Printer;
+    def->label = L("Purge in prime tower");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_SingleExtruderMMSetup_SingleExtruderMultimaterialParameters;
+    def->category = ConfigItemDef::Category::Printer_SingleExtruderMMSetup;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Purge remaining filament into prime tower. When off, only the prime volume "
+                     "goes to the prime tower and the multi-material unit purges the rest itself.");
+    def->init_fn = init_with(true);
 
     def = defs.add("enable_pressure_advance_during_ramming", typeid(bool));
     def->location = Printer;
@@ -2256,6 +3497,57 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->init_fn = init_with(FloatOrPercentage(Percentage{25.}));
     def->ratio_over = "perimeter_extrusion_width";
 
+    def = defs.add("top_bottom_infill_wall_overlap", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object, Volume };
+    def->label = L("Top/Bottom solid infill/wall overlap");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Infill_Overlap;
+    def->category = ConfigItemDef::Category::Print_Infill;
+    def->order = 1;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize "
+                     "the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good "
+                     "starting point, minimizing the appearance of pinholes. The percentage value is relative to the "
+                     "inner wall line width.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{25.});
+
+    def = defs.add("min_width_top_surface", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object, Volume };
+    def->label = L("One wall threshold");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 9;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("If a top surface has to be printed and it's partially covered by another layer, it won't be "
+                     "considered at a top layer where its width is below this value. This can be useful to not let the "
+                     "'one perimeter on top' trigger on surface that should be covered only by perimeters. This value can "
+                     "be a mm or a % of the perimeter extrusion width. Warning: If enabled, artifacts can be created if "
+                     "you have some thin features on the next layer, like letters. Set this setting to 0 to remove these "
+                     "artifacts.");
+    def->units = {L("mm"), L("%")};
+    def->min = 0;
+    // a percentage of the perimeter width: resolved in PerimeterGenerator
+    def->init_fn = init_with(FloatOrPercentage(Percentage{300.}));
+
+    def = defs.add("filter_out_gap_fill", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Filter out tiny gaps");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Don't print gap fill with a length is smaller than the threshold specified (in mm). This setting "
+                     "applies to top, bottom and solid infill and, if using the classic perimeter generator, to wall gap "
+                     "fill.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(0.);
+
     def = defs.add("infill_speed", typeid(double));
     def->location = Print;
     def->overrides_in = Locations{ Tool, Object, Volume };
@@ -2465,6 +3757,60 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->units = {L("mm/s")};
     def->min = 0;
     def->init_fn = init_with(15.);
+
+    def = defs.add("ironing_pattern", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Ironing Pattern");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_Ironing;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("The pattern that will be used when ironing.");
+    def->init_fn = init_with(
+        InfillPattern::ipRectilinear,
+        {{int(InfillPattern::ipRectilinear), "rectilinear", L("Rectilinear")},
+         {int(InfillPattern::ipConcentric), "concentric", L("Concentric")}}
+    );
+
+    def = defs.add("ironing_inset", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Ironing inset");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_Ironing;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The distance to keep from the edges. A value of 0 sets this to half of the nozzle diameter.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("ironing_angle", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Ironing angle offset");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_Ironing;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Angle of the ironing lines, relative to the top surface infill, or absolute with a fixed ironing angle.");
+    def->units = {L("°")};
+    def->min = 0;
+    def->max = 359;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("ironing_angle_fixed", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Fixed ironing angle");
+    def->option_group = ConfigItemDef::OptionGroup::Print_LayerSurfaces_Ironing;
+    def->category = ConfigItemDef::Category::Print_LayersSurfaces;
+    def->order = 8;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Use a fixed absolute angle for ironing.");
+    def->init_fn = init_with(false);
 
     def = defs.add("layer_gcode", typeid(std::string));
     def->location = Printer;
@@ -2781,6 +4127,34 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = 0;
     def->init_fn = init_with(0.);
 
+    def = defs.add("max_volumetric_extrusion_rate_slope_segment_length", typeid(double));
+    def->location = Print;
+    def->label = L("Smoothing segment length");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_PressureEqualizer;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 2;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("A lower value results in smoother extrusion rate transitions. However, this results in a "
+                     "significantly larger G-code file and more instructions for the printer to process. Default value of "
+                     "3 works well for most cases. If your printer is stuttering, increase this value to reduce the "
+                     "number of adjustments made. Allowed values: 0.5-5");
+    def->units = {L("mm")};
+    def->min = 0.5;
+    def->max = 5;
+    def->init_fn = init_with(3.);
+
+    def = defs.add("extrusion_rate_smoothing_external_perimeter_only", typeid(bool));
+    def->location = Print;
+    def->label = L("Apply only on external features");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_PressureEqualizer;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Applies extrusion rate smoothing only on external perimeters and overhangs. This can help reduce "
+                     "artefacts due to sharp speed transitions on externally visible overhangs without impacting the "
+                     "print speed of features that will not be visible to the user.");
+    def->init_fn = init_with(false);
+
     def = defs.add("min_fan_speed", typeid(int));
     def->location = Filament;
     def->label = L("Min fan speed");
@@ -2882,6 +4256,82 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->tooltip = L("Experimental option to adjust flow for overhangs (bridge flow will be used), "
                    "to apply bridge speed to them and enable fan.");
     def->init_fn = init_with(true);
+
+    def = defs.add("overhang_reverse", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Reverse on even");
+    def->full_label = L("Reverse on even layers");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Extrude perimeters that have a part over an overhang in the reverse direction on even layers. This "
+                     "alternating pattern can drastically improve steep overhangs. This setting can also help reduce part "
+                     "warping due to the reduction of stresses in the part walls.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("overhang_reverse_internal_only", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Reverse only internal perimeters");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Apply the reverse perimeters logic only on internal perimeters. This setting greatly reduces part "
+                     "stresses as they are now distributed in alternating directions. This should reduce part warping "
+                     "while also maintaining external wall quality. This feature can be very useful for warp prone "
+                     "material, like ABS/ASA, and also for elastic filaments, like TPU and Silk PLA. It can also help "
+                     "reduce warping on floating regions over supports. For this setting to be the most effective, it is "
+                     "recommended to set the Reverse Threshold to 0 so that all internal walls print in alternating "
+                     "directions on even layers irrespective of their overhang degree.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("overhang_reverse_threshold", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Reverse threshold");
+    def->full_label = L("Overhang reversal threshold");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Number of mm the overhang need to be for the reversal to be considered useful. Can be a % of the "
+                     "perimeter width. Value 0 enables reversal on every even layers regardless. When Detect overhang "
+                     "wall is not enabled, this option is ignored and reversal happens on every even layers regardless.");
+    def->units = {L("mm"), L("%")};
+    def->min = 0;
+    // a percentage of the perimeter's width: resolved in PerimeterGenerator
+    def->init_fn = init_with(FloatOrPercentage(Percentage{50.}));
+
+    def = defs.add("alternate_extra_wall", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object, Volume };
+    def->label = L("Alternate extra wall");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("This setting adds an extra wall to every other layer. This way the infill gets wedged vertically "
+                     "between the walls, resulting in stronger prints. When this option is enabled, the ensure vertical "
+                     "shell thickness option needs to be disabled. Using lightning infill together with this option is "
+                     "not recommended as there is limited infill to anchor the extra perimeters to.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("unsupported_wall_last", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Print unsupported walls last");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 8;
+    def->tooltip = L("Wall loops that lie entirely in mid air are printed once something can hold them: they are extruded "
+                     "after the other walls of their island, innermost first, whatever the wall order is. A loop that "
+                     "only the bridges of this layer can anchor waits until those bridges are printed, while a loop "
+                     "running alongside a supported wall keeps its place before the infill, which needs it as an anchor.");
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->init_fn = init_with(false);
 
     def = defs.add("parking_pos_retraction", typeid(double));
     def->location = Printer;
@@ -3058,6 +4508,81 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
 
     def->min = 0.;
     def->init_fn = init_with(0.);
+
+    def               = defs.add("adaptive_pressure_advance", typeid(bool));
+    def->location     = Filament;
+    def->label = L("Enable adaptive pressure advance (beta)");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_ExtrusionCalibration_PressureAdvance;
+    def->category     = ConfigItemDef::Category::Filament_ExtrusionCalibration;
+    def->order        = 2;
+    def->gui_type     = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("With increasing print speeds (and hence increasing volumetric flow through the nozzle) and "
+                     "increasing accelerations, it has been observed that the effective PA value typically decreases. "
+                     "This means that a single PA value is not always 100% optimal for all features and a compromise "
+                     "value is usually used that does not cause too much bulging on features with lower flow speed and "
+                     "accelerations while also not causing gaps on faster features. This feature aims to address this "
+                     "limitation by modeling the response of your printer's extrusion system depending on the volumetric "
+                     "flow speed and acceleration it is printing at. Internally, it generates a fitted model that can "
+                     "extrapolate the needed pressure advance for any given volumetric flow speed and acceleration, which "
+                     "is then emitted to the printer depending on the current print conditions. When enabled, the "
+                     "pressure advance value above is overridden. However, a reasonable default value above is strongly "
+                     "recommended to act as a fallback and for when tool changing.");
+    def->init_fn = init_with(false);
+
+    def               = defs.add("adaptive_pressure_advance_overhangs", typeid(bool));
+    def->location     = Filament;
+    def->label = L("Enable adaptive pressure advance within features (beta)");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_ExtrusionCalibration_PressureAdvance;
+    def->category     = ConfigItemDef::Category::Filament_ExtrusionCalibration;
+    def->order        = 3;
+    def->gui_type     = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable adaptive PA whenever there are flow changes in a feature, such as line width changes in a "
+                     "corner or overhangs. Not compatible with Prusa printers as they pause to process PA changes, which "
+                     "causes delays and defects. This is an experimental option, as if the PA profile is not set "
+                     "accurately, it will cause uniformity issues.");
+    def->init_fn = init_with(false);
+
+    def               = defs.add("adaptive_pressure_advance_bridges", typeid(double));
+    def->location     = Filament;
+    def->label = L("Static pressure advance for bridges");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_ExtrusionCalibration_PressureAdvance;
+    def->category     = ConfigItemDef::Category::Filament_ExtrusionCalibration;
+    def->order        = 4;
+    def->gui_type     = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Static pressure advance value for bridges. Set to 0 to apply the same pressure advance as "
+                     "equivalent walls (using adaptive settings if enabled). A lower PA value when printing bridges helps "
+                     "reduce the appearance of slight under-extrusion immediately after bridges. This is caused by the "
+                     "pressure drop in the nozzle when printing in the air and a lower PA helps counteract this.");
+    def->min = 0.;
+    def->max = 2;
+    def->init_fn = init_with(0.);
+
+    def               = defs.add("adaptive_pressure_advance_model", typeid(std::string));
+    def->location     = Filament;
+    def->label = L("Adaptive pressure advance measurements (beta)");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_ExtrusionCalibration_PressureAdvance;
+    def->category     = ConfigItemDef::Category::Filament_ExtrusionCalibration;
+    def->order        = 5;
+    def->gui_type     = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Add sets of pressure advance (PA) values, the volumetric flow speeds and accelerations they were "
+                     "measured at, separated by a comma. One set of values per line. For example 0.04,3.96,3000 "
+                     "0.033,3.96,10000 0.029,7.91,3000 0.026,7.91,10000 How to calibrate: 1. Run the pressure advance "
+                     "test for at least 3 speeds per acceleration value. It is recommended that the test is run for at "
+                     "least the speed of the external perimeters, the speed of the internal perimeters and the fastest "
+                     "feature print speed in your profile (usually its the sparse or solid infill). Then run them for the "
+                     "same speeds for the slowest and fastest print accelerations, and no faster than the recommended "
+                     "maximum acceleration as given by the Klipper input shaper 2. Take note of the optimal PA value for "
+                     "each volumetric flow speed and acceleration. You can find the flow number by selecting flow from "
+                     "the color scheme drop down and move the horizontal slider over the PA pattern lines. The number "
+                     "should be visible at the bottom of the page. The ideal PA value should be decreasing the higher the "
+                     "volumetric flow is. If it is not, confirm that your extruder is functioning correctly. The slower "
+                     "and with less acceleration you print, the larger the range of acceptable PA values. If no "
+                     "difference is visible, use the PA value from the faster test 3. Enter the triplets of PA values, "
+                     "Flow and Accelerations in the text box here and save your filament profile.");
+    def->multiline = true;
+    def->full_width = true;
+    def->height = 5;
+    def->init_fn = init_with(std::string{"0,0,0\n0,0,0"});
 
     def = defs.add("printer_vendor", typeid(std::string));
     def->location = Printer;
@@ -3349,6 +4874,26 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->units = {L("mm")};
     def->init_fn = init_with(0.);
 
+    def = defs.add("retract_lift_enforce", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Filament };
+    def->label = L("Lift Z on surfaces");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_VerticalLift;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Where retractions lift Z: everywhere, only after top surfaces, only on the first layer, or both. "
+                     "Within the 'Only lift Z' limits.");
+    def->init_fn = init_with(
+        RetractLiftEnforce::AllSurfaces,
+        {
+            {int(RetractLiftEnforce::AllSurfaces),  "all_surfaces",   L("All surfaces")},
+            {int(RetractLiftEnforce::TopOnly),      "top_only",       L("Top only")},
+            {int(RetractLiftEnforce::BottomOnly),   "bottom_only",    L("Bottom only")},
+            {int(RetractLiftEnforce::TopAndBottom), "top_and_bottom", L("Top and bottom")},
+        }
+    );
+
     def = defs.add("retract_restart_extra", typeid(double));
     def->location = Print;
     def->overrides_in = Locations{ Tool, Filament };
@@ -3540,6 +5085,1149 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->tooltip = L("Use scarf joint on inner perimeters.");
     def->init_fn = init_with(false);
 
+    def = defs.add("scarf_angle_threshold", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Conditional angle threshold");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_Seams;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("This option sets the threshold angle for applying a conditional scarf joint seam. If the maximum "
+                     "angle within the perimeter loop exceeds this value (indicating the absence of sharp corners), a "
+                     "scarf joint seam will be used. The default value is 155°.");
+    def->units = {L("°")};
+    def->min = 0;
+    def->max = 180;
+    def->init_fn = init_with(155);
+
+    def = defs.add("scarf_overhang_threshold", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Conditional overhang threshold");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_Seams;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 11;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This option determines the overhang threshold for the application of scarf joint seams. If the "
+                     "unsupported portion of the perimeter is less than this threshold, scarf joint seams will be "
+                     "applied. The default threshold is set at 40% of the external wall's width. Due to performance "
+                     "considerations, the degree of overhang is estimated.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->init_fn = init_with(Percentage{40.});
+
+    def = defs.add("seam_slope_steps", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Scarf steps");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_Seams;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 12;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Minimum number of segments of each scarf.");
+    def->min = 1;
+    def->full_label = L("Scarf joint steps");
+    def->init_fn = init_with(10);
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 1. Defaults keep 3.0's behaviour
+    // (converted Orca profiles carry Orca's own values).
+    def = defs.add("wipe_speed", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->label = L("Wipe speed");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_Seams;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 20;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("The wipe speed is determined by the speed setting specified in this configuration. If the value is "
+                     "expressed as a percentage (e.g. 80%), it will be calculated based on the travel speed setting "
+                     "above. The default value for this parameter is 80%.");
+    def->units = {L("mm/s"), L("%")};
+    def->min = 0;
+    def->init_fn = init_with(FloatOrPercentage(Percentage{80.}));
+    def->ratio_over = "travel_speed";
+
+    def = defs.add("role_based_wipe_speed", typeid(bool));
+    def->location = Print;
+    def->label = L("Role based wipe speed");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_Seams;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 21;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("The wipe speed is determined by the speed of the current extrusion role. e.g. if a wipe "
+                     "action is executed immediately following an outer wall extrusion, the speed of the "
+                     "outer wall extrusion will be utilized for the wipe action.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("skirt_speed", typeid(double));
+    def->location = Print;
+    def->label = L("Skirt speed");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Skirt;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Speed of skirt, in mm/s. Zero means use default layer extrusion speed.");
+    def->units = {L("mm/s")};
+    def->min = 0;
+    def->init_fn = init_with(50.);
+
+    def = defs.add("initial_layer_travel_speed", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->label = L("First layer travel speed");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_FirstLayer;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 20;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Travel speed of the first layer.");
+    def->units = {L("mm/s"), L("%")};
+    def->min = 1;
+    def->init_fn = init_with(FloatOrPercentage(Percentage{100.}));
+    def->ratio_over = "travel_speed";
+
+    def = defs.add("change_extrusion_role_gcode", typeid(std::string));
+    def->location = Printer;
+    def->label = L("Change extrusion role G-code");
+    def->category = ConfigItemDef::Category::Printer_CustomGCode;
+    def->option_group = ConfigItemDef::OptionGroup::Printer_CustomGCode;
+    def->order = 20;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This G-code is inserted when the extrusion role is changed.");
+    def->multiline = true;
+    def->full_width = true;
+    def->init_fn = init_with(std::string{});
+
+    def = defs.add("process_change_extrusion_role_gcode", typeid(std::string));
+    def->location = Print;
+    def->label = L("Change extrusion role G-code (process)");
+    def->category = ConfigItemDef::Category::Print_CustomGCode;
+    def->option_group = ConfigItemDef::OptionGroup::Print_CustomGCode;
+    def->order = 20;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This G-code is inserted when the extrusion role is changed. It runs after the machine and filament "
+                     "extrusion role G-code.");
+    def->multiline = true;
+    def->full_width = true;
+    def->init_fn = init_with(std::string{});
+
+    def = defs.add("filament_change_extrusion_role_gcode", typeid(std::string));
+    def->location = Filament;
+    def->label = L("Change extrusion role G-code (filament)");
+    def->category = ConfigItemDef::Category::Filament_CustomGCode;
+    def->option_group = ConfigItemDef::OptionGroup::Filament_CustomGCode;
+    def->order = 20;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This G-code is inserted when the extrusion role is changed for the active filament.");
+    def->multiline = true;
+    def->full_width = true;
+    def->init_fn = init_with(std::string{});
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 2, flow ratios (1 = 3.0's flow).
+    def = defs.add("set_other_flow_ratios", typeid(bool));
+    def->location = Print;
+    def->label = L("Set other flow ratios");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 30;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Change flow ratios for other extrusion path types.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("print_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 31;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The material may have volumetric change after switching between molten and crystalline states. This "
+                     "setting changes all extrusion flow of this filament in G-code proportionally. The recommended value "
+                     "range is between 0.95 and 1.05. You may be able to tune this value to get a nice flat surface if "
+                     "there is slight overflow or underflow. The final object flow ratio is this value multiplied by the "
+                     "filament flow ratio.");
+    def->min = 0.01;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("top_solid_infill_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Top surface flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 32;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for top solid infill. You can decrease it slightly to "
+                     "have smooth surface finish. The actual top surface flow used is calculated by multiplying this "
+                     "value with the filament flow ratio, and if set, the object's flow ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("outer_wall_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Outer wall flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 33;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for outer walls. The actual outer wall flow used is "
+                     "calculated by multiplying this value by the filament flow ratio, and if set, the object's flow "
+                     "ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("inner_wall_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Inner wall flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 34;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for inner walls. The actual inner wall flow used is "
+                     "calculated by multiplying this value by the filament flow ratio, and if set, the object's flow "
+                     "ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("overhang_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Overhang flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 35;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for overhangs. The actual overhang flow used is "
+                     "calculated by multiplying this value by the filament flow ratio, and if set, the object's flow "
+                     "ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("sparse_infill_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Sparse infill flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 36;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for sparse infill. The actual sparse infill flow used is "
+                     "calculated by multiplying this value by the filament flow ratio, and if set, the object's flow "
+                     "ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("internal_solid_infill_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Internal solid infill flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 37;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for internal solid infill. The actual internal solid "
+                     "infill flow used is calculated by multiplying this value by the filament flow ratio, and if set, "
+                     "the object's flow ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("gap_fill_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Gap fill flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 38;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for filling the gaps. The actual gap filling flow used "
+                     "is calculated by multiplying this value by the filament flow ratio, and if set, the object's flow "
+                     "ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("support_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Support flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 39;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for support. The actual support flow used is calculated "
+                     "by multiplying this value by the filament flow ratio, and if set, the object's flow ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("support_interface_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Support interface flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for the support interface. The actual support interface "
+                     "flow used is calculated by multiplying this value by the filament flow ratio, and if set, the "
+                     "object's flow ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("first_layer_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("First layer flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material on the first layer for the extrusion path roles listed "
+                     "in this section. For the first layer, the actual flow ratio for each path role (does not affect "
+                     "brims and skirts) will be multiplied by this value.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 3, air filtration (exhaust fan, M106 P3).
+    def = defs.add("support_air_filtration", typeid(bool));
+    def->location = Printer;
+    def->label = L("Support air filtration");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 30;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this if printer support air filtration\nG-code command: M106 P3 S(0-255)");
+    def->init_fn = init_with(true);
+
+    def = defs.add("activate_air_filtration", typeid(bool));
+    def->location = Filament;
+    def->label = L("Activate air filtration");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 30;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Activate for better air filtration. G-code command: M106 P3 S(0-255)");
+    def->init_fn = init_with(false);
+
+    def = defs.add("activate_air_filtration_during_print", typeid(bool));
+    def->location = Filament;
+    def->label = L("During print");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 31;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this to override the fan speed set in custom G-code during print.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("during_print_exhaust_fan_speed", typeid(int));
+    def->location = Filament;
+    def->label = L("Fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 32;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Speed of exhaust fan during printing. This speed will override the speed in filament custom G-code.");
+    def->units = {"%"};
+    def->min = 0;
+    def->max = 100;
+    def->full_label = L("Exhaust fan speed during print");
+    def->init_fn = init_with(60);
+
+    def = defs.add("activate_air_filtration_on_completion", typeid(bool));
+    def->location = Filament;
+    def->label = L("On completion");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 33;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this to override the fan speed set in custom G-code after print completion.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("complete_print_exhaust_fan_speed", typeid(int));
+    def->location = Filament;
+    def->label = L("Fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 34;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Speed of exhaust fan after printing completes.");
+    def->units = {"%"};
+    def->min = 0;
+    def->max = 100;
+    def->full_label = L("Exhaust fan speed on completion");
+    def->init_fn = init_with(80);
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 12.
+    def = defs.add("enable_overhang_bridge_fan", typeid(bool));
+    def->location = Filament;
+    def->label = L("Force cooling for overhangs and bridges");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_DynamicFanSpeed;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this option to allow adjustment of the part cooling fan speed for specifically for "
+                     "overhangs, internal and external bridges. Setting the fan speed specifically for these features can "
+                     "improve overall print quality and reduce warping.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("overhang_fan_speed", typeid(int));
+    def->location = Filament;
+    def->label = L("Overhangs and external bridges fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_DynamicFanSpeed;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Use this part cooling fan speed when printing bridges or overhang walls with an overhang threshold "
+                     "that exceeds the value set in the 'Overhangs cooling threshold' parameter above. Increasing the "
+                     "cooling specifically for overhangs and bridges can improve the overall print quality of these "
+                     "features. Please note, this fan speed is clamped on the lower end by the minimum fan speed "
+                     "threshold set above. It is also adjusted upwards up to the maximum fan speed threshold when the "
+                     "minimum layer time threshold is not met.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(100);
+
+    def = defs.add("overhang_fan_threshold", typeid(EnumWrapper));
+    def->location = Filament;
+    def->label = L("Overhang cooling activation threshold");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_DynamicFanSpeed;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 42;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("When the overhang exceeds this specified threshold, force the cooling fan to run at the "
+                     "'Overhang Fan Speed' set below. This threshold is expressed as a percentage, indicating the "
+                     "portion of each line's width that is unsupported by the layer beneath it. Setting this "
+                     "value to 0% forces the cooling fan to run for all outer walls, regardless of the overhang "
+                     "degree.");
+    def->init_fn = init_with(
+        OverhangFanThreshold::Bridge,
+        {
+            {int(OverhangFanThreshold::None),       "0%",  "0%"},
+            {int(OverhangFanThreshold::Overhang10), "10%", "10%"},
+            {int(OverhangFanThreshold::Overhang25), "25%", "25%"},
+            {int(OverhangFanThreshold::Overhang50), "50%", "50%"},
+            {int(OverhangFanThreshold::Overhang75), "75%", "75%"},
+            {int(OverhangFanThreshold::Bridge),     "95%", "95%"},
+        }
+    );
+
+    def = defs.add("scarf_joint_speed", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->label = L("Scarf joint speed");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_Seams;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("This option sets the printing speed for scarf joints. It is recommended to print scarf joints "
+                     "at a slow speed (less than 100 mm/s). It's also advisable to enable 'Extrusion rate smoothing' "
+                     "if the set speed varies significantly from the speed of the outer or inner walls. If the "
+                     "speed specified here is higher than the speed of the outer or inner walls, the printer will "
+                     "default to the slower of the two speeds. When specified as a percentage (e.g., 80%), the speed "
+                     "is calculated based on the respective outer or inner wall speed. The default value is set to "
+                     "100%.");
+    def->units = {L("mm/s"), L("%")};
+    def->min = 1;
+    // a percentage of the speed of the wall the joint is on: resolved in GCodeGenerator::_extrude
+    def->init_fn = init_with(FloatOrPercentage(Percentage{100.}));
+
+    def = defs.add("scarf_joint_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Scarf joint flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_Seams;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for scarf joints.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("time_cost", typeid(double));
+    def->location = Printer;
+    def->label = L("Time cost");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_Advanced;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 60;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The printer cost per hour.");
+    def->units = {L("money/h")};
+    def->min = 0;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("enable_power_loss_recovery", typeid(EnumWrapper));
+    def->location = Printer;
+    def->label = L("Power Loss Recovery");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_Advanced;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 61;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Choose how to control power loss recovery. When set to Printer configuration, the slicer will not "
+                     "emit power loss recovery G-code and will leave the printer's configuration unchanged. Applicable to "
+                     "Bambu Lab or Marlin 2 firmware based printers.");
+    def->init_fn = init_with(
+        PowerLossRecoveryMode::PrinterConfiguration,
+        {
+            {int(PowerLossRecoveryMode::PrinterConfiguration), "printer_configuration", L("Printer configuration")},
+            {int(PowerLossRecoveryMode::Enable),               "enable",                L("Enable")},
+            {int(PowerLossRecoveryMode::Disable),              "disable",               L("Disable")},
+        }
+    );
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 11, what Orca's runtime G-code variables read.
+    def = defs.add("bed_mesh_min", typeid(Vec2d));
+    def->location = Printer;
+    def->label = L("Bed mesh min");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_Advanced;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 50;
+    def->gui_type = ConfigItemDef::GUIType::points;
+    def->tooltip = L("This option sets the min point for the allowed bed mesh area. Due to the probe's XY offset, most "
+                     "printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed "
+                     "area, the minimum and maximum points of the bed mesh should be set appropriately. OrcaSlicer "
+                     "ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. "
+                     "This information can usually be obtained from your printer manufacturer. The default setting is "
+                     "(-99999, -99999), which means there are no limits, thus allowing probing across the entire bed.");
+    def->units = {L("mm")};
+    def->init_fn = init_with(Vec2d{-99999.0, -99999.0});
+
+    def = defs.add("bed_mesh_max", typeid(Vec2d));
+    def->location = Printer;
+    def->label = L("Bed mesh max");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_Advanced;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 51;
+    def->gui_type = ConfigItemDef::GUIType::points;
+    def->tooltip = L("This option sets the max point for the allowed bed mesh area. Due to the probe's XY offset, most "
+                     "printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed "
+                     "area, the minimum and maximum points of the bed mesh should be set appropriately. OrcaSlicer "
+                     "ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. "
+                     "This information can usually be obtained from your printer manufacturer. The default setting is "
+                     "(99999, 99999), which means there are no limits, thus allowing probing across the entire bed.");
+    def->units = {L("mm")};
+    def->init_fn = init_with(Vec2d{99999.0, 99999.0});
+
+    def = defs.add("bed_mesh_probe_distance", typeid(Vec2d));
+    def->location = Printer;
+    def->label = L("Probe point distance");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_Advanced;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 52;
+    def->gui_type = ConfigItemDef::GUIType::points;
+    def->tooltip = L("This option sets the preferred distance between probe points (grid size) for the X and Y directions, with the default being 50mm for both X and Y.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(Vec2d{50.0, 50.0});
+
+    def = defs.add("adaptive_bed_mesh_margin", typeid(double));
+    def->location = Printer;
+    def->label = L("Mesh margin");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_Advanced;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 53;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This option determines the additional distance by which the adaptive bed mesh area should be "
+                     "expanded in the XY directions.");
+    def->units = {L("mm")};
+    def->init_fn = init_with(0.);
+
+    def = defs.add("support_chamber_temp_control", typeid(bool));
+    def->location = Printer;
+    def->label = L("Support controlling chamber temperature");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 35;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("This option is enabled if machine support controlling chamber temperature\nG-code command: M141 S(0-255)");
+    def->init_fn = init_with(true);
+
+    def = defs.add("activate_chamber_temp_control", typeid(EnumWrapper));
+    def->location = Filament;
+    def->label = L("Activate temperature control");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MaterialTemperatures_BedChamberTemperature;
+    def->category = ConfigItemDef::Category::Filament_MaterialTemperatures;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Enable this option for automated chamber temperature control. This option activates the emitting of "
+                     "an M191 command before the \"machine_start_gcode\" which sets the chamber temperature and waits "
+                     "until it is reached. In addition, it emits an M141 command at the end of the print to turn off the "
+                     "chamber heater, if present. This option relies on the firmware supporting the M191 and M141 "
+                     "commands either via macros or natively and is usually used when an active chamber heater is "
+                     "installed.");
+    def->init_fn = init_with(
+        ChamberTemperatureControl::Auto,
+        {
+            {int(ChamberTemperatureControl::Auto), "auto", L("Auto")},
+            {int(ChamberTemperatureControl::Off),  "off",  L("Off")},
+            {int(ChamberTemperatureControl::On),   "on",   L("On")},
+        }
+    );
+
+    def = defs.add("temperature_vitrification", typeid(int));
+    def->location = Filament;
+    def->label = L("Softening temperature");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MaterialTemperatures_MaterialProperty;
+    def->category = ConfigItemDef::Category::Filament_MaterialTemperatures;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("The material softens at this temperature, so when the bed temperature is equal to or greater than "
+                     "this, it's highly recommended to open the front door and/or remove the upper glass to avoid clogs.");
+    def->units = {L("°C")};
+    def->min = 0;
+    def->init_fn = init_with(100);
+
+    def = defs.add("nozzle_temperature_range_low", typeid(int));
+    def->location = Filament;
+    def->label = L("Min");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MaterialTemperatures_NozzleTemperature;
+    def->category = ConfigItemDef::Category::Filament_MaterialTemperatures;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Lower end of the recommended nozzle temperature range of this filament.");
+    def->units = {L("°C")};
+    def->min = 0;
+    def->max = 1000;
+    def->full_label = L("Recommended nozzle temperature: min");
+    def->init_fn = init_with(190);
+
+    def = defs.add("nozzle_temperature_range_high", typeid(int));
+    def->location = Filament;
+    def->label = L("Max");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MaterialTemperatures_NozzleTemperature;
+    def->category = ConfigItemDef::Category::Filament_MaterialTemperatures;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Upper end of the recommended nozzle temperature range of this filament.");
+    def->units = {L("°C")};
+    def->min = 0;
+    def->max = 1000;
+    def->full_label = L("Recommended nozzle temperature: max");
+    def->init_fn = init_with(240);
+
+    def = defs.add("filament_flush_temp", typeid(int));
+    def->location = Filament;
+    def->label = L("Flush temperature");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MultiMaterial_TipShapingCooling;
+    def->category = ConfigItemDef::Category::Filament_MultiMaterial;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Temperature when flushing filament. 0 indicates the upper bound of the recommended nozzle "
+                     "temperature range.");
+    def->units = {L("°C")};
+    def->min = 0;
+    def->max = 500;
+    def->init_fn = init_with(0);
+
+    def = defs.add("filament_flush_volumetric_speed", typeid(double));
+    def->location = Filament;
+    def->label = L("Flush volumetric speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MultiMaterial_TipShapingCooling;
+    def->category = ConfigItemDef::Category::Filament_MultiMaterial;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Volumetric speed when flushing filament. 0 indicates the max volumetric speed.");
+    def->units = {L("mm³/s")};
+    def->min = 0;
+    def->max = 200;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("filament_is_support", typeid(bool));
+    def->location = Filament;
+    def->label = L("Support material");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MaterialTemperatures_MaterialProperty;
+    def->category = ConfigItemDef::Category::Filament_MaterialTemperatures;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Support material is commonly used to print supports and support interfaces.");
+    def->init_fn = init_with(false);
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 10.
+    def = defs.add("file_start_gcode", typeid(std::string));
+    def->location = Printer;
+    def->category = ConfigItemDef::Category::Printer_CustomGCode;
+    def->option_group = ConfigItemDef::OptionGroup::Printer_CustomGCode;
+    def->order = -1;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->label = L("File header G-code");
+    def->tooltip = L("G-code written at the very top of the output file, before any other content. Useful for adding "
+                     "metadata that printer firmware reads from the first lines of the file (e.g. estimated print time, "
+                     "filament usage). Supports placeholders like {print_time_total_sec}, {print_time_day}, "
+                     "{print_time_hour}, {print_time_minute}, {print_time_sec} and {used_filament_length}.");
+    def->multiline = true;
+    def->full_width = true;
+    def->height = 5;
+    def->init_fn = init_with("");
+
+    def = defs.add("time_lapse_gcode", typeid(std::string));
+    def->location = Printer;
+    def->category = ConfigItemDef::Category::Printer_CustomGCode;
+    def->option_group = ConfigItemDef::OptionGroup::Printer_CustomGCode;
+    def->order = 25;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->label = L("Timelapse G-code");
+    def->tooltip = L("This G-code is inserted at every layer change, after the Z lift (for a camera snapshot).");
+    def->multiline = true;
+    def->full_width = true;
+    def->height = 5;
+    def->init_fn = init_with("");
+
+    def = defs.add("timelapse_type", typeid(EnumWrapper));
+    def->location = Print;
+    def->label = L("Timelapse");
+    def->option_group = ConfigItemDef::OptionGroup::Print_OutputOptions_OutputFile;
+    def->category = ConfigItemDef::Category::Print_OutputOptions;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("If smooth or traditional mode is selected, a timelapse video will be generated for each print. "
+                     "After each layer is printed, a snapshot is taken with the chamber camera. All of these snapshots "
+                     "are composed into a timelapse video when printing completes. If smooth mode is selected, the "
+                     "toolhead will move to the excess chute after each layer is printed and then take a snapshot. Since "
+                     "the melt filament may leak from the nozzle during the process of taking a snapshot, a prime tower "
+                     "is required for smooth mode to wipe the nozzle.");
+    def->init_fn = init_with(
+        TimelapseType::Traditional,
+        {
+            {int(TimelapseType::Traditional), "0", L("Traditional")},
+            {int(TimelapseType::Smooth),      "1", L("Smooth")},
+        }
+    );
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 9, G-code output.
+    def = defs.add("gcode_skip_config_block", typeid(bool));
+    def->location = Printer;
+    def->label = L("Skip G-code config block");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_Advanced;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Do not write the CONFIG_BLOCK (slicer configuration key/value pairs) into the G-code file. This can "
+                     "help with printers whose firmware crashes when parsing these comment lines (e.g. Anycubic "
+                     "go-klipper). Note: the G-code file will no longer contain slicer settings, so importing it back "
+                     "into OrcaSlicer will not restore the configuration.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("gcode_add_line_number", typeid(bool));
+    def->location = Print;
+    def->label = L("Add line number");
+    def->option_group = ConfigItemDef::OptionGroup::Print_OutputOptions_OutputFile;
+    def->category = ConfigItemDef::Category::Print_OutputOptions;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this to add line number(Nx) at the beginning of each G-code line.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("manual_filament_change", typeid(bool));
+    def->location = Printer;
+    def->label = L("Manual Filament Change");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 33;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this option to omit the custom Change filament G-code only at the beginning of the "
+                     "print. The tool change command (e.g., T0) will be skipped throughout the entire print. This is "
+                     "useful for manual multi-material printing, where we use M600/PAUSE to trigger the manual "
+                     "filament change action.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("bed_temperature_formula", typeid(EnumWrapper));
+    def->location = Printer;
+    def->label = L("Bed temperature type");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 34;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("This option determines how the bed temperature is set during slicing: based on the temperature "
+                     "of the first filament or the highest temperature of the printed filaments.");
+    def->init_fn = init_with(
+        BedTemperatureFormula::ByFirstFilament,
+        {
+            {int(BedTemperatureFormula::ByFirstFilament), "by_first_filament", L("By First filament")},
+            {int(BedTemperatureFormula::ByHighestTemp),   "by_highest_temp",   L("By Highest Temp")},
+        }
+    );
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 8, motion.
+    def = defs.add("default_jerk", typeid(double));
+    def->location = Print;
+    def->label = L("Default");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Default jerk. 0 = jerk control off (the firmware's jerk is used).");
+    def->units = {L("mm/s")};
+    def->min = 0;
+    def->full_label = L("Default jerk");
+    def->init_fn = init_with(0.0);
+
+    def = defs.add("outer_wall_jerk", typeid(double));
+    def->location = Print;
+    def->label = L("Outer wall");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Jerk of outer walls.");
+    def->units = {L("mm/s")};
+    def->min = 0;
+    def->full_label = L("Outer wall jerk");
+    def->init_fn = init_with(9.0);
+
+    def = defs.add("inner_wall_jerk", typeid(double));
+    def->location = Print;
+    def->label = L("Inner wall");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 42;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Jerk of inner walls.");
+    def->units = {L("mm/s")};
+    def->min = 0;
+    def->full_label = L("Inner wall jerk");
+    def->init_fn = init_with(9.0);
+
+    def = defs.add("infill_jerk", typeid(double));
+    def->location = Print;
+    def->label = L("Infill");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 43;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Jerk for infill.");
+    def->units = {L("mm/s")};
+    def->min = 0;
+    def->full_label = L("Infill jerk");
+    def->init_fn = init_with(9.0);
+
+    def = defs.add("top_surface_jerk", typeid(double));
+    def->location = Print;
+    def->label = L("Top surface");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 44;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Jerk for top surface.");
+    def->units = {L("mm/s")};
+    def->min = 0;
+    def->full_label = L("Top surface jerk");
+    def->init_fn = init_with(9.0);
+
+    def = defs.add("initial_layer_jerk", typeid(double));
+    def->location = Print;
+    def->label = L("First layer");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 45;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Jerk for the first layer.");
+    def->units = {L("mm/s")};
+    def->min = 0;
+    def->full_label = L("First layer jerk");
+    def->init_fn = init_with(9.0);
+
+    def = defs.add("travel_jerk", typeid(double));
+    def->location = Print;
+    def->label = L("Travel");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 46;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Jerk for travel.");
+    def->units = {L("mm/s")};
+    def->min = 0;
+    def->full_label = L("Travel jerk");
+    def->init_fn = init_with(12.0);
+
+    def = defs.add("initial_layer_travel_jerk", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->label = L("First layer travel");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 47;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Travel jerk of first layer.\nThe percentage value is relative to Travel Jerk.");
+    def->units = {L("mm/s"), L("%")};
+    def->min = 0;
+    def->full_label = L("First layer travel jerk");
+    def->init_fn = init_with(FloatOrPercentage(Percentage{100.}));
+    def->ratio_over = "travel_jerk";
+
+    def = defs.add("initial_layer_travel_acceleration", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->label = L("First layer travel");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_FirstLayerAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Travel acceleration of first layer.\nThe percentage value is relative to Travel Acceleration.");
+    def->units = {L("mm/s²"), L("%")};
+    def->min = 0;
+    def->full_label = L("First layer travel acceleration");
+    def->init_fn = init_with(FloatOrPercentage(Percentage{100.}));
+    def->ratio_over = "travel_acceleration";
+
+    def = defs.add("accel_to_decel_enable", typeid(bool));
+    def->location = Print;
+    def->label = L("Enable accel_to_decel");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 48;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Klipper's max_accel_to_decel will be adjusted automatically.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("accel_to_decel_factor", typeid(Percentage));
+    def->location = Print;
+    def->label = L("accel_to_decel");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 49;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Klipper's max_accel_to_decel will be adjusted to this %% of acceleration.");
+    def->units = {L("%")};
+    def->min = 1;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{50.});
+
+    def = defs.add("default_junction_deviation", typeid(double));
+    def->location = Print;
+    def->label = L("Junction Deviation");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MotionDynamics_MainStructureAcceleration;
+    def->category = ConfigItemDef::Category::Print_MotionDynamics;
+    def->order = 50;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Marlin Firmware Junction Deviation (replaces the traditional XY Jerk setting).");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 0.3;
+    def->init_fn = init_with(0.);
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 7, fans.
+    def = defs.add("initial_layer_fan_speed", typeid(int));
+    def->location = Filament;
+    def->label = L("First layer fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Sets an exact fan speed for the first layer, overriding all other cooling settings. Useful for "
+                     "protecting 3D-printed toolhead parts (e.g. Voron-style ABS/ASA ducts) from a hot bed. A small "
+                     "amount of airflow cools the ducts down, without using full cooling that may in certain conditions "
+                     "hurt first-layer adhesion. From the second layer onwards, normal cooling resumes. If \"Full fan "
+                     "speed at layer\" is also set, the fan ramps smoothly from this value on the first layer up to your "
+                     "target by the chosen layer. Only available when \"No cooling for the first\" is 0. Set to -1 to "
+                     "disable it.");
+    def->units = {L("%")};
+    def->min = -1;
+    def->max = 100;
+    def->init_fn = init_with(-1);
+
+    def = defs.add("support_material_interface_fan_speed", typeid(int));
+    def->location = Filament;
+    def->label = L("Support interface fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("This part cooling fan speed is applied when printing support interfaces. Setting this parameter to "
+                     "a higher than regular speed reduces the layer binding strength between supports and the supported "
+                     "part, making them easier to separate. Set to -1 to disable it. This setting is overridden by "
+                     "disable_fan_first_layers.");
+    def->units = {L("%")};
+    def->min = -1;
+    def->max = 100;
+    def->init_fn = init_with(-1);
+
+    def = defs.add("internal_bridge_fan_speed", typeid(int));
+    def->location = Filament;
+    def->label = L("Internal bridges fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 41;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("The part cooling fan speed used for all internal bridges. Set to -1 to use the overhang fan speed "
+                     "settings instead. Reducing the internal bridges fan speed, compared to your regular fan speed, can "
+                     "help reduce part warping due to excessive cooling applied over a large surface for a prolonged "
+                     "period of time.");
+    def->units = {L("%")};
+    def->min = -1;
+    def->max = 100;
+    def->init_fn = init_with(-1);
+
+    def = defs.add("ironing_fan_speed", typeid(int));
+    def->location = Filament;
+    def->label = L("Ironing fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 42;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("This part cooling fan speed is applied when ironing. Setting this parameter to a lower than regular speed reduces possible nozzle clogging due to the low volumetric flow rate, making the interface smoother.\nSet to -1 to disable it.");
+    def->units = {L("%")};
+    def->min = -1;
+    def->max = 100;
+    def->init_fn = init_with(-1);
+
+    def = defs.add("additional_cooling_fan_speed", typeid(int));
+    def->location = Filament;
+    def->label = L("Fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_FanControlLimits;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 43;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Speed of auxiliary part cooling fan. Auxiliary fan will run at this speed during printing except "
+                     "the first several layers which is defined by no cooling layers. Please enable auxiliary_fan in "
+                     "printer settings to use this feature. G-code command: M106 P2 S(0-255)");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->full_label = L("Auxiliary fan speed");
+    def->init_fn = init_with(0);
+
+    def = defs.add("dont_slow_down_outer_wall", typeid(bool));
+    def->location = Filament;
+    def->label = L("Don't slow down outer walls");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_Cooling_CoolingLogic;
+    def->category = ConfigItemDef::Category::Filament_Cooling;
+    def->order = 40;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("If enabled, this setting will ensure external perimeters are not slowed down to meet the "
+                     "minimum layer time. This is particularly helpful in the below scenarios:\n\n"
+                     "1. To avoid changes in shine when printing glossy filaments\n"
+                     "2. To avoid changes in external wall speed which may create slight wall artifacts that "
+                     "appear like Z banding\n"
+                     "3. To avoid printing at speeds which cause VFAs (fine artifacts) on the external walls");
+    def->init_fn = init_with(false);
+
+    def = defs.add("auxiliary_fan", typeid(bool));
+    def->location = Printer;
+    def->label = L("Auxiliary part cooling fan");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 31;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this option if machine has auxiliary part cooling fan. G-code command: M106 P2 S(0-255).");
+    def->init_fn = init_with(false);
+
+    def = defs.add("part_cooling_fan_min_pwm", typeid(int));
+    def->location = Printer;
+    def->label = L("Minimum non-zero part cooling fan speed");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 32;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Some part-cooling fans cannot start spinning when commanded below a certain PWM duty cycle. When "
+                     "set above 0, any non-zero part-cooling fan command will be raised to at least this percentage so "
+                     "the fan reliably starts. A fan command of 0 (fan off) is always honoured exactly. This clamp is "
+                     "applied after every other fan calculation (first-layer ramp, layer-time interpolation, "
+                     "overhang/bridge/support-interface/ironing overrides), so scaling still operates within the range "
+                     "[this value, 100%]. If your firmware already disables the fan below a threshold (for example "
+                     "Klipper's [fan] off_below: 0.10 shuts the fan off whenever the commanded duty cycle is below 10%), "
+                     "this option and the firmware threshold should ideally be set to the same value. Matching them (e.g. "
+                     "off_below: 0.10 in Klipper and 10% here) guarantees the slicer never emits a non-zero value that "
+                     "the firmware would silently drop, and the fan never receives a value below the one you know it can "
+                     "actually spool at. Set to 0 to deactivate.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(0);
+
+    def = defs.add("fan_speedup_time", typeid(double));
+    def->location = Printer;
+    def->label = L("Fan speed-up time");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 33;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Start the fan this number of seconds earlier than its target start time (you can use fractional "
+                     "seconds). It assumes infinite acceleration for this time estimation, and will only take into "
+                     "account G1 and G0 moves (arc fitting is unsupported). It won't move fan commands from custom G-code "
+                     "(they act as a sort of 'barrier'). It won't move fan commands into the start G-code if the 'only "
+                     "custom start G-code' is activated. Use 0 to deactivate.");
+    def->units = {L("s")};
+    def->init_fn = init_with(0.);
+
+    def = defs.add("fan_speedup_overhangs", typeid(bool));
+    def->location = Printer;
+    def->label = L("Only overhangs");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 34;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Will only take into account the delay for the cooling of overhangs.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("fan_kickstart", typeid(double));
+    def->location = Printer;
+    def->label = L("Fan kick-start time");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 35;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Emit a max fan speed command for this amount of seconds before reducing to target speed to "
+                     "kick-start the cooling fan. This is useful for fans where a low PWM/power may be insufficient to "
+                     "get the fan started spinning from a stop, or to get the fan up to speed faster. Set to 0 to "
+                     "deactivate.");
+    def->units = {L("s")};
+    def->min = 0;
+    def->init_fn = init_with(0.);
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 6.
+    def = defs.add("xy_hole_compensation", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("X-Y hole compensation");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 20;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Holes in objects will expand or contract in the XY plane by the set value. Positive values "
+                     "make holes bigger and negative values make holes smaller. This function is used to adjust "
+                     "sizes slightly when objects have assembly issues.");
+    def->units = {L("mm")};
+    def->init_fn = init_with(0.);
+
+    def = defs.add("elefant_foot_compensation_layers", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Elephant foot compensation layers");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 21;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("The number of layers on which the elephant foot compensation will be active. The first "
+                     "layer will be shrunk by the elephant foot compensation value, then the next layers will be "
+                     "linearly shrunk less, up to the layer indicated by this value.");
+    def->units = {L("layers")};
+    def->min = 1;
+    def->init_fn = init_with(1);
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 5. 3.0 used a fixed 6.5 mm.
+    def = defs.add("small_perimeter_threshold", typeid(double));
+    def->location = Print;
+    def->label = L("Small perimeters threshold");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_MainStructure;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 30;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This sets the threshold for small perimeter length (as the radius of a circle of "
+                     "that length). Perimeters up to it are printed at the small perimeter speed.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(6.5);
+
+    // Ported from OrcaSlicer (PrintConfig.cpp): parity batch 4.
+    def = defs.add("slow_down_layers", typeid(int));
+    def->location = Print;
+    def->label = L("Number of slow layers");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_FirstLayer;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 21;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("The first few layers are printed slower than normal. "
+                     "The speed is gradually increased in a linear fashion over the specified number of layers.");
+    def->units = {L("layers")};
+    def->min = 0;
+    def->init_fn = init_with(0);
+
     def = defs.add("skirt_distance", typeid(double));
     def->location = Print;
     def->label = L("Distance from brim/object");
@@ -3563,6 +6251,31 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->units = {L("layers")};
     def->init_fn = init_with(1);
 
+    def = defs.add("skirt_start_angle", typeid(double));
+    def->location = Print;
+    def->label = L("Skirt start point");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Skirt;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Angle from the object center to skirt start point. Zero is the most right position, counter "
+                     "clockwise is positive angle.");
+    def->units = {L("°")};
+    def->min = -180;
+    def->max = 180;
+    def->init_fn = init_with(-135.);
+
+    def = defs.add("single_loop_draft_shield", typeid(bool));
+    def->location = Print;
+    def->label = L("Single loop after first layer");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Skirt;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Limits the skirt/draft shield loops to one wall after the first layer. This is useful, on occasion, "
+                     "to conserve filament but may cause the draft shield/skirt to warp / crack.");
+    def->init_fn = init_with(false);
+
     def = defs.add("draft_shield", typeid(EnumWrapper));
     def->location = Print;
     def->label = L("Draft shield");
@@ -3579,6 +6292,20 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
         {{int(DraftShield::dsDisabled), "disabled", L("Disabled")},
          {int(DraftShield::dsLimited), "limited", L("Limited")},
          {int(DraftShield::dsEnabled), "enabled", L("Enabled")}}
+    );
+
+    def = defs.add("skirt_type", typeid(EnumWrapper));
+    def->location = Print;
+    def->label = L("Skirt type");
+    def->option_group = ConfigItemDef::OptionGroup::Print_BedAdhesion_Skirt;
+    def->category = ConfigItemDef::Category::Print_BedAdhesion;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Combined - single skirt for all objects, Per object - individual object skirt.");
+    def->init_fn = init_with(
+        SkirtType::Combined,
+        {{int(SkirtType::Combined), "combined", L("Combined")},
+         {int(SkirtType::PerObject), "perobject", L("Per object")}}
     );
 
     def = defs.add("skirts", typeid(int));
@@ -3666,6 +6393,24 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = 0;
     def->init_fn = init_with(0);
 
+    def = defs.add("bridge_line_width", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object, Volume };
+    def->label = L("Bridge");
+    def->option_group = ConfigItemDef::OptionGroup::Print_ExtrusionRetraction_ExtrusionWidth;
+    def->category = ConfigItemDef::Category::Print_ExtrusionRetraction;
+    def->order = 9;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Line width of the Bridge. If expressed as a %, it will be computed over the nozzle diameter. "
+                     "Recommended to use with a higher Bridge density or Bridge flow ratio. The maximum value is 100% or "
+                     "the nozzle diameter. If set to 0, the line width will match the Internal solid infill width, or the "
+                     "nozzle diameter for thick bridges.");
+    def->units = {L("mm"), L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(FloatOrPercentage(Percentage{100.}));
+    def->ratio_over = "nozzle_diameter";
+
     def = defs.add("solid_infill_extrusion_width", typeid(FloatOrPercentage));
     def->location = Print;
     def->overrides_in = Locations{ Tool, Object, Volume };
@@ -3729,6 +6474,60 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
                    "It won't work when printing more than one single object.");
     def->init_fn = init_with(false);
 
+    def = defs.add("spiral_mode_smooth", typeid(bool));
+    def->location = Print;
+    def->label = L("Smooth Spiral");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_SlicingStrategy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 2;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Smooth Spiral smooths out X and Y moves as well, resulting in no visible seam at all, even in the "
+                     "XY directions on walls that are not vertical.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("spiral_mode_max_xy_smoothing", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->label = L("Max XY Smoothing");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_SlicingStrategy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Maximum distance to move points in XY to try to achieve a smooth spiral. If expressed as a %, it "
+                     "will be computed over nozzle diameter.");
+    def->units = {L("mm"), L("%")};
+    def->min = 0;
+    def->max = 1000;
+    // a percentage of the nozzle diameter: resolved in SpiralVase
+    def->init_fn = init_with(FloatOrPercentage(Percentage{200.}));
+
+    def = defs.add("spiral_starting_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Spiral starting flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_SlicingStrategy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Sets the starting flow ratio while transitioning from the last bottom layer to the spiral. Normally "
+                     "the spiral transition scales the flow ratio from 0% to 100% during the first loop which can in some "
+                     "cases lead to under extrusion at the start of the spiral.");
+    def->min = 0;
+    def->max = 1;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("spiral_finishing_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Spiral finishing flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_SlicingStrategy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Sets the finishing flow ratio while ending the spiral. Normally the spiral transition scales the "
+                     "flow ratio from 100% to 0% during the last loop which can in some cases lead to under extrusion at "
+                     "the end of the spiral.");
+    def->min = 0;
+    def->max = 1;
+    def->init_fn = init_with(0.);
+
     def = defs.add("standby_temperature_delta", typeid(int));
     def->location = Print;
     def->label = L("Temperature variation");
@@ -3743,6 +6542,32 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = -max_temp;
     def->max = max_temp;
     def->init_fn = init_with(-5);
+
+    def = defs.add("preheat_time", typeid(double));
+    def->location = Print;
+    def->label = L("Preheat time");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_OozePrevention;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("To reduce the waiting time after tool change, Orca can preheat the next tool while the current tool "
+                     "is still in use. This setting specifies the time in seconds to preheat the next tool. Orca will "
+                     "insert a M104 command to preheat the tool in advance.");
+    def->units = {L("s")};
+    def->min = 0;
+    def->max = 120;
+    def->init_fn = init_with(30.);
+
+    def = defs.add("preheat_steps", typeid(int));
+    def->location = Print;
+    def->label = L("Preheat steps");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_OozePrevention;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Insert multiple preheat commands (e.g. M104.1). Only useful for Prusa XL. For other printers, "
+                     "please set it to 1.");
+    def->min = 1;
+    def->max = 10;
+    def->init_fn = init_with(1);
 
     def = defs.add("autoemit_temperature_commands", typeid(bool));
     def->location = Printer;
@@ -3891,6 +6716,36 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
             {int(ToolChangeOrderingType::Cyclic),    "cyclic",    L("Cyclic")},
         }
     );
+
+    def               = defs.add("toolchange_cyclic_order", typeid(std::string));
+    def->location     = Print;
+    def->label        = L("Cyclic order");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ToolChanges;
+    def->category     = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order        = 1;
+    def->gui_type     = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Custom filament sequence used by the cyclic toolchange ordering, as filament numbers separated by "
+                     "commas (e.g. \"3,2,1,4\"). Each layer prints its filaments following this sequence; filaments not "
+                     "listed are printed last, in ascending order. Leave empty to cycle through the filaments in "
+                     "ascending order.");
+    def->init_fn = init_with(std::string{});
+
+    def               = defs.add("toolchange_cyclic_first_layer", typeid(bool));
+    def->location     = Print;
+    def->label        = L("Apply cyclic order to first layer");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ToolChanges;
+    def->category     = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order        = 2;
+    def->gui_type     = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Applies the cyclic toolchange order to the first layer as well. By default this is disabled, "
+                     "because the first layer is instead ordered for the best bed adhesion: filaments that print small, "
+                     "fragile first-layer features are printed last, so the following tool changes and travel moves are "
+                     "less likely to knock those weakly anchored parts loose. This first-layer order also honors a custom "
+                     "first layer filament sequence when one is set. The cyclic order's benefit (extra tool changes give "
+                     "each layer more time to cool) does not apply to the first layer, which is printed slowly and hot "
+                     "for adhesion. Enable this only if you need the exact same tool sequence on every layer, including "
+                     "the first, at the cost of that adhesion optimization.");
+    def->init_fn = init_with(false);
 
     def               = defs.add("support_material", typeid(EnumWrapper));
     def->location     = Print;
@@ -4205,6 +7060,137 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
          {int(SupportMaterialPattern::smpHoneycomb), "honeycomb", L("Honeycomb")}}
     );
 
+    def = defs.add("support_threshold_overlap", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Threshold overlap");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_Generation;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("If threshold angle is zero, support will be generated for overhangs whose overlap is below the threshold. The smaller this value is, the steeper the overhang that can be printed without support.");
+    def->units = {L("mm"), L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->ratio_over = "external_perimeter_extrusion_width";
+    def->init_fn = init_with(FloatOrPercentage(Percentage{50.}));
+
+    def = defs.add("support_remove_small_overhang", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Ignore small overhangs");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_Generation;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Ignore small overhangs that possibly don't require support.");
+    // off: 3.0's supports unchanged unless asked for (Orca: on)
+    def->init_fn = init_with(false);
+
+    def = defs.add("support_expansion", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Normal support expansion");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_SupportGeometry;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 2;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Expand (+) or shrink (-) the horizontal span of normal support.");
+    def->units = {L("mm")};
+    def->init_fn = init_with(0.);
+
+    def = defs.add("support_object_first_layer_gap", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Support/object first layer gap");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_InterfaceSeparation;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("XY separation between an object and its support at the first layer.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 10;
+    def->init_fn = init_with(0.2);
+
+    def = defs.add("support_bottom_interface_spacing", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Bottom interface spacing");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_InterfaceSeparation;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 8;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This is the spacing of bottom interface lines. 0 means solid interface.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(0.5);
+
+    def = defs.add("support_ironing", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Ironing Support Interface");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_InterfaceSeparation;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 9;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Ironing is using small flow to print on same height of support interface again to make it more smooth. This setting controls whether support interface being ironed. When enabled, support interface will be extruded as solid too.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("support_ironing_pattern", typeid(EnumWrapper));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Support Ironing Pattern");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_InterfaceSeparation;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("The pattern that will be used when ironing.");
+    def->init_fn = init_with(
+        InfillPattern::ipRectilinear,
+        {{int(InfillPattern::ipRectilinear), "rectilinear", L("Rectilinear")},
+         {int(InfillPattern::ipConcentric), "concentric", L("Concentric")}}
+    );
+
+    def = defs.add("support_ironing_flow", typeid(Percentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Support Ironing flow");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_InterfaceSeparation;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 11;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The amount of material to extrude during ironing. Relative to flow of normal support interface layer height. Too high value results in overextrusion on the surface.");
+    def->units = {L("%")};
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(Percentage{10.});
+
+    def = defs.add("support_ironing_spacing", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Support Ironing line spacing");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Supports_InterfaceSeparation;
+    def->category = ConfigItemDef::Category::Print_Supports;
+    def->order = 12;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This is the distance between the lines used for ironing.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 1;
+    def->init_fn = init_with(0.1);
+
+    def = defs.add("support_interface_not_for_body", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Avoid interface filament for base");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ExtruderAssignment;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Avoid using support interface filament to print support base if possible.");
+    def->init_fn = init_with(true);
+
     def = defs.add("support_material_interface_pattern", typeid(EnumWrapper));
     def->location = Print;
     def->compatibility_rule = CompatibilityRule::IgnoreOverrides;
@@ -4221,7 +7207,10 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
         SupportMaterialInterfacePattern::smipRectilinear,
         {{int(SupportMaterialInterfacePattern::smipAuto), "auto", L("Default")},
          {int(SupportMaterialInterfacePattern::smipRectilinear), "rectilinear", L("Rectilinear")},
-         {int(SupportMaterialInterfacePattern::smipConcentric), "concentric", L("Concentric")}}
+         {int(SupportMaterialInterfacePattern::smipConcentric), "concentric", L("Concentric")},
+         {int(SupportMaterialInterfacePattern::smipSpiralInset), "spiralinset", L("Spiral Inset")},
+         {int(SupportMaterialInterfacePattern::smipRectilinearInterlaced), "rectilinear_interlaced", L("Rectilinear Interlaced")},
+         {int(SupportMaterialInterfacePattern::smipGrid), "grid", L("Grid")}}
     );
 
     def = defs.add("support_material_spacing", typeid(double));
@@ -4251,6 +7240,35 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->units = {L("mm/s")};
     def->min = 0;
     def->init_fn = init_with(60.);
+
+    def = defs.add("small_support_perimeter_speed", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Small support perimeters");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_SupportAndBridges;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("Same as \"Small perimeters\", but for supports. This separate setting will affect the speed of "
+                     "support for areas <= `small_support_perimeter_threshold`. If expressed as a percentage (for "
+                     "example: 80%), it will be calculated on the support or support interface speed setting above.");
+    def->units = {L("mm/s"), L("%")};
+    def->min = 1;
+    // a percentage of the support or support interface speed: resolved in GCodeGenerator::extrude_support
+    def->init_fn = init_with(FloatOrPercentage(Percentage{50.}));
+
+    def = defs.add("small_support_perimeter_threshold", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Small support perimeters threshold");
+    def->option_group = ConfigItemDef::OptionGroup::Print_Speed_SupportAndBridges;
+    def->category = ConfigItemDef::Category::Print_Speed;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This sets the threshold for small support perimeter length. The default threshold is 0mm.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(0.);
 
     def = defs.add("support_material_style", typeid(EnumWrapper));
     def->location = Print;
@@ -4688,6 +7706,84 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
                    "on leaky extruders.");
     def->init_fn = init_with(false);
 
+    def = defs.add("wipe_distance", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Filament };
+    def->label = L("Wipe distance");
+    def->option_group = ConfigItemDef::OptionGroup::Print_ExtrusionRetraction_Retraction;
+    def->category = ConfigItemDef::Category::Print_ExtrusionRetraction;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Describe how long the nozzle will move along the last path when retracting. Depending on how long "
+                     "the wipe operation lasts, how fast and long the extruder/filament retraction settings are, a "
+                     "retraction move may be needed to retract the remaining filament. Setting a value in the retract "
+                     "amount before wipe setting below will perform any excess retraction before the wipe, else it will "
+                     "be performed after.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("wipe_before_external_loop", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Wipe before external loop");
+    def->option_group = ConfigItemDef::OptionGroup::Print_ExtrusionRetraction_Retraction;
+    def->category = ConfigItemDef::Category::Print_ExtrusionRetraction;
+    def->order = 8;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("To minimize visibility of potential overextrusion at the start of an external perimeter when "
+                     "printing with Outer/Inner or Inner/Outer/Inner wall print order, the de-retraction is performed "
+                     "slightly on the inside from the start of the external perimeter. That way any potential over "
+                     "extrusion is hidden from the outside surface. This is useful when printing with Outer/Inner or "
+                     "Inner/Outer/Inner wall print order as in these modes it is more likely an external perimeter is "
+                     "printed immediately after a de-retraction move.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("wipe_on_loops", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Wipe on loops");
+    def->option_group = ConfigItemDef::OptionGroup::Print_ExtrusionRetraction_Retraction;
+    def->category = ConfigItemDef::Category::Print_ExtrusionRetraction;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("To minimize the visibility of the seam in a closed loop extrusion, a small inward movement is "
+                     "executed before the extruder leaves the loop.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("wipe_inward", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Wipe inward");
+    def->option_group = ConfigItemDef::OptionGroup::Print_ExtrusionRetraction_Retraction;
+    def->category = ConfigItemDef::Category::Print_ExtrusionRetraction;
+    def->order = 9;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Applies only to external walls, including hole boundaries. Moves the hot nozzle toward printed "
+                     "inner walls during wiping to reduce reheating of freshly printed plastic and seam marks. Especially "
+                     "useful at layer heights below 0.1 mm, where wipe marks are more visible. Uses the regular wipe if "
+                     "no adjacent inner wall is already printed (single-wall areas or Outer/Inner wall order), or if no "
+                     "supported inward path can be found, for example at tight corners or seam gaps.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("wipe_inward_distance", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Wipe inward distance");
+    def->option_group = ConfigItemDef::OptionGroup::Print_ExtrusionRetraction_Retraction;
+    def->category = ConfigItemDef::Category::Print_ExtrusionRetraction;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->units = {L("mm"), L("%")};
+    def->tooltip = L("The distance the wipe path is shifted away from the external perimeter, specified in millimeters or "
+                     "as a percentage of the actual outer-wall extrusion width. For example, 50% shifts the path by half "
+                     "of the outer-wall width. The effective offset is limited by both the actual outer-wall width and "
+                     "the available spacing to the adjacent wall, so values above 100% or an equivalent absolute distance "
+                     "have no additional effect. Set to 0 to disable the offset.");
+    def->min = 0;
+    def->max = 100;
+    def->init_fn = init_with(FloatOrPercentage(Percentage{50.}));
+
     def = defs.add("wipe_tower", typeid(bool));
     def->location = Print;
     def->label = L("Enable");
@@ -4729,6 +7825,20 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->tooltip = L("Width of a wipe tower");
     def->units = {L("mm")};
     def->init_fn = init_with(60.);
+    def->min = 1.0;
+
+    // Ported from OrcaSlicer (prime_volume, PrintConfig.cpp): used instead of the purging
+    // volumes when the printer does not purge in the prime tower (purge_in_prime_tower).
+    def = defs.add("prime_volume", typeid(double));
+    def->location = Print;
+    def->label = L("Prime volume");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 1;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This is the volume of material to prime the extruder with on the tower.");
+    def->units = {L("mm³")};
+    def->init_fn = init_with(45.);
     def->min = 1.0;
 
     def = defs.add("wipe_tower_brim_width", typeid(double));
@@ -4832,6 +7942,121 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
                      "Set to 0 to use the one that is available (non-soluble would be preferred).");
     def->min = 0;
     def->init_fn = init_with(0);
+
+    def = defs.add("make_overhang_printable", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Make overhangs printable");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 29;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Modify the geometry to print overhangs without support material.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("make_overhang_printable_angle", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Make overhangs printable - Maximum angle");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 30;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Maximum angle of overhangs to allow after making more steep overhangs printable.90° will not change "
+                     "the model at all and allow any overhang, while 0 will replace all overhangs with conical material.");
+    def->units = {L("°")};
+    def->min = 0.;
+    def->max = 90.;
+    def->init_fn = init_with(55.);
+
+    def = defs.add("make_overhang_printable_hole_size", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Make overhangs printable - Hole area");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 31;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Maximum area of a hole in the base of the model before it's filled by conical material. A value of "
+                     "0 will fill all the holes in the model base.");
+    def->units = {L("mm²")};
+    def->min = 0.;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("precise_outer_wall", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Precise wall");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 23;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Improve shell precision by adjusting outer wall spacing. This also improves layer consistency. "
+                     "NOTE: This option will be ignored for outer-inner or inner-outer-inner wall sequences.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("precise_z_height", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object };
+    def->label = L("Precise Z height");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 24;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable this to get precise Z height of object after slicing. It will get the precise object height "
+                     "by fine-tuning the layer heights of the last few layers. Note that this is an experimental "
+                     "parameter.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("hole_to_polyhole", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Convert holes to polyholes");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 25;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Search for almost-circular holes that span more than one layer and convert the geometry to "
+                     "polyholes. Use the nozzle size and the (biggest) diameter to compute the polyhole. See "
+                     "http://hydraraptor.blogspot.com/2011/02/polyholes.html");
+    def->init_fn = init_with(false);
+
+    def = defs.add("hole_to_polyhole_threshold", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Polyhole detection margin");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 26;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->units = {L("mm"), L("%")};
+    def->tooltip = L("Maximum defection of a point to the estimated radius of the circle. As cylinders are often exported "
+                     "as triangles of varying size, points may not be on the circle circumference. This setting allows "
+                     "you some leeway to broaden the detection. In mm or in % of the radius.");
+    def->init_fn = init_with(FloatOrPercentage(0.01));
+
+    def = defs.add("hole_to_polyhole_twisted", typeid(bool));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Polyhole twist");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 27;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Rotate the polyhole every layer.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("hole_to_polyhole_max_edges", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Maximum Polyhole edge count");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 28;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Maximum number of polyhole edges This setting limits the amount of edges a polyhole can have");
+    def->min = 3;
+    def->init_fn = init_with(50);
 
     def = defs.add("xy_size_compensation", typeid(double));
     def->location = Print;
@@ -4980,6 +8205,71 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->init_fn = init_with(FloatOrPercentage(Percentage{85.}));
     def->ratio_over = "nozzle_diameter";
 
+    def = defs.add("initial_layer_min_bead_width", typeid(FloatOrPercentage));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object };
+    def->label = L("First layer minimum wall width");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_ArachnePerimeterGenerator;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 1;
+    def->gui_type = ConfigItemDef::GUIType::unit_or_percentage;
+    def->tooltip = L("The minimum wall width that should be used for the first layer is recommended to be set to the same "
+                     "size as the nozzle. This adjustment is expected to enhance adhesion.");
+    def->units = {L("mm"), L("%")};
+    def->min = 0;
+    // a percentage of the (smallest) nozzle diameter: resolved in Arachne::WallToolPaths
+    def->init_fn = init_with(FloatOrPercentage(Percentage{85.}));
+
+    def = defs.add("min_length_factor", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object };
+    def->label = L("Minimum wall length");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_ArachnePerimeterGenerator;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 2;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Adjust this value to prevent short, unclosed walls from being printed, which could increase print "
+                     "time. The value is a multiple of the wall width. Higher values remove more and longer walls. NOTE: "
+                     "Bottom and top surfaces will not be affected by this value to prevent visual gaps on the outside of "
+                     "the model. Adjust 'One wall threshold' in the 'Walls and surfaces' settings below to adjust the "
+                     "sensitivity of what is considered a top-surface. 'One wall threshold' is only visible if this "
+                     "setting is set above the default value of 0.5, or if single-wall top surfaces is enabled.");
+    def->min = 0;
+    def->max = 25;
+    def->init_fn = init_with(0.5);
+
+    def = defs.add("wall_maximum_resolution", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object };
+    def->label = L("Maximum wall resolution");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_ArachnePerimeterGenerator;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This value determines the smallest wall line segment length in mm. The smaller you set this value, "
+                     "the more accurate and precise the walls will be.");
+    def->units = {L("mm")};
+    def->min = 0.005;
+    def->max = 0.5;
+    def->init_fn = init_with(0.5);
+
+    def = defs.add("wall_maximum_deviation", typeid(double));
+    def->location = Print;
+    def->overrides_in = Locations{ Tool, Object };
+    def->label = L("Maximum wall deviation");
+    def->option_group = ConfigItemDef::OptionGroup::Print_PrecisionSlicing_ArachnePerimeterGenerator;
+    def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The maximum deviation allowed when reducing the resolution for the 'Maximum wall resolution' "
+                     "setting. If you increase this, the print will be less accurate, but the G-code will be smaller. "
+                     "'Maximum wall deviation' limits 'Maximum wall resolution', so if the two conflict, 'Maximum wall "
+                     "deviation' takes precedence.");
+    def->units = {L("mm")};
+    def->min = 0.005;
+    def->max = 0.05;
+    def->init_fn = init_with(0.025);
+
     def = defs.add("idle_temperature", typeid(std::optional<int>));
     def->location = Filament;
     def->label = L("Idle temperature");
@@ -5047,6 +8337,8 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->tooltip = L("Name or ID of tool print preset to use as default when this print preset is selected.");
     def->init_fn = init_with("");
 
+    // Orca's sidebar layout and modes of the print settings
+    apply_orca_layout(defs);
 }
 
 } // namespace Slic3r::Domain

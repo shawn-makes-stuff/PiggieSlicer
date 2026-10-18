@@ -1,0 +1,105 @@
+kind: printer
+id: +XzlNoZ73ZFDNfC8WeClGQ
+variants:
+- condition: printer.model == "LH Stinger"
+  name: LH Stinger
+  id: QwkwNAFb2y6Nvg/0SKzZyA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: ah+Yi1P8pIROgMSWX1WJLQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Daily @LH Stinger
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGES
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 200000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 200000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 200000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 200000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 2000.0
+      - 200.0
+      machine_max_jerk_e:
+      - 15.0
+      - 2.5
+      machine_max_jerk_x:
+      - 15.0
+      - 9.0
+      machine_max_jerk_y:
+      - 15.0
+      - 9.0
+      machine_max_jerk_z:
+      - 15.0
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 200.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 1000.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 1000.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 100.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        PRINT_START_LHS BED=[first_layer_bed_temperature[initial_extruder]] HOTEND=[first_layer_temperature] AUTOMESH=1 AUTOPURGE=1 QUIETMODE={if print_settings_id =~ /.*Quiet.*/ }1{else}0{endif}
+      parking_pos_retraction: 92
+      bed_shape:
+      - 18x38
+      - 218x38
+      - 218x238
+      - 18x238
+      max_print_height: 180
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

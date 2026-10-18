@@ -1,4 +1,5 @@
 #include "Slic3r/Domain/ConfigDef.hpp"
+#include <algorithm>
 
 static const std::string& L(const std::string& s)
 {
@@ -383,6 +384,13 @@ ConfigItemDef* ConfigDefinitions::add(const std::string_view name, const std::ty
 {
     ASSERT(!m_finalized);
     return &m_defs.emplace_back(ConfigItemDef{std::string(name), &type});
+}
+
+ConfigItemDef* ConfigDefinitions::find(const std::string_view name)
+{
+    ASSERT(!m_finalized);
+    const auto it = std::ranges::find(m_defs, name, &ConfigItemDef::name);
+    return it == m_defs.end() ? nullptr : &*it;
 }
 
 void ConfigDefinitions::check_valid() const

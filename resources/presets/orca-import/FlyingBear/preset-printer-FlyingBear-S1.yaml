@@ -1,0 +1,105 @@
+kind: printer
+id: Ve2LjmR03Mt5asNfunFvoA
+variants:
+- condition: printer.model == "FlyingBear S1"
+  name: FlyingBear S1
+  id: du/JasEtEu55RRZuiPB0dw
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: yZM12DJ4pPN5ooeFrY6A/Q
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @FlyingBear S1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 69
+      extruder_clearance_radius: 55
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: ";v2.9.3-20250610;\n;wiping nozzle start\nM106 P3 S0\nM140 S60\nclean_nozzle_position\n;wiping nozzle end\n;*************preheat nozzle and hotbed for Z_TILT_ADJUST*************\nM140 S60\nM104 S130\nG1 X110 Y110 F10000 \nG4 P200\nprobe\nSET_KINEMATIC_POSITION Z=0 ;Z homing\nG1 Z5\nM190 S60\nZ_TILT_ADJUST \n;*************Z_TILT_ADJUST end*************\nM140 S60 ;heat hotbed temp set by user\nG1 X5 Y5 F8000 \nG28 \nG1 X{first_layer_print_min[0]-1.5} Y{min(first_layer_print_min[1] + 100,print_bed_max[0])} F6000 \nG1 Z0 F400\nM104 S[first_layer_temperature] ;heat nozzle temp set by user\nM106 S100 ;close head_nozzle fan\nG4 P3000\nM106 S255 ;close head_nozzle fan\nG4 P3000\nM106 S100 ;close head_nozzle fan\n;*************PRINT START*************\nM104 S[first_layer_temperature] ;heat nozzle temp \nM190 S[first_layer_bed_temperature[initial_extruder]];heat bed temp set by user and wait \nM109 S[first_layer_temperature] ;heat nozzle temp set by user and wait \nM106 S0 ;close\
+        \ head_nozzle fan\nBED_MESH_CLEAR                                  \nBED_MESH_PROFILE LOAD=default   # bedmesh load\nG92 E0 ;Reset Extruder\n;G1 Z4.0 F200 ;Move Z Axis up\nG90 ;absolute position\n ; ; ; ; ; ; ; ; ; draw line along model\n;G92 E0 ;reset extruder\nG1 E3 F300 ;extrude filament\nG1 X{first_layer_print_min[0]-1.5} Y{min(first_layer_print_min[1] + 100,print_bed_max[0])} F6000 \nG1 Z0.22 F600\nG1 X{first_layer_print_min[0]-1.5} Y{max(0, first_layer_print_min[1]-1.5)}  F2000 E10\nG1 Z0.22 F600\nG1 X{min(first_layer_print_min[0] + 60,print_bed_max[0])} F1200 E12\n ; ; ; ; ; ; ; ; ;draw line along model end \nG4 P200\nG1 Z2\nG92 E0 ;Reset Extruder\nCLEAR_PAUSE\n;***********model start************\n"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 220x0
+      - 220x220
+      - '0x220'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

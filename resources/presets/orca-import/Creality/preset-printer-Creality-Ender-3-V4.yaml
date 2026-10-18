@@ -1,0 +1,106 @@
+kind: printer
+id: JYo/ZmYcGZRRNEbauJKOaQ
+variants:
+- condition: printer.model == "Creality Ender-3 V4"
+  name: Creality Ender-3 V4
+  id: osNdxTU1gQ7UBE2iPzLmXQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: RV3hHjzlr5blJZsGDRJYyw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |-
+        G2 Z{z_after_toolchange + 0.4} I0.86 J0.86 P1 F10000 ; spiral lift a little from second lift
+        G1 X215 Y110 F30000
+        G1 Z{z_after_toolchange} F600
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard @Creality Ender-3 V4 0.4 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 0
+      extruder_clearance_height: 35
+      extruder_clearance_radius: 78
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 2400.0
+      - 2400.0
+      machine_max_acceleration_extruding:
+      - 12000.0
+      - 12000.0
+      machine_max_acceleration_retracting:
+      - 2400.0
+      - 2400.0
+      machine_max_acceleration_travel:
+      - 12000.0
+      - 12000.0
+      machine_max_acceleration_x:
+      - 12000.0
+      - 12000.0
+      machine_max_acceleration_y:
+      - 12000.0
+      - 12000.0
+      machine_max_acceleration_z:
+      - 1000.0
+      - 1000.0
+      machine_max_jerk_e:
+      - 10.0
+      - 10.0
+      machine_max_jerk_x:
+      - 100.0
+      - 100.0
+      machine_max_jerk_y:
+      - 100.0
+      - 100.0
+      machine_max_jerk_z:
+      - 5.0
+      - 5.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 40.0
+      - 40.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: "{local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}M140 S0\nM104 S0 \nSTART_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]\nT[initial_extruder]\nM109 S[first_layer_temperature]\nM204 S2000\nG1 Z3 F600\nM83\nG1 X20 Y-1 F30000\nG1 Z0.3 F1200\nG1 X100 E10  F{filament_max_volumetric_speed[initial_extruder]/0.3*60}\nG1 X105 E.3742 \
+        \ F{outer_wall_volumetric_speed/(0.3*0.5)/4*60}\nG1 X110 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)*60}\nG1 X115 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4*60}\nG1 X120 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)*60}\nG1 X125 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4*60}\nG91\nG1 X1 Z-0.300\nG1 X4\nG92 E0\nG1 Z1 F1200"
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 220x0
+      - 220x220
+      - '0x220'
+      max_print_height: 235
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 96x96/PNG, 300x300/PNG
+      custom_parameters_printer: '{"long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "support_air_filtration": false}'

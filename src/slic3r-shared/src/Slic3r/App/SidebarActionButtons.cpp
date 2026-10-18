@@ -64,8 +64,9 @@ void SidebarActionButtons::init_physical_printer_ui()
         m_physical_printer_advanced_settings_dialog
     );
 
+    // the editor opens on its own (Printer section's network printer button); closing just closes
     m_physical_printer_advanced_settings_dialog->dialog_callbacks().close_requested = [this]()
-    { m_render_module_navigator->set_opened_dialog(m_physical_printer_settings_dialog); };
+    { m_render_module_navigator->set_opened_dialog(nullptr); };
 
     auto& interactor = m_project_interactor->physical_printer_interactor();
 
@@ -89,7 +90,7 @@ void SidebarActionButtons::init_physical_printer_ui()
     m_physical_printer_button->set_self_align(YGAlignStretch);
     m_physical_printer_button->set_flex_grow(1.f);
 
-    m_physical_printer_settings_dialog->attach_to_item(this, Yoga::Position::Left);
+    m_physical_printer_settings_dialog->attach_to_item(this, Yoga::Position::Right);
 
     m_physical_printer_settings_dialog->callbacks().opened = [this]() {
         m_physical_printer_button->set_checked(true);
@@ -112,7 +113,7 @@ void SidebarActionButtons::init_physical_printer_ui()
         } else {
             m_physical_printer_advanced_settings_dialog->attach_to_item(
                 m_physical_printer_settings_dialog->content_item(),
-                Yoga::Position::Left
+                Yoga::Position::Right
             );
             m_render_module_navigator->set_opened_dialog(m_physical_printer_advanced_settings_dialog);
         }

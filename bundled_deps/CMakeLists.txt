@@ -22,6 +22,10 @@ add_library(qoi STATIC
 )
 target_include_directories(qoi PUBLIC qoi)
 
+file(GLOB LIBNOISE_SOURCES libnoise/libnoise/*.cpp libnoise/libnoise/model/*.cpp libnoise/libnoise/module/*.cpp)
+add_library(libnoise STATIC ${LIBNOISE_SOURCES})
+target_include_directories(libnoise PUBLIC libnoise)
+
 add_library(fastfloat INTERFACE)
 target_include_directories(fastfloat INTERFACE fast_float)
 

@@ -1,0 +1,491 @@
+kind: printer
+id: JwuR2tgDFWdydtr7fdwyPg
+variants:
+- condition: printer.model == "TiQ2"
+  name: TiQ2
+  id: zFFmYvnJNS7ViR5EBdAhBg
+  variants:
+  - condition: tool.nozzle_diameter == 0.25 and printer.tool_count == 2
+    id: 9ji6zKMIgwGn1H25lwfHag
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        G1 Z{layer_z+2} F900 ; safe distance while tool change
+        G1 X32 Y3 F3000
+        M109 S{temperature[next_extruder]} T[next_extruder] ; set new tool temperature so it can start heating while changing
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.15mm Standard @iQ TiQ2 (0.25 Nozzle)
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G1 X-19 F3000 ; home X axis
+        G1 Y1 F3000 ; home Y axis
+        M104 S0 T0 ; turn off extruder
+        M104 S0 T1 ; turn off extruder
+        M104 S0 T2 ; turn off extruder
+        M140 S0 ; turn off bed
+        M106 S0 ; turn off fan
+        M806 S0 ; turn of housing fan
+        M84 ; disable motor
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 12.0
+      - 15.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M10710 S0
+      start_gcode: |-
+        T[initial_extruder]
+        M109 S{first_layer_temperature[current_extruder]}
+        G1 Z15 F900
+        G1 X-19 Y1 F9000
+        G1 X-19 Y45 F9000
+        G1 Y1 F9000
+        G1 Y45 F9000
+        G1 Y1 F9000
+        G1 Y45 F9000
+        G1 X0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x330
+      - '0x330'
+      max_print_height: 300
+      printer_notes: Machine file version 1.0 20251106
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4 and printer.tool_count == 2
+    id: JU/X8DmhKLijDeodSTvc/g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        G1 Z{layer_z+2} F900 ; safe distance while tool change
+        G1 X32 Y3 F3000
+        M109 S{temperature[next_extruder]} T[next_extruder] ; set new tool temperature so it can start heating while changing
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @iQ TiQ2 P1 - PACF Pro Fiberthree (0.4 Nozzle)
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G1 X-19 F3000 ; home X axis
+        G1 Y1 F3000 ; home Y axis
+        M104 S0 T0 ; turn off extruder
+        M104 S0 T1 ; turn off extruder
+        M104 S0 T2 ; turn off extruder
+        M140 S0 ; turn off bed
+        M106 S0 ; turn off fan
+        M806 S0 ; turn of housing fan
+        M84 ; disable motor
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 12.0
+      - 15.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M10710 S0
+      start_gcode: |-
+        T[initial_extruder]
+        M109 S{first_layer_temperature[current_extruder]}
+        G1 Z15 F900
+        G1 X-19 Y1 F9000
+        G1 X-19 Y45 F9000
+        G1 Y1 F9000
+        G1 Y45 F9000
+        G1 Y1 F9000
+        G1 Y45 F9000
+        G1 X0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x330
+      - '0x330'
+      max_print_height: 300
+      printer_notes: Machine file version 1.1 20250812
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6 and printer.tool_count == 2
+    id: rvHBvkRZEuhMcXrY4fQHHQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        G1 Z{layer_z+2} F900 ; safe distance while tool change
+        G1 X32 Y3 F3000
+        M109 S{temperature[next_extruder]} T[next_extruder] ; set new tool temperature so it can start heating while changing
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard @iQ TiQ2 (0.6 Nozzle)
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G1 X-19 F3000 ; home X axis
+        G1 Y1 F3000 ; home Y axis
+        M104 S0 T0 ; turn off extruder
+        M104 S0 T1 ; turn off extruder
+        M104 S0 T2 ; turn off extruder
+        M140 S0 ; turn off bed
+        M106 S0 ; turn off fan
+        M806 S0 ; turn of housing fan
+        M84 ; disable motor
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 12.0
+      - 15.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M10710 S0
+      start_gcode: |-
+        T[initial_extruder]
+        M109 S{first_layer_temperature[current_extruder]}
+        G1 Z15 F900
+        G1 X-19 Y1 F9000
+        G1 X-19 Y45 F9000
+        G1 Y1 F9000
+        G1 Y45 F9000
+        G1 Y1 F9000
+        G1 Y45 F9000
+        G1 X0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x330
+      - '0x330'
+      max_print_height: 300
+      printer_notes: Machine file version 1.0 20251106
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8 and printer.tool_count == 2
+    id: LE92tzY7tufUzZIQ9nTGWw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        G1 Z{layer_z+2} F900 ; safe distance while tool change
+        G1 X32 Y3 F3000
+        M109 S{temperature[next_extruder]} T[next_extruder] ; set new tool temperature so it can start heating while changing
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.40mm Standard @iQ TiQ2 (0.8 Nozzle)
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G1 X-19 F3000 ; home X axis
+        G1 Y1 F3000 ; home Y axis
+        M104 S0 T0 ; turn off extruder
+        M104 S0 T1 ; turn off extruder
+        M104 S0 T2 ; turn off extruder
+        M140 S0 ; turn off bed
+        M106 S0 ; turn off fan
+        M806 S0 ; turn of housing fan
+        M84 ; disable motor
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 12.0
+      - 15.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M10710 S0
+      start_gcode: |-
+        T[initial_extruder]
+        M109 S{first_layer_temperature[current_extruder]}
+        G1 Z15 F900
+        G1 X-19 Y1 F9000
+        G1 X-19 Y45 F9000
+        G1 Y1 F9000
+        G1 Y45 F9000
+        G1 Y1 F9000
+        G1 Y45 F9000
+        G1 X0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 330x0
+      - 330x330
+      - '0x330'
+      max_print_height: 300
+      printer_notes: Machine file version 1.0 20251106
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      custom_parameters_printer: '{"support_air_filtration": true}'

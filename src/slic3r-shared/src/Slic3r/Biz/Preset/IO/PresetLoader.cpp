@@ -12,6 +12,40 @@ namespace Slic3r::Biz::Preset::IO {
 
 namespace Details {
 
+// external_perimeters_first was replaced by the wall order (Orca wall_sequence): true is Outer/Inner.
+static void migrate_values(Domain::Preset::PresetNode& node)
+{
+    if (auto it = node.values.find("external_perimeters_first"); it != node.values.end()) {
+        const auto wall_sequence = [](bool external_first) { return std::string(external_first ? "outer wall/inner wall" : "inner wall/outer wall"); };
+        const auto truthy = [](const auto& v) -> bool {
+            using V = std::decay_t<decltype(v)>;
+            if constexpr (std::is_same_v<V, bool> || std::is_same_v<V, int> || std::is_same_v<V, double>)
+                return v != 0;
+            else if constexpr (std::is_same_v<V, std::string>)
+                return v == "1" || v == "true";
+            else
+                return false;
+        };
+        Domain::Preset::PresetValue value;
+        if (const auto* bools = std::get_if<Domain::Preset::Bools>(&it->second)) {
+            Domain::Preset::Strings strings;
+            for (bool b : *bools)
+                strings.emplace_back(wall_sequence(b));
+            value = std::move(strings);
+        } else if (const auto* ints = std::get_if<Domain::Preset::Ints>(&it->second)) {
+            Domain::Preset::Strings strings;
+            for (int i : *ints)
+                strings.emplace_back(wall_sequence(i != 0));
+            value = std::move(strings);
+        } else
+            value = wall_sequence(std::visit(truthy, it->second));
+        node.values.erase(it);
+        node.values.try_emplace("wall_sequence", std::move(value));
+    }
+    for (auto& v : node.variants)
+        migrate_values(v);
+}
+
 void collect_names(PresetNamesMapCollection& preset_names, const Domain::Preset::PresetNode& node, Domain::Preset::PresetKind kind, Domain::Preset::PresetOrigin origin, const std::string& root_id)
 {
     if (node.name.has_value()) {
@@ -53,6 +87,7 @@ void PresetLoader::load(const std::string& file_name, std::mutex& mutex, PresetO
 {
     Yaml::parse_all_documents_in_file(file_name.c_str(), [this, &mutex, &file_name, origin](const auto& doc) {
         auto preset = Yaml::parse_struct_unwrap<RootPresetNode>(doc);
+        Details::migrate_values(preset);
         std::lock_guard guard(mutex);
         preset.origin = origin;
         if (origin == PresetOrigin::User) {
@@ -67,6 +102,7 @@ void PresetLoader::load_from_string(std::string_view source, PresetOrigin origin
 {
     Yaml::parse_all_documents_in_string(source, [this, origin](const auto& doc) {
         auto preset = Yaml::parse_struct_unwrap<RootPresetNode>(doc);
+        Details::migrate_values(preset);
         preset.origin = origin;
         Details::collect_names(m_preset_names, preset, preset.kind, origin, preset.id);
         m_presets[preset.kind].emplace_back(std::move(preset));

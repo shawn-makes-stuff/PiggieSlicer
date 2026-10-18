@@ -1,0 +1,115 @@
+kind: printer
+id: lumJ1arOKOBUe0+YweDuLw
+variants:
+- condition: printer.model == "Creality K1 Max_CFS-C"
+  name: Creality K1 Max_CFS-C
+  id: Dp6cwdtC9ojtpoYvtJZDUA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: Xu8cV52jCbO78n4RHw7bLg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |-
+        G2 Z{z_after_toolchange + 0.4} I0.86 J0.86 P1 F10000 ; spiral lift a little from second lift
+        G1 X0 Y245 F30000
+        G1 Z{z_after_toolchange} F600
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard @Creality K1 Max_CFS-C 0.4 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 0
+      extruder_clearance_height: 45
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 300.0
+      machine_max_jerk_e:
+      - 10.0
+      - 10.0
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 5.0
+      - 5.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 800.0
+      - 800.0
+      machine_max_feedrate_y:
+      - 800.0
+      - 800.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+        T[initial_extruder]
+        M204 S2000
+        M109 S[first_layer_temperature]
+        G1 Z3 F600
+        M83
+        G92 E0
+        G1 Z1 F600
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 300x0
+      - 300x300
+      - '0x300'
+      max_print_height: 300
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 96x96/PNG, 300x300/PNG
+      custom_parameters_printer: '{"long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "support_air_filtration": true}'

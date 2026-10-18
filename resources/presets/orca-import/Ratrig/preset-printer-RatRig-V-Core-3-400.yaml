@@ -1,0 +1,104 @@
+kind: printer
+id: rGuU6NYG2qNn3D0ErdpMSw
+variants:
+- condition: printer.model == "RatRig V-Core 3 400"
+  name: RatRig V-Core 3 400
+  id: 32ZPhQF7PCe3PrdxARUbaw
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: pvV9KVGZLnyJ/OrlqTMw2w
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @RatRig
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 25
+      extruder_clearance_radius: 45
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_retracting:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_y:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 7.0
+      - 7.0
+      machine_max_jerk_y:
+      - 7.0
+      - 7.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      - 60.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: START_PRINT EXTRUDER_TEMP=[first_layer_temperature] EXTRUDER_OTHER_LAYER_TEMP=[temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 400x0
+      - 400x400
+      - '0x400'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

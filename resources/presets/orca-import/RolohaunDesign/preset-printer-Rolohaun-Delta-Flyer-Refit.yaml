@@ -1,0 +1,173 @@
+kind: printer
+id: 8ejU6nUkDcGtFI8UZsRDlw
+variants:
+- condition: printer.model == "Rolohaun Delta Flyer Refit"
+  name: Rolohaun Delta Flyer Refit
+  id: g7DfQmY34wm+IQjVQC608Q
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: buWHPI4RD+Hy2oWzFZyAOw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Rook MK1 LDO
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 10000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 12.0
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      - 12.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_y:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - 54.7907x4.79357
+      - 54.1644x9.55065
+      - 53.1259x14.235
+      - 51.6831x18.8111
+      - 49.8469x23.244
+      - 47.6314x27.5
+      - 45.0534x31.5467
+      - 42.1324x35.3533
+      - 38.8909x38.8909
+      - 35.3533x42.1324
+      - 31.5467x45.0534
+      - 27.5x47.6314
+      - 23.244x49.8469
+      - 18.8111x51.6831
+      - 14.235x53.1259
+      - 9.55065x54.1644
+      - 4.79357x54.7907
+      - 3.36778e-15x55
+      - -4.79357x54.7907
+      - -9.55065x54.1644
+      - -14.235x53.1259
+      - -18.8111x51.6831
+      - -23.244x49.8469
+      - -27.5x47.6314
+      - -31.5467x45.0534
+      - -35.3533x42.1324
+      - -38.8909x38.8909
+      - -42.1324x35.3533
+      - -45.0534x31.5467
+      - -47.6314x27.5
+      - -49.8469x23.244
+      - -51.6831x18.8111
+      - -53.1259x14.235
+      - -54.1644x9.55065
+      - -54.7907x4.79357
+      - -55x6.73556e-15
+      - -54.7907x-4.79357
+      - -54.1644x-9.55065
+      - -53.1259x-14.235
+      - -51.6831x-18.8111
+      - -49.8469x-23.244
+      - -47.6314x-27.5
+      - -45.0534x-31.5467
+      - -42.1324x-35.3533
+      - -38.8909x-38.8909
+      - -35.3533x-42.1324
+      - -31.5467x-45.0534
+      - -27.5x-47.6314
+      - -23.244x-49.8469
+      - -18.8111x-51.6831
+      - -14.235x-53.1259
+      - -9.55065x-54.1644
+      - -4.79357x-54.7907
+      - -1.01033e-14x-55
+      - 4.79357x-54.7907
+      - 9.55065x-54.1644
+      - 14.235x-53.1259
+      - 18.8111x-51.6831
+      - 23.244x-49.8469
+      - 27.5x-47.6314
+      - 31.5467x-45.0534
+      - 35.3533x-42.1324
+      - 38.8909x-38.8909
+      - 42.1324x-35.3533
+      - 45.0534x-31.5467
+      - 47.6314x-27.5
+      - 49.8469x-23.244
+      - 51.6831x-18.8111
+      - 53.1259x-14.235
+      - 54.1644x-9.55065
+      - 54.7907x-4.79357
+      - 55x-1.34711e-14
+      max_print_height: 115
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

@@ -134,7 +134,9 @@ public:
         Domain::GCodeExtrusionRole::SupportMaterial,
         Domain::GCodeExtrusionRole::SupportMaterialInterface,
         Domain::GCodeExtrusionRole::WipeTower,
-        Domain::GCodeExtrusionRole::Custom }) const;
+        Domain::GCodeExtrusionRole::Custom,
+        Domain::GCodeExtrusionRole::InternalBridgeInfill,
+        Domain::GCodeExtrusionRole::Brim }) const;
 
     bool is_option_visible(Biz::libpgcode::OptionType type) const;
     void toggle_option_visibility(Biz::libpgcode::OptionType type);

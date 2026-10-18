@@ -1,0 +1,133 @@
+kind: printer
+id: PDLzGkAgmEl4OG1ZA/a81g
+variants:
+- condition: printer.model == "Wanhao D9-500 MK2"
+  name: Wanhao D9-500 MK2
+  id: V5U/YNV6kyUP9/DFpbGGNA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: D27Hzq3hsRJOWaATJJXZ1Q
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Wanhao D9
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 47
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: G92 E0
+      end_gcode: |-
+        ; Wanhao Duplicator 9 end G-code
+        M104 S0 ; nozzle heater off
+        M140 S0 ; bed heater off
+        M107 ; fan off
+        G91 ; relative moves
+        G1 E-2 F1500 ; release the pressure in the nozzle
+        G1 Z10 F300 ; lift the nozzle
+        G90 ; absolute moves
+        G1 X5 Y{print_bed_max[1] - 10} F3000 ; bring the bed to the front
+        M84 X Y E ; motors off, Z keeps its position
+      machine_max_acceleration_e:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_extruding:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_retracting:
+      - 800.0
+      - 800.0
+      machine_max_acceleration_travel:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_x:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_y:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 1.0
+      - 1.0
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 5.0
+      - 5.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M600
+      start_gcode: |-
+        ; Wanhao Duplicator 9 start G-code, for the Marlin 2.1 firmwares at github.com/Le-Syl21/WANHAO-Duplicator-9
+        G21 ; millimetres
+        G90 ; absolute coordinates
+        M83 ; relative extrusion
+        M140 S[first_layer_bed_temperature[initial_extruder]] ; heat the bed
+        M104 S150 ; warm the nozzle without letting it ooze
+        G91 ; a print stopped by hand can leave the nozzle down on the bed
+        G1 Z10 F300 ; so raise it before homing: a BLTouch needs 10 mm to deploy
+        G90
+        M280 P0 S160 ; BLTouch: clear an alarm and stow the pin
+        G28 ; home all axes (this turns bed levelling off)
+        M420 S1 ; turn the bed mesh saved from the screen back on
+        G1 Z10 F300
+        M104 S[first_layer_temperature] ; start the nozzle now, the bed is still heating
+        M190 S[first_layer_bed_temperature[initial_extruder]] ; wait for the bed
+        M109 S[first_layer_temperature] ; and confirm the nozzle
+        G92 E0
+        G1 X15 Y20 Z0.3 F3000 ; start of the priming line
+        G1 Y140 E9.0 F1200 ; draw a line of filament
+        G1 X15.5 F3000
+        G1 Y20 E9.0 F1200 ; and back, next to it
+        G92 E0
+        G1 X22 F6000 ; wipe sideways to snap the string
+        G1 Z2 F300 ; lift, so the line does not stick to the nozzle
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 500x0
+      - 500x500
+      - '0x500'
+      max_print_height: 500
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

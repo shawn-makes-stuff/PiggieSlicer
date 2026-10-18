@@ -234,6 +234,7 @@ private:
     ToolBarButton* m_toolbar_place_on_face           = nullptr;
     ToolBarButton* m_toolbar_simplify                = nullptr;
     ToolBarButton* m_toolbar_arrange                 = nullptr;
+    ToolBarButton* m_toolbar_add_bed                 = nullptr;
     ToolBarButton* m_toolbar_paint_on_supports       = nullptr;
     ToolBarButton* m_toolbar_paint_on_seams          = nullptr;
     ToolBarButton* m_toolbar_paint_on_fuzzy_skin     = nullptr;

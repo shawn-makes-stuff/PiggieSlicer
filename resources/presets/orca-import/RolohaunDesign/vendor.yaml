@@ -1,0 +1,203 @@
+kind: vendor
+id: RolohaunDesign
+name: RolohaunDesign
+version: 2.4.0+orca.02.04.00.03
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Rolohaun Delta Flyer Refit
+  base_model: Rolohaun Delta Flyer Refit
+  printer_configs_order:
+  - Rolohaun-Delta-Flyer-Refit-0-4-nozzle
+- label: Rook MK1 LDO
+  base_model: Rook MK1 LDO
+  printer_configs_order:
+  - Rook-MK1-LDO-0-2-nozzle
+  - Rook-MK1-LDO-0-4-nozzle
+  - Rook-MK1-LDO-0-6-nozzle
+  - Rook-MK1-LDO-0-8-nozzle
+---
+kind: printer
+technology: FFF
+name: Rolohaun Delta Flyer Refit
+id: Rolohaun Delta Flyer Refit
+model:
+  base_model: Rolohaun Delta Flyer Refit
+  model: Rolohaun Delta Flyer Refit
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: bedtexture-rook-green-120.svg
+  thumbnail: Rolohaun Delta Flyer Refit_cover.png
+---
+kind: printer
+technology: FFF
+name: Rook MK1 LDO
+id: Rook MK1 LDO
+model:
+  base_model: Rook MK1 LDO
+  model: Rook MK1 LDO
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_texture: bedtexture-rook-green-120.svg
+  thumbnail: Rook MK1 LDO_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Rolohaun-Delta-Flyer-Refit-0-4-nozzle
+name: Rolohaun Delta Flyer Refit 0.4 nozzle
+printer: Rolohaun Delta Flyer Refit
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Rook-MK1-LDO-0-2-nozzle
+name: Rook MK1 LDO 0.2 nozzle
+printer: Rook MK1 LDO
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Rook-MK1-LDO-0-4-nozzle
+name: Rook MK1 LDO 0.4 nozzle
+printer: Rook MK1 LDO
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Rook-MK1-LDO-0-6-nozzle
+name: Rook MK1 LDO 0.6 nozzle
+printer: Rook MK1 LDO
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Rook-MK1-LDO-0-8-nozzle
+name: Rook MK1 LDO 0.8 nozzle
+printer: Rook MK1 LDO
+tools:
+- tool: '0.8'
+sheet: high_temp_plate

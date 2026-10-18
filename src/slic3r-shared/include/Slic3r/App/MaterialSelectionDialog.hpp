@@ -60,6 +60,10 @@ protected:
     void close_action() override;
 
     void update_preset_list();
+    /// Orca installs a printer's default filaments with it: favourite them when the list has no
+    /// favourite yet, and note whether filtering by favourites leaves anything.
+    void install_default_materials();
+    bool m_list_has_favorites{false};
 
 private:
     struct ProjectContext;

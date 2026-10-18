@@ -63,7 +63,10 @@ void SearchPopup::navigate_down()
 
     AbstractButton* checked     = m_button_group->checked_button();
     std::optional<size_t> index = m_results_list_view->index_of(checked);
-    ASSERT(index.has_value());
+    if (!index) {
+        select_top();
+        return;
+    }
     m_results_list_view->item_at(++index.value() % m_results_list_view->object_count())
         ->set_checked(true);
 }

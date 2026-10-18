@@ -1,0 +1,407 @@
+kind: printer
+id: JE+xvaoXLyWdn8pVm4jqeQ
+variants:
+- condition: printer.model == "M1"
+  name: M1
+  id: V1AKJncYi+sKcQ30Lish1w
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: vtsrcJWm36RnQ38Rs4O+aw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @M1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_x:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_y:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 12.0
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      - 12.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_y:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        M109 S[first_layer_temperature]
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 106x0
+      - 106x106
+      - '0x106'
+      max_print_height: 100
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: YAry018FDLUFvXZYCk8M1g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @M1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_x:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_y:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 12.0
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      - 12.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_y:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        M109 S[first_layer_temperature]
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 106x0
+      - 106x106
+      - '0x106'
+      max_print_height: 100
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: RY9TpOOY5XJxrEfZe2byAQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @M1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_x:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_y:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 12.0
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      - 12.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_y:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        M109 S[first_layer_temperature]
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 106x0
+      - 106x106
+      - '0x106'
+      max_print_height: 100
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: CuF51rw5qXF0Vet7r8vPgQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @M1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_x:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_y:
+      - 8000.0
+      - 8000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 12.0
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      - 12.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_y:
+      - 420.0
+      - 420.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        M109 S[first_layer_temperature]
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 106x0
+      - 106x106
+      - '0x106'
+      max_print_height: 100
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

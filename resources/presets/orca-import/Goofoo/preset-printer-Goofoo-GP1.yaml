@@ -1,0 +1,142 @@
+kind: printer
+id: 7tcLcLID69uqqhKDLvMWHQ
+variants:
+- condition: printer.model == "Goofoo GP1"
+  name: Goofoo GP1
+  id: Wni2NPWboIoSfvvaNTk2hg
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: ifiCi3NZTKhC0mFp7TXpoA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        ;G92 E0
+      toolchange_gcode: G5
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Goofoo GP1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+        ;layer
+        ;{if layer_num == 2}
+        ;M106 P1 S255
+        ;{endif}
+        SET_PRINT_STATS_INFO CURRENT_LAYER=[layer_num]
+      end_gcode: |-
+        ; End G-code
+        END_PRINT
+      machine_max_acceleration_e:
+      - 20000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      machine_max_acceleration_retracting:
+      - 15000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 0.0
+      - 0.0
+      machine_max_acceleration_x:
+      - 10000.0
+      machine_max_acceleration_y:
+      - 10000.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 200.0
+      machine_max_jerk_e:
+      - 1.0
+      - 2.5
+      machine_max_jerk_x:
+      - 5.0
+      - 9.0
+      machine_max_jerk_y:
+      - 5.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: G5
+      start_gcode: |-
+        M117 Printing...
+        M107 ; Turn off the fan
+        G21  ; set units to millimeters
+        G90  ; use absolute coordinates
+        M83  ; use relative distances for extrusion
+        M104 S140
+        M190 S[first_layer_bed_temperature]  ; wait for bed temp
+        ;G32  ;Load bed mesh
+        G28   ;home
+        G29   bed leveling
+        M104 S[first_layer_temperature]      ; set extruder temp
+        M140 S[first_layer_bed_temperature]  ; set bed temp
+        M109 S[first_layer_temperature]      ; wait for extruder temp
+        M190 S[first_layer_bed_temperature]  ; wait for bed temp
+        G0 Z2.0 F600;
+        G0 X50 Y10 F8000;
+        G92 E0.0 ; reset extruder distance position
+        G0 Z0.4 F600;
+        G1 X100.0 E10 F3000.0 ; intro line
+        G92 E0.0 ; reset extruder distance position
+        G1 X200.0 E15 F3000.0 ; intro line
+        G92 E0.0 ; reset extruder distance position
+        G0 Z0.8 F600;
+        G1 X100.0 E15 F3000.0 ; intro line
+        G1 Z0.4 F600     ;Wipe
+        G0 Y12 F6000    ;Wipe
+        G1 X100 F6000    ;Wipe
+        G0 Y8 F12000   ;Wipe
+        G1 X200 F6000    ;Wipe
+        G1 X190 Y12 F6000 ;Wipe
+        G1 X180 Y8 F6000 ;Wipe
+        G1 X170 Y12 F6000 ;Wipe
+        G1 X160 Y8 F6000 ;Wipe
+        G1 X150 Y12 F6000 ;Wipe
+        ;G0 Z2.0 F600;
+        G92 E0.0 ; reset extruder distance position
+        ;START_PRINT
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x250
+      - '0x250'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

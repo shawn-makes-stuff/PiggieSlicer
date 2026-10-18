@@ -88,6 +88,7 @@ public:
     ToolBar* mode_toolbar() const;
 
     SidebarStackLayout* sidebar_stack_layout() const;
+    SidebarPrint* sidebar_print() const;
 
     void set_sidebars_visible(bool visible);
 
@@ -103,9 +104,6 @@ protected:
 
     ToolBar* find_toolbar(ToolbarID id) const;
 
-    void update_cube_view_position();
-    void update_left_separator_enable();
-
 private:
     void init_toolbar_row();
 
@@ -116,6 +114,7 @@ protected:
     Yoga::SplitLayout* m_layout_main_bottom = nullptr;
     Yoga::Item* m_layout_left_column        = nullptr;
     Yoga::Item* m_layout_center_row         = nullptr;
+    // settings column, the top part of the left column (Orca-style single sidebar)
     Yoga::Item* m_layout_right_column       = nullptr;
 
     Yoga::Item* m_layout_middle_toolbar_row = nullptr;
@@ -124,7 +123,6 @@ protected:
 
     SidebarStackLayout* m_layout_sidebar_stack_layout = nullptr;
 
-    // we are moving CubeView between Horizontal and Vertical layouts, wrapper is needed
     Yoga::Item* m_cube_view_wrapper = nullptr;
 
     ToolBar* m_tool_left_toolbar  = nullptr;

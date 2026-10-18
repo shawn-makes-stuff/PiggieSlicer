@@ -62,11 +62,55 @@ void populate_local_bundle(const BundlePaths& bundle_paths)
 }
 
 
-Domain::Preset::Bundle load_bundle(const BundlePaths& bundle_paths)
+// The system presets of the vendor in vendor_dir and the user's presets of that vendor.
+static bool load_vendor_presets_from(
+    const BundlePaths& bundle_paths, const fs::path& vendor_dir, Domain::Preset::VendorBundle& vendor_bundle)
+{
+    const std::string& vendor_id = vendor_bundle.vendor_data.info.id;
+    const std::string& repo_id   = vendor_bundle.vendor_data.info.repo_id;
+    PresetLoader preset_loader;
+    try {
+        preset_loader.load_dir(vendor_dir.string());
+    }
+    catch (std::exception& e) {
+        SPDLOG_ERROR("Loading bundle {} failed with error {}", vendor_dir.string(), e.what());
+        // Clean up presets that failed loading (half loaded to the point of failure)
+        preset_loader.release();
+        return false;
+    }
+
+    // read user presets
+    const fs::path user_vendor_dir{bundle_paths.user_preset_dir_path(vendor_id, repo_id)};
+    if (fs::exists(user_vendor_dir)) {
+        try {
+            preset_loader.load_dir(user_vendor_dir.string(), Domain::Preset::PresetOrigin::User);
+        }
+        catch (std::exception& e) {
+            SPDLOG_ERROR("Loading user bundle {} failed with error {}", user_vendor_dir.string(), e.what());
+        }
+    }
+
+    std::tie(vendor_bundle.presets, vendor_bundle.preset_names) = preset_loader.release();
+    return true;
+}
+
+bool load_vendor_presets(const BundlePaths& bundle_paths, Domain::Preset::VendorBundle& vendor_bundle)
+{
+    for (const auto& base_dir : {bundle_paths.local_bundle_path, bundle_paths.app_bundle_path}) {
+        const fs::path vendor_dir{
+            fs::path{base_dir} / vendor_bundle.vendor_data.info.repo_id / vendor_bundle.vendor_data.info.id};
+        if (!base_dir.empty() && fs::exists(vendor_dir / "vendor.yaml")) {
+            SPDLOG_INFO("Loading the presets of vendor dir: {}", vendor_dir.string());
+            return load_vendor_presets_from(bundle_paths, vendor_dir, vendor_bundle);
+        }
+    }
+    return false;
+}
+
+Domain::Preset::Bundle load_bundle(const BundlePaths& bundle_paths, const std::set<std::string>* preset_vendors)
 {
     Domain::Preset::Bundle bundle;
     HwConfigLoader config_loader;
-    PresetLoader preset_loader;
 
     fs::path config_base{bundle_paths.user_config_path};
 
@@ -102,60 +146,34 @@ Domain::Preset::Bundle load_bundle(const BundlePaths& bundle_paths)
                 continue;
             }
 
-            bool loaded = false;
             Domain::Preset::VendorBundle vendor_bundle;
             SPDLOG_INFO("Loading preset bundle vendor dir: {}", vendor_dir.string());
 
             try {
-
                 config_loader.load(vendor_yaml_path.string());
                 vendor_bundle.vendor_data = config_loader.release();
                 vendor_bundle.vendor_data.info.repo_id = repo_id;
-
-                preset_loader.load_dir(vendor_dir.string());
-                loaded = true;
-            }
-            catch (Yaml::ParseError& e) {
-                SPDLOG_ERROR("Loading bundle {} failed with error {}", vendor_dir.string(), e.what());
-            }
-            catch (fs::filesystem_error& e) {
-                SPDLOG_ERROR("Loading bundle {} failed with error {}", vendor_dir.string(), e.what());
+                // The generic external multi-material unit is offered for every vendor.
+                Domain::Preset::add_external_mmu_feeder_def(vendor_bundle.vendor_data);
             }
             catch (std::exception& e) {
                 SPDLOG_ERROR("Loading bundle {} failed with error {}", vendor_dir.string(), e.what());
+                continue;
             }
 
-            if (loaded) {
-                // read user presets
-                const fs::path user_vendor_dir{bundle_paths.user_preset_dir_path(vendor_id, repo_id)};
-                if (fs::exists(user_vendor_dir)) {
-                    try {
-                        preset_loader.load_dir(user_vendor_dir.string(), Domain::Preset::PresetOrigin::User);
-                    }
-                    catch (Yaml::ParseError& e) {
-                        SPDLOG_ERROR("Loading user bundle {} failed with error {}", user_vendor_dir.string(), e.what());
-                    }
-                    catch (fs::filesystem_error& e) {
-                        SPDLOG_ERROR("Loading user bundle {} failed with error {}", user_vendor_dir.string(), e.what());
-                    }
-                    catch (std::exception& e) {
-                        SPDLOG_ERROR("Loading user bundle {} failed with error {}", user_vendor_dir.string(), e.what());
-                    }
-                }
-
-                std::tie(vendor_bundle.presets, vendor_bundle.preset_names) = preset_loader.release();
-
-                // TODO read/append user printer configs
-                //vendor_bundle.printer_configs = load_vendor_user_configs((config_base / vendor_bundle.vendor_data.info.id).string(), vendor_bundle.vendor_data);
-
-                bundle.vendor_bundles.emplace(vendor_bundle.vendor_data.info.id, std::move(vendor_bundle));
-
-                // prevent continuing with fallback
-                break;
-            } else {
-                // Clean up presets that failed loading (half loaded to the point of failure)
-                preset_loader.release();
+            // a vendor without an added printer: its presets are read when one is added
+            if (preset_vendors == nullptr || preset_vendors->contains(vendor_bundle.vendor_data.info.id)) {
+                if (!load_vendor_presets_from(bundle_paths, vendor_dir, vendor_bundle))
+                    continue;
             }
+
+            // TODO read/append user printer configs
+            //vendor_bundle.printer_configs = load_vendor_user_configs((config_base / vendor_bundle.vendor_data.info.id).string(), vendor_bundle.vendor_data);
+
+            bundle.vendor_bundles.emplace(vendor_bundle.vendor_data.info.id, std::move(vendor_bundle));
+
+            // prevent continuing with fallback
+            break;
         }
     }
 
@@ -222,7 +240,7 @@ static size_t get_cache_footprint(const BundlePaths& bundle_paths, const std::st
     size_t hash = combine_hashes(folder_hash, std::hash<std::string>{}(slicer_version));
 
     // Increment the following value to enforce invalidation of caches from older versions:
-    size_t cache_epoch = 14;
+    size_t cache_epoch = 17;
     return combine_hashes(hash, std::hash<int>{}(cache_epoch));
 }
 

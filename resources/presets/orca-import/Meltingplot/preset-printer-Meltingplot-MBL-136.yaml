@@ -1,0 +1,452 @@
+kind: printer
+id: 450+bGJIDLYG8Mu2m34yAg
+variants:
+- condition: printer.model == "Meltingplot MBL 136"
+  name: Meltingplot MBL 136
+  id: ayanoGBAEpeAtFFwqkifAQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: 701XEggMVl7m+Nc65L89yw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.18mm Fine 0.4 nozzle @Meltingplot MBL
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G90
+        G1 Z{min(max_layer_z + 5, max_print_height)} F600
+        M98 P"0:/sys/meltingplot/print_end"
+      machine_max_acceleration_e:
+      - 2500.0
+      machine_max_acceleration_extruding:
+      - 800.0
+      machine_max_acceleration_retracting:
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 1500.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 72.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 240.0
+      machine_max_feedrate_y:
+      - 240.0
+      machine_max_feedrate_z:
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M226
+      start_gcode: |-
+        M140 P0 S{first_layer_bed_temperature[0]} ; set bed temp
+        G10 P0 R{first_layer_temperature[0] + standby_temperature_delta} S{first_layer_temperature[0]}
+
+        M83 ; use relative distances for extrusion
+        G90 ; use absolute coordinates
+
+        M98 P"0:/sys/meltingplot/print_start"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 850x0
+      - 850x405
+      - '0x405'
+      max_print_height: 396
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 64x64/PNG, 400x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: Sz9vvw9u5wQ2PfC9QjLbeg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard 0.6 nozzle @Meltingplot MBL
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G90
+        G1 Z{min(max_layer_z + 5, max_print_height)} F600
+        M98 P"0:/sys/meltingplot/print_end"
+      machine_max_acceleration_e:
+      - 2500.0
+      machine_max_acceleration_extruding:
+      - 800.0
+      machine_max_acceleration_retracting:
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 1500.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 72.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 240.0
+      machine_max_feedrate_y:
+      - 240.0
+      machine_max_feedrate_z:
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M226
+      start_gcode: |-
+        M140 P0 S{first_layer_bed_temperature[0]} ; set bed temp
+        G10 P0 R{first_layer_temperature[0] + standby_temperature_delta} S{first_layer_temperature[0]}
+
+        M83 ; use relative distances for extrusion
+        G90 ; use absolute coordinates
+
+        M98 P"0:/sys/meltingplot/print_start"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 850x0
+      - 850x405
+      - '0x405'
+      max_print_height: 396
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 64x64/PNG, 400x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: G0boyWDKHghsZWo88nVWyw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.38mm Standard 0.8 nozzle @Meltingplot MBL
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G90
+        G1 Z{min(max_layer_z + 5, max_print_height)} F600
+        M98 P"0:/sys/meltingplot/print_end"
+      machine_max_acceleration_e:
+      - 2500.0
+      machine_max_acceleration_extruding:
+      - 800.0
+      machine_max_acceleration_retracting:
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 1500.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 72.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 240.0
+      machine_max_feedrate_y:
+      - 240.0
+      machine_max_feedrate_z:
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M226
+      start_gcode: |-
+        M140 P0 S{first_layer_bed_temperature[0]} ; set bed temp
+        G10 P0 R{first_layer_temperature[0] + standby_temperature_delta} S{first_layer_temperature[0]}
+
+        M83 ; use relative distances for extrusion
+        G90 ; use absolute coordinates
+
+        M98 P"0:/sys/meltingplot/print_start"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 850x0
+      - 850x405
+      - '0x405'
+      max_print_height: 396
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 64x64/PNG, 400x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 1
+    id: 78ijtG8b43qJQGwGckCGDA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.48mm Optimal 1.0 nozzle @Meltingplot MBL
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G90
+        G1 Z{min(max_layer_z + 5, max_print_height)} F600
+        M98 P"0:/sys/meltingplot/print_end"
+      machine_max_acceleration_e:
+      - 2500.0
+      machine_max_acceleration_extruding:
+      - 800.0
+      machine_max_acceleration_retracting:
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 1500.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 72.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 240.0
+      machine_max_feedrate_y:
+      - 240.0
+      machine_max_feedrate_z:
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M226
+      start_gcode: |-
+        M140 P0 S{first_layer_bed_temperature[0]} ; set bed temp
+        G10 P0 R{first_layer_temperature[0] + standby_temperature_delta} S{first_layer_temperature[0]}
+
+        M83 ; use relative distances for extrusion
+        G90 ; use absolute coordinates
+
+        M98 P"0:/sys/meltingplot/print_start"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 850x0
+      - 850x405
+      - '0x405'
+      max_print_height: 396
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 64x64/PNG, 400x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 1.2
+    id: iOeWjI7+qDNrsXNW90MpiQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.56mm Optimal 1.2 nozzle @Meltingplot MBL
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G90
+        G1 Z{min(max_layer_z + 5, max_print_height)} F600
+        M98 P"0:/sys/meltingplot/print_end"
+      machine_max_acceleration_e:
+      - 2500.0
+      machine_max_acceleration_extruding:
+      - 800.0
+      machine_max_acceleration_retracting:
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 1500.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 72.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      machine_max_feedrate_x:
+      - 240.0
+      machine_max_feedrate_y:
+      - 240.0
+      machine_max_feedrate_z:
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M226
+      start_gcode: |-
+        M140 P0 S{first_layer_bed_temperature[0]} ; set bed temp
+        G10 P0 R{first_layer_temperature[0] + standby_temperature_delta} S{first_layer_temperature[0]}
+
+        M83 ; use relative distances for extrusion
+        G90 ; use absolute coordinates
+
+        M98 P"0:/sys/meltingplot/print_start"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 850x0
+      - 850x405
+      - '0x405'
+      max_print_height: 396
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 64x64/PNG, 400x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

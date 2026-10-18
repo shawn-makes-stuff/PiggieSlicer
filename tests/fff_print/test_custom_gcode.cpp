@@ -255,3 +255,26 @@ TEST_CASE("Custom G-code", "[CustomGCode]")
         }
     }
 }
+
+TEST_CASE("Orca parity: role change G-code, skirt and first layer travel speed", "[CustomGCode][Orca]")
+{
+    TestConfig config;
+    config.printer.items.opt("change_extrusion_role_gcode").set(";ROLE {last_extrusion_role}>{extrusion_role}");
+    config.print.items.opt("skirts").set(1);
+    config.print.items.opt("skirt_speed").set(17.);
+    config.print.items.opt("travel_speed").set(150.);
+    config.print.items.opt("initial_layer_travel_speed").set(Domain::FloatOrPercentage(Domain::Percentage{50.}));
+    const std::string gcode = Slic3r::Test::slice({ Slic3r::Test::TestMesh::cube_20x20x20 }, config);
+
+    THEN("the role change G-code is emitted with Orca's role names") {
+        REQUIRE(Slic3r::Test::contains(gcode, ";ROLE Mixed>Skirt\n"));
+        REQUIRE(Slic3r::Test::contains(gcode, ">ExternalPerimeter\n"));
+    }
+    THEN("the skirt is printed at the skirt speed") {
+        REQUIRE(Slic3r::Test::contains(gcode, "F1020"));
+    }
+    THEN("first layer travels at 50 % of the travel speed, later ones at the travel speed") {
+        REQUIRE(Slic3r::Test::contains(gcode, "F4500"));
+        REQUIRE(Slic3r::Test::contains(gcode, "F9000"));
+    }
+}

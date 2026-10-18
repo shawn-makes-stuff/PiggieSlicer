@@ -24,6 +24,7 @@
 #include <limits>
 #include <cmath>
 #include <cstring>
+#include <sstream>
 
 namespace Slic3r {
 
@@ -235,22 +236,6 @@ void ToolOrdering::collect_extruders(
     const std::vector<std::pair<double, unsigned int>> &per_layer_extruder_switches,
     const std::vector<std::pair<double, unsigned int>> &per_layer_color_changes
 ) {
-    // Collect the support extruders.
-    for (auto support_layer : object.support_layers()) {
-        LayerTools   &layer_tools = this->tools_for_layer(support_layer->print_z);
-        ExtrusionRole role = support_layer->support_fills.role();
-        bool         has_support        = role == ExtrusionRole::Mixed || role == ExtrusionRole::SupportMaterial;
-        bool         has_interface      = role == ExtrusionRole::Mixed || role == ExtrusionRole::SupportMaterialInterface;
-        unsigned int extruder_support   = object.config().get<int>("support_material_extruder");
-        unsigned int extruder_interface = object.config().get<int>("support_material_interface_extruder");
-        if (has_support)
-            layer_tools.extruders.push_back(extruder_support);
-        if (has_interface)
-            layer_tools.extruders.push_back(extruder_interface);
-        if (has_support || has_interface)
-            layer_tools.has_support = true;
-    }
-
     // Extruder overrides are ordered by print_z.
     std::vector<std::pair<double, unsigned int>>::const_iterator it_per_layer_extruder_override = per_layer_extruder_switches.begin();
     unsigned int extruder_override = 0;
@@ -333,6 +318,46 @@ void ToolOrdering::collect_extruders(
         }
     }
 
+    // Collect the support extruders.
+    for (auto support_layer : object.support_layers()) {
+        LayerTools   &layer_tools = this->tools_for_layer(support_layer->print_z);
+        ExtrusionRole role = support_layer->support_fills.role();
+        bool         has_support        = role == ExtrusionRole::Mixed || role == ExtrusionRole::SupportMaterial;
+        bool         has_interface      = role == ExtrusionRole::Mixed || role == ExtrusionRole::SupportMaterialInterface;
+        unsigned int extruder_support   = object.config().get<int>("support_material_extruder");
+        unsigned int extruder_interface = object.config().get<int>("support_material_interface_extruder");
+        if (has_support) {
+            if (extruder_support > 0 || ! has_interface || extruder_interface == 0 || layer_tools.has_object)
+                layer_tools.extruders.push_back(extruder_support);
+            else {
+                // Orca: the base of a support-only layer with a "don't care" extruder printed with the non soluble
+                // extruder cheapest to switch to from the interface one, not the interface one itself if
+                // support_interface_not_for_body.
+                const std::vector<bool>   &soluble        = object.print()->config().get<std::vector<bool>>("filament_soluble");
+                const std::vector<double> &wiping_volumes = object.print()->config().get<std::vector<double>>("wiping_volumes_matrix");
+                const size_t               n              = size_t(std::sqrt(double(wiping_volumes.size())) + EPSILON);
+                const int                  current        = object.config().get<bool>("support_interface_not_for_body") ? int(extruder_interface) - 1 : -1;
+                int                        next_extruder  = current;
+                double                     min_flush      = std::numeric_limits<double>::max();
+                for (unsigned int extruder_id : object.print()->extruders()) {
+                    if ((extruder_id < soluble.size() && soluble[extruder_id]) || int(extruder_id) == current)
+                        continue;
+                    const size_t idx = (extruder_interface - 1) * n + extruder_id;
+                    const double flush = idx < wiping_volumes.size() ? wiping_volumes[idx] : 0.;
+                    if (flush < min_flush) {
+                        next_extruder = int(extruder_id);
+                        min_flush     = flush;
+                    }
+                }
+                layer_tools.extruders.push_back(unsigned(next_extruder + 1));
+            }
+        }
+        if (has_interface)
+            layer_tools.extruders.push_back(extruder_interface);
+        if (has_support || has_interface)
+            layer_tools.has_support = true;
+    }
+
     for (auto& layer : m_layer_tools) {
         // Sort and remove duplicates
         sort_remove_duplicates(layer.extruders);
@@ -368,6 +393,25 @@ void ToolOrdering::reorder_extruders(unsigned int last_extruder_id)
         // 1 based index
         ++ last_extruder_id;
 
+    const bool cyclic = m_print_config_ptr != nullptr &&
+        m_print_config_ptr->get<Domain::ToolChangeOrderingType>("toolchange_ordering") == Domain::ToolChangeOrderingType::Cyclic;
+    // Orca: the first layer keeps the optimized order unless toolchange_cyclic_first_layer
+    const bool cyclic_first_layer = cyclic && m_print_config_ptr->get<bool>("toolchange_cyclic_first_layer");
+    // Orca toolchange_cyclic_order: 1-based extruders ("3,2,1,4"), invalid entries ignored
+    std::vector<unsigned int> cyclic_order;
+    if (cyclic) {
+        std::istringstream tokens{m_print_config_ptr->get<std::string>("toolchange_cyclic_order")};
+        for (std::string token; std::getline(tokens, token, ',');) {
+            try {
+                size_t pos = 0;
+                const int extruder = std::stoi(token, &pos);
+                if (token.find_first_not_of(" \t\r\n", pos) == std::string::npos && extruder >= 1 &&
+                    std::find(cyclic_order.begin(), cyclic_order.end(), unsigned(extruder)) == cyclic_order.end())
+                    cyclic_order.push_back(unsigned(extruder));
+            } catch (const std::exception &) {}
+        }
+    }
+
     for (LayerTools &lt : m_layer_tools) {
         // Extruders in lt.extruders are already sorted.
 
@@ -381,9 +425,14 @@ void ToolOrdering::reorder_extruders(unsigned int last_extruder_id)
                 lt.extruders.erase(lt.extruders.begin());
             }
 
-            if (m_print_config_ptr == nullptr
-                || m_print_config_ptr->get<Domain::ToolChangeOrderingType>("toolchange_ordering") == Domain::ToolChangeOrderingType::Optimized)
-            {
+            if (cyclic && (&lt != &m_layer_tools.front() || cyclic_first_layer)) {
+                // Extruders in the cyclic order first, the others after them in ascending order.
+                const auto rank = [&cyclic_order](unsigned int extruder) {
+                    return size_t(std::find(cyclic_order.begin(), cyclic_order.end(), extruder) - cyclic_order.begin());
+                };
+                std::stable_sort(lt.extruders.begin(), lt.extruders.end(),
+                                 [&rank](unsigned int lhs, unsigned int rhs) { return rank(lhs) < rank(rhs); });
+            } else {
                 // Reorder the extruders to start with the last one.
                 for (size_t i = 1; i < lt.extruders.size(); ++i) {
                     if (lt.extruders[i] == last_extruder_id) {

@@ -282,8 +282,33 @@ static void get_trapezoids2(const ExPolygon &expoly, Polygons* polygons, double 
         polygon.rotate(-(PI/2 - angle), Point(0,0));
 }
 
-// Coverage is currently only used by the unit tests. It is extremely slow and unreliable!
-Polygons BridgeDetector::coverage(double angle) const
+// Orca: vertical strips of the spacing width, a quarter of the spacing taken off each side, clipped by the expolygon.
+static void get_trapezoids3_half(const ExPolygon &expoly, Polygons *polygons, float spacing)
+{
+    const Polygons src_polygons = Algorithms::ExPolygon::to_polygons(expoly);
+    const Points   pp           = Algorithms::Polygon::to_points(src_polygons);
+    if (pp.empty())
+        return;
+    const BoundingBox bb(BB::construct(pp));
+
+    // the x coordinates of the strips
+    std::vector<coord_t> xx;
+    for (coord_t x = bb.min.x(); x < bb.max.x() - coord_t(spacing / 2); x += coord_t(spacing))
+        xx.push_back(x);
+    xx.push_back(bb.max.x());
+
+    for (std::vector<coord_t>::const_iterator x = xx.begin(); x != xx.end() - 1; ++x) {
+        const coord_t next_x = *(x + 1);
+        if (*x == next_x)
+            continue;
+        const Polygon strip{ { *x + coord_t(spacing) / 4, bb.min.y() }, { next_x - coord_t(spacing) / 4, bb.min.y() },
+                             { next_x - coord_t(spacing) / 4, bb.max.y() }, { *x + coord_t(spacing) / 4, bb.max.y() } };
+        Slic3r::append(*polygons, intersection(Polygons{ strip }, src_polygons));
+    }
+}
+
+// Coverage is currently only used by the unit tests and Orca counterbore_hole_bridging (precise).
+Polygons BridgeDetector::coverage(double angle, bool precise) const
 {
     if (angle == -1)
         angle = this->angle;
@@ -304,13 +329,46 @@ Polygons BridgeDetector::coverage(double angle) const
             for (ExPolygon &expoly : offset_ex(expolygon, 0.5f * float(this->spacing))) {
                 // Compute trapezoids according to a vertical orientation
                 Polygons trapezoids;
-                get_trapezoids2(expoly, &trapezoids, PI/2.0);
-                for (const Polygon &trapezoid : trapezoids) {
-                    // not nice, we need a more robust non-numeric check
+                if (precise)
+                    get_trapezoids3_half(expoly, &trapezoids, float(this->spacing));
+                else
+                    get_trapezoids2(expoly, &trapezoids, PI/2.0);
+                for (Polygon &trapezoid : trapezoids) {
                     size_t n_supported = 0;
-                    for (const Line &supported_line : intersection_ln(Algorithms::Polygon::to_lines(trapezoid), anchors))
-                        if (supported_line.length() >= this->spacing)
-                            ++ n_supported;
+                    if (! precise) {
+                        // not nice, we need a more robust non-numeric check
+                        for (const Line &supported_line : intersection_ln(Algorithms::Polygon::to_lines(trapezoid), anchors))
+                            if (supported_line.length() >= this->spacing)
+                                ++ n_supported;
+                    } else {
+                        // Orca: a strip anchored on both ends is trimmed to between its anchors' centers, with what
+                        // get_trapezoids3_half took off its sides added back
+                        const Polygons intersects = intersection(Polygons{ trapezoid }, anchors);
+                        n_supported = intersects.size();
+                        if (n_supported >= 2) {
+                            coord_t min_y = std::numeric_limits<coord_t>::max(), max_y = std::numeric_limits<coord_t>::lowest();
+                            for (const Polygon &poly_bound : intersects) {
+                                const coord_t center_y = BB::center(Algorithms::Polygon::get_bounding_box(poly_bound)).y();
+                                min_y = std::min(min_y, center_y);
+                                max_y = std::max(max_y, center_y);
+                            }
+                            coord_t min_x = trapezoid[0].x(), max_x = trapezoid[0].x();
+                            for (const Point &p : trapezoid.points) {
+                                min_x = std::min(min_x, p.x());
+                                max_x = std::max(max_x, p.x());
+                            }
+                            min_x -= this->spacing / 4 + 1;
+                            max_x += this->spacing / 4 + 1;
+                            const coord_t mid_x = (min_x + max_x) / 2;
+                            for (Point &p : trapezoid.points) {
+                                p.y() = std::clamp(p.y(), min_y, max_y);
+                                if (p.x() > min_x && p.x() < mid_x)
+                                    p.x() = min_x;
+                                if (p.x() < max_x && p.x() > mid_x)
+                                    p.x() = max_x;
+                            }
+                        }
+                    }
                     if (n_supported >= 2) 
                         covered.push_back(std::move(trapezoid));
                 }
@@ -322,7 +380,9 @@ Polygons BridgeDetector::coverage(double angle) const
         covered = union_(covered);
         // Intersect trapezoids with actual bridge area to remove extra margins and append it to result.
         Algorithms::Polygon::rotate(covered, -(PI / 2. - angle));
-        covered = intersection(this->expolygons, covered);
+        // Orca: the precise coverage is not clipped by the bridged area
+        if (! precise)
+            covered = intersection(this->expolygons, covered);
 #if 0
         {
             my @lines = map @{$_->lines}, @$trapezoids;

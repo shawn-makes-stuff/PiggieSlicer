@@ -1,0 +1,157 @@
+kind: printer
+id: Z3SKG+xxEDMotoSh7zIeig
+variants:
+- condition: printer.model == "D12 300 PRO M2 MONO DUAL PoopTool"
+  name: D12 300 PRO M2 MONO DUAL PoopTool
+  id: XW6RrQJIl7TlGSLPLwiD6Q
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: 348xbeoUqN64R5/1kqJKQQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: "M201 X20000 ; accélération X temporairement élevée\nM211 S0\n\nG1 E-25 F2000                     ; Rétraction initiale normale\nM106 P1 S60                      ; Ventilateur auxiliaire activé\n\n{if toolchange_count > 0}\nG17\nG2 Z{max_layer_z + 0.4} I0.86 J0.86 P1 F10000 ; Spiral lift pour les changements après le premier\n{endif}\n\nG1 Z{max_layer_z + 3.0} F1200    ; Remontée\nG1 X{print_bed_max[0] + 25} F8000 ; Déplacement vers zone de purge\nG4 P3000                         ; Pause\n\nG1 E-60 F2000                    ; Deuxième rétraction pour atteindre un total de -70 mm\nG92 E0                           ; Réinitialise la position extrudeur à 0\nG92 E0\n\nM106 S0                          ; Stop ventilateur\nT[next_extruder]                ; Changement d’outil \nG1 E60 F2000 \nG1 E35 F600                      ; Réinsertion du filament (partiel, évite la surpression)\nG92 E0                           ; Réinitialise encore\n\nG1 E32 F300\t\t; Pré-purge\nG92 E0\n\
+        \n; FLUSH_START\n;G4 P3000\nG1 E25 F300 ; Purge minimum\n;EXTRA_PURGE\nG1 E{flush_length /1 } F300 ; Purge adaptative\n;G1 E[flush_length] F300 ; Purge adaptative\n; FLUSH_END\n\nG92 E0\nM106 S255                        ; Ventilateur à pleine vitesse\nG4 P5000                         ; Pause de sécurité\n\n;G90\t\t\t\t; Positionnement absolu\n\n{if layer_z <= (first_layer_height + 0.001)}\n;M201 X[default_acceleration] Y[default_acceleration] Z500\n{endif}\n\nG1 X{print_bed_max[0] + 15} F6000\nG1 X{print_bed_max[0] + 25} F6000\nG1 X{print_bed_max[0] + 15} F6000\nM106 S0 \nG1 X{print_bed_max[0] + 25} F6000\nG1 E{flush_length /1 } F300 ; Purge adaptative\nG92 E0\nM106 S255                        ; Ventilateur à pleine vitesse\nG4 P5000 \nG1 X{print_bed_max[0] + 15} F6000\nG1 X{print_bed_max[0] + 25} F6000\nG1 X{print_bed_max[0] + 15} F6000\n\n\n;{if layer_z <= (first_layer_height + 0.001)}\nM201 X[first_layer_acceleration] \n;{else}\nM201 X[default_acceleration]\n;{endif}\n\nG1 E1\
+        \ F1800                    ; Amorce douce\nM211 S1                          ; Réactivation des limites logicielles\nG92 E0                           ; Final reset extrudeur"
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Wanhao-D12-300 PoopTool
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        ; Wanhao D12-230 Default End Gcode
+        G91                     ; Mode déplacement relatif
+        G1 E-2 F300             ; Retrait léger du filament pour éviter le suintement
+        G1 Z10 F1200             ; Monte la tête de 10 mm
+        G90                     ; Retour en position absolue
+        G1 X0 Y200 F3000         ; Déplace la tête vers l'arrière pour dégager la pièce
+        M104 S0                  ; Éteint la chauffe de la buse
+        M140 S0                  ; Éteint la chauffe du plateau
+        M107                     ; Arrête tous les ventilateurs
+        M106 S0 P3               ; Arrête le ventilateur de la carte mère
+        M106 S0 P2               ; Arrête le ventilateur auxiliaire
+        M84 X Y E                ; Désactive les moteurs des axes X, Y et de l'extrudeur
+        SET_VELOCITY_LIMIT ACCEL=2000 ACCEL_TO_DECEL=1000
+      machine_max_acceleration_e:
+      - 6000.0
+      - 6000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 500.0
+      machine_max_acceleration_x:
+      - 1200.0
+      - 1200.0
+      machine_max_acceleration_y:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 14.0
+      - 14.0
+      machine_max_jerk_y:
+      - 14.0
+      - 14.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.2
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      - 50.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 15.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M600
+      start_gcode: |-
+        G31
+        save_last_file
+        SAVE_VARIABLE VARIABLE=was_interrupted VALUE=True
+        G21                                ; set metrics values
+        M104 S[first_layer_temperature]               ; set extruder temperature
+        M140 S[first_layer_bed_temperature[initial_extruder]]           ; set bed temperature
+        G91                                ; set relative positioning mode
+        G28                                ; home
+        G90                                ; set absolute positioning mode
+        G1 X0 Y0 F3000                      ; park head
+        M117                                ; Purge extrudeur
+        G92 E0                             ; Reset extrudeur
+        M109 S[first_layer_temperature]                         ; set and wait extruder temperature
+        M190 S[first_layer_bed_temperature[initial_extruder]]            ; set and wait bed temperature
+        BED_MESH_CALIBRATE ADAPTIVE=1 ADAPTIVE_MARGIN=5 ; adaptive bed leveling
+
+        G1 Z1.0 F3000                      ; Prépare la buse à une petite hauteur
+        M83                                ; Positionnement relatif pour l'extrudeur
+
+        ; Purge longue à l'avant du plateau (Y=0), centrée
+        G1 X{print_bed_max[0] / 2 - 20} Y0 Z0.3 F5000     ; Début ligne 1
+        G1 X{print_bed_max[0] / 2 + 20} Y0 Z0.3 F750 E24  ; Ligne 1 (2x plus longue)
+        G1 X{print_bed_max[0] / 2 - 20} Y1 Z0.3 F5000     ; Légère montée et retour
+        G1 X{print_bed_max[0] / 2 + 20} Y1 Z0.3 F750 E24  ; Ligne 2
+
+        G1 E-5 F1800                                     ; Rétraction
+        M82                                              ; Positionnement absolu pour l'extrudeur
+        G92 E0                                           ; Reset extrusion
+        G1 Z1.0 F3000                                    ; Légère montée
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 310x0
+      - 310x310
+      - '0x310'
+      max_print_height: 400
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: |
+        ;;;;;;;;;;;;;;;;;;;;;;;;CUSTOM G-CODE;;;;;;;;;;;;;;;;;;;;;;;;
+        {if sheet_type=="Textured PEI Plate"}
+         SET_GCODE_OFFSET Z=-0.00
+        {else}
+        SET_GCODE_OFFSET Z=0.0
+        {endif}
+
+        ;available bed types are:
+        ;"Cool Plate"
+        ;"Engineering Plate"
+        ;"High Temp Plate"
+        ;"Textured PEI Plate"
+        ;;;;;;;;;;;;;;;;;;;;;;;;;CUSTOM G-CODE;;;;;;;;;;;;;;;;;;;;;;;;
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'

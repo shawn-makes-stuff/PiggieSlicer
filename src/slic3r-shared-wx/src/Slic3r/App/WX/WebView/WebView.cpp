@@ -43,7 +43,7 @@ void web_view_create(
 {
     assert(webView);
     wxString correct_url = url.empty() ? wxString(L"") : wxURI(url).BuildURI();
-    wxString user_agent  = format_wxstr("%1%/%2% (%3%)",SLIC3R_APP_NAME, SLIC3R_VERSION, platform_to_string(platform()));
+    wxString user_agent  = format_wxstr("%1%/%2% (%3%)",SLIC3R_APP_NAME, SLIC3R_APP_VERSION, platform_to_string(platform()));
 
 #ifdef __WIN32__
     webView->SetUserAgent(user_agent);

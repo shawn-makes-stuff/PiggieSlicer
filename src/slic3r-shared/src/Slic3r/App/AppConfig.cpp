@@ -120,6 +120,22 @@ void appconfig_config_init_fn(Domain::ConfigDefinitions& defs)
         }
     );
 
+    // Windows: the window buttons in the app's top bar instead of the system title bar
+    // (MainFrame::MSWWindowProc, WXRenderCanvas::has_custom_caption); read at start-up
+    def = defs.add("custom_title_bar", typeid(bool));
+    def->location = Domain::AppConfigLocation{};
+    def->gui_type = GUIType::checkbox;
+    def->label = L("Window buttons in the top bar");
+    def->tooltip = L("Hide the system title bar and show the window buttons at the end of the top bar. "
+                     "Takes effect after a restart.");
+#ifdef _WIN32
+    def->category = Domain::ConfigItemDef::Category::AppConfig_General;
+#else
+    def->category = Domain::ConfigItemDef::Category::Hidden;
+#endif
+    def->option_group = Domain::ConfigItemDef::OptionGroup::AppConfig_General_Application;
+    def->init_fn = []() { return Domain::ConfigValue(true); };
+
     def = defs.add("reverse_mouse_wheel_zoom", typeid(bool));
     def->location = Domain::AppConfigLocation{};
     def->gui_type = GUIType::checkbox;
@@ -182,10 +198,17 @@ void appconfig_config_init_fn(Domain::ConfigDefinitions& defs)
     def->option_group = Domain::ConfigItemDef::OptionGroup::AppConfig_Services_General;
     def->init_fn = []() { return Domain::ConfigValue(false); }; // off by default, so it does not fire before wizard on the first run!
 
+    // Orca's settings visibility (GUI_App::get_saved_mode, "user_mode"): 0 Simple, 1 Advanced, 2 Expert
+    def = defs.add("print_settings_mode", typeid(int));
+    def->location = Domain::AppConfigLocation{};
+    def->category = Domain::ConfigItemDef::Category::Hidden;
+    def->init_fn = []() { return Domain::ConfigValue(0); };
+
     def = defs.add("layout_main_left_column_width", typeid(double));
     def->location = Domain::AppConfigLocation{};
     def->category = Domain::ConfigItemDef::Category::Hidden;
-    def->init_fn = []() { return Domain::ConfigValue(300.); };
+    // Orca-style sidebar (Orca: 39 em), with some extra room; also its minimum (AbstractRenderLayout)
+    def->init_fn = []() { return Domain::ConfigValue(465.); };
 
     def = defs.add("layout_main_right_column_width", typeid(double));
     def->location = Domain::AppConfigLocation{};
@@ -293,12 +316,15 @@ void appconfig_config_init_fn(Domain::ConfigDefinitions& defs)
     def           = defs.add("printers_only_favorites", typeid(bool));
     def->location = Domain::AppConfigLocation{};
     def->category = Domain::ConfigItemDef::Category::Hidden;
-    def->init_fn  = []() { return Domain::ConfigValue(false); };
+    // Orca's printer list shows only the printers the user added (picking one favourites it)
+    def->init_fn  = []() { return Domain::ConfigValue(true); };
 
     def           = defs.add("materials_only_favorites", typeid(bool));
     def->location = Domain::AppConfigLocation{};
     def->category = Domain::ConfigItemDef::Category::Hidden;
-    def->init_fn  = []() { return Domain::ConfigValue(false); };
+    // Orca's filament list shows the installed filaments (MaterialSelectionDialog falls back to all
+    // when none of the printer's filaments is a favourite)
+    def->init_fn  = []() { return Domain::ConfigValue(true); };
 
     def           = defs.add("auto_reslice", typeid(bool));
     def->location = Domain::AppConfigLocation{};

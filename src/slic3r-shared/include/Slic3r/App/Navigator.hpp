@@ -66,6 +66,8 @@ public:
     );
 
     void navigate_to_module_type(Render::ModuleType type);
+    /// Plater or Preview, of the selected project (Plater before the modules exist).
+    Render::ModuleType current_module_type() const;
 
     void on_selected_project_changed(size_t index) override;
 
@@ -88,6 +90,11 @@ public:
     bool is_fullscreen() const;
     void set_fullscreen(bool fullscreen);
     void close_application();
+    bool has_custom_caption() const;
+    void minimize_window();
+    void toggle_maximize_window();
+    bool is_window_maximized() const;
+    void start_window_drag();
 
     void on_app_config_changed(const std::string& key) override;
 

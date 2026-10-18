@@ -21,6 +21,9 @@
 #include "Slic3r/Domain/Types.hpp"
 #include "Slic3r/Exception.hpp"
 #include "Slic3r/Domain/ConfigDefsFDM.hpp"
+#include "libslic3r/ExtrusionRole.hpp"
+#include "libslic3r/Flow.hpp"
+#include <map>
 
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/ConfigViews.hpp"
@@ -36,6 +39,24 @@ using ThickPolylines = std::vector<ThickPolyline>;
 namespace FillAdaptive {
     struct Octree;
 };
+class TpmsRadialField;
+
+// Orca: the skin and skeleton densities and flows of the Locked Zag, collected over the regions of a layer
+struct LockRegionParam
+{
+    LockRegionParam() {}
+    std::map<float, Domain::ExPolygons> skin_density_params;
+    std::map<float, Domain::ExPolygons> skeleton_density_params;
+    std::map<Flow, Domain::ExPolygons>  skin_flow_params;
+    std::map<Flow, Domain::ExPolygons>  skeleton_flow_params;
+};
+
+// Orca symmetric_y: mirrored about the vertical line x = x_axis
+inline void symmetric_y(Domain::Points &points, const Domain::coord_t x_axis)
+{
+    for (Domain::Point &pt : points)
+        pt.x() = 2 * x_axis - pt.x();
+}
 
 // Infill shall never fail, therefore the error is classified as RuntimeError, not SlicingError.
 class InfillFailedException : public Slic3r::RuntimeError {
@@ -51,6 +72,30 @@ struct FillParams
 
     // Fill density, fraction in <0, 1>
     float       density 		{ 0.f };
+    // Orca fill_multiline: lines per line of the pattern
+    int         multiline       { 1 };
+    // Orca sparse_infill_smooth_factor: corner smoothing factor in the range [0, 1]
+    double      smooth_factor   { 0. };
+    // Orca infill_complete_top: the tops of the 3D Honeycomb filled in
+    bool        infill_complete_top { false };
+    // Orca lateral_lattice_angle_1 / _2 (Lateral Lattice), infill_overhang_angle (Lateral Honeycomb), in degrees
+    double      lateral_lattice_angle_1 { 0. };
+    double      lateral_lattice_angle_2 { 0. };
+    float       infill_overhang_angle   { 60.f };
+    // Orca gyroid_optimized: the Gyroid as the marching squares variant
+    bool        gyroid_optimized { false };
+    // Orca tpms_adaptive: the TPMS / Gyroid density graded from the surface to the interior of the object
+    Domain::TpmsAdaptiveMode     tpms_adaptive { Domain::TpmsAdaptiveMode::Disabled };
+    float                        tpms_interior_density { 0.f };
+    Domain::TpmsAdaptiveGradient tpms_adaptive_gradient { Domain::TpmsAdaptiveGradient::Linear };
+    // Orca Cross Zag / Locked Zag: the shift of the lines (infill_shift_step), the mirroring (symmetric_infill_y_axis)
+    float           horiz_move { 0.f };
+    bool            symmetric_infill_y_axis { false };
+    Domain::coord_t symmetric_y_axis { 0 };
+    // Orca Locked Zag: the skeleton within the skin, overlapping it by infill_lock_depth (scaled)
+    bool            locked_zag { false };
+    float           infill_lock_depth { 0.f };
+    float           skin_infill_depth { 0.f };
 
     // Length of an infill anchor along the perimeter.
     // 1000mm is roughly the maximum length line that fits into a 32bit coord_t.
@@ -79,6 +124,12 @@ struct FillParams
     // For infills that produce closed loops to force printing those loops clockwise.
     bool        prefer_clockwise_movements { false };
 
+    // Orca: the role of the fill, the forced fill order of the top / bottom surfaces and the center of their patterns
+    ExtrusionRole                  extrusion_role { ExtrusionRole::None };
+    Domain::InfillPattern          pattern { Domain::InfillPattern::ipRectilinear };
+    Domain::SurfaceFillOrder       fill_order { Domain::SurfaceFillOrder::Default };
+    Domain::CenterOfSurfacePattern center_of_surface_pattern { Domain::CenterOfSurfacePattern::EachSurface };
+
     unsigned extruder_id{std::numeric_limits<unsigned>::max()};
 };
 static_assert(std::is_trivially_copyable_v<FillParams>, "FillParams class is not POD (and it should be - see constructor).");
@@ -96,6 +147,8 @@ public:
     double    overlap;
     // in radians, ccw, 0 = East
     float       angle;
+    // Orca: don't alternate the angle per layer
+    bool        fixed_angle{false};
     // In scaled coordinates. Maximum lenght of a perimeter segment connecting two infill lines.
     // Used by the FillRectilinear2, FillGrid2, FillTriangles, FillStars and FillCubic.
     // If left to zero, the links will not be limited.
@@ -107,6 +160,8 @@ public:
 
     // Octree builds on mesh for usage in the adaptive cubic infill
     FillAdaptive::Octree* adapt_fill_octree = nullptr;
+    // Orca: radial coordinate inside the object for the adaptive TPMS infill
+    const TpmsRadialField* tpms_radial_field = nullptr;
 
     // PrintConfig and PrintObjectConfig are used by infills that use Arachne (Concentric and FillEnsuring).
     PrintRegionConfigView region_config;
@@ -119,9 +174,15 @@ public:
     static bool  use_bridge_flow(const Domain::InfillPattern type);
 
     void         set_bounding_box(const Domain::BoundingBox2crd &bbox) { bounding_box = bbox; }
+    // Orca: the bounding box of the object extended to cover any rotation of every layer
+    Domain::BoundingBox2crd extended_object_bounding_box() const;
 
     // Use bridge flow for the fill?
     virtual bool use_bridge_flow() const { return false; }
+    // Orca: the pattern is anchored at the origin rather than at the surface
+    virtual bool aligned_to_origin() const { return false; }
+    // Orca: the skin and skeleton of the Locked Zag
+    virtual void set_lock_region_param(const LockRegionParam & /* lock_param */) {}
 
     // Do not sort the fill lines to optimize the print head path?
     virtual bool no_sort() const { return false; }
@@ -175,6 +236,8 @@ public:
     static void connect_infill(Domain::Polylines &&infill_ordered, const std::vector<const Domain::Polygon*> &boundary, const Domain::BoundingBox2crd &bbox, Domain::Polylines &polylines_out, double spacing, const FillParams &params);
 
     static void connect_base_support(Domain::Polylines &&infill_ordered, const std::vector<const Domain::Polygon*> &boundary_src, const Domain::BoundingBox2crd &bbox, Domain::Polylines &polylines_out, const double spacing, const FillParams &params);
+    // Orca fill_multiline: each line replaced by params.multiline parallel lines spacing apart (open round offsets)
+    static void multiline_fill(Domain::Polylines &polylines, const FillParams &params, float spacing);
     static void connect_base_support(Domain::Polylines &&infill_ordered, const Domain::Polygons &boundary_src, const Domain::BoundingBox2crd &bbox, Domain::Polylines &polylines_out, const double spacing, const FillParams &params);
 
     static Domain::coord_t _adjust_solid_spacing(const Domain::coord_t width, const Domain::coord_t distance);

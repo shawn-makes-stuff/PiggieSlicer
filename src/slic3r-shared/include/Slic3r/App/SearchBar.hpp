@@ -3,6 +3,10 @@
 #include "Slic3r/App/SearchObservableList.hpp"
 #include "Slic3r/App/Yoga/Item.hpp"
 
+#include <functional>
+#include <optional>
+#include <string>
+
 namespace Slic3r::Biz {
 class ProjectInteractor;
 } // namespace Slic3r::Biz
@@ -25,6 +29,16 @@ public:
 
     void focus_search();
 
+    /// Searches something else than the settings (e.g. the preview's G-code and legend): typing
+    /// calls text_changed, Enter calls entered; no settings results popup.
+    struct ContextSearch
+    {
+        std::string hint;
+        std::function<void(const std::string& text)> text_changed;
+        std::function<void(const std::string& text)> entered;
+    };
+    void set_context_search(ContextSearch context_search);
+
 private:
     void update_open_popup();
 
@@ -36,6 +50,7 @@ private:
     SearchPopup* m_search_popup{nullptr};
 
     Yoga::InputText* m_input_text{nullptr};
+    std::optional<ContextSearch> m_context_search;
 };
 
 } // namespace Slic3r::App

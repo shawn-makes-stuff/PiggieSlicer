@@ -1,0 +1,215 @@
+kind: printer
+id: bBUhBttt1oI75PpsMfP0aQ
+variants:
+- condition: printer.model == "M3D Enabler D8500"
+  name: M3D Enabler D8500
+  id: dCnbLlPHp7I7wP0rRBJVpw
+  variants:
+  - condition: tool.nozzle_diameter == 0.4 and printer.tool_count == 2
+    id: YJP7I1x4HPNLOIorQ7jb3A
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: M18 E
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @M3D Enabler D8500
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 19
+      extruder_clearance_radius: 100
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        ; ===== ORCA END GCODE =====
+        M400
+        M83
+        G92 E0
+        G1 E-17 F1800           ; retract BEFORE any moves or power changes
+
+        ; Now lift and park
+        G91
+        G1 Z2 F2000
+        G90
+        G1 X100 Y160 F3000      ; parking point
+
+        ; Power down in order
+        M104 T0 S0
+        M104 T1 S0
+        M106 S50                ; keep fan at ~50% while cooling (adjust if desired)
+        ; (Leave steppers on by omitting M84)
+        ; ===== END ORCA END GCODE =====
+      machine_max_acceleration_e:
+      - 10000.0
+      - 10000.0
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_extruding:
+      - 1500.0
+      - 1250.0
+      machine_max_acceleration_retracting:
+      - 1500.0
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 0.0
+      - 0.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 400.0
+      - 400.0
+      - 400.0
+      - 400.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 400.0
+      - 400.0
+      - 400.0
+      - 400.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |
+        ; ===== ORCA START GCODE =====
+        ; minx:{first_layer_print_min[0]}
+        ; miny:{first_layer_print_min[1]}
+        ; maxx:{first_layer_print_max[0]}
+        ; maxy:{first_layer_print_max[1]}
+        ; used_0:{is_extruder_used[0]}
+        ; used_1:{is_extruder_used[1]}
+
+        ; Heaters
+        {if is_extruder_used[0]}M104 T0 S{first_layer_temperature[0]}{endif}
+        {if !is_extruder_used[0]}M104 T0 S150{endif}
+        {if is_extruder_used[1]}M104 T1 S{first_layer_temperature[1]}{endif}
+        {if !is_extruder_used[1]}M104 T1 S150{endif}
+        M140 S0
+        M106 S50
+
+        ; Home and clearance
+        G28 X Y
+        G28 Z
+        G91
+        G1 Z10 F1200            ; lift 10mm
+        G90
+
+        ; Bed wait (dummy)
+        M190 S0
+
+        ; Wait for target temps
+        {if is_extruder_used[0]}M109 T0 S{first_layer_temperature[0]}{endif}
+        {if is_extruder_used[1]}M109 T1 S{first_layer_temperature[1]}{endif}
+
+        ; Absolute XYZ / Relative E
+        G90
+        M83
+
+        ; ===== Dynamic Bed Leveling ====
+        T0
+        G1 Z3 F3000
+        G1 X15 Y15 F6000
+        G1 Z0.25 F1000; Otherwise Orca displays with a 3mm height
+        ; Single probe touch
+        G30
+        M420 S1
+        ; Bias the contact as -0.25 and fix Z-zero
+        G92 Z-0.25        ; probed contact now treated as Z = -0.25
+        G1 Z0.3 F300
+
+        ; ===== PRIME / TWO-LINE WIPES (sparse, no air extrude) =====
+
+        ; --- Tool 0: lines at Y=5 and Y=6 ---
+        {if is_extruder_used[0]}
+        T0
+        G92 E0
+        G1 X20 Y5 F3000
+        G1 Z0.30 F600
+        G1 X180 E18 F700
+        G1 Y6.0 F1200
+        G1 X20 E18 F700
+        G92 E0
+        {endif}
+
+        ; --- Tool 1: lines at Y=7 and Y=8 ---
+        {if is_extruder_used[1]}
+        T1
+        G92 E0
+        G1 X20 Y7 F3000
+        G1 Z0.30 F600
+        G1 X180 E18 F700
+        G1 Y8.0 F1200
+        G1 X20 E18 F700
+        G92 E0
+        {endif}
+
+        ; Activate initial tool (no retracts; Orca starts immediately)
+        T{initial_extruder}
+        G92 E0
+        ; ===== END ORCA START GCODE =====
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 210x0
+      - 210x150
+      - '0x150'
+      max_print_height: 150
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 120x60/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

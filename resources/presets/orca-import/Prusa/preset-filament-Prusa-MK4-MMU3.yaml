@@ -1,0 +1,882 @@
+kind: filament
+id: QW0+/RoL6jX4oZTHk7kWtw
+name: Generic ABS @Prusa MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 2.5
+  filament_cooling_initial_speed: 5
+  filament_cooling_moves: 3
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.926
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 35
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 42.4194 42.4194 42.4194 42.4194 42.4194| 0.05 42.4387 0.45 42.4387 0.95 42.4387 1.45 42.4387 1.95 42.4387 2.45 42.4387 2.95 42.4387 3.45 42.4387 3.95 42.4387 4.45 42.4387 4.95 42.4387
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 26.5
+  start_filament_gcode: |-
+    ; Filament gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.03{elsif nozzle_diameter[0]==0.25}0.1{elsif nozzle_diameter[0]==0.3}0.06{elsif nozzle_diameter[0]==0.35}0.05{elsif nozzle_diameter[0]==0.5}0.03{elsif nozzle_diameter[0]==0.6}0.02{elsif nozzle_diameter[0]==0.8}0.01{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.02{elsif nozzle_diameter[0]==0.5}0.018{elsif nozzle_diameter[0]==0.6}0.012{elsif nozzle_diameter[0]==0.8}0.01{elsif nozzle_diameter[0]==0.25}0.09{elsif nozzle_diameter[0]==0.3}0.065{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S40 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 60
+  filament_unloading_speed_start: 60
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: pcKv1WVw8FJMcdIxdZgX6Q
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Engineering Plate"
+  id: lpTMzXKHQL5LX/CL0/MsEg
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: Jk9uKhwy8nuNq3A9p2mDfQ
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: wQofmNzFTJKtQ7kHA7Smng
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: /4uIan2nrCdm5AmDDTkORQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: uFbNIRuzW/VV/e8tqTcpmw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: cYB7mTCuVYRnM1bTOwxzcw
+name: Generic ASA @Prusa MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 2.5
+  filament_cooling_initial_speed: 5
+  filament_cooling_moves: 3
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.93
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 35
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 42.4194 42.4194 42.4194 42.4194 42.4194| 0.05 42.4387 0.45 42.4387 0.95 42.4387 1.45 42.4387 1.95 42.4387 2.45 42.4387 2.95 42.4387 3.45 42.4387 3.95 42.4387 4.45 42.4387 4.95 42.4387
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 26.5
+  start_filament_gcode: |-
+    ; Filament gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.03{elsif nozzle_diameter[0]==0.25}0.1{elsif nozzle_diameter[0]==0.3}0.06{elsif nozzle_diameter[0]==0.35}0.05{elsif nozzle_diameter[0]==0.5}0.03{elsif nozzle_diameter[0]==0.6}0.02{elsif nozzle_diameter[0]==0.8}0.01{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.02{elsif nozzle_diameter[0]==0.5}0.018{elsif nozzle_diameter[0]==0.6}0.012{elsif nozzle_diameter[0]==0.8}0.01{elsif nozzle_diameter[0]==0.25}0.09{elsif nozzle_diameter[0]==0.3}0.065{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S40 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 60
+  filament_unloading_speed_start: 60
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: FyDxWP9dml6E6GwrJp6QWA
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Engineering Plate"
+  id: TS3R0w3u+TupTgxxcMD2mw
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: PnYc/A1TK/TE6J87dGMgjg
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: biIkpuIBEaaUbXMNLRaBeQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: Y3Z96SVKINKOS47aAubafQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: j+lF/icKsAVG+i3oJTRDGw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: xifXHaJnA4g6SldPBc4ZFQ
+name: Generic PC @Prusa MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 2.5
+  filament_cooling_initial_speed: 5
+  filament_cooling_moves: 3
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 42.4194 42.4194 42.4194 42.4194 42.4194| 0.05 42.4387 0.45 42.4387 0.95 42.4387 1.45 42.4387 1.95 42.4387 2.45 42.4387 2.95 42.4387 3.45 42.4387 3.95 42.4387 4.45 42.4387 4.95 42.4387
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 26.5
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 60
+  filament_unloading_speed_start: 60
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: fWo4nmteHK0rbIiWG4lPXw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: wjW8TD3LAKLaHyg88U191w
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: zkmHjBUqKgMeBmpTCocIbg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: zSc/V0H6vOJGivvVgGKvXA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: gKJCBttA5pkD/IX8TC3nLA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: ebH4YOo5U/pWltwUzrehtw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: gr4iweRibtenw0I3K1qZTQ
+name: Generic PETG @Prusa MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 90
+  min_fan_speed: 40
+  filament_cooling_final_speed: 2.5
+  filament_cooling_initial_speed: 5
+  filament_cooling_moves: 3
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 35
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 42.4194 42.4194 42.4194 42.4194 42.4194| 0.05 42.4387 0.45 42.4387 0.95 42.4387 1.45 42.4387 1.95 42.4387 2.45 42.4387 2.95 42.4387 3.45 42.4387 3.95 42.4387 4.45 42.4387 4.95 42.4387
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 26.5
+  start_filament_gcode: |-
+    ; filament start gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.035{elsif nozzle_diameter[0]==0.25}0.12{elsif nozzle_diameter[0]==0.3}0.09{elsif nozzle_diameter[0]==0.35}0.08{elsif nozzle_diameter[0]==0.6}0.04{elsif nozzle_diameter[0]==0.5}0.05{elsif nozzle_diameter[0]==0.8}0.02{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.055{elsif nozzle_diameter[0]==0.5}0.042{elsif nozzle_diameter[0]==0.6}0.025{elsif nozzle_diameter[0]==0.8}0.018{elsif nozzle_diameter[0]==0.25}0.18{elsif nozzle_diameter[0]==0.3}0.1{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S36 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 60
+  filament_unloading_speed_start: 60
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +x2BSPx+MH2GBCExEAT+Hg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: 0cY8tqnbHGGldFHc00Nawg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 6FmAhJwExVfaY9C9YJPQuw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: K0GSsXsm3su4hRDexngkpg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: oaGDiOhWRwO93Epuv0MDNA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: IWknSGZCyAB3kK5WrakCsA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: bQDECuYgLqTWcH9X8Vos7g
+name: Generic PLA @Prusa MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.5
+  filament_cooling_initial_speed: 10
+  filament_cooling_moves: 2
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 40.1613 40.3548 40.4516 40.3548 40.2581| 0.05 40.1483 0.45 40.3419 0.95 40.3419 1.45 40.3419 1.95 40.3419 2.45 40.3419 2.95 40.3419 3.45 40.3419 3.95 40.3419 4.45 40.3419 4.95 40.3419
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 29
+  start_filament_gcode: |-
+    ; filament start gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.026{elsif nozzle_diameter[0]==0.25}0.14{elsif nozzle_diameter[0]==0.3}0.07{elsif nozzle_diameter[0]==0.35}0.06{elsif nozzle_diameter[0]==0.6}0.03{elsif nozzle_diameter[0]==0.5}0.035{elsif nozzle_diameter[0]==0.8}0.015{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.026{elsif nozzle_diameter[0]==0.5}0.025{elsif nozzle_diameter[0]==0.6}0.02{elsif nozzle_diameter[0]==0.8}0.014{elsif nozzle_diameter[0]==0.25}0.12{elsif nozzle_diameter[0]==0.3}0.08{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S36 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 30
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +Ra4qkXIjJ+uUXwzuPNXmQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: 0iljG/wdf0JKGP3LNyyWsg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 3lfyVkQzvdd4TcBaQHcn6g
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: xzyhEaq8lnzkm/H+2rslQw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: ZkvA6kTVrTv/cA6hMOjFBg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: g+Rhn+z/Q8V5qqNsuni8IQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 5kfHGkPpmu3WD5d2FNDVog
+name: Prusament ASA @MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 2.5
+  filament_cooling_initial_speed: 5
+  filament_cooling_moves: 3
+  filament_cost: 35.28
+  filament_density: 1.07
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.93
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 35
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 42.4194 42.4194 42.4194 42.4194 42.4194| 0.05 42.4387 0.45 42.4387 0.95 42.4387 1.45 42.4387 1.95 42.4387 2.45 42.4387 2.95 42.4387 3.45 42.4387 3.95 42.4387 4.45 42.4387 4.95 42.4387
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 26.5
+  start_filament_gcode: |-
+    ; Filament gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.03{elsif nozzle_diameter[0]==0.25}0.1{elsif nozzle_diameter[0]==0.3}0.06{elsif nozzle_diameter[0]==0.35}0.05{elsif nozzle_diameter[0]==0.5}0.03{elsif nozzle_diameter[0]==0.6}0.02{elsif nozzle_diameter[0]==0.8}0.01{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.02{elsif nozzle_diameter[0]==0.5}0.018{elsif nozzle_diameter[0]==0.6}0.012{elsif nozzle_diameter[0]==0.8}0.01{elsif nozzle_diameter[0]==0.25}0.09{elsif nozzle_diameter[0]==0.3}0.065{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S40 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 60
+  filament_unloading_speed_start: 60
+  filament_vendor: Prusa Polymers
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: gRIuMlW+Tc8yWsLE6S8QHA
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Engineering Plate"
+  id: gvR2v5c2H6V75/blbz9j/A
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: 86bOLDQx/taAYQ6B4sF2KA
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: pad2YK4QbZWFGg3zrtfYag
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: /KbaxV1vN0rHJdqzD/LHgg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Jb+EEat3ze/0BpONkozsag
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: WpvTf7HkeSrylubPV1zOYQ
+name: Prusament PC Blend @MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 2.5
+  filament_cooling_initial_speed: 5
+  filament_cooling_moves: 3
+  filament_cost: 51.53
+  filament_density: 1.22
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 42.4194 42.4194 42.4194 42.4194 42.4194| 0.05 42.4387 0.45 42.4387 0.95 42.4387 1.45 42.4387 1.95 42.4387 2.45 42.4387 2.95 42.4387 3.45 42.4387 3.95 42.4387 4.45 42.4387 4.95 42.4387
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 26.5
+  start_filament_gcode: |-
+    ; Filament gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.03{elsif nozzle_diameter[0]==0.25}0.1{elsif nozzle_diameter[0]==0.3}0.06{elsif nozzle_diameter[0]==0.35}0.05{elsif nozzle_diameter[0]==0.5}0.03{elsif nozzle_diameter[0]==0.6}0.02{elsif nozzle_diameter[0]==0.8}0.01{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.02{elsif nozzle_diameter[0]==0.5}0.018{elsif nozzle_diameter[0]==0.6}0.012{elsif nozzle_diameter[0]==0.8}0.01{elsif nozzle_diameter[0]==0.25}0.09{elsif nozzle_diameter[0]==0.3}0.065{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S40 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 60
+  filament_unloading_speed_start: 60
+  filament_vendor: Prusa Polymers
+  full_fan_speed_layer: 0
+  temperature: 275
+  first_layer_temperature: 275
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: DyDQF7wgPRn3TzAdNsEGHg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 5+KrzSTNl1MSvM0C/gHeRA
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: OJ30Cn9yxVVqW8BVIvSMRw
+  values:
+    bed_temperature: 115
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: gTOWiVQr1Cwseq0DIjd0Uw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: LnGPuVkd+4MNnjSliu8nvg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: VE9m8YPPf9Tw6AKLCp0lUw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: qXZL1HZUjuP/dZMigtUW7A
+name: Prusament PETG @MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 90
+  min_fan_speed: 40
+  filament_cooling_final_speed: 2.5
+  filament_cooling_initial_speed: 5
+  filament_cooling_moves: 3
+  filament_cost: 29.99
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 35
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 42.4194 42.4194 42.4194 42.4194 42.4194| 0.05 42.4387 0.45 42.4387 0.95 42.4387 1.45 42.4387 1.95 42.4387 2.45 42.4387 2.95 42.4387 3.45 42.4387 3.95 42.4387 4.45 42.4387 4.95 42.4387
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 26.5
+  start_filament_gcode: |-
+    ; filament start gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.035{elsif nozzle_diameter[0]==0.25}0.12{elsif nozzle_diameter[0]==0.3}0.09{elsif nozzle_diameter[0]==0.35}0.08{elsif nozzle_diameter[0]==0.6}0.04{elsif nozzle_diameter[0]==0.5}0.05{elsif nozzle_diameter[0]==0.8}0.02{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.055{elsif nozzle_diameter[0]==0.5}0.042{elsif nozzle_diameter[0]==0.6}0.025{elsif nozzle_diameter[0]==0.8}0.018{elsif nozzle_diameter[0]==0.25}0.18{elsif nozzle_diameter[0]==0.3}0.1{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S36 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 60
+  filament_unloading_speed_start: 60
+  filament_vendor: Prusa Polymers
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +UGr44qdw81ZgG+P6sagfQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: ciOa2l+JkSr1GjKiAPpUBg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: Pnm/mjZip0nZO+Qdd19GxA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: KRlzdEL3dfSB4uq3rB2grQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: mfgMTtyVOHUr0a+qK7ULHQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: +ZM2Xw0xL1/m+sqYmypjDg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: JbOl9qdrBsmj4MytlMvDtQ
+name: Prusament PLA @MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.5
+  filament_cooling_initial_speed: 10
+  filament_cooling_moves: 2
+  filament_cost: 27.99
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 40.1613 40.3548 40.4516 40.3548 40.2581| 0.05 40.1483 0.45 40.3419 0.95 40.3419 1.45 40.3419 1.95 40.3419 2.45 40.3419 2.95 40.3419 3.45 40.3419 3.95 40.3419 4.45 40.3419 4.95 40.3419
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 29
+  start_filament_gcode: |-
+    ; filament start gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.026{elsif nozzle_diameter[0]==0.25}0.14{elsif nozzle_diameter[0]==0.3}0.07{elsif nozzle_diameter[0]==0.35}0.06{elsif nozzle_diameter[0]==0.6}0.03{elsif nozzle_diameter[0]==0.5}0.035{elsif nozzle_diameter[0]==0.8}0.015{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.026{elsif nozzle_diameter[0]==0.5}0.025{elsif nozzle_diameter[0]==0.6}0.02{elsif nozzle_diameter[0]==0.8}0.014{elsif nozzle_diameter[0]==0.25}0.12{elsif nozzle_diameter[0]==0.3}0.08{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S36 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 100
+  filament_unloading_speed_start: 100
+  filament_vendor: Prusa Polymers
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ExkWcN9QS43ZCzINUgvQdw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: izs0jJmnPd/vDQdN3xzFUg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: riDLxbCGbvDttXqoWD2/qQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: foVnie9x1mbkm/AiUkeUYw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: jStb09JGXRw3rhUVLK/+lA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 1HR0w8UzqOtOsOW2a0KSGg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 5dE9KggOZxKEmrjUgW9VTw
+name: Prusament rPLA @MK4 MMU3
+condition: (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.4) or (printer.model == "Prusa MK4 MMU3" and tool.nozzle_diameter == 0.6) or (printer.model == "Prusa MK4 MMU3 HF" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.5
+  filament_cooling_initial_speed: 10
+  filament_cooling_moves: 2
+  filament_cost: 37.49
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 1
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 250 100 40.1613 40.3548 40.4516 40.3548 40.2581| 0.05 40.1483 0.45 40.3419 0.95 40.3419 1.45 40.3419 1.95 40.3419 2.45 40.3419 2.95 40.3419 3.45 40.3419 3.95 40.3419 4.45 40.3419 4.95 40.3419
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 29
+  start_filament_gcode: |-
+    ; filament start gcode
+    M900 K{if nozzle_diameter[0]==0.4}0.026{elsif nozzle_diameter[0]==0.25}0.14{elsif nozzle_diameter[0]==0.3}0.07{elsif nozzle_diameter[0]==0.35}0.06{elsif nozzle_diameter[0]==0.6}0.03{elsif nozzle_diameter[0]==0.5}0.035{elsif nozzle_diameter[0]==0.8}0.015{else}0{endif} ; Filament gcode
+
+    {if printer_notes=~/.*PRINTER_MODEL_MK4IS.*/}
+    M572 S{if nozzle_diameter[0]==0.4}0.026{elsif nozzle_diameter[0]==0.5}0.025{elsif nozzle_diameter[0]==0.6}0.02{elsif nozzle_diameter[0]==0.8}0.014{elsif nozzle_diameter[0]==0.25}0.12{elsif nozzle_diameter[0]==0.3}0.08{else}0{endif} ; Filament gcode
+    {endif}
+
+    M142 S36 ; set heatbreak target temp
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 40
+  filament_unloading_speed_start: 30
+  filament_vendor: Prusa Polymers
+  full_fan_speed_layer: 0
+  temperature: 205
+  first_layer_temperature: 205
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60, "filament_flush_volumetric_speed": 0.0, "idle_temperature": 0, "required_nozzle_HRC": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 6TxeDqmtPkikl993Ru2izg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: u40QeKa+ON4GpCXlbSOV8Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: gsk/LCofKZaU4whjt/ZwCw
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: yEKQ3WIdOL1Z8Ilw0owRJQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Textured Cool Plate"
+  id: GYKTH+tTrm/inynSC5gDlg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 5LLjCipPY+cSaMjw5ddJFw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35

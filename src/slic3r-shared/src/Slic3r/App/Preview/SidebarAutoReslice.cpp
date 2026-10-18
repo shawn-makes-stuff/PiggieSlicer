@@ -10,23 +10,20 @@ using Biz::ProjectInteractor;
 using Biz::Slicing::SlicingInteractor;
 
 SidebarAutoReslice::SidebarAutoReslice(ProjectInteractor& project_interactor) :
-    Window("SidebarAutoReslice")
+    m_project_interactor(project_interactor)
 {
-    set_min_width(220);
+    set_orientation(Yoga::Orientation::Horizontal);
 
-    Item* row = emplace_back<Yoga::Item>();
-    row->set_orientation(Yoga::Orientation::Horizontal);
-
-    m_auto_reslice_chb = row->emplace_back<Yoga::ToggleButton>(
+    m_auto_reslice_chb = emplace_back<Yoga::ToggleButton>(
         Biz::_u8L("Auto-reslice"),
         Biz::_u8L("Automatically runs slicing after any settings change.")
     );
     m_auto_reslice_chb->set_font_type(Render::ImguiFontType::Bold);
-    m_auto_reslice_chb->callbacks().checked_changed = [&](bool checked)
+    m_auto_reslice_chb->callbacks().checked_changed = [this](bool checked)
     {
-        SlicingInteractor& slicing_interactor{project_interactor.slicing_interactor()};
+        SlicingInteractor& slicing_interactor{m_project_interactor.slicing_interactor()};
         if (checked) {
-            slicing_interactor.enable_auto_slicing(project_interactor.selected_bed_slicing_id());
+            slicing_interactor.enable_auto_slicing(m_project_interactor.selected_bed_slicing_id());
         } else {
             slicing_interactor.stop_all();
             slicing_interactor.disable_auto_slicing();
@@ -40,6 +37,12 @@ SidebarAutoReslice::SidebarAutoReslice(ProjectInteractor& project_interactor) :
 bool SidebarAutoReslice::is_enabled() const
 {
     return m_auto_reslice_chb->checked();
+}
+
+void SidebarAutoReslice::apply()
+{
+    if (is_enabled())
+        m_project_interactor.slicing_interactor().enable_auto_slicing(m_project_interactor.selected_bed_slicing_id());
 }
 
 } // namespace Slic3r::App::Preview

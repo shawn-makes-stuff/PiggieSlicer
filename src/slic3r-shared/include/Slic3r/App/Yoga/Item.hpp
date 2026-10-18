@@ -124,6 +124,9 @@ public:
     void set_visible(bool visible);
     void set_flex_grow(const Unit& flex_grow);
     void set_flex_shrink(const Unit& flex_shrink);
+    /// Main-axis size before growing (pixels; nullopt = auto, the content size); 0 shares the
+    /// space purely by flex_grow
+    void set_flex_basis(std::optional<float> flex_basis);
     void set_direction(YGDirection direction);
     void set_aspect_ratio(float aspect_ratio);
     void set_position_type(YGPositionType position_type);

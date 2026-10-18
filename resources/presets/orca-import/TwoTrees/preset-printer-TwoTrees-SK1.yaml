@@ -1,0 +1,164 @@
+kind: printer
+id: cUU5sz9loSsRTMPYRz6OCQ
+variants:
+- condition: printer.model == "TwoTrees SK1"
+  name: TwoTrees SK1
+  id: FwTUXUxrpYmnSVhPxH9iNg
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: q1CFQqKf6B8I498WY2IZhg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: PAUSE
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @SK1
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 60
+      extruder_clearance_radius: 50
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        M104 S0 ; turn off temperature
+        M140 S0 ; turn off heatbed
+
+        G92 E0.0     ; reset extruder distance position
+        G1 E-1 F2100 ; retract
+
+        G0 X50 Y250 F12000;
+        M84    ; disable motors
+
+        M107   ; turn off fan
+
+        SET_VELOCITY_LIMIT ACCEL_TO_DECEL=4000
+      machine_max_acceleration_e:
+      - 20000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 1250.0
+      machine_max_acceleration_retracting:
+      - 15000.0
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 1500.0
+      - 1250.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 1000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 1000.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 200.0
+      machine_max_jerk_e:
+      - 1.0
+      - 2.5
+      machine_max_jerk_x:
+      - 5.0
+      - 10.0
+      machine_max_jerk_y:
+      - 5.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 730.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 730.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        M107 ; Turn off the fan
+        G21  ; set units to millimeters
+        G90  ; use absolute coordinates
+        M83  ; use relative distances for extrusion
+
+        M104 S220     ; set extruder temp
+        M140 S60  ; set bed temp
+        M109 S220      ; wait for extruder temp
+        M190 S60  ; wait for bed temp
+        G1 E-1.5 F2100 ; retract
+
+        ;G32  ;Load bed mesh
+        G28   ;home
+        G29   ;bed leveling
+
+        M104 S[first_layer_temperature]      ; set extruder temp
+        M140 S[first_layer_bed_temperature]  ; set bed temp
+        M109 S[first_layer_temperature]      ; wait for extruder temp
+        M190 S[first_layer_bed_temperature]  ; wait for bed temp
+
+        G0 Z2.0 F600;
+        G0 X50 Y10 F12000;
+
+        G92 E0.0 ; reset extruder distance position
+        G0 Z0.4 F600;
+        G1 X100.0 E10 F3000.0 ; intro line
+        G92 E0.0 ; reset extruder distance position
+        G1 X200.0 E15 F3000.0 ; intro line
+        G92 E0.0 ; reset extruder distance position
+        G0 Z0.8 F600;
+        G1 X100.0 E15 F3000.0 ; intro line
+
+        G1 Z0.4 F600     ;Wipe
+        G0 Y12 F6000    ;Wipe
+        G1 X100 F6000    ;Wipe
+        G0 Y8 F12000   ;Wipe
+        G1 X200 F6000    ;Wipe
+        G1 X190 Y12 F6000 ;Wipe
+        G1 X180 Y8 F6000 ;Wipe
+        G1 X170 Y12 F6000 ;Wipe
+        G1 X160 Y8 F6000 ;Wipe
+        G1 X150 Y12 F6000 ;Wipe
+
+
+        ;G0 Z2.0 F600;
+        G92 E0.0 ; reset extruder distance position
+
+        SET_VELOCITY_LIMIT ACCEL_TO_DECEL=10000
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 256x0
+      - 256x256
+      - '0x256'
+      max_print_height: 256
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

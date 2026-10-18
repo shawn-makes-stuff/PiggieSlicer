@@ -1,0 +1,539 @@
+kind: printer
+id: 5+Id7zkpcKidbfszVf4Lwg
+variants:
+- condition: printer.model == "Geeetech Thunder"
+  name: Geeetech Thunder
+  id: hTPrWPuBiKPDukNXK4y7nw
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: 2POxTH8uM0KPSKdyCqKPJA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Fine @Geeetech Thunder
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 47
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;------------------------------------
+        ;layer No: [layer_num] ———>Print Height: [layer_z] mm
+        ;------------------------------------
+      end_gcode: |-
+        G91 ;Switch to relative positioning
+        G1 E-2.5 F2700 ;Retract filament
+        G1 E-1.5 Z0.2 F2400 ;Retract and raise Z
+        G1 X5 Y5 F3000 ;Move away
+        G1 Z10 ;lift print head
+        G90 ;Switch to absolute positioning
+        G28 X Y ;homing XY
+        M106 S0 ;off Fan
+        M104 S0 ;Cooldown hotend
+        M140 S0 ;Cooldown bed
+        M84 X Y E ;Disable steppers
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_retracting:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 4000.0
+      - 4000.0
+      machine_max_acceleration_z:
+      - 50.0
+      - 50.0
+      machine_max_jerk_e:
+      - 8.0
+      - 8.0
+      machine_max_jerk_x:
+      - 45.0
+      - 45.0
+      machine_max_jerk_y:
+      - 45.0
+      - 45.0
+      machine_max_jerk_z:
+      - 0.8
+      - 0.8
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 35.0
+      - 35.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 10.0
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |-
+        ;Official viki homepage for Thunder:https://www.geeetech.com/wiki/index.php/Geeetech_Thunder_3D_printer
+
+        M104 S[first_layer_temperature] ; Set Hotend Temp.
+        M140 S[first_layer_bed_temperature] ; Set bed Temp.
+        M190 S[first_layer_bed_temperature] ; Wait for Bed Temp.
+        M109 S[first_layer_temperature] ; Wait for Hotend Temp.
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+        G92 E0 ; Reset Extruder
+        G28 ; Home all axes
+        M107 P0 ;Off Main Fan
+        M107 P1 ;Off Aux Fan
+        M2012 P8 S1 F100 ; ON Light
+        G1 Z5.0 F3000 ;Move the Z-axis slightly up to prevent scratching the heatbed
+        G1 X0.1 Y20 Z0.8 F5000 ; Move to start position
+        G1 X0.1 Y200.0 Z1.2 F1500 E30 ; Draw the first line
+        G92 E0 ; Reset Extruder
+        G1 X0.4 Y200.0 Z1.2 F3000 ; Move to side a little
+        G1 X0.4 Y20 Z1.2 F1500 E25 ; Draw the second line
+        G92 E0 ; Reset Extruder
+        G1 Z2.0 F3000 ; Move the Z-axis slightly up to prevent scratching the heatbed
+        G1 X5 Y20 Z0.4 F3000.0 ; Scrape off nozzle residue
+        G92 E0
+        ;---------------------------------------
+        ;M106 P0 S383 ; ON MainFan 150% if need
+        ;M106 P1 S255 ; ON Aux Fan 100% if need
+        ;---------------------------------------
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x250
+      - '0x250'
+      max_print_height: 260
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: zFFhTykIpG2hd7crjTpvbw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Geeetech Thunder
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 47
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;------------------------------------
+        ;layer No: [layer_num] ———>Print Height: [layer_z] mm
+        ;------------------------------------
+      end_gcode: |-
+        G91 ;Switch to relative positioning
+        G1 E-2.5 F2700 ;Retract filament
+        G1 E-1.5 Z0.2 F2400 ;Retract and raise Z
+        G1 X5 Y5 F3000 ;Move away
+        G1 Z10 ;lift print head
+        G90 ;Switch to absolute positioning
+        G28 X Y ;homing XY
+        M106 S0 ;off Fan
+        M104 S0 ;Cooldown hotend
+        M140 S0 ;Cooldown bed
+        M84 X Y E ;Disable steppers
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_retracting:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 4000.0
+      - 4000.0
+      machine_max_acceleration_z:
+      - 50.0
+      - 50.0
+      machine_max_jerk_e:
+      - 8.0
+      - 8.0
+      machine_max_jerk_x:
+      - 45.0
+      - 45.0
+      machine_max_jerk_y:
+      - 45.0
+      - 45.0
+      machine_max_jerk_z:
+      - 0.8
+      - 0.8
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 35.0
+      - 35.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 10.0
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |-
+        ;Official viki homepage for Thunder:https://www.geeetech.com/wiki/index.php/Geeetech_Thunder_3D_printer
+
+        M104 S[first_layer_temperature] ; Set Hotend Temp.
+        M140 S[first_layer_bed_temperature] ; Set bed Temp.
+        M190 S[first_layer_bed_temperature] ; Wait for Bed Temp.
+        M109 S[first_layer_temperature] ; Wait for Hotend Temp.
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+        G92 E0 ; Reset Extruder
+        G28 ; Home all axes
+        M107 P0 ;Off Main Fan
+        M107 P1 ;Off Aux Fan
+        M2012 P8 S1 F100 ; ON Light
+        G1 Z5.0 F3000 ;Move the Z-axis slightly up to prevent scratching the heatbed
+        G1 X0.1 Y20 Z0.8 F5000 ; Move to start position
+        G1 X0.1 Y200.0 Z1.2 F1500 E30 ; Draw the first line
+        G92 E0 ; Reset Extruder
+        G1 X0.4 Y200.0 Z1.2 F3000 ; Move to side a little
+        G1 X0.4 Y20 Z1.2 F1500 E25 ; Draw the second line
+        G92 E0 ; Reset Extruder
+        G1 Z2.0 F3000 ; Move the Z-axis slightly up to prevent scratching the heatbed
+        G1 X5 Y20 Z0.4 F3000.0 ; Scrape off nozzle residue
+        G92 E0
+        ;---------------------------------------
+        ;M106 P0 S383 ; ON MainFan 150% if need
+        ;M106 P1 S255 ; ON Aux Fan 100% if need
+        ;---------------------------------------
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x250
+      - '0x250'
+      max_print_height: 260
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: o3gW6dkD3qpaH3S47oTSYw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard @Geeetech Thunder 0.6 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 47
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;------------------------------------
+        ;layer No: [layer_num] ———>Print Height: [layer_z] mm
+        ;------------------------------------
+      end_gcode: |-
+        G91 ;Switch to relative positioning
+        G1 E-2.5 F2700 ;Retract filament
+        G1 E-1.5 Z0.2 F2400 ;Retract and raise Z
+        G1 X5 Y5 F3000 ;Move away
+        G1 Z10 ;lift print head
+        G90 ;Switch to absolute positioning
+        G28 X Y ;homing XY
+        M106 S0 ;off Fan
+        M104 S0 ;Cooldown hotend
+        M140 S0 ;Cooldown bed
+        M84 X Y E ;Disable steppers
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_retracting:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 4000.0
+      - 4000.0
+      machine_max_acceleration_z:
+      - 50.0
+      - 50.0
+      machine_max_jerk_e:
+      - 8.0
+      - 8.0
+      machine_max_jerk_x:
+      - 45.0
+      - 45.0
+      machine_max_jerk_y:
+      - 45.0
+      - 45.0
+      machine_max_jerk_z:
+      - 0.8
+      - 0.8
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 35.0
+      - 35.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 10.0
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |-
+        ;Official viki homepage for Thunder:https://www.geeetech.com/wiki/index.php/Geeetech_Thunder_3D_printer
+
+        M104 S[first_layer_temperature] ; Set Hotend Temp.
+        M140 S[first_layer_bed_temperature] ; Set bed Temp.
+        M190 S[first_layer_bed_temperature] ; Wait for Bed Temp.
+        M109 S[first_layer_temperature] ; Wait for Hotend Temp.
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+        G92 E0 ; Reset Extruder
+        G28 ; Home all axes
+        M107 P0 ;Off Main Fan
+        M107 P1 ;Off Aux Fan
+        M2012 P8 S1 F100 ; ON Light
+        G1 Z5.0 F3000 ;Move the Z-axis slightly up to prevent scratching the heatbed
+        G1 X0.1 Y20 Z0.8 F5000 ; Move to start position
+        G1 X0.1 Y200.0 Z1.2 F1500 E30 ; Draw the first line
+        G92 E0 ; Reset Extruder
+        G1 X0.4 Y200.0 Z1.2 F3000 ; Move to side a little
+        G1 X0.4 Y20 Z1.2 F1500 E25 ; Draw the second line
+        G92 E0 ; Reset Extruder
+        G1 Z2.0 F3000 ; Move the Z-axis slightly up to prevent scratching the heatbed
+        G1 X5 Y20 Z0.4 F3000.0 ; Scrape off nozzle residue
+        G92 E0
+        ;---------------------------------------
+        ;M106 P0 S383 ; ON MainFan 150% if need
+        ;M106 P1 S255 ; ON Aux Fan 100% if need
+        ;---------------------------------------
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x250
+      - '0x250'
+      max_print_height: 260
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: LWk+tDh+4Fx/FKo3LkYvFw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.44mm Draft @Geeetech Thunder 0.8 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 47
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;------------------------------------
+        ;layer No: [layer_num] ———>Print Height: [layer_z] mm
+        ;------------------------------------
+      end_gcode: |-
+        G91 ;Switch to relative positioning
+        G1 E-2.5 F2700 ;Retract filament
+        G1 E-1.5 Z0.2 F2400 ;Retract and raise Z
+        G1 X5 Y5 F3000 ;Move away
+        G1 Z10 ;lift print head
+        G90 ;Switch to absolute positioning
+        G28 X Y ;homing XY
+        M106 S0 ;off Fan
+        M104 S0 ;Cooldown hotend
+        M140 S0 ;Cooldown bed
+        M84 X Y E ;Disable steppers
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_retracting:
+      - 3500.0
+      - 3500.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 4000.0
+      - 4000.0
+      machine_max_acceleration_z:
+      - 50.0
+      - 50.0
+      machine_max_jerk_e:
+      - 8.0
+      - 8.0
+      machine_max_jerk_x:
+      - 45.0
+      - 45.0
+      machine_max_jerk_y:
+      - 45.0
+      - 45.0
+      machine_max_jerk_z:
+      - 0.8
+      - 0.8
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 35.0
+      - 35.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 10.0
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |-
+        ;Official viki homepage for Thunder:https://www.geeetech.com/wiki/index.php/Geeetech_Thunder_3D_printer
+
+        M104 S[first_layer_temperature] ; Set Hotend Temp.
+        M140 S[first_layer_bed_temperature] ; Set bed Temp.
+        M190 S[first_layer_bed_temperature] ; Wait for Bed Temp.
+        M109 S[first_layer_temperature] ; Wait for Hotend Temp.
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+        G92 E0 ; Reset Extruder
+        G28 ; Home all axes
+        M107 P0 ;Off Main Fan
+        M107 P1 ;Off Aux Fan
+        M2012 P8 S1 F100 ; ON Light
+        G1 Z5.0 F3000 ;Move the Z-axis slightly up to prevent scratching the heatbed
+        G1 X0.1 Y20 Z0.8 F5000 ; Move to start position
+        G1 X0.1 Y200.0 Z1.2 F1500 E30 ; Draw the first line
+        G92 E0 ; Reset Extruder
+        G1 X0.4 Y200.0 Z1.2 F3000 ; Move to side a little
+        G1 X0.4 Y20 Z1.2 F1500 E25 ; Draw the second line
+        G92 E0 ; Reset Extruder
+        G1 Z2.0 F3000 ; Move the Z-axis slightly up to prevent scratching the heatbed
+        G1 X5 Y20 Z0.4 F3000.0 ; Scrape off nozzle residue
+        G92 E0
+        ;---------------------------------------
+        ;M106 P0 S383 ; ON MainFan 150% if need
+        ;M106 P1 S255 ; ON Aux Fan 100% if need
+        ;---------------------------------------
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x250
+      - '0x250'
+      max_print_height: 260
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

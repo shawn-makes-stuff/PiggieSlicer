@@ -91,6 +91,9 @@ private:
     Text* m_material_name{nullptr};
     LayoutButton* m_cog_btn{nullptr};
     LayoutButton* m_nozzle_btn{nullptr};
+    Item* m_nozzle_separator{nullptr};
+    Item* m_index_text{nullptr};
+    Item* m_index_separator{nullptr};
     std::weak_ptr<ButtonGroup> m_button_group;
     FnIndexClicked m_on_cog_clicked;
     FnIndexClicked m_on_nozzle_clicked;

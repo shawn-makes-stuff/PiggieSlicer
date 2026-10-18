@@ -27,9 +27,17 @@ ConfigItemPoints::ConfigItemPoints(
     on_data_update();
 }
 
+// A single point (Domain::Vec2d) or a list of points.
+static std::vector<Domain::Vec2d> points_of(const Domain::ConfigItem& item)
+{
+    if (*item.def().type == typeid(Domain::Vec2d))
+        return {item.get<Domain::Vec2d>()};
+    return item.get<std::vector<Domain::Vec2d>>();
+}
+
 void ConfigItemPoints::on_data_update()
 {
-    const std::vector<Domain::Vec2d> data = m_state->get<std::vector<Domain::Vec2d>>();
+    const std::vector<Domain::Vec2d> data = points_of(*m_state);
 
     if (data.size() != m_points.size()) {
         construct_points();
@@ -51,7 +59,10 @@ void ConfigItemPoints::send_data()
         data.push_back({point.validator_x->value(), point.validator_y->value()});
     }
 
-    set_item_value(Domain::ConfigValue{data});
+    if (*m_state->def().type == typeid(Domain::Vec2d))
+        set_item_value(Domain::ConfigValue{data.front()});
+    else
+        set_item_value(Domain::ConfigValue{data});
 }
 
 void ConfigItemPoints::construct_points()
@@ -61,14 +72,17 @@ void ConfigItemPoints::construct_points()
     }
     m_points.clear();
 
-    const size_t size = m_state->get<std::vector<Domain::Vec2d>>().size();
+    const bool   single = *m_state->def().type == typeid(Domain::Vec2d);
+    const size_t size   = points_of(*m_state).size();
     for (size_t i = 0; i < size; ++i) {
         Point& point    = m_points.emplace_back();
         point.container = emplace_back<Item>();
         point.container->set_gap(5);
         point.container->set_margin(Margins(0, 0, 5, 0));
-        Text* text = point.container->emplace_back<Text>(std::to_string(i + 1));
-        text->set_align({AlignH::Center, AlignV::Center});
+        if (!single) {
+            Text* text = point.container->emplace_back<Text>(std::to_string(i + 1));
+            text->set_align({AlignH::Center, AlignV::Center});
+        }
         point.validator_x = std::make_unique<DoubleValidator>(
             m_state->def().min.value_or(std::numeric_limits<double>::lowest()),
             m_state->def().max.value_or(std::numeric_limits<double>::max())
@@ -89,6 +103,7 @@ void ConfigItemPoints::construct_points()
         point.input_y = point.container->emplace_back<InputTextField>("ConfigItemPointY");
         point.input_y->set_flex_grow(1);
         point.input_y->set_validator(point.validator_y.release());
+        point.input_y->callbacks().text_edited = [this]() { send_data(); };
     }
 }
 

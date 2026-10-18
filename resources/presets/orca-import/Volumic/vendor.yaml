@@ -1,0 +1,975 @@
+kind: vendor
+id: Volumic
+name: Volumic
+version: 2.4.0+orca.02.04.00.05
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: EXO42
+  base_model: EXO42
+  printer_configs_order:
+  - EXO42-0-4-nozzle
+- label: EXO42 IDRE
+  base_model: EXO42 IDRE
+  printer_configs_order:
+  - EXO42-IDRE-0-4-nozzle
+  - EXO42-IDRE-COPY-MODE-0-4-nozzle
+  - EXO42-IDRE-MIRROR-MODE-0-4-nozzle
+- label: EXO42 Performance
+  base_model: EXO42 Performance
+  printer_configs_order:
+  - EXO42-Performance-0-4-nozzle
+- label: EXO42 Stage 2
+  base_model: EXO42 Stage 2
+  printer_configs_order:
+  - EXO42-Stage-2-0-4-nozzle
+- label: EXO65
+  base_model: EXO65
+  printer_configs_order:
+  - EXO65-0-6-nozzle
+- label: EXO65 IDRE
+  base_model: EXO65 IDRE
+  printer_configs_order:
+  - EXO65-IDRE-0-4-nozzle
+  - EXO65-IDRE-COPY-MODE-0-4-nozzle
+  - EXO65-IDRE-MIRROR-MODE-0-4-nozzle
+- label: EXO65 Performance
+  base_model: EXO65 Performance
+  printer_configs_order:
+  - EXO65-Performance-0-4-nozzle
+  - EXO65-Performance-0-6-nozzle
+  - EXO65-Performance-0-8-nozzle
+- label: EXO65 Stage 2
+  base_model: EXO65 Stage 2
+  printer_configs_order:
+  - EXO65-Stage-2-0-6-nozzle
+- label: SH65
+  base_model: SH65
+  printer_configs_order:
+  - SH65-0-4-nozzle
+- label: SH65 IDRE
+  base_model: SH65 IDRE
+  printer_configs_order:
+  - SH65-IDRE-0-4-nozzle
+  - SH65-IDRE-COPY-MODE-0-4-nozzle
+  - SH65-IDRE-MIRROR-MODE-0-4-nozzle
+- label: SH65 Performance
+  base_model: SH65 Performance
+  printer_configs_order:
+  - SH65-Performance-0-4-nozzle
+- label: SH65 Stage 2
+  base_model: SH65 Stage 2
+  printer_configs_order:
+  - SH65-Stage-2-0-4-nozzle
+- label: VS20MK2
+  base_model: VS20MK2
+  printer_configs_order:
+  - VS20MK2-0-4-nozzle
+- label: VS30MK2
+  base_model: VS30MK2
+  printer_configs_order:
+  - VS30MK2-0-4-nozzle
+- label: VS30MK3
+  base_model: VS30MK3
+  printer_configs_order:
+  - VS30MK3-0-4-nozzle
+- label: VS30MK3 Stage 2
+  base_model: VS30MK3 Stage 2
+  printer_configs_order:
+  - VS30MK3-Stage-2-0-4-nozzle
+- label: VS30SC
+  base_model: VS30SC
+  printer_configs_order:
+  - VS30SC-0-4-nozzle
+- label: VS30SC2
+  base_model: VS30SC2
+  printer_configs_order:
+  - VS30SC2-0-4-nozzle
+- label: VS30SC2 Performance
+  base_model: VS30SC2 Performance
+  printer_configs_order:
+  - VS30SC2-Performance-0-4-nozzle
+- label: VS30SC2 Stage 2
+  base_model: VS30SC2 Stage 2
+  printer_configs_order:
+  - VS30SC2-Stage-2-0-4-nozzle
+- label: VS30ULTRA
+  base_model: VS30ULTRA
+  printer_configs_order:
+  - VS30ULTRA-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: EXO42
+id: EXO42
+model:
+  base_model: EXO42
+  model: EXO42
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: EXO42_bed.STL
+  thumbnail: EXO42_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO42 IDRE (0.4 nozzle)
+id: EXO42 IDRE (0.4 nozzle)
+model:
+  base_model: EXO42 IDRE
+  model: EXO42 IDRE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- EXO42 IDRE
+visual:
+  bed_model: EXO42_bed.STL
+  thumbnail: EXO42 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO42 IDRE COPY MODE (0.4 nozzle)
+id: EXO42 IDRE COPY MODE (0.4 nozzle)
+model:
+  base_model: EXO42 IDRE
+  model: EXO42 IDRE COPY MODE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- EXO42 IDRE
+visual:
+  bed_model: EXO42_bed.STL
+  thumbnail: EXO42 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO42 IDRE MIRROR MODE (0.4 nozzle)
+id: EXO42 IDRE MIRROR MODE (0.4 nozzle)
+model:
+  base_model: EXO42 IDRE
+  model: EXO42 IDRE MIRROR MODE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- EXO42 IDRE
+visual:
+  bed_model: EXO42_bed.STL
+  thumbnail: EXO42 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO42 Performance
+id: EXO42 Performance
+model:
+  base_model: EXO42 Performance
+  model: EXO42 Performance
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: EXO42_bed.STL
+  thumbnail: EXO42 Performance_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO42 Stage 2
+id: EXO42 Stage 2
+model:
+  base_model: EXO42 Stage 2
+  model: EXO42 Stage 2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: EXO42_bed.STL
+  thumbnail: EXO42 Stage 2_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO65
+id: EXO65
+model:
+  base_model: EXO65
+  model: EXO65
+tool_count: 1
+features:
+  supports_06_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: EXO65_bed.STL
+  thumbnail: EXO65_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO65 IDRE (0.4 nozzle)
+id: EXO65 IDRE (0.4 nozzle)
+model:
+  base_model: EXO65 IDRE
+  model: EXO65 IDRE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- EXO65 IDRE
+visual:
+  bed_model: EXO65_bed.STL
+  thumbnail: EXO65 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO65 IDRE COPY MODE (0.4 nozzle)
+id: EXO65 IDRE COPY MODE (0.4 nozzle)
+model:
+  base_model: EXO65 IDRE
+  model: EXO65 IDRE COPY MODE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- EXO65 IDRE
+visual:
+  bed_model: EXO65_bed.STL
+  thumbnail: EXO65 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO65 IDRE MIRROR MODE (0.4 nozzle)
+id: EXO65 IDRE MIRROR MODE (0.4 nozzle)
+model:
+  base_model: EXO65 IDRE
+  model: EXO65 IDRE MIRROR MODE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- EXO65 IDRE
+visual:
+  bed_model: EXO65_bed.STL
+  thumbnail: EXO65 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO65 Performance
+id: EXO65 Performance
+model:
+  base_model: EXO65 Performance
+  model: EXO65 Performance
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: EXO65_bed.STL
+  thumbnail: EXO65 Performance_cover.png
+---
+kind: printer
+technology: FFF
+name: EXO65 Stage 2
+id: EXO65 Stage 2
+model:
+  base_model: EXO65 Stage 2
+  model: EXO65 Stage 2
+tool_count: 1
+features:
+  supports_06_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: EXO65_bed.STL
+  thumbnail: EXO65 Stage 2_cover.png
+---
+kind: printer
+technology: FFF
+name: SH65
+id: SH65
+model:
+  base_model: SH65
+  model: SH65
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SH65_bed.STL
+  thumbnail: SH65_cover.png
+---
+kind: printer
+technology: FFF
+name: SH65 IDRE (0.4 nozzle)
+id: SH65 IDRE (0.4 nozzle)
+model:
+  base_model: SH65 IDRE
+  model: SH65 IDRE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- SH65 IDRE
+visual:
+  bed_model: SH65_bed.STL
+  thumbnail: SH65 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: SH65 IDRE COPY MODE (0.4 nozzle)
+id: SH65 IDRE COPY MODE (0.4 nozzle)
+model:
+  base_model: SH65 IDRE
+  model: SH65 IDRE COPY MODE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- SH65 IDRE
+visual:
+  bed_model: SH65_bed.STL
+  thumbnail: SH65 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: SH65 IDRE MIRROR MODE (0.4 nozzle)
+id: SH65 IDRE MIRROR MODE (0.4 nozzle)
+model:
+  base_model: SH65 IDRE
+  model: SH65 IDRE MIRROR MODE (0.4 nozzle)
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+legacy_printer_model:
+- SH65 IDRE
+visual:
+  bed_model: SH65_bed.STL
+  thumbnail: SH65 IDRE_cover.png
+---
+kind: printer
+technology: FFF
+name: SH65 Performance
+id: SH65 Performance
+model:
+  base_model: SH65 Performance
+  model: SH65 Performance
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SH65_bed.STL
+  thumbnail: SH65 Performance_cover.png
+---
+kind: printer
+technology: FFF
+name: SH65 Stage 2
+id: SH65 Stage 2
+model:
+  base_model: SH65 Stage 2
+  model: SH65 Stage 2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SH65_bed.STL
+  thumbnail: SH65 Stage 2_cover.png
+---
+kind: printer
+technology: FFF
+name: VS20MK2
+id: VS20MK2
+model:
+  base_model: VS20MK2
+  model: VS20MK2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS20_bed.STL
+  thumbnail: VS20MK2_cover.png
+---
+kind: printer
+technology: FFF
+name: VS30MK2
+id: VS30MK2
+model:
+  base_model: VS30MK2
+  model: VS30MK2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS30PRO_bed.STL
+  thumbnail: VS30MK2_cover.png
+---
+kind: printer
+technology: FFF
+name: VS30MK3
+id: VS30MK3
+model:
+  base_model: VS30MK3
+  model: VS30MK3
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS30U_bed.STL
+  thumbnail: VS30MK3_cover.png
+---
+kind: printer
+technology: FFF
+name: VS30MK3 Stage 2
+id: VS30MK3 Stage 2
+model:
+  base_model: VS30MK3 Stage 2
+  model: VS30MK3 Stage 2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS30U_bed.STL
+  thumbnail: VS30MK3 Stage 2_cover.png
+---
+kind: printer
+technology: FFF
+name: VS30SC
+id: VS30SC
+model:
+  base_model: VS30SC
+  model: VS30SC
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS30U_bed.STL
+  thumbnail: VS30SC_cover.png
+---
+kind: printer
+technology: FFF
+name: VS30SC2
+id: VS30SC2
+model:
+  base_model: VS30SC2
+  model: VS30SC2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS30U_bed.STL
+  thumbnail: VS30SC2_cover.png
+---
+kind: printer
+technology: FFF
+name: VS30SC2 Performance
+id: VS30SC2 Performance
+model:
+  base_model: VS30SC2 Performance
+  model: VS30SC2 Performance
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS30U_bed.STL
+  thumbnail: VS30SC2 Performance_cover.png
+---
+kind: printer
+technology: FFF
+name: VS30SC2 Stage 2
+id: VS30SC2 Stage 2
+model:
+  base_model: VS30SC2 Stage 2
+  model: VS30SC2 Stage 2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS30U_bed.STL
+  thumbnail: VS30SC2 Stage 2_cover.png
+---
+kind: printer
+technology: FFF
+name: VS30ULTRA
+id: VS30ULTRA
+model:
+  base_model: VS30ULTRA
+  model: VS30ULTRA
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: VS30U_bed.STL
+  thumbnail: VS30ULTRA_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: EXO42-0-4-nozzle
+name: EXO42 (0.4 nozzle)
+printer: EXO42
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO42-IDRE-0-4-nozzle
+name: EXO42 IDRE (0.4 nozzle)
+printer: EXO42 IDRE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO42-IDRE-COPY-MODE-0-4-nozzle
+name: EXO42 IDRE COPY MODE (0.4 nozzle)
+printer: EXO42 IDRE COPY MODE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO42-IDRE-MIRROR-MODE-0-4-nozzle
+name: EXO42 IDRE MIRROR MODE (0.4 nozzle)
+printer: EXO42 IDRE MIRROR MODE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO42-Performance-0-4-nozzle
+name: EXO42 Performance (0.4 nozzle)
+printer: EXO42 Performance
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO42-Stage-2-0-4-nozzle
+name: EXO42 Stage 2 (0.4 nozzle)
+printer: EXO42 Stage 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO65-0-6-nozzle
+name: EXO65 (0.6 nozzle)
+printer: EXO65
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO65-IDRE-0-4-nozzle
+name: EXO65 IDRE (0.4 nozzle)
+printer: EXO65 IDRE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO65-IDRE-COPY-MODE-0-4-nozzle
+name: EXO65 IDRE COPY MODE (0.4 nozzle)
+printer: EXO65 IDRE COPY MODE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO65-IDRE-MIRROR-MODE-0-4-nozzle
+name: EXO65 IDRE MIRROR MODE (0.4 nozzle)
+printer: EXO65 IDRE MIRROR MODE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO65-Performance-0-4-nozzle
+name: EXO65 Performance (0.4 nozzle)
+printer: EXO65 Performance
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO65-Performance-0-6-nozzle
+name: EXO65 Performance (0.6 nozzle)
+printer: EXO65 Performance
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO65-Performance-0-8-nozzle
+name: EXO65 Performance (0.8 nozzle)
+printer: EXO65 Performance
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: EXO65-Stage-2-0-6-nozzle
+name: EXO65 Stage 2 (0.6 nozzle)
+printer: EXO65 Stage 2
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SH65-0-4-nozzle
+name: SH65 (0.4 nozzle)
+printer: SH65
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SH65-IDRE-0-4-nozzle
+name: SH65 IDRE (0.4 nozzle)
+printer: SH65 IDRE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SH65-IDRE-COPY-MODE-0-4-nozzle
+name: SH65 IDRE COPY MODE (0.4 nozzle)
+printer: SH65 IDRE COPY MODE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SH65-IDRE-MIRROR-MODE-0-4-nozzle
+name: SH65 IDRE MIRROR MODE (0.4 nozzle)
+printer: SH65 IDRE MIRROR MODE (0.4 nozzle)
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SH65-Performance-0-4-nozzle
+name: SH65 Performance (0.4 nozzle)
+printer: SH65 Performance
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SH65-Stage-2-0-4-nozzle
+name: SH65 Stage 2 (0.4 nozzle)
+printer: SH65 Stage 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS20MK2-0-4-nozzle
+name: VS20MK2 (0.4 nozzle)
+printer: VS20MK2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS30MK2-0-4-nozzle
+name: VS30MK2 (0.4 nozzle)
+printer: VS30MK2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS30MK3-0-4-nozzle
+name: VS30MK3 (0.4 nozzle)
+printer: VS30MK3
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS30MK3-Stage-2-0-4-nozzle
+name: VS30MK3 Stage 2 (0.4 nozzle)
+printer: VS30MK3 Stage 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS30SC-0-4-nozzle
+name: VS30SC (0.4 nozzle)
+printer: VS30SC
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS30SC2-0-4-nozzle
+name: VS30SC2 (0.4 nozzle)
+printer: VS30SC2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS30SC2-Performance-0-4-nozzle
+name: VS30SC2 Performance (0.4 nozzle)
+printer: VS30SC2 Performance
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS30SC2-Stage-2-0-4-nozzle
+name: VS30SC2 Stage 2 (0.4 nozzle)
+printer: VS30SC2 Stage 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: VS30ULTRA-0-4-nozzle
+name: VS30ULTRA (0.4 nozzle)
+printer: VS30ULTRA
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

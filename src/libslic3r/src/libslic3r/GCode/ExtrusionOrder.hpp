@@ -103,8 +103,20 @@ struct SupportPath {
     bool is_interface;
 };
 
+struct BrimPath {
+    SmoothPath path;
+    bool is_loop;
+};
+
 struct NormalExtrusions {
+    // the instance in instances_to_print; an instance may be visited more than once (Orca print_order)
+    std::size_t instance_index{ 0 };
     Point instance_offset;
+    // Orca: the per object skirt (at the first visit of its group on a layer) with the layer's skirt height and the
+    // brims (at the first visit of their instances on the first layer), in the print coordinates
+    std::vector<std::pair<std::size_t, GCode::SmoothPath>> skirt;
+    double skirt_height{ 0. };
+    std::vector<BrimPath> brim;
     std::vector<SupportPath> support_extrusions;
     std::vector<SliceExtrusions> slices_extrusions;
 };
@@ -128,15 +140,14 @@ using PathSmoothingFunction = std::function<PathSmoothingResult(
     const Layer *, const PrintRegion *, const ExtrusionEntityReference &, const unsigned extruder_id, std::optional<InstancePoint> &previous_position
 )>;
 
-struct BrimPath {
-    SmoothPath path;
-    bool is_loop;
-};
+// Orca: whether the skirt of a skirt / brim group is printed on this layer, with the layer's skirt height
+using SkirtGroupDueFunction = std::function<std::optional<double>(std::size_t group_idx)>;
 
 struct ExtruderExtrusions {
     unsigned extruder_id;
+    // Orca: the combined skirts (with the first extruder of the layer) and the layer's skirt height
     std::vector<std::pair<std::size_t, GCode::SmoothPath>> skirt;
-    std::vector<BrimPath> brim;
+    double skirt_height{ 0. };
     std::vector<OverridenExtrusions> overriden_extrusions;
     std::vector<NormalExtrusions> normal_extrusions;
     std::optional<Point> wipe_tower_start;
@@ -153,10 +164,11 @@ std::vector<ExtruderExtrusions> get_extrusions(
     const bool is_first_layer,
     const LayerTools &layer_tools,
     const std::vector<InstanceToPrint> &instances_to_print,
-    const std::map<unsigned int, std::pair<size_t, size_t>> &skirt_loops_per_extruder,
+    const SkirtGroupDueFunction &skirt_group_due,
+    // Orca: the instances whose brims are not printed yet, those printed now are taken out
+    std::set<ObjectInstanceID> &pending_brims,
     unsigned current_extruder_id,
     const PathSmoothingFunction &smooth_path,
-    bool get_brim,
     std::optional<Point> previous_position
 );
 

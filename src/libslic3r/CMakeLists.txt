@@ -149,6 +149,24 @@ set(SLIC3R_SOURCES
     src/libslic3r/Fill/FillBase.cpp
     src/libslic3r/Fill/FillConcentric.cpp
     src/libslic3r/Fill/FillConcentric.hpp
+    src/libslic3r/Fill/FillConcentricInternal.cpp
+    src/libslic3r/Fill/FillCornerSmoothing.cpp
+    src/libslic3r/ConnectedBodies.cpp
+    src/libslic3r/ConnectedBodies.hpp
+    src/libslic3r/Fill/FillCrossHatch.cpp
+    src/libslic3r/Fill/FillSpiralInset.cpp
+    src/libslic3r/Fill/FillTpmsAdaptive.cpp
+    src/libslic3r/Fill/FillTpmsD.cpp
+    src/libslic3r/Fill/FillTpmsFK.cpp
+    src/libslic3r/Fill/FillCornerSmoothing.hpp
+    src/libslic3r/Fill/FillCrossHatch.hpp
+    src/libslic3r/Fill/FillSpiralInset.hpp
+    src/libslic3r/Fill/FillTpmsAdaptive.hpp
+    src/libslic3r/Fill/FillTpmsD.hpp
+    src/libslic3r/Fill/FillTpmsFK.hpp
+    src/libslic3r/MaterialType.cpp
+    src/libslic3r/MaterialType.hpp
+    src/libslic3r/Fill/FillConcentricInternal.hpp
     src/libslic3r/Fill/FillEnsuring.cpp
     src/libslic3r/Fill/FillEnsuring.hpp
     src/libslic3r/Fill/FillGyroid.cpp
@@ -181,6 +199,7 @@ set(SLIC3R_SOURCES
     src/libslic3r/GCode/Thumbnails.hpp
     src/libslic3r/GCode/ToolOrdering.hpp
     src/libslic3r/GCode/WipeTower.hpp
+    include/libslic3r/GCode/FlushVolCalc.hpp
     src/libslic3r/GCode.cpp
     src/libslic3r/GCode.hpp
     src/libslic3r/GCode/AvoidCrossingPerimeters.cpp
@@ -209,6 +228,14 @@ set(SLIC3R_SOURCES
     src/libslic3r/GCode/PostProcessor.hpp
     src/libslic3r/GCode/PressureEqualizer.cpp
     src/libslic3r/GCode/PressureEqualizer.hpp
+    src/libslic3r/GCode/AdaptivePAProcessor.cpp
+    src/libslic3r/GCode/AdaptivePAProcessor.hpp
+    src/libslic3r/GCode/FanMover.cpp
+    src/libslic3r/GCode/FanMover.hpp
+    src/libslic3r/GCode/PchipInterpolator.cpp
+    src/libslic3r/GCode/PchipInterpolator.hpp
+    src/libslic3r/GCode/SmallAreaInfillFlowCompensator.cpp
+    src/libslic3r/GCode/SmallAreaInfillFlowCompensator.hpp
     src/libslic3r/GCode/PrintExtents.cpp
     src/libslic3r/GCode/PrintExtents.hpp
     src/libslic3r/GCode/RetractWhenCrossingPerimeters.cpp
@@ -242,8 +269,13 @@ set(SLIC3R_SOURCES
     src/libslic3r/GCode/Travels.cpp
     src/libslic3r/GCode/Travels.hpp
     src/libslic3r/GCode/Wipe.cpp
+    src/libslic3r/GCode/WipePathHelpers.cpp
+    src/libslic3r/GCode/OrderingStrategies.cpp
+    src/libslic3r/GCode/OrderingStrategies.hpp
+    src/libslic3r/GCode/WipePathHelpers.hpp
     src/libslic3r/GCode/Wipe.hpp
     src/libslic3r/GCode/WipeTower.cpp
+    src/libslic3r/GCode/FlushVolCalc.cpp
     src/libslic3r/GCode/WipeTowerIntegration.cpp
     src/libslic3r/GCode/WipeTowerIntegration.hpp
     src/libslic3r/Geometry.hpp
@@ -488,6 +520,7 @@ target_link_libraries(libslic3r PUBLIC
     clipper
     clipper_z
     slic3r-biz-parser
+    libnoise
 )
 
 if (APPLE)

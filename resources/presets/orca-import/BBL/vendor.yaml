@@ -1,0 +1,1096 @@
+kind: vendor
+id: BBL
+name: BBL
+version: 2.8.0+orca.02.08.00.15
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Bambu Lab A1
+  base_model: Bambu Lab A1
+  printer_configs_order:
+  - Bambu-Lab-A1-0-2-nozzle
+  - Bambu-Lab-A1-0-4-nozzle
+  - Bambu-Lab-A1-0-6-nozzle
+  - Bambu-Lab-A1-0-8-nozzle
+- label: Bambu Lab A1 mini
+  base_model: Bambu Lab A1 mini
+  printer_configs_order:
+  - Bambu-Lab-A1-mini-0-2-nozzle
+  - Bambu-Lab-A1-mini-0-4-nozzle
+  - Bambu-Lab-A1-mini-0-6-nozzle
+  - Bambu-Lab-A1-mini-0-8-nozzle
+- label: Bambu Lab A2L
+  base_model: Bambu Lab A2L
+  printer_configs_order:
+  - Bambu-Lab-A2L-0-2-nozzle
+  - Bambu-Lab-A2L-0-4-nozzle
+  - Bambu-Lab-A2L-0-6-nozzle
+  - Bambu-Lab-A2L-0-8-nozzle
+- label: Bambu Lab H2C
+  base_model: Bambu Lab H2C
+  printer_configs_order:
+  - Bambu-Lab-H2C-0-2-nozzle
+  - Bambu-Lab-H2C-0-4-nozzle
+  - Bambu-Lab-H2C-0-6-nozzle
+  - Bambu-Lab-H2C-0-8-nozzle
+- label: Bambu Lab H2D
+  base_model: Bambu Lab H2D
+  printer_configs_order:
+  - Bambu-Lab-H2D-0-2-nozzle
+  - Bambu-Lab-H2D-0-4-nozzle
+  - Bambu-Lab-H2D-0-6-nozzle
+  - Bambu-Lab-H2D-0-8-nozzle
+- label: Bambu Lab H2D Pro
+  base_model: Bambu Lab H2D Pro
+  printer_configs_order:
+  - Bambu-Lab-H2D-Pro-0-2-nozzle
+  - Bambu-Lab-H2D-Pro-0-4-nozzle
+  - Bambu-Lab-H2D-Pro-0-6-nozzle
+  - Bambu-Lab-H2D-Pro-0-8-nozzle
+- label: Bambu Lab H2S
+  base_model: Bambu Lab H2S
+  printer_configs_order:
+  - Bambu-Lab-H2S-0-2-nozzle
+  - Bambu-Lab-H2S-0-4-nozzle
+  - Bambu-Lab-H2S-0-6-nozzle
+  - Bambu-Lab-H2S-0-8-nozzle
+- label: Bambu Lab P1P
+  base_model: Bambu Lab P1P
+  printer_configs_order:
+  - Bambu-Lab-P1P-0-2-nozzle
+  - Bambu-Lab-P1P-0-4-nozzle
+  - Bambu-Lab-P1P-0-6-nozzle
+  - Bambu-Lab-P1P-0-8-nozzle
+- label: Bambu Lab P1S
+  base_model: Bambu Lab P1S
+  printer_configs_order:
+  - Bambu-Lab-P1S-0-2-nozzle
+  - Bambu-Lab-P1S-0-4-nozzle
+  - Bambu-Lab-P1S-0-6-nozzle
+  - Bambu-Lab-P1S-0-8-nozzle
+- label: Bambu Lab P2S
+  base_model: Bambu Lab P2S
+  printer_configs_order:
+  - Bambu-Lab-P2S-0-2-nozzle
+  - Bambu-Lab-P2S-0-4-nozzle
+  - Bambu-Lab-P2S-0-6-nozzle
+  - Bambu-Lab-P2S-0-8-nozzle
+- label: Bambu Lab X1
+  base_model: Bambu Lab X1
+  printer_configs_order:
+  - Bambu-Lab-X1-0-2-nozzle
+  - Bambu-Lab-X1-0-4-nozzle
+  - Bambu-Lab-X1-0-6-nozzle
+  - Bambu-Lab-X1-0-8-nozzle
+- label: Bambu Lab X1 Carbon
+  base_model: Bambu Lab X1 Carbon
+  printer_configs_order:
+  - Bambu-Lab-X1-Carbon-0-2-nozzle
+  - Bambu-Lab-X1-Carbon-0-4-nozzle
+  - Bambu-Lab-X1-Carbon-0-6-nozzle
+  - Bambu-Lab-X1-Carbon-0-8-nozzle
+- label: Bambu Lab X1E
+  base_model: Bambu Lab X1E
+  printer_configs_order:
+  - Bambu-Lab-X1E-0-2-nozzle
+  - Bambu-Lab-X1E-0-4-nozzle
+  - Bambu-Lab-X1E-0-6-nozzle
+  - Bambu-Lab-X1E-0-8-nozzle
+- label: Bambu Lab X2D
+  base_model: Bambu Lab X2D
+  printer_configs_order:
+  - Bambu-Lab-X2D-0-2-nozzle
+  - Bambu-Lab-X2D-0-4-nozzle
+  - Bambu-Lab-X2D-0-6-nozzle
+  - Bambu-Lab-X2D-0-8-nozzle
+---
+kind: printer
+technology: FFF
+name: Bambu Lab A1
+id: Bambu Lab A1
+model:
+  base_model: Bambu Lab A1
+  model: Bambu Lab A1
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-X1.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab A1_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab A1 mini
+id: Bambu Lab A1 mini
+model:
+  base_model: Bambu Lab A1 mini
+  model: Bambu Lab A1 mini
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-A1M.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab A1 mini_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab A2L
+id: Bambu Lab A2L
+model:
+  base_model: Bambu Lab A2L
+  model: Bambu Lab A2L
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-H2C.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab A2L_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab H2C
+id: Bambu Lab H2C
+model:
+  base_model: Bambu Lab H2C
+  model: Bambu Lab H2C
+tool_count: 2
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-H2C.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab H2C_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab H2D
+id: Bambu Lab H2D
+model:
+  base_model: Bambu Lab H2D
+  model: Bambu Lab H2D
+tool_count: 2
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-H2D.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab H2D_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab H2D Pro
+id: Bambu Lab H2D Pro
+model:
+  base_model: Bambu Lab H2D Pro
+  model: Bambu Lab H2D Pro
+tool_count: 2
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-H2D.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab H2D Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab H2S
+id: Bambu Lab H2S
+model:
+  base_model: Bambu Lab H2S
+  model: Bambu Lab H2S
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-O1S.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab H2S_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab P1P
+id: Bambu Lab P1P
+model:
+  base_model: Bambu Lab P1P
+  model: Bambu Lab P1P
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-X1.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab P1P_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab P1S
+id: Bambu Lab P1S
+model:
+  base_model: Bambu Lab P1S
+  model: Bambu Lab P1S
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-X1.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab P1S_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab P2S
+id: Bambu Lab P2S
+model:
+  base_model: Bambu Lab P2S
+  model: Bambu Lab P2S
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-X1.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab P2S_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab X1
+id: Bambu Lab X1
+model:
+  base_model: Bambu Lab X1
+  model: Bambu Lab X1
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-X1.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab X1_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab X1 Carbon
+id: Bambu Lab X1 Carbon
+model:
+  base_model: Bambu Lab X1 Carbon
+  model: Bambu Lab X1 Carbon
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-X1.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab X1 Carbon_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab X1E
+id: Bambu Lab X1E
+model:
+  base_model: Bambu Lab X1E
+  model: Bambu Lab X1E
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-X1.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab X1E_cover.png
+---
+kind: printer
+technology: FFF
+name: Bambu Lab X2D
+id: Bambu Lab X2D
+model:
+  base_model: Bambu Lab X2D
+  model: Bambu Lab X2D
+tool_count: 2
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: bbl-3dp-X1.stl
+  bed_texture: bbl-3dp-logo.svg
+  thumbnail: Bambu Lab X2D_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Bambu-Lab-A1-0-2-nozzle
+name: Bambu Lab A1 0.2 nozzle
+printer: Bambu Lab A1
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A1-0-4-nozzle
+name: Bambu Lab A1 0.4 nozzle
+printer: Bambu Lab A1
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A1-0-6-nozzle
+name: Bambu Lab A1 0.6 nozzle
+printer: Bambu Lab A1
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A1-0-8-nozzle
+name: Bambu Lab A1 0.8 nozzle
+printer: Bambu Lab A1
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A1-mini-0-2-nozzle
+name: Bambu Lab A1 mini 0.2 nozzle
+printer: Bambu Lab A1 mini
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A1-mini-0-4-nozzle
+name: Bambu Lab A1 mini 0.4 nozzle
+printer: Bambu Lab A1 mini
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A1-mini-0-6-nozzle
+name: Bambu Lab A1 mini 0.6 nozzle
+printer: Bambu Lab A1 mini
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A1-mini-0-8-nozzle
+name: Bambu Lab A1 mini 0.8 nozzle
+printer: Bambu Lab A1 mini
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A2L-0-2-nozzle
+name: Bambu Lab A2L 0.2 nozzle
+printer: Bambu Lab A2L
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A2L-0-4-nozzle
+name: Bambu Lab A2L 0.4 nozzle
+printer: Bambu Lab A2L
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A2L-0-6-nozzle
+name: Bambu Lab A2L 0.6 nozzle
+printer: Bambu Lab A2L
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-A2L-0-8-nozzle
+name: Bambu Lab A2L 0.8 nozzle
+printer: Bambu Lab A2L
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2C-0-2-nozzle
+name: Bambu Lab H2C 0.2 nozzle
+printer: Bambu Lab H2C
+tool_count: 2
+tools:
+- tool: '0.2'
+  features:
+    extruder_index: 0
+- tool: '0.2'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2C-0-4-nozzle
+name: Bambu Lab H2C 0.4 nozzle
+printer: Bambu Lab H2C
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2C-0-6-nozzle
+name: Bambu Lab H2C 0.6 nozzle
+printer: Bambu Lab H2C
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2C-0-8-nozzle
+name: Bambu Lab H2C 0.8 nozzle
+printer: Bambu Lab H2C
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2D-0-2-nozzle
+name: Bambu Lab H2D 0.2 nozzle
+printer: Bambu Lab H2D
+tool_count: 2
+tools:
+- tool: '0.2'
+  features:
+    extruder_index: 0
+- tool: '0.2'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2D-0-4-nozzle
+name: Bambu Lab H2D 0.4 nozzle
+printer: Bambu Lab H2D
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2D-0-6-nozzle
+name: Bambu Lab H2D 0.6 nozzle
+printer: Bambu Lab H2D
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2D-0-8-nozzle
+name: Bambu Lab H2D 0.8 nozzle
+printer: Bambu Lab H2D
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2D-Pro-0-2-nozzle
+name: Bambu Lab H2D Pro 0.2 nozzle
+printer: Bambu Lab H2D Pro
+tool_count: 2
+tools:
+- tool: '0.2'
+  features:
+    extruder_index: 0
+- tool: '0.2'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2D-Pro-0-4-nozzle
+name: Bambu Lab H2D Pro 0.4 nozzle
+printer: Bambu Lab H2D Pro
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2D-Pro-0-6-nozzle
+name: Bambu Lab H2D Pro 0.6 nozzle
+printer: Bambu Lab H2D Pro
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2D-Pro-0-8-nozzle
+name: Bambu Lab H2D Pro 0.8 nozzle
+printer: Bambu Lab H2D Pro
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2S-0-2-nozzle
+name: Bambu Lab H2S 0.2 nozzle
+printer: Bambu Lab H2S
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2S-0-4-nozzle
+name: Bambu Lab H2S 0.4 nozzle
+printer: Bambu Lab H2S
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2S-0-6-nozzle
+name: Bambu Lab H2S 0.6 nozzle
+printer: Bambu Lab H2S
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-H2S-0-8-nozzle
+name: Bambu Lab H2S 0.8 nozzle
+printer: Bambu Lab H2S
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P1P-0-2-nozzle
+name: Bambu Lab P1P 0.2 nozzle
+printer: Bambu Lab P1P
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P1P-0-4-nozzle
+name: Bambu Lab P1P 0.4 nozzle
+printer: Bambu Lab P1P
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P1P-0-6-nozzle
+name: Bambu Lab P1P 0.6 nozzle
+printer: Bambu Lab P1P
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P1P-0-8-nozzle
+name: Bambu Lab P1P 0.8 nozzle
+printer: Bambu Lab P1P
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P1S-0-2-nozzle
+name: Bambu Lab P1S 0.2 nozzle
+printer: Bambu Lab P1S
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P1S-0-4-nozzle
+name: Bambu Lab P1S 0.4 nozzle
+printer: Bambu Lab P1S
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P1S-0-6-nozzle
+name: Bambu Lab P1S 0.6 nozzle
+printer: Bambu Lab P1S
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P1S-0-8-nozzle
+name: Bambu Lab P1S 0.8 nozzle
+printer: Bambu Lab P1S
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P2S-0-2-nozzle
+name: Bambu Lab P2S 0.2 nozzle
+printer: Bambu Lab P2S
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P2S-0-4-nozzle
+name: Bambu Lab P2S 0.4 nozzle
+printer: Bambu Lab P2S
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P2S-0-6-nozzle
+name: Bambu Lab P2S 0.6 nozzle
+printer: Bambu Lab P2S
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-P2S-0-8-nozzle
+name: Bambu Lab P2S 0.8 nozzle
+printer: Bambu Lab P2S
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1-0-2-nozzle
+name: Bambu Lab X1 0.2 nozzle
+printer: Bambu Lab X1
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1-0-4-nozzle
+name: Bambu Lab X1 0.4 nozzle
+printer: Bambu Lab X1
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1-0-6-nozzle
+name: Bambu Lab X1 0.6 nozzle
+printer: Bambu Lab X1
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1-0-8-nozzle
+name: Bambu Lab X1 0.8 nozzle
+printer: Bambu Lab X1
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1-Carbon-0-2-nozzle
+name: Bambu Lab X1 Carbon 0.2 nozzle
+printer: Bambu Lab X1 Carbon
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1-Carbon-0-4-nozzle
+name: Bambu Lab X1 Carbon 0.4 nozzle
+printer: Bambu Lab X1 Carbon
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1-Carbon-0-6-nozzle
+name: Bambu Lab X1 Carbon 0.6 nozzle
+printer: Bambu Lab X1 Carbon
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1-Carbon-0-8-nozzle
+name: Bambu Lab X1 Carbon 0.8 nozzle
+printer: Bambu Lab X1 Carbon
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1E-0-2-nozzle
+name: Bambu Lab X1E 0.2 nozzle
+printer: Bambu Lab X1E
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1E-0-4-nozzle
+name: Bambu Lab X1E 0.4 nozzle
+printer: Bambu Lab X1E
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1E-0-6-nozzle
+name: Bambu Lab X1E 0.6 nozzle
+printer: Bambu Lab X1E
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X1E-0-8-nozzle
+name: Bambu Lab X1E 0.8 nozzle
+printer: Bambu Lab X1E
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X2D-0-2-nozzle
+name: Bambu Lab X2D 0.2 nozzle
+printer: Bambu Lab X2D
+tool_count: 2
+tools:
+- tool: '0.2'
+  features:
+    extruder_index: 0
+- tool: '0.2'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X2D-0-4-nozzle
+name: Bambu Lab X2D 0.4 nozzle
+printer: Bambu Lab X2D
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X2D-0-6-nozzle
+name: Bambu Lab X2D 0.6 nozzle
+printer: Bambu Lab X2D
+tool_count: 2
+tools:
+- tool: '0.6'
+  features:
+    extruder_index: 0
+- tool: '0.6'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Bambu-Lab-X2D-0-8-nozzle
+name: Bambu Lab X2D 0.8 nozzle
+printer: Bambu Lab X2D
+tool_count: 2
+tools:
+- tool: '0.8'
+  features:
+    extruder_index: 0
+- tool: '0.8'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate

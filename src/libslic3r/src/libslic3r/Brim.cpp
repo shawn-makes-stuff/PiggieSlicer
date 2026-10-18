@@ -1,20 +1,14 @@
-#include <boost/thread/lock_guard.hpp>
 #include <oneapi/tbb/blocked_range.h>
 #include <oneapi/tbb/parallel_for.h>
 #include <algorithm>
-#include <numeric>
-#include <unordered_set>
-#include <mutex>
 #include <cmath>
-#include <functional>
 #include <utility>
 #include <vector>
 #include <cassert>
-#include <cinttypes>
 #include <cstddef>
 
 #include "Slic3r/Biz/Algorithms/DouglasPeucker.hpp"
-#include "clipper/clipper_z.hpp"
+#include "libslic3r/Brim.hpp"
 #include "libslic3r/ClipperUtils.hpp"
 #include "libslic3r/EdgeGrid.hpp"
 #include "libslic3r/Layer.hpp"
@@ -27,7 +21,10 @@
 #include "libslic3r/ExtrusionRole.hpp"
 #include "libslic3r/Flow.hpp"
 #include "libslic3r/Geometry.hpp"
+#include "libslic3r/Geometry/ConvexHull.hpp"
 #include "libslic3r/LayerRegion.hpp"
+#include "libslic3r/MaterialType.hpp"
+#include "Slic3r/Biz/Algorithms/ModelVolume.hpp"
 #include "libslic3r/Line.hpp"
 #include "libslic3r/Point.hpp"
 #include "libslic3r/Polygon.hpp"
@@ -35,15 +32,16 @@
 #include "libslic3r/PrintBase.hpp"
 #include "Slic3r/Biz/Algorithms/BoundingBox.hpp"
 
-#if defined(BRIM_DEBUG_TO_SVG)
-    #include "Slic3r/Biz/Algorithms/SVG.hpp"
-#endif
-
 using namespace Slic3r::Biz;
 
 namespace Slic3r {
 
 namespace BB = Biz::Algorithms::BoundingBox;
+
+// Orca SCALED_RESOLUTION
+static constexpr double scaled_resolution = 0.0125 / SCALING_FACTOR;
+// Orca POLY_SIDE_COUNT: the sides of a brim ear circle
+static constexpr size_t poly_side_count = 24;
 
 static void append_and_translate(ExPolygons &dst, const ExPolygons &src, const PrintInstance &instance) {
     size_t dst_idx = dst.size();
@@ -59,13 +57,13 @@ static void append_and_translate(Polygons &dst, const Polygons &src, const Print
         dst[dst_idx].translate(instance.shift().x(), instance.shift().y());
 }
 
-static float max_brim_width(const SpanOfConstPtrs<PrintObject> &objects)
-{
-    assert(!objects.empty());
-    return float(std::accumulate(objects.begin(), objects.end(), 0.,
-                                 [](double partial_result, const PrintObject *object) {
-                                     return std::max(partial_result, object->config().get<Domain::BrimType>("brim_type") == Domain::BrimType::NoBrim ? 0. : object->config().get<double>("brim_width"));
-                                 }));
+// Orca: the brim area translated into the print coordinates, per instance.
+static void append_and_translate(const ExPolygons &src, const PrintInstance &instance, size_t instance_idx,
+                                 std::map<ObjectInstanceID, ExPolygons> &brim_area_map) {
+    ExPolygons src_shifted = src;
+    for (ExPolygon &expoly : src_shifted)
+        expoly.translate(instance.shift().x(), instance.shift().y());
+    Slic3r::append(brim_area_map[{ instance.print_object->id(), instance_idx }], std::move(src_shifted));
 }
 
 // Returns ExPolygons of the bottom layer of the print object after elephant foot compensation.
@@ -77,311 +75,409 @@ static ExPolygons get_print_object_bottom_layer_expolygons(const PrintObject &pr
     return ex_polygons;
 }
 
-// Returns ExPolygons of bottom layer for every print object in Print after elephant foot compensation.
-static std::vector<ExPolygons> get_print_bottom_layers_expolygons(const Print &print)
+// Orca brim_use_efc_outline: the brim follows the outline after the elephant foot compensation.
+static bool use_brim_efc_outline(const PrintObject &object)
 {
-    std::vector<ExPolygons> bottom_layers_expolygons;
-    bottom_layers_expolygons.reserve(print.objects().size());
-    for (const PrintObject *object : print.objects())
-        bottom_layers_expolygons.emplace_back(get_print_object_bottom_layer_expolygons(*object));
-
-    return bottom_layers_expolygons;
+    return object.config().get<bool>("brim_use_efc_outline") && object.config().get<double>("elefant_foot_compensation") > 0. &&
+        object.config().get<int>("elefant_foot_compensation_layers") > 0 && object.config().get<int>("raft_layers") == 0;
 }
 
-static ConstPrintObjectPtrs get_top_level_objects_with_brim(const Print &print, const std::vector<ExPolygons> &bottom_layers_expolygons)
+// Orca Polygon::convex_points() / concave_points(): the vertices turning left (convex) / right (concave) by more than
+// angle_threshold.
+static Points convex_concave_points(const Polygon &polygon, double angle_threshold, bool convex)
 {
-    assert(print.objects().size() == bottom_layers_expolygons.size());
-    Polygons             islands;
-    ConstPrintObjectPtrs island_to_object;
-    for(size_t print_object_idx = 0; print_object_idx < print.objects().size(); ++print_object_idx) {
-        const PrintObject *object = print.objects()[print_object_idx];
-        Polygons islands_object;
-        islands_object.reserve(bottom_layers_expolygons[print_object_idx].size());
-        for (const ExPolygon &ex_poly : bottom_layers_expolygons[print_object_idx])
-            islands_object.emplace_back(ex_poly.contour);
-
-        islands.reserve(islands.size() + object->instances().size() * islands_object.size());
-        for (const PrintInstance &instance : object->instances())
-            for (Polygon &poly : islands_object) {
-                islands.emplace_back(poly);
-                islands.back().translate(instance.shift());
-                island_to_object.emplace_back(object);
-            }
+    const Points &poly = polygon.points;
+    if (poly.size() < 3)
+        return {};
+    // The filter function is cross2(v1, v2) {>,<} 0, then the angle at the vertex larger than the threshold: the
+    // cos of the angle between the edges below the cos of the threshold (just above it, so a right angle does not
+    // pass a threshold of a right angle).
+    const double cos_threshold = std::cos(std::nextafter(angle_threshold, +INFINITY));
+    Points out;
+    Point  p1 = poly.back();
+    Vec2d  v1 = (p1 - *(poly.end() - 2)).cast<double>();
+    for (const Point &p2 : poly) {
+        const Vec2d v2 = (p2 - p1).cast<double>();
+        const double cross = cross2(v1, v2);
+        if ((convex ? cross > 0. : cross < 0.) && (angle_threshold <= EPSILON || v1.normalized().dot(v2.normalized()) < cos_threshold))
+            out.emplace_back(p1);
+        v1 = v2;
+        p1 = p2;
     }
-    assert(islands.size() == island_to_object.size());
+    return out;
+}
 
-    ClipperLib_Z::Paths islands_clip;
-    islands_clip.reserve(islands.size());
-    for (const Polygon &poly : islands) {
-        islands_clip.emplace_back();
-        ClipperLib_Z::Path &island_clip = islands_clip.back();
-        island_clip.reserve(poly.points.size());
-        int island_idx = int(&poly - &islands.front());
-        // The Z coordinate carries index of the island used to get the pointer to the object.
-        for (const Point &pt : poly.points)
-            island_clip.emplace_back(pt.x(), pt.y(), island_idx + 1);
-    }
-
-    // Init Clipper
-    ClipperLib_Z::Clipper clipper;
-    // Assign the maximum Z from four points. This values is valid index of the island
-    clipper.ZFillFunction([](const ClipperLib_Z::IntPoint &e1bot, const ClipperLib_Z::IntPoint &e1top, const ClipperLib_Z::IntPoint &e2bot,
-                             const ClipperLib_Z::IntPoint &e2top, ClipperLib_Z::IntPoint &pt) {
-        pt.z() = std::max(std::max(e1bot.z(), e1top.z()), std::max(e2bot.z(), e2top.z()));
-    });
-    // Add islands
-    clipper.AddPaths(islands_clip, ClipperLib_Z::ptSubject, true);
-    // Execute union operation to construct polytree
-    ClipperLib_Z::PolyTree islands_polytree;
-    //FIXME likely pftNonZero or ptfPositive would be better. Why are we using ptfEvenOdd for Unions?
-    clipper.Execute(ClipperLib_Z::ctUnion, islands_polytree, ClipperLib_Z::pftEvenOdd, ClipperLib_Z::pftEvenOdd);
-
-    std::unordered_set<size_t> processed_objects_idx;
-    ConstPrintObjectPtrs       top_level_objects_with_brim;
-    for (int i = 0; i < islands_polytree.ChildCount(); ++i) {
-        for (const ClipperLib_Z::IntPoint &point : islands_polytree.Childs[i]->Contour) {
-            if (point.z() != 0 && processed_objects_idx.find(island_to_object[point.z() - 1]->id().id) == processed_objects_idx.end()) {
-                top_level_objects_with_brim.emplace_back(island_to_object[point.z() - 1]);
-                processed_objects_idx.insert(island_to_object[point.z() - 1]->id().id);
+// Orca make_brim_ears_auto (from SuperSlicer): circles of the ear size at the sharp corners of the outline (the
+// convex ones of the outer outline, the concave ones of the holes).
+static ExPolygons make_brim_ears_auto(const ExPolygons &obj_expoly, coord_t size_ear, coord_t ear_detection_length,
+                                      double brim_ears_max_angle, bool is_outer_brim)
+{
+    ExPolygons mouse_ears_ex;
+    if (size_ear <= 0)
+        return mouse_ears_ex;
+    // the places to put the ears
+    const double angle_threshold = (180 - brim_ears_max_angle) * PI / 180.0;
+    Points pt_ears;
+    for (const ExPolygon &poly : obj_expoly) {
+        Polygon decimated_polygon = poly.contour;
+        if (ear_detection_length > 0) {
+            Points points = poly.contour.points;
+            points.push_back(points.front());
+            points = Algorithms::DouglasPeucker::douglas_peucker(points, double(ear_detection_length));
+            // not below 4 points, as that surely fills everything anyway
+            if (points.size() > 4) {
+                points.erase(points.end() - 1);
+                decimated_polygon.points = points;
             }
         }
+        append(pt_ears, convex_concave_points(decimated_polygon, angle_threshold, is_outer_brim));
     }
-    return top_level_objects_with_brim;
+
+    // the ear pattern
+    Polygon point_round;
+    for (size_t i = 0; i < poly_side_count; i++) {
+        const double angle = (2.0 * PI * i) / poly_side_count;
+        point_round.points.emplace_back(coord_t(size_ear * cos(angle)), coord_t(size_ear * sin(angle)));
+    }
+    for (const Point &pt : pt_ears) {
+        mouse_ears_ex.emplace_back();
+        mouse_ears_ex.back().contour = point_round;
+        mouse_ears_ex.back().contour.translate(pt);
+    }
+    return mouse_ears_ex;
 }
 
-static Polygons top_level_outer_brim_islands(const ConstPrintObjectPtrs &top_level_objects_with_brim, const double scaled_resolution)
+// Orca getadhesionCoeff (BBS): the adhesion coefficient of the material of the model parts printed on the first layer
+// (the last one found).
+static double get_adhesion_coefficient(const PrintObject &object)
 {
-    Polygons islands;
-    for (const PrintObject *object : top_level_objects_with_brim) {
-        if (!object->has_brim())
-            continue;
+    std::vector<unsigned int> first_layer_extruders;
+    for (const LayerRegion *region : object.layers().front()->regions())
+        if (region->has_extrusions())
+            first_layer_extruders.push_back(region->region().extruder(frExternalPerimeter));
+    const std::vector<std::string> filament_types = object.print()->config().get<std::vector<std::string>>("filament_type");
+    double adhesion_coefficient = 1;
+    for (const Domain::ModelVolume *model_volume : object.model_object()->volumes)
+        for (unsigned int extruder : first_layer_extruders)
+            if (model_volume->extruder_id() == int(extruder) && extruder >= 1 && extruder <= filament_types.size())
+                MaterialType::get_adhesion_coefficient(filament_types[extruder - 1], adhesion_coefficient);
+    return adhesion_coefficient;
+}
 
-        //FIXME how about the brim type?
-        auto     brim_separation = float(scale_(object->config().get<double>("brim_separation")));
-        Polygons islands_object;
-        for (const ExPolygon &ex_poly : get_print_object_bottom_layer_expolygons(*object)) {
-            Polygons contour_offset = offset(ex_poly.contour, brim_separation, ClipperLib::jtSquare);
-            for (Polygon &poly : contour_offset)
-                Algorithms::DouglasPeucker::douglas_peucker(poly, scaled_resolution);
+// Orca Model::findMaxSpeed: the highest of the object's print speeds (250 mm/s if none).
+static double find_max_speed(const PrintObject &object)
+{
+    double max_speed = -1.;
+    for (const LayerRegion *layerm : object.layers().front()->regions()) {
+        const PrintRegion &region             = layerm->region();
+        const double       perimeter_speed    = region.extruder_config_value<double>("perimeter_speed", frPerimeter);
+        const double       external_speed     = region.extruder_config_value<Domain::FloatOrPercentage>("external_perimeter_speed", frExternalPerimeter).get_abs_value(perimeter_speed);
+        const double       infill_speed       = region.extruder_config_value<double>("infill_speed", frInfill);
+        const double       solid_infill_speed = region.extruder_config_value<Domain::FloatOrPercentage>("solid_infill_speed", frSolidInfill).get_abs_value(infill_speed);
+        const double       top_speed          = region.extruder_config_value<Domain::FloatOrPercentage>("top_solid_infill_speed", frTopSolidInfill).get_abs_value(solid_infill_speed);
+        const double       small_speed        = region.extruder_config_value<Domain::FloatOrPercentage>("small_perimeter_speed", frExternalPerimeter).get_abs_value(external_speed);
+        max_speed = std::max({ max_speed, perimeter_speed, external_speed, infill_speed, solid_infill_speed, top_speed, small_speed });
+    }
+    const double support_speed = object.config().get<double>("support_material_speed");
+    max_speed = std::max({ max_speed, support_speed,
+                           object.config().get<Domain::FloatOrPercentage>("small_support_perimeter_speed").get_abs_value(support_speed) });
+    return max_speed <= 0 ? 250. : max_speed;
+}
 
-            Slic3r::append(islands_object, std::move(contour_offset));
+// Orca Model::getThermalLength: the shortest thermal length of the materials of the model parts.
+static double get_thermal_length(const Print &print, const std::vector<const Domain::ModelVolume*> &volumes)
+{
+    const std::vector<std::string> filament_types = print.config().get<std::vector<std::string>>("filament_type");
+    double thermal_length = 200.;
+    for (const Domain::ModelVolume *volume : volumes)
+        if (volume->is_model_part()) {
+            double volume_thermal_length = 200.;
+            if (const int extruder = volume->extruder_id(); extruder >= 1 && size_t(extruder) <= filament_types.size())
+                MaterialType::get_thermal_length(filament_types[extruder - 1], volume_thermal_length);
+            thermal_length = std::min(thermal_length, volume_thermal_length);
         }
-
-        for (const PrintInstance &instance : object->instances())
-            append_and_translate(islands, islands_object, instance);
-    }
-    return islands;
+    return thermal_length;
 }
 
-static ExPolygons top_level_outer_brim_area(const Print                   &print,
-                                            const ConstPrintObjectPtrs    &top_level_objects_with_brim,
-                                            const std::vector<ExPolygons> &bottom_layers_expolygons,
-                                            const float                    no_brim_offset)
+// Orca compSecondMoment (BBS): the second moment of area of a polygon about the origin.
+static bool second_moment(Polygon poly, Vec2d &sm)
 {
-    assert(print.objects().size() == bottom_layers_expolygons.size());
-    std::unordered_set<size_t> top_level_objects_idx;
-    top_level_objects_idx.reserve(top_level_objects_with_brim.size());
-    for (const PrintObject *object : top_level_objects_with_brim)
-        top_level_objects_idx.insert(object->id().id);
+    Algorithms::Polygon::make_counter_clockwise(poly);
+    sm = Vec2d(0., 0.);
+    if (poly.points.size() < 3)
+        return false;
+    Vec2d p1 = poly.points.back().cast<double>();
+    for (const Point &p : poly.points) {
+        const Vec2d  p2 = p.cast<double>();
+        const double a  = cross2(p1, p2);
+        sm += Vec2d((p1.y() * p1.y() + p1.y() * p2.y() + p2.y() * p2.y()), (p1.x() * p1.x() + p1.x() * p2.x() + p2.x() * p2.x())) * a / 12;
+        p1 = p2;
+    }
+    return true;
+}
+
+// The area, centroid and second moment of area about the centroid of an expolygon.
+struct ExPolyProp {
+    double area = 0;
+    Vec2d  centroid;
+    Vec2d  second_moment;
+};
+static bool second_moment(const ExPolygon &expoly, ExPolyProp &prop)
+{
+    double area = expoly.contour.area();
+    Vec2d  cent = expoly.contour.centroid().cast<double>() * area;
+    Vec2d  sm;
+    if (! second_moment(expoly.contour, sm))
+        return false;
+    for (const Polygon &hole : expoly.holes) {
+        const double a = hole.area();
+        area += hole.area();
+        cent += hole.centroid().cast<double>() * a;
+        Vec2d smh;
+        if (second_moment(hole, smh))
+            sm += -smh;
+    }
+    cent = cent / area;
+    sm   = sm - Vec2d(cent.y() * cent.y(), cent.x() * cent.x()) * area;
+    prop.area          = area;
+    prop.centroid      = cent;
+    prop.second_moment = sm;
+    return true;
+}
+
+// The second moment of area of expolygons about their common centroid.
+static bool second_moment(const ExPolygons &expolys, double &sm_x, double &sm_y)
+{
+    if (expolys.empty())
+        return false;
+    std::vector<ExPolyProp> props;
+    for (const ExPolygon &expoly : expolys)
+        if (ExPolyProp prop; second_moment(expoly, prop))
+            props.push_back(prop);
+    if (props.empty())
+        return false;
+    double total_area = 0.;
+    Vec2d  static_moment(0., 0.);
+    for (const ExPolyProp &prop : props) {
+        total_area += prop.area;
+        static_moment += prop.centroid * prop.area;
+    }
+    const double total_centroid_x = static_moment.x() / total_area;
+    const double total_centroid_y = static_moment.y() / total_area;
+    sm_x = 0;
+    sm_y = 0;
+    for (const ExPolyProp &prop : props) {
+        const double delta_x = prop.centroid.x() - total_centroid_x;
+        const double delta_y = prop.centroid.y() - total_centroid_y;
+        sm_x += prop.second_moment.x() + prop.area * delta_y * delta_y;
+        sm_y += prop.second_moment.y() + prop.area * delta_x * delta_x;
+    }
+    return true;
+}
+
+// Orca configBrimWidthByVolumeGroups (BBS): the auto brim width of a group of model parts, by the adhesion, the speed,
+// the group's height, its second moment of area and its thermal length; none below 5 mm, at most 18 mm.
+static double brim_width_by_volume_group(const PrintObject &object, double adhesion, double max_speed,
+                                         const std::vector<const Domain::ModelVolume*> &volumes, const ExPolygons &expolys, double &group_height)
+{
+    Domain::BoundingBox3d merged_bbox;
+    for (const Domain::ModelVolume *volume : volumes)
+        if (volume->is_model_part()) {
+            const Domain::ModelObject &model_object = *object.model_object();
+            const Transform3d t = model_object.instances.empty() ? volume->get_matrix() : Transform3d(model_object.instances.front()->get_matrix() * volume->get_matrix());
+            merged_bbox = BB::merge(merged_bbox, Algorithms::ModelVolume::transformed_bounding_box(*volume, t));
+        }
+    const double height = BB::sizes(merged_bbox)(2);
+    group_height = height;
+    // the second moment of the first layer of the group
+    double ixx = -1.e30, iyy = -1.e30;
+    if (! expolys.empty() && ! second_moment(expolys, ixx, iyy))
+        ixx = iyy = -1.e30;
+    ixx = ixx * SCALING_FACTOR * SCALING_FACTOR * SCALING_FACTOR * SCALING_FACTOR;
+    iyy = iyy * SCALING_FACTOR * SCALING_FACTOR * SCALING_FACTOR * SCALING_FACTOR;
+
+    // the bounding box of the first layer of the group
+    BoundingBox bbox2;
+    for (const ExPolygon &expoly : expolys)
+        bbox2 = BB::merge(bbox2, get_extents(expoly.contour));
+    const Point  size2 = BB::sizes(bbox2);
+    const double thermal_length     = std::sqrt(double(size2.x()) * size2.x() + double(size2.y()) * size2.y()) * SCALING_FACTOR;
+    const double thermal_length_ref = get_thermal_length(*object.print(), volumes);
+
+    const double height_to_area = std::max(height / ixx * (size2.y() * SCALING_FACTOR), height / iyy * (size2.x() * SCALING_FACTOR)) * height / 1920;
+    double brim_width = adhesion * std::min(std::min(std::max(height_to_area * max_speed, thermal_length * 8. / thermal_length_ref * std::min(height, 30.) / 30.), 18.), 1.5 * thermal_length);
+    // small brims are omitted
+    if (brim_width < 5 && brim_width < 1.5 * thermal_length)
+        brim_width = 0;
+    // large brims are omitted
+    if (brim_width > 18)
+        brim_width = 18.;
+    return brim_width;
+}
+
+// Orca outer_inner_brim_area (BBS): the brim areas per object instance (outer / inner / ears), not over the objects,
+// their supports, the wipe tower and outside of the bed, each touching its object or another brim. Returns the area
+// of all of them.
+static ExPolygons outer_inner_brim_area(const Print &print, const float no_brim_offset, std::map<ObjectInstanceID, ExPolygons> &brim_area_map)
+{
+    const Flow flow = print.brim_flow();
 
     ExPolygons brim_area;
     ExPolygons no_brim_area;
-    for(size_t print_object_idx = 0; print_object_idx < print.objects().size(); ++print_object_idx) {
-        const PrintObject *object            = print.objects()[print_object_idx];
-        const Domain::BrimType brim_type     = object->config().get<Domain::BrimType>("brim_type");
-        const float        brim_separation   = scale_(object->config().get<double>("brim_separation"));
-        const float        brim_width        = scale_(object->config().get<double>("brim_width"));
-        const bool         is_top_outer_brim = top_level_objects_idx.find(object->id().id) != top_level_objects_idx.end();
+    Polygons   holes;
+    ExPolygons object_islands;
+    for (const PrintObject *object : print.objects()) {
+        const Domain::BrimType brim_type        = object->config().get<Domain::BrimType>("brim_type");
+        const bool             has_brim_auto    = brim_type == Domain::BrimType::AutoBrim;
+        const float            brim_offset      = scale_(object->config().get<double>("brim_separation"));
+        const double           flow_width       = flow.scaled_spacing() * SCALING_FACTOR;
+        float                  brim_width       = scale_(floor(object->config().get<double>("brim_width") / flow_width / 2) * flow_width * 2);
+        const float            scaled_additional_brim_width = scale_(floor(5 / flow_width / 2) * flow_width * 2);
+        const float            scaled_half_min_adh_length   = scale_(1.1);
+        const float            scaled_flow_width = flow.scaled_spacing();
+        const bool             use_auto_brim_ears  = brim_type == Domain::BrimType::BrimEars;
+        const bool             use_inner_brim_ears = use_auto_brim_ears && ! object->config().get<bool>("brim_ears_outer_only");
+        const bool             has_inner_brim = brim_type == Domain::BrimType::InnerOnly || brim_type == Domain::BrimType::OuterAndInner || use_inner_brim_ears;
+        const bool             has_outer_brim = brim_type == Domain::BrimType::OuterOnly || brim_type == Domain::BrimType::OuterAndInner || has_brim_auto || use_auto_brim_ears;
+        const coord_t          ear_detection_length = scale_(object->config().get<double>("brim_ears_detection_length"));
+        const double           brim_ears_max_angle  = object->config().get<double>("brim_ears_max_angle");
+        const ExPolygons       brim_slices = use_brim_efc_outline(*object) ? get_print_object_bottom_layer_expolygons(*object) : object->layers().front()->lslices;
 
         ExPolygons brim_area_object;
         ExPolygons no_brim_area_object;
-        for (const ExPolygon &ex_poly : bottom_layers_expolygons[print_object_idx]) {
-            if ((brim_type == Domain::BrimType::OuterOnly || brim_type == Domain::BrimType::OuterAndInner) && is_top_outer_brim)
-                append(brim_area_object, diff_ex(offset(ex_poly.contour, brim_width + brim_separation, ClipperLib::jtSquare), offset(ex_poly.contour, brim_separation, ClipperLib::jtSquare)));
-
-            // After 7ff76d07684858fd937ef2f5d863f105a10f798e offset and shrink don't work with CW polygons (holes), so let's make it CCW.
-            Polygons ex_poly_holes_reversed = ex_poly.holes;
-            Algorithms::Polygon::reverse(ex_poly_holes_reversed);
-            if (brim_type == Domain::BrimType::OuterOnly || brim_type == Domain::BrimType::NoBrim)
-                append(no_brim_area_object, shrink_ex(ex_poly_holes_reversed, no_brim_offset, ClipperLib::jtSquare));
-
-            if (brim_type == Domain::BrimType::InnerOnly || brim_type == Domain::BrimType::NoBrim)
-                append(no_brim_area_object, diff_ex(offset(ex_poly.contour, no_brim_offset, ClipperLib::jtSquare), ex_poly_holes_reversed));
-
-            if (brim_type != Domain::BrimType::NoBrim)
-                append(no_brim_area_object, offset_ex(ExPolygon(ex_poly.contour), brim_separation, ClipperLib::jtSquare));
-
-            no_brim_area_object.emplace_back(ex_poly.contour);
-        }
-
-        for (const PrintInstance &instance : object->instances()) {
-            append_and_translate(brim_area, brim_area_object, instance);
-            append_and_translate(no_brim_area, no_brim_area_object, instance);
-        }
-    }
-
-    return diff_ex(brim_area, no_brim_area);
-}
-
-// Return vector of booleans indicated if polygons from bottom_layers_expolygons contain another polygon or not.
-// Every ExPolygon is counted as several Polygons (contour and holes). Contour polygon is always processed before holes.
-static std::vector<bool> has_polygons_nothing_inside(const Print &print, const std::vector<ExPolygons> &bottom_layers_expolygons)
-{
-    assert(print.objects().size() == bottom_layers_expolygons.size());
-    Polygons islands;
-    for(size_t print_object_idx = 0; print_object_idx < print.objects().size(); ++print_object_idx) {
-        const PrintObject *object         = print.objects()[print_object_idx];
-        const Polygons     islands_object = Algorithms::ExPolygon::to_polygons(bottom_layers_expolygons[print_object_idx]);
-
-        islands.reserve(islands.size() + object->instances().size() * islands_object.size());
-        for (const PrintInstance &instance : object->instances())
-            append_and_translate(islands, islands_object, instance);
-    }
-
-    ClipperLib_Z::Paths islands_clip;
-    islands_clip.reserve(islands.size());
-    for (const Polygon &poly : islands) {
-        size_t             island_idx = &poly - &islands.front();
-        ClipperLib_Z::Path island_clip;
-        for (const Point &pt : poly.points)
-            island_clip.emplace_back(pt.x(), pt.y(), island_idx + 1);
-        islands_clip.emplace_back(island_clip);
-    }
-
-    ClipperLib_Z::Clipper clipper;
-    // Always assign zero to detect cases when two polygons are overlapping.
-    clipper.ZFillFunction([](const ClipperLib_Z::IntPoint &e1bot, const ClipperLib_Z::IntPoint &e1top, const ClipperLib_Z::IntPoint &e2bot, const ClipperLib_Z::IntPoint &e2top, ClipperLib_Z::IntPoint &pt) {
-        pt.z() = 0;
-    });
-
-    clipper.AddPaths(islands_clip, ClipperLib_Z::ptSubject, true);
-    ClipperLib_Z::PolyTree islands_polytree;
-    clipper.Execute(ClipperLib_Z::ctUnion, islands_polytree, ClipperLib_Z::pftEvenOdd, ClipperLib_Z::pftEvenOdd);
-
-    std::vector<bool> has_nothing_inside(islands.size());
-    std::function<void(const ClipperLib_Z::PolyNode&)> check_contours = [&check_contours, &has_nothing_inside](const ClipperLib_Z::PolyNode &parent_node)->void {
-        if (!parent_node.Childs.empty())
-            for(const ClipperLib_Z::PolyNode *child_node : parent_node.Childs)
-                check_contours(*child_node);
-
-        if (parent_node.Childs.empty() && !parent_node.Contour.empty() && parent_node.Contour.front().z() != 0) {
-            int polygon_idx = parent_node.Contour.front().z();
-            assert(polygon_idx > 0 && polygon_idx <= int(has_nothing_inside.size()));
-
-            // The whole contour must have the same ID. In other cases, some counters overlap.
-            for (const ClipperLib_Z::IntPoint &point : parent_node.Contour)
-                if (polygon_idx != point.z())
-                    return;
-
-            has_nothing_inside[polygon_idx - 1] = true;
-        }
-    };
-
-    check_contours(islands_polytree);
-    return has_nothing_inside;
-}
-
-// INNERMOST means that ExPolygon doesn't contain any other ExPolygons.
-// NORMAL is for other cases.
-enum class InnerBrimType {NORMAL, INNERMOST};
-
-struct InnerBrimExPolygons
-{
-    ExPolygons    brim_area;
-    InnerBrimType type       = InnerBrimType::NORMAL;
-    double        brim_width = 0.;
-};
-
-static std::vector<InnerBrimExPolygons> inner_brim_area(const Print                   &print,
-                                                        const ConstPrintObjectPtrs    &top_level_objects_with_brim,
-                                                        const std::vector<ExPolygons> &bottom_layers_expolygons,
-                                                        const float                    no_brim_offset)
-{
-    assert(print.objects().size() == bottom_layers_expolygons.size());
-    std::vector<bool>          has_nothing_inside = has_polygons_nothing_inside(print, bottom_layers_expolygons);
-    std::unordered_set<size_t> top_level_objects_idx;
-    top_level_objects_idx.reserve(top_level_objects_with_brim.size());
-    for (const PrintObject *object : top_level_objects_with_brim)
-        top_level_objects_idx.insert(object->id().id);
-
-    std::vector<ExPolygons> brim_area_innermost(print.objects().size());
-    ExPolygons              brim_area;
-    ExPolygons              no_brim_area;
-    Polygons                holes_reversed;
-
-    // polygon_idx must correspond to idx generated inside has_polygons_nothing_inside()
-    size_t polygon_idx = 0;
-    for(size_t print_object_idx = 0; print_object_idx < print.objects().size(); ++print_object_idx) {
-        const PrintObject *object          = print.objects()[print_object_idx];
-        const Domain::BrimType brim_type   = object->config().get<Domain::BrimType>("brim_type");
-        const float        brim_separation = scale_(object->config().get<double>("brim_separation"));
-        const float        brim_width      = scale_(object->config().get<double>("brim_width"));
-        const bool         top_outer_brim  = top_level_objects_idx.find(object->id().id) != top_level_objects_idx.end();
-
-        ExPolygons brim_area_innermost_object;
-        ExPolygons brim_area_object;
-        ExPolygons no_brim_area_object;
-        Polygons   holes_reversed_object;
-        for (const ExPolygon &ex_poly : bottom_layers_expolygons[print_object_idx]) {
-            if (brim_type == Domain::BrimType::OuterOnly || brim_type == Domain::BrimType::OuterAndInner) {
-                if (top_outer_brim)
-                    no_brim_area_object.emplace_back(ex_poly);
-                else
-                    append(brim_area_object, diff_ex(offset(ex_poly.contour, brim_width + brim_separation, ClipperLib::jtSquare), offset(ex_poly.contour, brim_separation, ClipperLib::jtSquare)));
-            }
-
-            // After 7ff76d07684858fd937ef2f5d863f105a10f798e offset and shrink don't work with CW polygons (holes), so let's make it CCW.
-            Polygons ex_poly_holes_reversed = ex_poly.holes;
-            Algorithms::Polygon::reverse(ex_poly_holes_reversed);
-            for ([[maybe_unused]] const PrintInstance &instance : object->instances()) {
-                ++polygon_idx; // Increase idx because of the contour of the ExPolygon.
-
-                if (brim_type == Domain::BrimType::InnerOnly || brim_type == Domain::BrimType::OuterAndInner)
-                    for(const Polygon &hole : ex_poly_holes_reversed) {
-                        size_t hole_idx = &hole - &ex_poly_holes_reversed.front();
-                        if (has_nothing_inside[polygon_idx + hole_idx])
-                            append(brim_area_innermost_object, shrink_ex({hole}, brim_separation, ClipperLib::jtSquare));
-                        else
-                            append(brim_area_object, diff_ex(shrink_ex({hole}, brim_separation, ClipperLib::jtSquare), shrink_ex({hole}, brim_width + brim_separation, ClipperLib::jtSquare)));
+        ExPolygons no_brim_area_support;
+        Polygons   holes_object;
+        Polygons   holes_support;
+        // the brims by the groups of connected model parts
+        const double adhesion  = has_brim_auto ? get_adhesion_coefficient(*object) : 1.;
+        const double max_speed = has_brim_auto ? find_max_speed(*object) : 0.;
+        for (const PrintObject::VolumeGroupSlices &volume_group : object->first_layer_volume_groups()) {
+            std::vector<const Domain::ModelVolume*> group_volumes;
+            for (const Domain::ObjectID volume_id : volume_group.volume_ids)
+                for (const Domain::ModelVolume *volume : object->model_object()->volumes)
+                    if (volume->id() == volume_id) {
+                        group_volumes.push_back(volume);
+                        break;
                     }
-
-                polygon_idx += ex_poly.holes.size(); // Increase idx for every hole of the ExPolygon.
+            if (group_volumes.empty())
+                continue;
+            double group_height = 0.;
+            if (has_brim_auto) {
+                const double brim_width_raw = brim_width_by_volume_group(*object, adhesion, max_speed, group_volumes, volume_group.slices, group_height);
+                brim_width = scale_(floor(brim_width_raw / flow_width / 2) * flow_width * 2);
             }
+            // with the EFC outline, the group's slices within the compensated first layer
+            const ExPolygons group_slices = use_brim_efc_outline(*object) ? intersection_ex(brim_slices, volume_group.slices) : volume_group.slices;
+            for (const ExPolygon &ex_poly : group_slices) {
+                // an additional brim width if the part's adhesion area is too small and no brim is generated
+                float brim_width_mod;
+                if (brim_width < scale_(5.) && has_brim_auto && group_height > 10.)
+                    brim_width_mod = Algorithms::ExPolygon::area(ex_poly) / ex_poly.contour.length() < scaled_half_min_adh_length && brim_width < scaled_flow_width ?
+                        brim_width + scaled_additional_brim_width : brim_width;
+                else
+                    brim_width_mod = brim_width;
+                // limited to 1.5 times the bounding box size of a single polygon
+                if (has_brim_auto) {
+                    const Point size = BB::sizes(Algorithms::Polygon::get_bounding_box(ex_poly.contour));
+                    brim_width_mod = std::min(brim_width_mod, float(std::max(size.x(), size.y())));
+                }
+                // a whole number of loops
+                brim_width_mod = floor(brim_width_mod / scaled_flow_width / 2) * scaled_flow_width * 2;
 
-            if (brim_type == Domain::BrimType::InnerOnly || brim_type == Domain::BrimType::NoBrim)
-                append(no_brim_area_object, diff_ex(offset(ex_poly.contour, no_brim_offset, ClipperLib::jtSquare), ex_poly_holes_reversed));
+                Polygons ex_poly_holes_reversed = ex_poly.holes;
+                Algorithms::Polygon::reverse(ex_poly_holes_reversed);
 
-            if (brim_type == Domain::BrimType::OuterOnly || brim_type == Domain::BrimType::NoBrim)
-                append(no_brim_area_object, diff_ex(ex_poly.contour, shrink_ex(ex_poly_holes_reversed, no_brim_offset, ClipperLib::jtSquare)));
-
-            append(holes_reversed_object, ex_poly_holes_reversed);
+                if (has_outer_brim) {
+                    // the inner and outer boundaries offset from the same polygon, against round off errors
+                    const ExPolygons inner_expoly = offset_ex(Polygons{ ex_poly.contour }, brim_offset, ClipperLib::jtRound, scaled_resolution);
+                    ExPolygons       outer_expoly;
+                    if (use_auto_brim_ears) {
+                        const coord_t size_ear = coord_t(brim_width_mod - brim_offset - flow.scaled_spacing());
+                        outer_expoly = make_brim_ears_auto(inner_expoly, size_ear, ear_detection_length, brim_ears_max_angle, true);
+                    } else
+                        outer_expoly = offset_ex(inner_expoly, brim_width_mod, ClipperLib::jtRound, scaled_resolution);
+                    append(brim_area_object, diff_ex(outer_expoly, inner_expoly));
+                }
+                if (has_inner_brim) {
+                    const ExPolygons inner_expoly = offset_ex(ex_poly_holes_reversed, -brim_width - brim_offset);
+                    ExPolygons       outer_expoly;
+                    if (use_auto_brim_ears) {
+                        const coord_t size_ear = coord_t(brim_width - brim_offset - flow.scaled_spacing());
+                        outer_expoly = make_brim_ears_auto(offset_ex(ex_poly_holes_reversed, -brim_offset), size_ear, ear_detection_length, brim_ears_max_angle, false);
+                    } else
+                        outer_expoly = offset_ex(ex_poly_holes_reversed, -brim_offset);
+                    append(brim_area_object, intersection_ex(diff_ex(outer_expoly, inner_expoly), ex_poly_holes_reversed));
+                }
+                // brims apart from the holes / the contour without them
+                if (! has_inner_brim)
+                    append(no_brim_area_object, diff_ex(ex_poly_holes_reversed, offset_ex(ex_poly_holes_reversed, -no_brim_offset)));
+                if (! has_outer_brim)
+                    append(no_brim_area_object, diff_ex(offset(ex_poly.contour, no_brim_offset), ex_poly_holes_reversed));
+                append(holes_object, ex_poly_holes_reversed);
+            }
         }
-        append(no_brim_area_object, offset_ex(bottom_layers_expolygons[print_object_idx], brim_separation, ClipperLib::jtSquare));
+        const ExPolygons object_island = offset_ex(brim_slices, brim_offset, ClipperLib::jtRound, scaled_resolution);
+        append(no_brim_area_object, object_island);
 
-        for (const PrintInstance &instance : object->instances()) {
-            append_and_translate(brim_area_innermost[print_object_idx], brim_area_innermost_object, instance);
-            append_and_translate(brim_area, brim_area_object, instance);
+        for (size_t instance_idx = 0; instance_idx < object->instances().size(); ++instance_idx) {
+            const PrintInstance &instance = object->instances()[instance_idx];
+            if (! brim_area_object.empty())
+                append_and_translate(brim_area_object, instance, instance_idx, brim_area_map);
             append_and_translate(no_brim_area, no_brim_area_object, instance);
-            append_and_translate(holes_reversed, holes_reversed_object, instance);
+            append_and_translate(holes, holes_object, instance);
+            append_and_translate(object_islands, object_island, instance);
+        }
+
+        // no brim over the support
+        if (! object->support_layers().empty())
+            for (const Polygon &support_contour : object->support_layers().front()->support_fills.polygons_covered_by_spacing())
+                no_brim_area_support.emplace_back(support_contour);
+        for (const PrintInstance &instance : object->instances()) {
+            append_and_translate(no_brim_area, no_brim_area_support, instance);
+            append_and_translate(holes, holes_support, instance);
         }
     }
-    assert(polygon_idx == has_nothing_inside.size());
 
-    ExPolygons brim_area_innermost_merged;
-    // Append all innermost brim areas.
-    std::vector<InnerBrimExPolygons> brim_area_out;
-    for (size_t print_object_idx = 0; print_object_idx < print.objects().size(); ++print_object_idx)
-        if (const double brim_width = print.objects()[print_object_idx]->config().get<double>("brim_width"); !brim_area_innermost[print_object_idx].empty()) {
-            append(brim_area_innermost_merged, brim_area_innermost[print_object_idx]);
-            brim_area_out.push_back({std::move(brim_area_innermost[print_object_idx]), InnerBrimType::INNERMOST, brim_width});
+    // no brim over the wipe tower
+    if (const Points wipe_tower = print.first_layer_wipe_tower_corners(); wipe_tower.size() >= 3)
+        no_brim_area.emplace_back(Geometry::convex_hull(wipe_tower));
+
+    // no brim outside of the bed
+    {
+        Polygon bed;
+        for (const Vec2d &pt : print.config().get<std::vector<Vec2d>>("bed_shape"))
+            bed.points.emplace_back(scaled(pt));
+        if (bed.size() >= 3)
+            if (const ExPolygons outside = diff_ex(offset(bed, scale_(30.), ClipperLib::jtRound, scaled_resolution), Polygons{ bed }); ! outside.empty())
+                no_brim_area.push_back(outside.front());
+    }
+    for (auto &[key, areas] : brim_area_map)
+        areas = diff_ex(areas, no_brim_area);
+
+    // a brim touches at least an island of its object or a brim area
+    for (auto map_it = brim_area_map.begin(); map_it != brim_area_map.end(); ++map_it) {
+        ExPolygons other_expolys;
+        for (const auto &[other_key, other_areas] : brim_area_map)
+            if (other_key != map_it->first)
+                append(other_expolys, other_areas);
+
+        const ExPolygons temp_area = std::move(map_it->second);
+        map_it->second.clear();
+        for (size_t ia = 0; ia != temp_area.size(); ++ia) {
+            // this object's other brim areas
+            ExPolygons other_expoly;
+            for (size_t iao = 0; iao != temp_area.size(); ++iao)
+                if (iao != ia)
+                    other_expoly.push_back(temp_area[iao]);
+
+            const ExPolygons offseted_ta = offset_ex(temp_area[ia], flow.scaled_spacing() * 2, ClipperLib::jtRound, scaled_resolution);
+            if (! intersection_ex(offseted_ta, object_islands).empty() || ! intersection_ex(offseted_ta, other_expoly).empty() ||
+                ! intersection_ex(offseted_ta, other_expolys).empty())
+                map_it->second.push_back(temp_area[ia]);
         }
-
-    // Append all normal brim areas.
-    brim_area_out.push_back({diff_ex(intersection_ex(Algorithms::ExPolygon::to_polygons(std::move(brim_area)), holes_reversed), no_brim_area), InnerBrimType::NORMAL});
-
-    // Cut out a huge brim areas that overflows into the INNERMOST holes.
-    brim_area_out.back().brim_area = diff_ex(brim_area_out.back().brim_area, brim_area_innermost_merged);
-    return brim_area_out;
+        append(brim_area, map_it->second);
+    }
+    return brim_area;
 }
 
 // Flip orientation of open polylines to minimize travel distance.
@@ -395,7 +491,7 @@ static void optimize_polylines_by_reversing(Polylines *polylines)
             double dist_to_start = (next.first_point() - prev.last_point()).cast<double>().norm();
             double dist_to_end   = (next.last_point() - prev.last_point()).cast<double>().norm();
 
-            if (dist_to_end < dist_to_start) 
+            if (dist_to_end < dist_to_start)
                 next.reverse();
         }
     }
@@ -479,80 +575,42 @@ static Polylines connect_brim_lines(Polylines &&polylines, const Polygons &brim_
     return std::move(polylines);
 }
 
-static void make_inner_brim(const Print                   &print,
-                            const ConstPrintObjectPtrs    &top_level_objects_with_brim,
-                            const std::vector<ExPolygons> &bottom_layers_expolygons,
-                            ExtrusionEntityCollection     &brim)
+// Orca tryExPolygonOffset (BBS): the loops of a brim area, from its outline inwards.
+static Polygons brim_area_loops(const ExPolygons &brim_area, const Print &print)
 {
-    assert(print.objects().size() == bottom_layers_expolygons.size());
-    const auto                       scaled_resolution = scaled<double>(print.config().get<double>("gcode_resolution"));
-    Flow                             flow              = print.brim_flow();
-    std::vector<InnerBrimExPolygons> inner_brims_ex    = inner_brim_area(print, top_level_objects_with_brim, bottom_layers_expolygons, float(flow.scaled_spacing()));
-    Polygons                         loops;
-    std::mutex                       loops_mutex;
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, inner_brims_ex.size()), [&inner_brims_ex, &flow, &scaled_resolution, &loops, &loops_mutex](const tbb::blocked_range<size_t> &range) {
-        for (size_t brim_idx = range.begin(); brim_idx < range.end(); ++brim_idx) {
-            const InnerBrimExPolygons &inner_brim_ex = inner_brims_ex[brim_idx];
-            auto                       num_loops     = size_t(floor(inner_brim_ex.brim_width / flow.spacing()));
-            ExPolygons                 islands_ex    = offset_ex(inner_brim_ex.brim_area, -0.5f * float(flow.scaled_spacing()), ClipperLib::jtSquare);
-            for (size_t i = 0; (inner_brim_ex.type == InnerBrimType::INNERMOST ? i < num_loops : !islands_ex.empty()); ++i) {
-                for (ExPolygon &poly_ex : islands_ex)
-                    Algorithms::DouglasPeucker::douglas_peucker(poly_ex, scaled_resolution);
-
-                {
-                    boost::lock_guard<std::mutex> lock(loops_mutex);
-                    Slic3r::append(loops, Algorithms::ExPolygon::to_polygons(islands_ex));
-                }
-                islands_ex = offset_ex(islands_ex, -float(flow.scaled_spacing()), ClipperLib::jtSquare);
-            }
-        }
-    }); // end of parallel_for
-
-    loops = union_pt_chained_outside_in(loops);
-    std::reverse(loops.begin(), loops.end());
-    extrusion_entities_append_loops(brim.entities, std::move(loops), 
-        ExtrusionAttributes{
-            ExtrusionRole::Skirt,
-            ExtrusionFlow{ float(flow.mm3_per_mm()), float(flow.width()), float(print.skirt_first_layer_height()) } });
+    const Flow flow = print.brim_flow();
+    Polygons   loops;
+    ExPolygons islands_ex = brim_area;
+    for (ExPolygon &poly_ex : islands_ex)
+        Algorithms::DouglasPeucker::douglas_peucker(poly_ex, scaled_resolution);
+    islands_ex = offset_ex(islands_ex, -0.5f * float(flow.scaled_spacing()), ClipperLib::jtRound, scaled_resolution);
+    while (! islands_ex.empty()) {
+        for (ExPolygon &poly_ex : islands_ex)
+            Algorithms::DouglasPeucker::douglas_peucker(poly_ex, scaled_resolution);
+        append(loops, Algorithms::ExPolygon::to_polygons(islands_ex));
+        islands_ex = offset_ex(islands_ex, -1.3f * float(flow.scaled_spacing()), ClipperLib::jtRound, scaled_resolution);
+        for (ExPolygon &poly_ex : islands_ex)
+            Algorithms::DouglasPeucker::douglas_peucker(poly_ex, scaled_resolution);
+        islands_ex = offset_ex(islands_ex, 0.3f * float(flow.scaled_spacing()), ClipperLib::jtRound, scaled_resolution);
+    }
+    return loops;
 }
 
-// Produce brim lines around those objects, that have the brim enabled.
-// Collect islands_area to be merged into the final 1st layer convex hull.
-ExtrusionEntityCollection make_brim(const Print &print, PrintTryCancel try_cancel, Polygons &islands_area)
+ExtrusionEntityCollection make_brim_infill(const ExPolygons &brim_area, const Print &print)
 {
-    const auto              scaled_resolution           = scaled<double>(print.config().get<double>("gcode_resolution"));
-    Flow                    flow                        = print.brim_flow();
-    std::vector<ExPolygons> bottom_layers_expolygons    = get_print_bottom_layers_expolygons(print);
-    ConstPrintObjectPtrs    top_level_objects_with_brim = get_top_level_objects_with_brim(print, bottom_layers_expolygons);
-    Polygons                islands                     = top_level_outer_brim_islands(top_level_objects_with_brim, scaled_resolution);
-    ExPolygons              islands_area_ex             = top_level_outer_brim_area(print, top_level_objects_with_brim, bottom_layers_expolygons, float(flow.scaled_spacing()));
-    islands_area                                        = Algorithms::ExPolygon::to_polygons(islands_area_ex);
-
-    Polygons        loops;
-    size_t          num_loops = size_t(floor(max_brim_width(print.objects()) / flow.spacing()));
-    for (size_t i = 0; i < num_loops; ++i) {
-        try_cancel();
-        islands = expand(islands, float(flow.scaled_spacing()), ClipperLib::jtSquare);
-        for (Polygon &poly : islands) 
-            Algorithms::DouglasPeucker::douglas_peucker(poly, scaled_resolution);
-        Slic3r::append(loops, shrink(islands, 0.5f * float(flow.scaled_spacing())));
-    }
-    loops = union_pt_chained_outside_in(loops);
+    const Flow flow  = print.brim_flow();
+    Polygons   loops = union_pt_chained_outside_in(brim_area_loops(brim_area, print));
 
     std::vector<Polylines> loops_pl_by_levels;
     {
         Polylines loops_pl = Algorithms::Polygon::to_polylines(loops);
         loops_pl_by_levels.assign(loops_pl.size(), Polylines());
         tbb::parallel_for(tbb::blocked_range<size_t>(0, loops_pl.size()),
-            [&loops_pl_by_levels, &loops_pl, &islands_area](const tbb::blocked_range<size_t> &range) {
-                for (size_t i = range.begin(); i < range.end(); ++i) {
-                    loops_pl_by_levels[i] = chain_polylines(intersection_pl({ std::move(loops_pl[i]) }, islands_area));
-                }
+            [&loops_pl_by_levels, &loops_pl](const tbb::blocked_range<size_t> &range) {
+                for (size_t i = range.begin(); i < range.end(); ++i)
+                    loops_pl_by_levels[i] = chain_polylines({ std::move(loops_pl[i]) });
             });
     }
-
-    // output
-    ExtrusionEntityCollection brim;
 
     // Reduce down to the ordered list of polylines.
     Polylines all_loops;
@@ -562,176 +620,45 @@ ExtrusionEntityCollection make_brim(const Print &print, PrintTryCancel try_cance
 
     // Flip orientation of open polylines to minimize travel distance.
     optimize_polylines_by_reversing(&all_loops);
+    all_loops = connect_brim_lines(std::move(all_loops), offset(brim_area, float(SCALED_EPSILON)), float(flow.scaled_spacing()) * 2.f);
 
-#ifdef BRIM_DEBUG_TO_SVG
-    static int irun = 0;
-    ++ irun;
-
-    {
-        Biz::Algorithms::SVG::SVG svg(debug_out_path("brim-%d.svg", irun).c_str(), get_extents(all_loops));
-        svg.draw(union_ex(islands), "blue");
-        svg.draw(islands_area_ex, "green");
-        svg.draw(all_loops, "black", coord_t(scale_(0.1)));
-    }
-#endif // BRIM_DEBUG_TO_SVG
-
-    all_loops = connect_brim_lines(std::move(all_loops), offset(islands_area_ex, float(SCALED_EPSILON)), float(flow.scaled_spacing()) * 2.f);
-
-#ifdef BRIM_DEBUG_TO_SVG
-    {
-        Biz::Algorithms::SVG::SVG svg(debug_out_path("brim-connected-%d.svg", irun).c_str(), get_extents(all_loops));
-        svg.draw(union_ex(islands), "blue");
-        svg.draw(islands_area_ex, "green");
-        svg.draw(all_loops, "black", coord_t(scale_(0.1)));
-    }
-#endif // BRIM_DEBUG_TO_SVG
-
-    const bool could_brim_intersects_skirt = std::any_of(print.objects().begin(), print.objects().end(), [&print](const PrintObject *object) {
-        const Domain::BrimType &bt = object->config().get<Domain::BrimType>("brim_type");
-        return (bt == Domain::BrimType::OuterOnly || bt == Domain::BrimType::OuterAndInner) && print.config().get<double>("skirt_distance") < object->config().get<double>("brim_width");
-    });
-
-    const bool draft_shield = print.config().get<Domain::DraftShield>("draft_shield") != Domain::DraftShield::dsDisabled;
-
-
-    // If there is a possibility that brim intersects skirt, go through loops and split those extrusions
-    // The result is either the original Polygon or a list of Polylines
-    if (draft_shield && ! print.skirt().empty() && could_brim_intersects_skirt)
-    {
-        // Find the bounding polygons of the skirt
-        const Polygons skirt_inners = offset(dynamic_cast<ExtrusionLoop*>(print.skirt().entities.back())->polygon(),
-                                              -float(scale_(print.skirt_flow().spacing()))/2.f,
-                                              ClipperLib::jtRound,
-                                              float(scale_(0.1)));
-        const Polygons skirt_outers = offset(dynamic_cast<ExtrusionLoop*>(print.skirt().entities.front())->polygon(),
-                                              float(scale_(print.skirt_flow().spacing()))/2.f,
-                                              ClipperLib::jtRound,
-                                              float(scale_(0.1)));
-
-        // First calculate the trimming region.
-		ClipperLib_Z::Paths trimming;
-		{
-		    ClipperLib_Z::Paths input_subject;
-		    ClipperLib_Z::Paths input_clip;
-		    for (const Polygon &poly : skirt_outers) {
-		    	input_subject.emplace_back();
-		    	ClipperLib_Z::Path &out = input_subject.back();
-		    	out.reserve(poly.points.size());
-			    for (const Point &pt : poly.points)
-					out.emplace_back(pt.x(), pt.y(), 0);
-		    }
-		    for (const Polygon &poly : skirt_inners) {
-		    	input_clip.emplace_back();
-		    	ClipperLib_Z::Path &out = input_clip.back();
-		    	out.reserve(poly.points.size());
-			    for (const Point &pt : poly.points)
-					out.emplace_back(pt.x(), pt.y(), 0);
-		    }
-		    // init Clipper
-		    ClipperLib_Z::Clipper clipper;
-		    // add polygons
-		    clipper.AddPaths(input_subject, ClipperLib_Z::ptSubject, true);
-		    clipper.AddPaths(input_clip,    ClipperLib_Z::ptClip,    true);
-		    // perform operation
-		    clipper.Execute(ClipperLib_Z::ctDifference, trimming, ClipperLib_Z::pftNonZero, ClipperLib_Z::pftNonZero);
-		}
-
-		// Second, trim the extrusion loops with the trimming regions.
-		ClipperLib_Z::Paths loops_trimmed;
-		{
-            // Produce ClipperLib_Z::Paths from polylines (not necessarily closed).
-			ClipperLib_Z::Paths input_clip;
-			for (const Polyline &loop_pl : all_loops) {
-				input_clip.emplace_back();
-				ClipperLib_Z::Path& out = input_clip.back();
-				out.reserve(loop_pl.points.size());
-				int64_t loop_idx = &loop_pl - &all_loops.front();
-				for (const Point& pt : loop_pl.points)
-					// The Z coordinate carries index of the source loop.
-					out.emplace_back(pt.x(), pt.y(), loop_idx + 1);
-			}
-			// init Clipper
-			ClipperLib_Z::Clipper clipper;
-			clipper.ZFillFunction([](const ClipperLib_Z::IntPoint& e1bot, const ClipperLib_Z::IntPoint& e1top, const ClipperLib_Z::IntPoint& e2bot, const ClipperLib_Z::IntPoint& e2top, ClipperLib_Z::IntPoint& pt) {
-				// Assign a valid input loop identifier. Such an identifier is strictly positive, the next line is safe even in case one side of a segment
-				// hat the Z coordinate not set to the contour coordinate.
-				pt.z() = std::max(std::max(e1bot.z(), e1top.z()), std::max(e2bot.z(), e2top.z()));
-			});
-			// add polygons
-			clipper.AddPaths(input_clip, ClipperLib_Z::ptSubject, false);
-			clipper.AddPaths(trimming,   ClipperLib_Z::ptClip,    true);
-			// perform operation
-			ClipperLib_Z::PolyTree loops_trimmed_tree;
-			clipper.Execute(ClipperLib_Z::ctDifference, loops_trimmed_tree, ClipperLib_Z::pftNonZero, ClipperLib_Z::pftNonZero);
-			ClipperLib_Z::PolyTreeToPaths(std::move(loops_trimmed_tree), loops_trimmed);
-		}
-
-		// Third, produce the extrusions, sorted by the source loop indices.
-		{
-			std::vector<std::pair<const ClipperLib_Z::Path*, size_t>> loops_trimmed_order;
-			loops_trimmed_order.reserve(loops_trimmed.size());
-			for (const ClipperLib_Z::Path &path : loops_trimmed) {
-				size_t input_idx = 0;
-				for (const ClipperLib_Z::IntPoint &pt : path)
-					if (pt.z() > 0) {
-						input_idx = (size_t)pt.z();
-						break;
-					}
-				assert(input_idx != 0);
-				loops_trimmed_order.emplace_back(&path, input_idx);
-			}
-			std::stable_sort(loops_trimmed_order.begin(), loops_trimmed_order.end(),
-				[](const std::pair<const ClipperLib_Z::Path*, size_t> &l, const std::pair<const ClipperLib_Z::Path*, size_t> &r) {
-					return l.second < r.second;
-				});
-
-			Point last_pt(0, 0);
-			for (size_t i = 0; i < loops_trimmed_order.size();) {
-				// Find all pieces that the initial loop was split into.
-				size_t j = i + 1;
-                for (; j < loops_trimmed_order.size() && loops_trimmed_order[i].second == loops_trimmed_order[j].second; ++ j) ;
-                const ClipperLib_Z::Path &first_path = *loops_trimmed_order[i].first;
-				if (i + 1 == j && first_path.size() > 3 && first_path.front().x() == first_path.back().x() && first_path.front().y() == first_path.back().y()) {
-					auto *loop = new ExtrusionLoop();
-                    brim.entities.emplace_back(loop);
-                    loop->paths.emplace_back(ExtrusionAttributes{
-                        ExtrusionRole::Skirt, 
-                        ExtrusionFlow{ float(flow.mm3_per_mm()), float(flow.width()), float(print.skirt_first_layer_height()) } });
-		            Points &points = loop->paths.front().polyline.points;
-		            points.reserve(first_path.size());
-		            for (const ClipperLib_Z::IntPoint &pt : first_path)
-		            	points.emplace_back(coord_t(pt.x()), coord_t(pt.y()));
-		            i = j;
-				} else {
-			    	//FIXME The path chaining here may not be optimal.
-			    	ExtrusionEntityCollection this_loop_trimmed;
-					this_loop_trimmed.entities.reserve(j - i);
-			    	for (; i < j; ++ i) {
-                        this_loop_trimmed.entities.emplace_back(new ExtrusionPath({
-                            ExtrusionRole::Skirt,
-                            ExtrusionFlow{ float(flow.mm3_per_mm()), float(flow.width()), float(print.skirt_first_layer_height()) } }));
-						const ClipperLib_Z::Path &path = *loops_trimmed_order[i].first;
-			            Points &points = dynamic_cast<ExtrusionPath*>(this_loop_trimmed.entities.back())->polyline.points;
-			            points.reserve(path.size());
-			            for (const ClipperLib_Z::IntPoint &pt : path)
-			            	points.emplace_back(coord_t(pt.x()), coord_t(pt.y()));
-		           	}
-		           	chain_and_reorder_extrusion_entities(this_loop_trimmed.entities, &last_pt);
-                    brim.entities.reserve(brim.entities.size() + this_loop_trimmed.entities.size());
-		           	append(brim.entities, std::move(this_loop_trimmed.entities));
-		           	this_loop_trimmed.entities.clear();
-		        }
-		        last_pt = brim.last_point();
-			}
-		}
-    } else {
-        extrusion_entities_append_loops_and_paths(brim.entities, std::move(all_loops), 
-            ExtrusionAttributes{ ExtrusionRole::Skirt,
-                ExtrusionFlow{ float(flow.mm3_per_mm()), float(flow.width()), float(print.skirt_first_layer_height()) } });
-    }
-
-    make_inner_brim(print, top_level_objects_with_brim, bottom_layers_expolygons, brim);
+    ExtrusionEntityCollection brim;
+    extrusion_entities_append_loops_and_paths(brim.entities, std::move(all_loops),
+        ExtrusionAttributes{ ExtrusionRole::Brim,
+            ExtrusionFlow{ float(flow.mm3_per_mm()), float(flow.width()), float(print.skirt_first_layer_height()) } });
     return brim;
+}
+
+ExtrusionEntityCollection make_brim(const Print &print, PrintTryCancel try_cancel, Polygons &islands_area,
+                                    std::map<ObjectInstanceID, ExtrusionEntityCollection> &brim_by_instance,
+                                    std::map<ObjectInstanceID, ExPolygons> &brim_areas_by_instance)
+{
+    std::map<ObjectInstanceID, ExPolygons> brim_area_map;
+    const Flow       flow            = print.brim_flow();
+    const ExPolygons islands_area_ex = outer_inner_brim_area(print, float(flow.scaled_spacing()), brim_area_map);
+
+    // Orca combine_brims: unless combined (later, by the skirt / brim groups), the brims do not overlap: each takes
+    // what the ones before it left
+    if (! print.config().get<bool>("combine_brims")) {
+        ExPolygons claimed_area;
+        for (auto &[_, areas] : brim_area_map) {
+            areas = diff_ex(areas, claimed_area);
+            append(claimed_area, areas);
+        }
+    }
+
+    islands_area           = Algorithms::ExPolygon::to_polygons(islands_area_ex);
+    brim_areas_by_instance = brim_area_map;
+
+    ExtrusionEntityCollection brims;
+    for (auto &[key, areas] : brim_area_map)
+        if (! areas.empty()) {
+            try_cancel();
+            ExtrusionEntityCollection brim = make_brim_infill(areas, print);
+            brims.append(brim.entities);
+            brim_by_instance.emplace(key, std::move(brim));
+        }
+    return brims;
 }
 
 } // namespace Slic3r

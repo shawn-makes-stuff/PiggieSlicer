@@ -6,6 +6,10 @@ namespace Slic3r::App::Yoga {
 class LayoutButton;
 } // namespace Slic3r::App::Yoga
 
+namespace Slic3r::App::Preview {
+class SidebarAutoReslice;
+} // namespace Slic3r::App::Preview
+
 namespace Slic3r::App::Plater {
 
 class SidebarPlaterActionButtons :
@@ -30,6 +34,7 @@ public:
 
 private:
     Yoga::LayoutButton* m_button_slice = nullptr;
+    Preview::SidebarAutoReslice* m_auto_reslice = nullptr;
     std::function<void()> m_import_object_callback;
 
     void update_slice_button(const Biz::Scene::BedSelection& selection);

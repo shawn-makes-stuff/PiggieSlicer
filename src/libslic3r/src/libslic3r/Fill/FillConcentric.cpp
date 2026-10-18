@@ -4,6 +4,7 @@
 #include <cstddef>
 
 #include "Slic3r/Biz/Algorithms/Polyline.hpp"
+#include "libslic3r/Fill/FillCornerSmoothing.hpp"
 #include "../ClipperUtils.hpp"
 #include "../ExPolygon.hpp"
 #include "libslic3r/Arachne/WallToolPaths.hpp"
@@ -32,24 +33,48 @@ void FillConcentric::_fill_surface_single(
     // no rotation is supported for this infill pattern
     BoundingBox bounding_box = Algorithms::Polygon::get_bounding_box(expolygon.contour);
 
-    coord_t min_spacing = scaled<coord_t>(this->spacing);
+    coord_t min_spacing = scaled<coord_t>(this->spacing) * params.multiline;
     coord_t distance    = coord_t(min_spacing / params.density);
+    // A non-positive step never shrinks the region, so the inset loop below would not end.
+    if (min_spacing <= 0 || distance <= 0)
+        return;
 
     if (params.density > 0.9999f && !params.dont_adjust) {
         distance      = Slic3r::FillConcentric::_adjust_solid_spacing(BB::sizes(bounding_box)(0), distance);
         this->spacing = unscale<double>(distance);
     }
 
-    Polygons   loops = Algorithms::ExPolygon::to_polygons(expolygon);
-    ExPolygons last { std::move(expolygon) };
+    // Orca fill_multiline: contracted by the outer lines of a multiline loop
+    const ExPolygons contracted = offset_ex(expolygon, -float(scale_(0.5 * (params.multiline - 1) * this->spacing)));
+    Polygons   loops = Algorithms::ExPolygon::to_polygons(contracted);
+    ExPolygons last { contracted };
     while (! last.empty()) {
         last = offset2_ex(last, -(distance + min_spacing/2), +min_spacing/2);
         append(loops, Algorithms::ExPolygon::to_polygons(last));
     }
 
+    // Orca: the corners of the loops rounded where the curve stays inside (the loops are offsets of the region, not
+    // clipped by it: rounding cuts toward the inside of the turn, which around a hole or a concave feature is outside),
+    // reaching at most half the distance between two loops.
+    auto corner_stays_inside = [&contracted](const Vec2d &from, const Vec2d &to) {
+        // The straight chord between the ends of the curve is the deepest the curve can cut.
+        for (const double t : { 0.25, 0.5, 0.75 }) {
+            const Vec2d sample = from + t * (to - from);
+            const Point point(coord_t(sample.x()), coord_t(sample.y()));
+            if (std::none_of(contracted.begin(), contracted.end(), [&point](const ExPolygon &region) { return Algorithms::ExPolygon::contains(region, point); }))
+                return false;
+        }
+        return true;
+    };
+    smooth_polygons_corners(loops, params.smooth_factor, scaled<double>(params.resolution), 0.5 * distance, corner_stays_inside);
+
     // generate paths from the outermost to the innermost, to avoid
     // adhesion problems of the first central tiny loops
     loops = union_pt_chained_outside_in(loops);
+
+    // Orca: an outward fill order prints the innermost loops first instead.
+    if (params.fill_order == Domain::SurfaceFillOrder::Outward)
+        std::reverse(loops.begin(), loops.end());
 
     // split paths using a nearest neighbor search
     size_t iPathFirst = polylines_out.size();
@@ -58,6 +83,9 @@ void FillConcentric::_fill_surface_single(
         polylines_out.emplace_back(Algorithms::Polygon::split_at_index(loop, nearest_point_index(loop.points, last_pos)));
         last_pos = polylines_out.back().last_point();
     }
+
+    // Orca fill_multiline
+    multiline_fill(polylines_out, params, spacing);
 
     // clip the paths to prevent the extruder from getting exactly on the first point of the loop
     // Keep valid paths only.
@@ -107,6 +135,15 @@ void FillConcentric::_fill_surface_single(const FillParams              &params,
 
             for (const Arachne::ExtrusionLine &wall : loop)
                 all_extrusions.emplace_back(&wall);
+        }
+
+        // Orca: a forced fill order prints the loops in strictly monotonic depth order, so that the surfaces broken up
+        // by holes or slots cannot hop outward and back inward.
+        if (params.fill_order != Domain::SurfaceFillOrder::Default) {
+            const bool outward = params.fill_order == Domain::SurfaceFillOrder::Outward;
+            std::stable_sort(all_extrusions.begin(), all_extrusions.end(), [outward](const Arachne::ExtrusionLine *a, const Arachne::ExtrusionLine *b) {
+                return outward ? a->inset_idx > b->inset_idx : a->inset_idx < b->inset_idx;
+            });
         }
 
         // Split paths using a nearest neighbor search.

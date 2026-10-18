@@ -3,7 +3,12 @@
 #include "Slic3r/App/Yoga/CollapsibleWindow.hpp"
 #include "Slic3r/App/Preview/Legend.hpp"
 
+namespace Slic3r::Domain {
+struct FullPrintStatistics;
+}
+
 namespace Slic3r::App::Yoga {
+class Text;
 class Rectangle;
 class ToggleButton;
 class ComboBox;
@@ -16,6 +21,7 @@ class LegendWindow : public Yoga::CollapsibleWindow
 public:
     LegendWindow(libvgcode::FdmViewer* viewer, FdmViewerWrapper* wrapper);
     LegendCallbacks& callbacks();
+    void set_filter(const std::string& filter);
     void update_type_selector(const std::vector<std::string>& types, const std::vector<libvgcode::ViewType>& option_types, int selection);
 
 private:
@@ -32,6 +38,32 @@ private:
     Yoga::ToggleButton* m_detail_view{ nullptr };
 
     Yoga::Rectangle* m_settings{ nullptr };
+};
+
+/// Orca's print summary: time and filament of the model, the purge (wipe tower and flushes) and
+/// the start / end G-code, with the totals and the cost
+class SlicedInfoWindow : public Yoga::CollapsibleWindow
+{
+public:
+    SlicedInfoWindow();
+    void update(const Domain::FullPrintStatistics& stats, const FdmViewerWrapper& viewer);
+
+private:
+    struct Row
+    {
+        Yoga::Item* row{nullptr};
+        Yoga::Text* time{nullptr};
+        Yoga::Text* weight{nullptr};
+        Yoga::Text* length{nullptr};
+    };
+    Row add_row(const std::string& label, bool bold);
+
+    Row m_model;
+    Row m_purge;
+    Row m_prepare;
+    Row m_total;
+    Yoga::Item* m_cost_row{nullptr};
+    Yoga::Text* m_cost{nullptr};
 };
 
 } // namespace Slic3r::App::Preview

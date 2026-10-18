@@ -120,3 +120,28 @@ TEST_CASE("MaterialIterator")
         REQUIRE(visited_addresses == Addresses{{0}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}});
     }
 }
+
+TEST_CASE("External multi-material unit")
+{
+    VendorData vendor_data;
+    add_external_mmu_feeder_def(vendor_data);
+    REQUIRE(vendor_data.find_feeder_config_def_by_id(EXTERNAL_MMU_FEEDER_ID) != nullptr);
+
+    REQUIRE(make_external_mmu_feeder(1, vendor_data).slot_count == EXTERNAL_MMU_MIN_SLOTS);
+    REQUIRE(make_external_mmu_feeder(100, vendor_data).slot_count == EXTERNAL_MMU_MAX_SLOTS);
+    const HwFeederConfig unit = make_external_mmu_feeder(4, vendor_data);
+    REQUIRE(unit.type == FeederType::MMU);
+    REQUIRE(unit.model.base_model == EXTERNAL_MMU_BASE_MODEL);
+    REQUIRE(is_external_mmu(unit));
+
+    // units on two tools of a three-tool printer
+    HwPrinterConfig printer = build_fff_printer_config(3, {{{0}, unit}, {{2}, make_external_mmu_feeder(16, vendor_data)}});
+    REQUIRE(printer.material_slot_count() == 3 + 3 + 15);
+    REQUIRE(has_external_mmu(printer));
+    REQUIRE(find_external_mmu(printer, 0) != nullptr);
+    REQUIRE(find_external_mmu(printer, 1) == nullptr);
+    REQUIRE(find_external_mmu(printer, 2)->slot_count == 16);
+    REQUIRE(MaterialIterator::from_slot_index(printer, 3).tool_index() == 0);
+    REQUIRE(MaterialIterator::from_slot_index(printer, 4).tool_index() == 1);
+    REQUIRE(MaterialIterator::from_slot_index(printer, 5).tool_index() == 2);
+}

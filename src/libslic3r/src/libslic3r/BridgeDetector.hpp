@@ -48,7 +48,8 @@ public:
     // If bridge_direction_override != 0, then the angle is used instead of auto-detect.
     bool detect_angle(double bridge_direction_override = 0.);
     // Coverage is currently only used by the unit tests. It is extremely slow and unreliable!
-    Polygons coverage(double angle = -1) const;
+    // precise: Orca's coverage by strips of the spacing, trimmed to the anchors and not clipped by the bridged area
+    Polygons coverage(double angle = -1, bool precise = false) const;
     void unsupported_edges(double angle, Polylines* unsupported) const;
     Polylines unsupported_edges(double angle = -1) const;
     

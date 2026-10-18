@@ -12,8 +12,7 @@ class SidebarStackLayout : public Yoga::StackLayout
 public:
     enum class ItemType
     {
-        Bed,
-        Object,
+        Bed, // Process section (with the object list in its Objects mode)
         Gizmo,
         GCode
     };

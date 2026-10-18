@@ -95,14 +95,12 @@ TopBar::TopBar(
     left_wrapper->emplace_back<Separator>(Orientation::Vertical);
 #endif // !USE_NATIVE_MENU
 
-    add_save_project_btn(left_wrapper);
     m_undo_redo_wrapper = left_wrapper->emplace_back<Item>();
     m_undo_redo_wrapper->set_min_width(100_fpx);
     if (m_undo_store) {
         add_undo_btn(m_undo_redo_wrapper);
         add_redo_btn(m_undo_redo_wrapper);
     }
-    add_show_ui_btn(left_wrapper);
 
     m_list_view = emplace_back<ProjectButtonListView>(ProjectButtonFactory{m_project_interactor, m_project_saver});
     m_list_view->set_window_flags(
@@ -177,6 +175,9 @@ TopBar::TopBar(
 
     left_wrapper->set_padding(5_fpx);
     right_wrapper->set_padding(5_fpx);
+
+    if (m_navigator.has_custom_caption())
+        add_window_btns(this);
 
     if (m_project_interactor.selected_project_id() != Domain::INVALID_ID) {
         on_selected_project_changed(m_project_interactor.selected_project_id());
@@ -294,10 +295,9 @@ void TopBar::focus_search()
     m_search_bar->focus_search();
 }
 
-void TopBar::add_save_project_btn(Item* parent)
+Yoga::ObjectPtr TopBar::take_search_bar()
 {
-    m_save_btn = parent->emplace_back<LayoutButton>("", Render::Icon::TobBarSave, _u8L("Save"));
-    m_render_module->command_binding_manager().bind_tb_item(CommandName::SaveProject, m_save_btn);
+    return m_search_bar->parent()->remove(m_search_bar);
 }
 
 static void toggle_menu_visibility(Menu* menu)
@@ -305,6 +305,57 @@ static void toggle_menu_visibility(Menu* menu)
     if (!menu)
         return;
     menu->opened() ? menu->close() : menu->open();
+}
+
+void TopBar::add_window_btns(Item* parent)
+{
+    // the system caption's buttons, at the end of the bar; never shrunk away, some room before them
+    Item* wrapper = parent->emplace_back<Item>();
+    wrapper->set_flex_shrink(0);
+    wrapper->set_margin({10_fpx, 0.f, 0.f, 0.f});
+    auto add = [wrapper](Render::Icon icon, const std::string& tooltip)
+    {
+        LayoutButton* btn = wrapper->emplace_back<LayoutButton>(std::string{}, icon, tooltip);
+        btn->set_background_color(Platform::Color::ButtonTransparent);
+        btn->set_tooltip_position(Position::Bottom);
+        btn->set_content_align_items(YGAlignCenter);
+        btn->set_content_justify_content(YGJustifyCenter);
+        btn->icon_object()->set_height(14_fpx);
+        btn->icon_object()->set_width(14_fpx);
+        btn->set_width(46_fpx);
+        btn->set_height(35_fpx);
+        btn->set_content_padding({});
+        btn->set_draw_flags(ImDrawFlags_None);
+        return btn;
+    };
+    add(Render::Icon::Minus, Biz::_u8L("Minimize"))->callbacks().action = [this]
+    { m_navigator.minimize_window(); };
+    m_maximize_btn = add(Render::Icon::Square, Biz::_u8L("Maximize"));
+    m_maximize_btn->callbacks().action = [this] { m_navigator.toggle_maximize_window(); };
+    add(Render::Icon::TopBarCross, Biz::_u8L("Close"))->callbacks().action = [this]
+    { m_navigator.close_application(); };
+}
+
+void TopBar::render_body(const Yoga::Vec2f& pos, const Yoga::Vec2f& size)
+{
+    Window::render_body(pos, size);
+    if (!m_navigator.has_custom_caption())
+        return;
+
+    if (m_maximize_btn != nullptr) {
+        const bool maximized = m_navigator.is_window_maximized();
+        m_maximize_btn->set_icon(maximized ? Render::Icon::MultipleSquares : Render::Icon::Square);
+        m_maximize_btn->set_tooltip(maximized ? Biz::_u8L("Restore") : Biz::_u8L("Maximize"));
+    }
+
+    // a press on the bar itself (not on a button, a project tab or an open menu)
+    if (!ImGui::IsWindowHovered() || ImGui::IsAnyItemHovered() || ImGui::IsAnyItemActive()
+        || ImGui::IsPopupOpen("", ImGuiPopupFlags_AnyPopupId))
+        return;
+    if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+        m_navigator.toggle_maximize_window();
+    else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+        m_navigator.start_window_drag();
 }
 
 void TopBar::add_undo_btn(Item* parent)
@@ -345,22 +396,6 @@ void TopBar::add_redo_btn(Item* parent)
     m_redo_stack_btn->callbacks().action = [this]() { toggle_menu_visibility(m_redo_menu); };
 
     m_render_module->command_binding_manager().bind_tb_item(CommandName::Redo, m_redo_btn);
-}
-
-void TopBar::add_show_ui_btn(Item* parent)
-{
-    m_show_ui_btn =
-        parent->emplace_back<LayoutButton>("", Render::Icon::TobBarShowUI, _u8L("Hide sidebars"));
-    m_show_ui_btn->set_checkable(true);
-    m_show_ui_btn->set_checked(AppServices::instance().app_config().get<bool>("hide_sidebars"));
-
-    m_show_ui_btn->callbacks().action = [this]()
-    {
-        m_show_ui_btn->set_tooltip(
-            m_show_ui_btn->checked() ? _u8L("Show sidebars") : _u8L("Hide sidebars")
-        );
-        m_navigator.set_hide_sidebars(m_show_ui_btn->checked());
-    };
 }
 
 void TopBar::add_menu_btns(Item* parent)

@@ -57,6 +57,8 @@ void ConfigItemTextField::on_data_update()
                 set_input_flags(input_flags() | ImGuiInputTextFlags_Multiline);
                 set_resizable(true);
                 input_text()->set_min_height(80);
+                // a few lines to start with, not the whole G-code / notes; drag to resize
+                input_text()->set_height(120);
             } else {
                 set_input_flags(input_flags() & ~ImGuiInputTextFlags_Multiline);
                 set_resizable(false);

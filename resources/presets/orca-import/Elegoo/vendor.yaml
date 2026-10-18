@@ -1,0 +1,1290 @@
+kind: vendor
+id: Elegoo
+name: Elegoo
+version: 2.4.0+orca.02.04.00.11
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    supports_1_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Centauri
+  base_model: Elegoo Centauri
+  printer_configs_order:
+  - Elegoo-Centauri
+  - Elegoo-Centauri-Carbon
+  - Elegoo-Centauri-Carbon-2
+- label: Centauri 2
+  base_model: Elegoo Centauri 2
+  printer_configs_order:
+  - Elegoo-Centauri-2
+- label: Neptune
+  base_model: Elegoo Neptune
+  printer_configs_order:
+  - Elegoo-Neptune
+  - Elegoo-Neptune-X
+- label: Neptune 2
+  base_model: Elegoo Neptune 2
+  printer_configs_order:
+  - Elegoo-Neptune-2
+  - Elegoo-Neptune-2D-1t
+  - Elegoo-Neptune-2D-2t
+  - Elegoo-Neptune-2S
+- label: Neptune 3
+  base_model: Elegoo Neptune 3
+  printer_configs_order:
+  - Elegoo-Neptune-3
+  - Elegoo-Neptune-3-Max
+  - Elegoo-Neptune-3-Plus
+  - Elegoo-Neptune-3-Pro
+- label: Neptune 4
+  base_model: Elegoo Neptune 4
+  printer_configs_order:
+  - Elegoo-Neptune-4
+  - Elegoo-Neptune-4-Max
+  - Elegoo-Neptune-4-Plus
+  - Elegoo-Neptune-4-Pro
+- label: OrangeStorm
+  base_model: Elegoo OrangeStorm
+  printer_configs_order:
+  - Elegoo-OrangeStorm-Giga
+---
+kind: printer
+technology: FFF
+name: Elegoo Centauri
+id: Elegoo Centauri
+model:
+  base_model: Elegoo Centauri
+  model: Elegoo Centauri
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: textured_pei_plate
+default_materials:
+- Elegoo ASA @EC
+- Elegoo PETG @EC
+- Elegoo PETG PRO @EC
+- Elegoo PLA Matte @EC
+- Elegoo PLA PRO @EC
+- Elegoo PLA Silk @EC
+- Elegoo PLA @EC
+- Elegoo PLA+ @EC
+- Elegoo Rapid PETG @EC
+- Elegoo Rapid PLA+ @EC
+- Elegoo TPU 95A @EC
+- Elegoo PLA Basic @EC
+- Elegoo PLA Galaxy @EC
+- Elegoo PLA Marble @EC
+- Elegoo PLA Sparkle @EC
+- Elegoo PLA Wood @EC
+- Elegoo Rapid TPU 95A @EC
+- Elegoo ABS @EC
+- Elegoo PAHT-CF @EC
+- Elegoo PC @EC
+- Elegoo PC-FR @EC
+- Elegoo PETG-CF @EC
+- Elegoo PETG-GF @EC
+- Elegoo PETG Translucent @EC
+visual:
+  bed_model: elegoo_centuri_buildplate_model.stl
+  bed_texture: elegoo_centuri_buildplate_texture.svg
+  thumbnail: Elegoo Centauri_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Centauri 2
+id: Elegoo Centauri 2
+model:
+  base_model: Elegoo Centauri 2
+  model: Elegoo Centauri 2
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @EC2
+- Elegoo PETG @EC2
+- Elegoo PETG PRO @EC2
+- Elegoo PLA Matte @EC2
+- Elegoo PLA PRO @EC2
+- Elegoo PLA Silk @EC2
+- Elegoo PLA-CF @EC2
+- Elegoo PLA @EC2
+- Elegoo PLA+ @EC2
+- Elegoo Rapid PETG @EC2
+- Elegoo Rapid PLA+ @EC2
+- Elegoo TPU 95A @EC2
+- Elegoo PLA Basic @EC2
+- Elegoo PLA Galaxy @EC2
+- Elegoo PLA Marble @EC2
+- Elegoo PLA Sparkle @EC2
+- Elegoo PLA Wood @EC2
+- Elegoo Rapid TPU 95A @EC2
+- Elegoo ABS @EC2
+- Elegoo PAHT-CF @EC2
+- Elegoo PC @EC2
+- Elegoo PC-FR @EC2
+- Elegoo PETG-CF @EC2
+- Elegoo PETG-GF @EC2
+- Elegoo PETG Translucent @EC2
+- Elegoo ASA-CF @EC2
+- Elegoo PET-CF @EC2
+- Elegoo PETG HF @EC2
+- Elegoo PLA Glow @EC2
+- Elegoo PLA Translucent2 @EC2
+visual:
+  bed_model: elegoo_centuri_carbon_buildplate_model.stl
+  thumbnail: Elegoo Centauri 2_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Centauri Carbon
+id: Elegoo Centauri Carbon
+model:
+  base_model: Elegoo Centauri
+  model: Elegoo Centauri Carbon
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: textured_pei_plate
+default_materials:
+- Elegoo ASA @ECC
+- Elegoo PETG @ECC
+- Elegoo PETG PRO @ECC
+- Elegoo PLA Matte @ECC
+- Elegoo PLA PRO @ECC
+- Elegoo PLA Silk @ECC
+- Elegoo PLA-CF @ECC
+- Elegoo PLA @ECC
+- Elegoo PLA+ @ECC
+- Elegoo Rapid PETG @ECC
+- Elegoo Rapid PLA+ @ECC
+- Elegoo TPU 95A @ECC
+- Elegoo PLA Basic @ECC
+- Elegoo PLA Galaxy @ECC
+- Elegoo PLA Marble @ECC
+- Elegoo PLA Sparkle @ECC
+- Elegoo PLA Wood @ECC
+- Elegoo Rapid TPU 95A @ECC
+- Elegoo ABS @ECC
+- Elegoo PAHT-CF @ECC
+- Elegoo PC @ECC
+- Elegoo PC-FR @ECC
+- Elegoo PETG-CF @ECC
+- Elegoo PETG-GF @ECC
+- Elegoo PETG Translucent @ECC
+visual:
+  bed_model: elegoo_centuri_carbon_buildplate_model.stl
+  bed_texture: elegoo_centuri_carbon_buildplate_texture.svg
+  thumbnail: Elegoo Centauri Carbon_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Centauri Carbon 2
+id: Elegoo Centauri Carbon 2
+model:
+  base_model: Elegoo Centauri
+  model: Elegoo Centauri Carbon 2
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @ECC2
+- Elegoo PETG @ECC2
+- Elegoo PETG PRO @ECC2
+- Elegoo PLA Matte @ECC2
+- Elegoo PLA PRO @ECC2
+- Elegoo PLA Silk @ECC2
+- Elegoo PLA-CF @ECC2
+- Elegoo PLA @ECC2
+- Elegoo PLA+ @ECC2
+- Elegoo Rapid PETG @ECC2
+- Elegoo Rapid PLA+ @ECC2
+- Elegoo TPU 95A @ECC2
+- Elegoo PLA Basic @ECC2
+- Elegoo PLA Galaxy @ECC2
+- Elegoo PLA Marble @ECC2
+- Elegoo PLA Sparkle @ECC2
+- Elegoo PLA Wood @ECC2
+- Elegoo Rapid TPU 95A @ECC2
+- Elegoo ABS @ECC2
+- Elegoo PAHT-CF @ECC2
+- Elegoo PC @ECC2
+- Elegoo PC-FR @ECC2
+- Elegoo PETG-CF @ECC2
+- Elegoo PETG-GF @ECC2
+- Elegoo PETG Translucent @ECC2
+- Elegoo ASA-CF @ECC2
+- Elegoo PET-CF @ECC2
+- Elegoo PETG HF @ECC2
+- Elegoo PLA Glow @ECC2
+- Elegoo PLA Translucent2 @ECC2
+visual:
+  bed_model: elegoo_centuri_carbon_buildplate_model.stl
+  bed_texture: elegoo_centuri_carbon_buildplate_texture.svg
+  thumbnail: Elegoo Centauri Carbon 2_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune
+id: Elegoo Neptune
+model:
+  base_model: Elegoo Neptune
+  model: Elegoo Neptune
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN2 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN2 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN2 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN2 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN2 Series
+- Elegoo PLA-CF @EN2 Series
+- Elegoo PLA @EN2 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN2 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN2 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN2 Series
+visual:
+  bed_model: elegoo_neptune_buildplate_model.stl
+  bed_texture: elegoo_neptune_buildplate_texture.svg
+  thumbnail: Elegoo Neptune_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 2
+id: Elegoo Neptune 2
+model:
+  base_model: Elegoo Neptune 2
+  model: Elegoo Neptune 2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN2 Series
+- Elegoo PETG @0.2 nozzle
+- Elegoo PETG @EN2 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN2 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN2 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN2 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN2 Series
+- Elegoo PLA-CF @EN2 Series
+- Elegoo PLA @EN2 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN2 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN2 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN2 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN2 Series
+- Elegoo PLA Galaxy @EN2 Series
+- Elegoo PLA Marble @EN2 Series
+- Elegoo PLA Sparkle @EN2 Series
+- Elegoo PLA Wood @EN2 Series
+- Elegoo Rapid TPU 95A @EN2 Series
+- Elegoo PETG-CF @EN2 Series
+- Elegoo PETG-GF @EN2 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN2 Series
+visual:
+  bed_model: elegoo_neptune2_buildplate_model.stl
+  bed_texture: elegoo_neptune2_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 2_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 2D
+id: Elegoo Neptune 2D
+model:
+  base_model: Elegoo Neptune 2
+  model: Elegoo Neptune 2D
+tool_count: 2
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN2 Series
+- Elegoo PETG @0.2 nozzle
+- Elegoo PETG @EN2 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN2 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN2 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN2 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN2 Series
+- Elegoo PLA-CF @EN2 Series
+- Elegoo PLA @EN2 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN2 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN2 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN2 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN2 Series
+- Elegoo PLA Galaxy @EN2 Series
+- Elegoo PLA Marble @EN2 Series
+- Elegoo PLA Sparkle @EN2 Series
+- Elegoo PLA Wood @EN2 Series
+- Elegoo Rapid TPU 95A @EN2 Series
+- Elegoo PETG-CF @EN2 Series
+- Elegoo PETG-GF @EN2 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN2 Series
+visual:
+  bed_model: elegoo_neptune2d_buildplate_model.stl
+  bed_texture: elegoo_neptune2d_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 2D_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 2S
+id: Elegoo Neptune 2S
+model:
+  base_model: Elegoo Neptune 2
+  model: Elegoo Neptune 2S
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN2 Series
+- Elegoo PETG @0.2 nozzle
+- Elegoo PETG @EN2 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN2 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN2 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN2 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN2 Series
+- Elegoo PLA-CF @EN2 Series
+- Elegoo PLA @EN2 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN2 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN2 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN2 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN2 Series
+- Elegoo PLA Galaxy @EN2 Series
+- Elegoo PLA Marble @EN2 Series
+- Elegoo PLA Sparkle @EN2 Series
+- Elegoo PLA Wood @EN2 Series
+- Elegoo Rapid TPU 95A @EN2 Series
+- Elegoo PETG-CF @EN2 Series
+- Elegoo PETG-GF @EN2 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN2 Series
+visual:
+  bed_model: elegoo_neptune2s_buildplate_model.stl
+  bed_texture: elegoo_neptune2s_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 2S_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 3
+id: Elegoo Neptune 3
+model:
+  base_model: Elegoo Neptune 3
+  model: Elegoo Neptune 3
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN2 Series
+- Elegoo PETG @0.2 nozzle
+- Elegoo PETG @EN2 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN2 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN2 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN2 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN2 Series
+- Elegoo PLA-CF @EN2 Series
+- Elegoo PLA @EN2 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN2 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN2 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN2 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN2 Series
+- Elegoo PLA Galaxy @EN2 Series
+- Elegoo PLA Marble @EN2 Series
+- Elegoo PLA Sparkle @EN2 Series
+- Elegoo PLA Wood @EN2 Series
+- Elegoo Rapid TPU 95A @EN2 Series
+- Elegoo PETG-CF @EN2 Series
+- Elegoo PETG-GF @EN2 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN2 Series
+visual:
+  bed_model: elegoo_neptune3_buildplate_model.stl
+  bed_texture: elegoo_neptune3_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 3_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 3 Max
+id: Elegoo Neptune 3 Max
+model:
+  base_model: Elegoo Neptune 3
+  model: Elegoo Neptune 3 Max
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN3 Series
+- Elegoo PETG @0.2 nozzle
+- Elegoo PETG @EN3 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN3 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN3 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN3 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN3 Series
+- Elegoo PLA-CF @EN3 Series
+- Elegoo PLA @EN3 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN3 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN3 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN3 Series
+- Elegoo TPU 95A @EN3 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN3 Series
+- Elegoo PLA Galaxy @EN3 Series
+- Elegoo PLA Marble @EN3 Series
+- Elegoo PLA Sparkle @EN3 Series
+- Elegoo PLA Wood @EN3 Series
+- Elegoo Rapid TPU 95A @EN3 Series
+- Elegoo PETG-CF @EN3 Series
+- Elegoo PETG-GF @EN3 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN3 Series
+visual:
+  bed_model: elegoo_neptune3max_buildplate_model.stl
+  bed_texture: elegoo_neptune3max_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 3 Max_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 3 Plus
+id: Elegoo Neptune 3 Plus
+model:
+  base_model: Elegoo Neptune 3
+  model: Elegoo Neptune 3 Plus
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN3 Series
+- Elegoo PETG @0.2 nozzle
+- Elegoo PETG @EN3 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN3 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN3 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN3 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN3 Series
+- Elegoo PLA-CF @EN3 Series
+- Elegoo PLA @EN3 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN3 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN3 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN3 Series
+- Elegoo TPU 95A @EN3 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN3 Series
+- Elegoo PLA Galaxy @EN3 Series
+- Elegoo PLA Marble @EN3 Series
+- Elegoo PLA Sparkle @EN3 Series
+- Elegoo PLA Wood @EN3 Series
+- Elegoo Rapid TPU 95A @EN3 Series
+- Elegoo PETG-CF @EN3 Series
+- Elegoo PETG-GF @EN3 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN3 Series
+visual:
+  bed_model: elegoo_neptune3plus_buildplate_model.stl
+  bed_texture: elegoo_neptune3plus_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 3 Plus_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 3 Pro
+id: Elegoo Neptune 3 Pro
+model:
+  base_model: Elegoo Neptune 3
+  model: Elegoo Neptune 3 Pro
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN3 Series
+- Elegoo PETG @0.2 nozzle
+- Elegoo PETG @EN3 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN3 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN3 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN3 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN3 Series
+- Elegoo PLA-CF @EN3 Series
+- Elegoo PLA @EN3 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN3 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN3 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN3 Series
+- Elegoo TPU 95A @EN3 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN3 Series
+- Elegoo PLA Galaxy @EN3 Series
+- Elegoo PLA Marble @EN3 Series
+- Elegoo PLA Sparkle @EN3 Series
+- Elegoo PLA Wood @EN3 Series
+- Elegoo Rapid TPU 95A @EN3 Series
+- Elegoo PETG-CF @EN3 Series
+- Elegoo PETG-GF @EN3 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN3 Series
+visual:
+  bed_model: elegoo_neptune3pro_buildplate_model.stl
+  bed_texture: elegoo_neptune3pro_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 3 Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 4
+id: Elegoo Neptune 4
+model:
+  base_model: Elegoo Neptune 4
+  model: Elegoo Neptune 4
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN4 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN4 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN4 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN4 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN4 Series
+- Elegoo PLA-CF @EN4 Series
+- Elegoo PLA @EN4 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN4 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN4 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN4 Series
+- Elegoo TPU 95A @EN4 Series
+visual:
+  bed_texture: elegoo_neptune_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 4_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 4 Max
+id: Elegoo Neptune 4 Max
+model:
+  base_model: Elegoo Neptune 4
+  model: Elegoo Neptune 4 Max
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN4 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN4 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN4 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN4 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN4 Series
+- Elegoo PLA-CF @EN4 Series
+- Elegoo PLA @EN4 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN4 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN4 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN4 Series
+- Elegoo TPU 95A @EN4 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN4 Series
+- Elegoo PLA Galaxy @EN4 Series
+- Elegoo PLA Marble @EN4 Series
+- Elegoo PLA Sparkle @EN4 Series
+- Elegoo PLA Wood @EN4 Series
+- Elegoo Rapid TPU 95A @EN4 Series
+- Elegoo PETG-CF @EN4 Series
+- Elegoo PETG-GF @EN4 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN4 Series
+visual:
+  bed_model: elegoo_neptune4max_buildplate_model.stl
+  bed_texture: elegoo_neptune4max_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 4 Max_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 4 Plus
+id: Elegoo Neptune 4 Plus
+model:
+  base_model: Elegoo Neptune 4
+  model: Elegoo Neptune 4 Plus
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN4 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN4 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN4 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN4 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN4 Series
+- Elegoo PLA-CF @EN4 Series
+- Elegoo PLA @EN4 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN4 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN4 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN4 Series
+- Elegoo TPU 95A @EN4 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN4 Series
+- Elegoo PLA Galaxy @EN4 Series
+- Elegoo PLA Marble @EN4 Series
+- Elegoo PLA Sparkle @EN4 Series
+- Elegoo PLA Wood @EN4 Series
+- Elegoo Rapid TPU 95A @EN4 Series
+- Elegoo PETG-CF @EN4 Series
+- Elegoo PETG-GF @EN4 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN4 Series
+visual:
+  bed_model: elegoo_neptune4plus_buildplate_model.stl
+  bed_texture: elegoo_neptune4plus_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 4 Plus_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune 4 Pro
+id: Elegoo Neptune 4 Pro
+model:
+  base_model: Elegoo Neptune 4
+  model: Elegoo Neptune 4 Pro
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN4 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN4 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN4 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN4 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN4 Series
+- Elegoo PLA-CF @EN4 Series
+- Elegoo PLA @EN4 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN4 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN4 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN4 Series
+- Elegoo TPU 95A @EN4 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN4 Series
+- Elegoo PLA Galaxy @EN4 Series
+- Elegoo PLA Marble @EN4 Series
+- Elegoo PLA Sparkle @EN4 Series
+- Elegoo PLA Wood @EN4 Series
+- Elegoo Rapid TPU 95A @EN4 Series
+- Elegoo PETG-CF @EN4 Series
+- Elegoo PETG-GF @EN4 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN4 Series
+visual:
+  bed_model: elegoo_neptune4pro_buildplate_model.stl
+  bed_texture: elegoo_neptune4pro_buildplate_texture.svg
+  thumbnail: Elegoo Neptune 4 Pro_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo Neptune X
+id: Elegoo Neptune X
+model:
+  base_model: Elegoo Neptune
+  model: Elegoo Neptune X
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo ASA @0.2 nozzle
+- Elegoo ASA @EN2 Series
+- Elegoo PETG @0.2 nozzle
+- Elegoo PETG @EN2 Series
+- Elegoo PETG PRO @0.2 nozzle
+- Elegoo PETG PRO @EN2 Series
+- Elegoo PLA @0.2 nozzle
+- Elegoo PLA Matte @0.2 nozzle
+- Elegoo PLA Matte @EN2 Series
+- Elegoo PLA PRO @0.2 nozzle
+- Elegoo PLA PRO @EN2 Series
+- Elegoo PLA Silk @0.2 nozzle
+- Elegoo PLA Silk @EN2 Series
+- Elegoo PLA-CF @EN2 Series
+- Elegoo PLA @EN2 Series
+- Elegoo PLA+ @0.2 nozzle
+- Elegoo PLA+ @EN2 Series
+- Elegoo Rapid PETG @0.2 nozzle
+- Elegoo Rapid PETG @EN2 Series
+- Elegoo Rapid PLA+ @0.2 nozzle
+- Elegoo Rapid PLA+ @EN2 Series
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @EN2 Series
+- Elegoo PLA Galaxy @EN2 Series
+- Elegoo PLA Marble @EN2 Series
+- Elegoo PLA Sparkle @EN2 Series
+- Elegoo PLA Wood @EN2 Series
+- Elegoo Rapid TPU 95A @EN2 Series
+- Elegoo PETG-CF @EN2 Series
+- Elegoo PETG-GF @EN2 Series
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @EN2 Series
+visual:
+  bed_model: elegoo_neptunex_buildplate_model.stl
+  bed_texture: elegoo_neptunex_buildplate_texture.svg
+  thumbnail: Elegoo Neptune X_cover.png
+---
+kind: printer
+technology: FFF
+name: Elegoo OrangeStorm Giga
+id: Elegoo OrangeStorm Giga
+model:
+  base_model: Elegoo OrangeStorm
+  model: Elegoo OrangeStorm Giga
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+default_materials:
+- Elegoo PLA @Elegoo Giga
+- Elegoo PETG PRO @Elegoo Giga
+- Elegoo ASA @Elegoo Giga
+- Elegoo PLA Matte @Elegoo Giga
+- Elegoo Rapid PETG @Elegoo Giga
+- Elegoo Rapid PLA+ @Elegoo Giga
+- Elegoo PLA Basic @0.2 nozzle
+- Elegoo PLA Basic @Elegoo Giga
+- Elegoo PLA Galaxy @Elegoo Giga
+- Elegoo PLA Marble @Elegoo Giga
+- Elegoo PLA Sparkle @Elegoo Giga
+- Elegoo PLA Wood @Elegoo Giga
+- Elegoo Rapid TPU 95A @Elegoo Giga
+- Elegoo PETG-CF @Elegoo Giga
+- Elegoo PETG-GF @Elegoo Giga
+- Elegoo PETG Translucent @0.2 nozzle
+- Elegoo PETG Translucent @Elegoo Giga
+visual:
+  bed_model: elegoo_orangestorm_giga_buildplate_model.stl
+  bed_texture: elegoo_orangestorm_giga_buildplate_texture.svg
+  thumbnail: Elegoo OrangeStorm Giga_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: tool
+technology: FFF
+id: '1.0'
+name: 1.0 nozzle
+condition: printer.supports_1_nozzle
+features:
+  nozzle_diameter:
+    default: 1.0
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Elegoo-Centauri
+name: Elegoo Centauri
+printer: Elegoo Centauri
+tools:
+- tool: '0.4'
+sheet: textured_pei_plate
+---
+kind: printer_config
+id: Elegoo-Centauri-2
+name: Elegoo Centauri 2
+printer: Elegoo Centauri 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Centauri-Carbon
+name: Elegoo Centauri Carbon
+printer: Elegoo Centauri Carbon
+tools:
+- tool: '0.4'
+sheet: textured_pei_plate
+---
+kind: printer_config
+id: Elegoo-Centauri-Carbon-2
+name: Elegoo Centauri Carbon 2
+printer: Elegoo Centauri Carbon 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune
+name: Elegoo Neptune
+printer: Elegoo Neptune
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-2
+name: Elegoo Neptune 2
+printer: Elegoo Neptune 2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-2D-1t
+name: Elegoo Neptune 2D 1T
+printer: Elegoo Neptune 2D
+tool_count: 1
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-2D-2t
+name: Elegoo Neptune 2D 2T
+printer: Elegoo Neptune 2D
+tool_count: 2
+tools:
+- tool: '0.4'
+  features:
+    extruder_index: 0
+- tool: '0.4'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-2S
+name: Elegoo Neptune 2S
+printer: Elegoo Neptune 2S
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-3
+name: Elegoo Neptune 3
+printer: Elegoo Neptune 3
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-3-Max
+name: Elegoo Neptune 3 Max
+printer: Elegoo Neptune 3 Max
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-3-Plus
+name: Elegoo Neptune 3 Plus
+printer: Elegoo Neptune 3 Plus
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-3-Pro
+name: Elegoo Neptune 3 Pro
+printer: Elegoo Neptune 3 Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-4
+name: Elegoo Neptune 4
+printer: Elegoo Neptune 4
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-4-Max
+name: Elegoo Neptune 4 Max
+printer: Elegoo Neptune 4 Max
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-4-Plus
+name: Elegoo Neptune 4 Plus
+printer: Elegoo Neptune 4 Plus
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-4-Pro
+name: Elegoo Neptune 4 Pro
+printer: Elegoo Neptune 4 Pro
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-Neptune-X
+name: Elegoo Neptune X
+printer: Elegoo Neptune X
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Elegoo-OrangeStorm-Giga
+name: Elegoo OrangeStorm Giga
+printer: Elegoo OrangeStorm Giga
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

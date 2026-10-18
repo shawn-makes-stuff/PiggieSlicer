@@ -239,8 +239,11 @@ bool ComboBox::BeginComboPopup(ImGuiID popup_id, const ImRect& bb, ImGuiComboFla
         ImVec2 constraint_min(0.0f, 0.0f), constraint_max(FLT_MAX, FLT_MAX);
         if ((g.NextWindowData.HasFlags & ImGuiNextWindowDataFlags_HasSize) == 0
             || g.NextWindowData.SizeVal.x
-                <= 0.0f) // Don't apply constraints if user specified a size
+                <= 0.0f) { // Don't apply constraints if user specified a size
+            // the list is exactly as wide as its field
             constraint_min.x = w;
+            constraint_max.x = w;
+        }
         if ((g.NextWindowData.HasFlags & ImGuiNextWindowDataFlags_HasSize) == 0
             || g.NextWindowData.SizeVal.y <= 0.0f)
             constraint_max.y = CalcMaxPopupHeightFromItemCount(popup_max_height_in_items);

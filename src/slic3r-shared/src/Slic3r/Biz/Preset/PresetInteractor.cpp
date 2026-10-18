@@ -28,6 +28,7 @@
 #include <vector>
 #include <string>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <Slic3r/Log.hpp>
 #include <magic_enum/magic_enum.hpp>
@@ -296,6 +297,43 @@ void PresetInteractor::update_vendor_presets(std::mutex& mut, Domain::Preset::Bu
 
 }
 
+void PresetInteractor::set_added_printers(std::optional<std::set<std::string>> added_printers)
+{
+    m_added_printers = std::move(added_printers);
+}
+
+std::string PresetInteractor::added_printer_key(const std::string& vendor_id, const std::string& template_id)
+{
+    return vendor_id + "/" + template_id;
+}
+
+std::set<std::string> PresetInteractor::added_printers_with_presets(const std::set<std::string>& preset_ids) const
+{
+    std::set<std::string> ret;
+    const auto& preset_bundle = m_workbench.preset_bundle();
+    for (const auto& hw_config : preset_bundle.printer_configs | std::views::values) {
+        if (!hw_config.template_id)
+            continue;
+        const auto it = preset_bundle.evaluated_presets.find(hw_config.id);
+        if (it == preset_bundle.evaluated_presets.end())
+            continue;
+        if (std::ranges::any_of(it->second, [&](const auto& epp) { return preset_ids.contains(epp.preset.id); }))
+            ret.insert(added_printer_key(hw_config.vendor_id, *hw_config.template_id));
+    }
+    return ret;
+}
+
+std::vector<std::string> PresetInteractor::system_printer_preset_ids(const std::string& hw_config_id) const
+{
+    std::vector<std::string> ret;
+    const auto& preset_bundle = m_workbench.preset_bundle();
+    if (const auto it = preset_bundle.evaluated_presets.find(hw_config_id); it != preset_bundle.evaluated_presets.end())
+        for (const auto& epp : it->second)
+            if (epp.preset.origin == Domain::Preset::PresetOrigin::System)
+                ret.push_back(epp.preset.id);
+    return ret;
+}
+
 void PresetInteractor::load_preset_bundle(const IO::BundlePaths& bundle_paths)
 {
     std::optional<Domain::Preset::Bundle> preset_bundle_opt;
@@ -308,7 +346,20 @@ void PresetInteractor::load_preset_bundle(const IO::BundlePaths& bundle_paths)
         if (bundle_paths.populate_local_bundle) {
             IO::populate_local_bundle(bundle_paths);
         }
-        preset_bundle_opt = std::make_optional(IO::load_bundle(bundle_paths));
+        // only the vendors with an added printer (and those of the printers kept from the last
+        // load) get their presets read; the picker needs the vendors' printers only
+        std::optional<std::set<std::string>> preset_vendors;
+        if (m_added_printers) {
+            preset_vendors.emplace();
+            for (const std::string& key : *m_added_printers)
+                preset_vendors->insert(key.substr(0, key.find('/')));
+            if (m_workbench.has_preset_bundle())
+                for (const auto& config : m_workbench.preset_bundle().printer_configs | std::views::values)
+                    if (!config.template_id)
+                        preset_vendors->insert(config.vendor_id);
+        }
+        preset_bundle_opt = std::make_optional(
+            IO::load_bundle(bundle_paths, preset_vendors ? &*preset_vendors : nullptr));
         Domain::Preset::Bundle& preset_bundle = *preset_bundle_opt;
         // copy over printer configs from original bundle, so these are not lost on reload
         if (m_workbench.has_preset_bundle()) {
@@ -316,12 +367,15 @@ void PresetInteractor::load_preset_bundle(const IO::BundlePaths& bundle_paths)
             std::ranges::copy(
                 m_workbench.preset_bundle().printer_configs
                     | std::views::filter(
-                        [&preset_bundle](const auto& hw_config)
+                        [&preset_bundle, this](const auto& hw_config)
                         {
-                            // filter out removed vendors
-                            return preset_bundle.vendor_bundles.contains(
-                                hw_config.second.vendor_id
-                            );
+                            // filter out removed vendors, and printers no longer added
+                            const auto& config = hw_config.second;
+                            return preset_bundle.vendor_bundles.contains(config.vendor_id)
+                                && (!m_added_printers || !config.template_id
+                                    || m_added_printers->contains(
+                                        added_printer_key(config.vendor_id, *config.template_id)
+                                    ));
                         }
                     ),
                 std::inserter(preset_bundle.printer_configs, preset_bundle.printer_configs.end())
@@ -333,9 +387,18 @@ void PresetInteractor::load_preset_bundle(const IO::BundlePaths& bundle_paths)
             }
         }
 
-        // TODO: remove this when config wizard is ready
+        // The printers of the vendor templates: only those the user added are built (and so
+        // evaluated below); the picker lists every template (docs/design/STARTUP_FIX.md).
         {
             HwConfigEvaluator config_eval;
+            auto add_config = [&](Domain::Preset::VendorBundle& vendor_bundle,
+                                  const Domain::Preset::HwPrinterConfigTemplate& hw_printer_template)
+            {
+                auto printer_config =
+                    config_eval.create_printer_config(hw_printer_template, vendor_bundle.vendor_data);
+                preset_bundle.printer_configs.emplace(printer_config.id, printer_config);
+                vendor_bundle.printer_configs.emplace_back(std::move(printer_config));
+            };
             for (auto& [vendor, vendor_bundle] : preset_bundle.vendor_bundles) {
                 if (std::ranges::any_of(
                         preset_bundle.printer_configs | std::views::values,
@@ -345,12 +408,22 @@ void PresetInteractor::load_preset_bundle(const IO::BundlePaths& bundle_paths)
                     continue;
                 }
                 for (const auto& hw_printer_template : vendor_bundle.vendor_data.printer_configs) {
-                    auto printer_config = config_eval.create_printer_config(
-                        hw_printer_template,
-                        vendor_bundle.vendor_data
-                    );
-                    preset_bundle.printer_configs.emplace(printer_config.id, printer_config);
-                    vendor_bundle.printer_configs.emplace_back(std::move(printer_config));
+                    if (m_added_printers
+                        && !m_added_printers->contains(added_printer_key(vendor, hw_printer_template.id)))
+                        continue;
+                    add_config(vendor_bundle, hw_printer_template);
+                }
+            }
+            // nothing added yet (first start, before the Welcome picker): one printer, so a project
+            // has a printer to start with
+            if (preset_bundle.printer_configs.empty()) {
+                for (auto& vendor_bundle : preset_bundle.vendor_bundles | std::views::values) {
+                    if (!vendor_bundle.vendor_data.printer_configs.empty()) {
+                        if (vendor_bundle.presets.empty())
+                            IO::load_vendor_presets(bundle_paths, vendor_bundle);
+                        add_config(vendor_bundle, vendor_bundle.vendor_data.printer_configs.front());
+                        break;
+                    }
                 }
             }
         }
@@ -941,6 +1014,13 @@ bool PresetInteractor::update_changed_printer_configs(
 {
     auto& preset_bundle{m_workbench.preset_bundle()};
 
+    // a printer of a vendor whose presets were not read at start-up (no printer of it added)
+    for (const Domain::Preset::HwPrinterConfig& hw_config : hw_configs) {
+        auto& vendor_bundle{preset_bundle.vendor_bundles.at(hw_config.vendor_id)};
+        if (vendor_bundle.presets.empty())
+            IO::load_vendor_presets(m_bundle_paths, vendor_bundle);
+    }
+
     const std::string& selected_printer_root_id{selected_printer_preset().printer.root_id};
 
     ListenerInvokeLaterBag bag;
@@ -1210,6 +1290,117 @@ void PresetInteractor::discard_selected_printer_preset_changes()
             );
         }
     );
+}
+
+void PresetInteractor::select_printer_defaults()
+{
+    const std::string default_print = get_string(selected_printer_preset().printer, "default_print");
+    const auto& prints = m_print_presets.items();
+    for (size_t i = 0, n = prints.size(); i < n; ++i)
+        if (Domain::Preset::short_name(prints.at(i).name) == default_print) {
+            select_print_preset(std::string{prints.at(i).id});
+            break;
+        }
+    const std::string default_material = get_string(selected_printer_preset().print, "default_material");
+    for (size_t slot = 0; slot < m_material_presets.size(); ++slot) {
+        const auto& materials = m_material_presets.at(slot).items();
+        for (size_t i = 0, n = materials.size(); i < n; ++i)
+            if (Domain::Preset::short_name(materials.at(i).name) == default_material) {
+                select_material_preset(slot, std::string{materials.at(i).id});
+                break;
+            }
+    }
+}
+
+bool PresetInteractor::delete_selected_user_preset(Domain::Preset::PresetKind kind, size_t slot_index)
+{
+    using Domain::Preset::PresetKind;
+    const auto& selected = selected_printer_preset();
+    const bool is_printer  = kind == PresetKind::FdmPrinter || kind == PresetKind::SlaPrinter;
+    const bool is_print    = kind == PresetKind::FdmPrint || kind == PresetKind::SlaPrint;
+    const bool is_material = kind == PresetKind::FdmMaterial || kind == PresetKind::SlaMaterial;
+    if (!is_printer && !is_print && !(is_material && slot_index < selected.materials.size()))
+        return false;
+
+    struct Deleted
+    {
+        Domain::Preset::PresetOrigin origin;
+        std::string id, root_id, name;
+        std::optional<std::string> user_file;
+    };
+    auto deleted_of = [](const auto& p) { return Deleted{p.origin, p.id, p.root_id, p.name, p.user_file}; };
+    const Deleted d = is_printer ? deleted_of(selected.printer)
+        : is_print               ? deleted_of(selected.print)
+                                 : deleted_of(selected.materials[slot_index]);
+    if (d.origin != Domain::Preset::PresetOrigin::User)
+        return false;
+    const std::string vendor_id    = selected.hw_config.vendor_id;
+    const std::string repo_id      = selected.hw_config.repo_id;
+    const std::string hw_config_id = selected.hw_config.id;
+
+    // Orca selects the first compatible preset instead, preferring the default one (printer's
+    // default print / print's default filament; for a printer, the system preset of the same model)
+    const PresetItemObservableList& list = is_printer ? m_printer_presets
+        : is_print                                    ? m_print_presets
+                                                      : m_material_presets.at(slot_index);
+    auto preferred = [&](const PresetItem& item)
+    {
+        if (is_printer)
+            return item.hw_printer_config_id == hw_config_id
+                && item.origin == Domain::Preset::PresetOrigin::System;
+        const std::string default_name =
+            is_print ? get_string(selected.printer, "default_print")
+                     : get_string(selected.print, "default_material");
+        return Domain::Preset::short_name(item.name) == default_name;
+    };
+    const auto& items = list.items();
+    const PresetItem* next = nullptr;
+    for (size_t i = 0, n = items.size(); i < n && next == nullptr; ++i)
+        if (items.at(i).id != d.id && preferred(items.at(i)))
+            next = &items.at(i);
+    for (size_t i = 0, n = items.size(); i < n && next == nullptr; ++i)
+        if (items.at(i).id != d.id)
+            next = &items.at(i);
+    if (next == nullptr)
+        return false;
+    const std::string next_id    = next->id;
+    const std::string next_hw_id = next->hw_printer_config_id;
+
+    // the edits go with the preset (no save prompt on the switch)
+    if (is_printer) {
+        discard_selected_printer_preset_changes();
+        select_printer_preset(next_hw_id, next_id, true);
+    } else if (is_print) {
+        discard_selected_print_preset_changes();
+        select_print_preset(next_id, true);
+    } else {
+        discard_selected_tool_material_preset_changes(slot_index);
+        select_material_preset(slot_index, next_id, true);
+    }
+
+    boost::system::error_code ec;
+    boost::filesystem::remove(
+        d.user_file ? boost::filesystem::path(*d.user_file)
+                    : IO::preset_path(m_bundle_paths, kind, d.name, vendor_id, repo_id),
+        ec
+    );
+    // the saved file's root node carries the preset's root id
+    auto& vendor_bundle = m_workbench.preset_bundle().vendor_bundles.at(vendor_id);
+    std::erase_if(vendor_bundle.presets.at(kind), [&d](const auto& node) { return node.id == d.root_id; });
+    vendor_bundle.preset_names = IO::collect_names(vendor_bundle.presets);
+    // drops it from the evaluated presets; no reload_vendor_presets, which re-evaluates the vendor
+    // and leaves the config box interactors pointing at the old originals
+    delete_preset(kind, d.id);
+
+    ListenerInvokeLaterBag bag;
+    auto& selected_preset = mutable_selected_printer_preset();
+    if (is_printer)
+        fill_printer_presets(false, bag);
+    else if (is_print)
+        fill_print_presets(selected_preset, false, bag);
+    else
+        fill_materials_presets(selected_preset, false, bag);
+    return true;
 }
 
 void PresetInteractor::discard_selected_print_preset_changes()
@@ -2333,6 +2524,96 @@ bool PresetInteractor::select_printer_sheet(const std::string& id, bool user)
     }
 
     return successfully_changed;
+}
+
+std::vector<std::string> PresetInteractor::default_material_names() const
+{
+    const auto& hw_config = selected_printer_preset().hw_config;
+    const auto& bundles   = m_workbench.preset_bundle().vendor_bundles;
+    const auto vendor_it  = bundles.find(hw_config.vendor_id);
+    if (vendor_it == bundles.end())
+        return {};
+    const auto* def = vendor_it->second.vendor_data.find_printer_config_def_by_id(hw_config.printer_id);
+    std::vector<std::string> names;
+    if (def != nullptr) {
+        // the material list shows short names (before "@", Domain::Preset::short_name)
+        for (const std::string& name : def->default_materials)
+            names.emplace_back(Domain::Preset::short_name(name));
+    }
+    return names;
+}
+
+bool PresetInteractor::can_attach_external_mmu(size_t tool_index) const
+{
+    const auto& hw_config = selected_printer_preset().hw_config;
+    if (hw_config.technology != Domain::PrinterTechnology::FFF || tool_index >= hw_config.tool_count)
+        return false;
+    // a vendor feeder (e.g. Prusa MMU3) stays as it is
+    const auto* feeder = Domain::Preset::find_tool_feeder(hw_config, tool_index);
+    return feeder == nullptr || Domain::Preset::is_external_mmu(*feeder);
+}
+
+std::optional<uint32_t> PresetInteractor::external_mmu_slot_count(size_t tool_index) const
+{
+    const auto* feeder =
+        Domain::Preset::find_external_mmu(selected_printer_preset().hw_config, tool_index);
+    return feeder ? std::optional{feeder->slot_count} : std::nullopt;
+}
+
+bool PresetInteractor::set_external_mmu(size_t tool_index, std::optional<uint32_t> slot_count, bool user)
+{
+    if (!can_attach_external_mmu(tool_index))
+        return false;
+
+    auto modifier = [&](Domain::Preset::HwPrinterConfig& hw_config)
+    {
+        const Domain::Preset::Address address{static_cast<uint8_t>(tool_index)};
+        if (!slot_count.has_value()) {
+            hw_config.feeders.erase(address);
+            return;
+        }
+        const auto& vendor_data =
+            m_workbench.preset_bundle().vendor_bundles.at(hw_config.vendor_id).vendor_data;
+        hw_config.feeders[address] = Domain::Preset::make_external_mmu_feeder(*slot_count, vendor_data);
+    };
+
+    const bool successfully_changed =
+        change_hw_config_and_validate(m_selected_project_id, modifier);
+    if (successfully_changed) {
+        const auto& ccc = selected_config_container_context();
+        const Domain::SelectionId config_container_id{ccc.config_container_id};
+        invoke_listeners<IPresetChangedListener>(
+            [project_id = m_selected_project_id, config_container_id](auto* l)
+            {
+                l->on_hw_item_selection_changed(
+                    project_id,
+                    config_container_id,
+                    HwItemType::FeederItem
+                );
+            }
+        );
+
+        if (user) {
+            m_backup_store.invalidate_backup(m_selected_project_id);
+        }
+
+        invoke_slicing_input_changed();
+    }
+
+    return successfully_changed;
+}
+
+bool PresetInteractor::change_external_mmu_slots(size_t tool_index, int delta, bool user)
+{
+    const auto slots = external_mmu_slot_count(tool_index);
+    if (!slots.has_value())
+        return delta > 0 && set_external_mmu(tool_index, Domain::Preset::EXTERNAL_MMU_MIN_SLOTS, user);
+    const int64_t new_slots = int64_t(*slots) + delta;
+    if (new_slots < Domain::Preset::EXTERNAL_MMU_MIN_SLOTS)
+        return set_external_mmu(tool_index, std::nullopt, user);
+    if (new_slots > Domain::Preset::EXTERNAL_MMU_MAX_SLOTS)
+        return false;
+    return set_external_mmu(tool_index, uint32_t(new_slots), user);
 }
 
 bool PresetInteractor::change_hw_config_and_validate(

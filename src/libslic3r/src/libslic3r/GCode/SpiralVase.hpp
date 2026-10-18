@@ -35,7 +35,11 @@ public:
 
         const auto nozzle_diameter{Biz::Slicing::get_nozzle_diameters(config.hw_config())};
         const double max_nozzle_diameter = *std::max_element(nozzle_diameter.begin(), nozzle_diameter.end());
-        m_max_xy_smoothing               = float(2. * max_nozzle_diameter);
+        // Orca spiral_mode_max_xy_smoothing: a percentage of the (largest) nozzle diameter
+        m_max_xy_smoothing    = float(config.get<Domain::FloatOrPercentage>("spiral_mode_max_xy_smoothing").get_abs_value(max_nozzle_diameter));
+        m_smooth_spiral       = config.get<bool>("spiral_mode_smooth");
+        m_starting_flow_ratio = float(config.get<double>("spiral_starting_flow_ratio"));
+        m_finishing_flow_ratio = float(config.get<double>("spiral_finishing_flow_ratio"));
     };
 
     void enable(bool enable)
@@ -56,6 +60,9 @@ private:
     bool 				m_transition_layer = false;
     // Whether to interpolate XY coordinates with the previous layer. Results in no seam at layer changes
     bool                m_smooth_spiral = true;
+    // Orca: the flow ratio the first loop ramps up from and the last loop down to
+    float               m_starting_flow_ratio = 0.f;
+    float               m_finishing_flow_ratio = 0.f;
     std::vector<Vec2f>  m_previous_layer;
 };
 }

@@ -371,6 +371,9 @@ bool DesktopApp::OnInit()
         [this]()
         {
             if (m_init_completed) {
+                m_project_interactor->preset_interactor().set_added_printers(
+                    AppServices::instance().app_config().app_settings_advanced().added_printers
+                );
                 m_project_interactor->preset_interactor().load_preset_bundle(m_bundle_paths);
                 return;
             }
@@ -446,7 +449,19 @@ void DesktopApp::finish_init()
 
     // load new presets
     m_bundle_paths = Biz::Preset::IO::BundlePaths::make_standard_runtime();
+    // only the printers the user added are built (docs/design/STARTUP_FIX.md). A fresh setup has
+    // none yet; a setup from before the list existed builds everything once and keeps the printers
+    // its printer list showed (the favourites).
+    AppSettingsAdvanced& advanced = app_services.app_config().app_settings_advanced();
+    if (!advanced.added_printers && advanced.printer_favorite_presets.empty())
+        advanced.added_printers = std::set<std::string>{};
+    preset_interactor.set_added_printers(advanced.added_printers);
     preset_interactor.load_preset_bundle(m_bundle_paths);
+    if (!advanced.added_printers) {
+        advanced.added_printers =
+            preset_interactor.added_printers_with_presets(advanced.printer_favorite_presets);
+        app_services.app_config().save();
+    }
 
     if (m_splash_screen)
         m_splash_screen->SetText(WX::_L("Initializing Prepare Mode") + dots);

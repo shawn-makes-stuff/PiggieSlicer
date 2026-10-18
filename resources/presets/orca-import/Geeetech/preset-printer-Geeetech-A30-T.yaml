@@ -1,0 +1,133 @@
+kind: printer
+id: CcHSgYNOdgKdvpLBH59izQ
+variants:
+- condition: printer.model == "Geeetech A30 T"
+  name: Geeetech A30 T
+  id: KTUlaY76jz0IbsQPgmtMSw
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: SULUL7wb8Xq3HtCctJdRZA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Geeetech common
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 47
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;------------------------------------
+        ;layer No: [layer_num] ———>Print Height: [layer_z] mm
+        ;------------------------------------
+      end_gcode: |-
+        G1 E-2.5 F2100 ; Retract filament
+        G92 E0.0
+        G1{if max_layer_z < max_print_height} Z{z_offset+min(max_layer_z+30, max_print_height+0.2)}{endif} E-1.5 F720 ; Retract and raise Z
+        G4 ; wait
+        M104 S0 ; Cooldown hotend
+        M140 S0 ; Cooldown bed
+        M107 ; off fan
+        G1 X0 Y100 F3000 ; park print head
+        M84 ; disable motors
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 500.0
+      - 500.0
+      machine_max_acceleration_x:
+      - 500.0
+      - 500.0
+      machine_max_acceleration_y:
+      - 500.0
+      - 500.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 8.0
+      - 8.0
+      machine_max_jerk_y:
+      - 8.0
+      - 8.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.013
+      - 0.0
+      machine_max_feedrate_e:
+      - 60.0
+      - 60.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 10.0
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |-
+        ;Custom Start G-code
+        M104 S[first_layer_temperature] ; set extruder temp
+        M140 S[first_layer_bed_temperature[initial_extruder]] ; set bed temp
+        M190 S[first_layer_bed_temperature[initial_extruder]] ; wait for bed temp
+        M109 S[first_layer_temperature] ; wait for extruder temp
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+        G92 E0 ; Reset Extruder
+        G28 ; Home all axes
+        M107 ;Off Fan
+        G1 Z5.0 F3000 ;Move Z Axis up little to prevent scratching of Heat Bed
+        G1 X0.1 Y20 Z1.4 F6000 ; Move to start position
+        T[initial_extruder] ; Choose initial filament for the first line
+        G1 X0.1 Y80.0 Z1.4 F1000 E25 ; Draw the first line
+        G92 E0 ; Reset Extruder
+        G1 X0.4 Y80.0 Z1.4 F6000 ; Move to side a little
+        G1 X1.4 Y20 Z1.4 F1000 E20 ; Draw the second line
+        G92 E0 ; Reset Extruder
+        G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+        G1 X5 Y20 Z0.28 F3000.0 ; Move over to prevent blob squish
+        G92 E0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 320x0
+      - 320x320
+      - '0x320'
+      max_print_height: 420
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

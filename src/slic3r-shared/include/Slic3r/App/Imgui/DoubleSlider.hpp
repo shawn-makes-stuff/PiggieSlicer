@@ -265,6 +265,7 @@ public:
     }
 
     void set_slider_values(std::vector<ValType>&& values) { m_values = std::move(values); }
+    const std::vector<ValType>& slider_values() const { return m_values; }
     // values used to show thumb labels
     void set_slider_alternate_values(std::vector<ValType>&& values) { m_alternate_values = std::move(values); }
 

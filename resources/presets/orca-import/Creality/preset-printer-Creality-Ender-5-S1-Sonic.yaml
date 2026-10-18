@@ -1,0 +1,128 @@
+kind: printer
+id: qUThvJnBhCXZq35jXa31Fw
+variants:
+- condition: printer.model == "Creality Ender-5 S1 Sonic"
+  name: Creality Ender-5 S1 Sonic
+  id: pY2fieubrJyWPy15isibrQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: jLDud/MngzdA61+LOLPOcw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Creality Ender-5 S1 Sonic 0.4 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 55
+      extruder_clearance_radius: 62.5
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+2, max_print_height)} F600 ; Move print head up{endif}
+        G1 X5 Y{print_bed_max[1]*0.8} F{travel_speed*60} ; present print
+        {if max_layer_z < max_print_height-10}G1 Z{z_offset+min(max_layer_z+70, max_print_height-10)} F600 ; Move print head further up{endif}
+        {if max_layer_z < max_print_height*0.6}G1 Z{max_print_height*0.6} F600 ; Move print head further up{endif}
+        M140 S0 ; turn off heatbed
+        M104 S0 ; turn off temperature
+        M107 ; turn off fan
+        M84 X Y E ; disable motors
+      machine_max_acceleration_e:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_extruding:
+      - 2500.0
+      - 2500.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_x:
+      - 2500.0
+      - 2500.0
+      machine_max_acceleration_y:
+      - 2500.0
+      - 2500.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 12.0
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      - 12.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 250.0
+      - 250.0
+      machine_max_feedrate_y:
+      - 250.0
+      - 250.0
+      machine_max_feedrate_z:
+      - 30.0
+      - 30.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |-
+        G90 ; use absolute coordinates
+        M83 ; extruder relative mode
+        M104 S150 ; set temporary nozzle temp to prevent oozing during homing
+        M140 S[first_layer_bed_temperature[initial_extruder]] ; set final bed temp
+        G4 S30 ; allow partial nozzle warmup
+        G28 ; home all axis and restore leveling
+        G1 Z50 F240
+        G1 X2.0 Y10 F3000
+        M104 S[first_layer_temperature] ; set final nozzle temp
+        M190 S[first_layer_bed_temperature[initial_extruder]] ; wait for bed temp to stabilize
+        M109 S[first_layer_temperature] ; wait for nozzle temp to stabilize
+        G1 Z0.28 F240
+        G92 E0
+        G1 X2.0 Y140 E10 F1500 ; prime the nozzle
+        G1 X2.3 Y140 F5000
+        G92 E0
+        G1 X2.3 Y10 E10 F1200 ; prime the nozzle
+        G92 E0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 220x0
+      - 220x220
+      - '0x220'
+      max_print_height: 280
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "support_air_filtration": false}'

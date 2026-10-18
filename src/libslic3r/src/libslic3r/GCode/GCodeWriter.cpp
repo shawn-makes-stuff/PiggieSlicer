@@ -13,6 +13,7 @@
 
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/ConfigUtils.hpp"
+#include "LocalesUtils.hpp"
 #include "libslic3r/ConfigViews.hpp"
 
 #ifdef __APPLE__
@@ -224,7 +225,11 @@ std::string GCodeWriter::set_acceleration_internal(Acceleration type, unsigned i
     last_value = acceleration;
 
     std::ostringstream gcode;
-    if (FLAVOR_IS(gcfRepetier)) {
+    if (klipper_velocity_limit()) {
+        // Orca: SET_VELOCITY_LIMIT ACCEL / ACCEL_TO_DECEL
+        gcode << "SET_VELOCITY_LIMIT ACCEL=" << acceleration << " ACCEL_TO_DECEL="
+              << float_to_string_decimal_point(acceleration * this->config.accel_to_decel_factor / 100);
+    } else if (FLAVOR_IS(gcfRepetier)) {
         gcode << (separate_travel ? "M202 X" : "M201 X") << acceleration << " Y" << acceleration;
     } else if (FLAVOR_IS(gcfRepRapFirmware)
                || FLAVOR_IS(gcfMarlinFirmware)
@@ -239,6 +244,90 @@ std::string GCodeWriter::set_acceleration_internal(Acceleration type, unsigned i
     gcode << "\n";
     
     return gcode.str();
+}
+
+std::string GCodeWriter::set_power_loss_recovery(Domain::PowerLossRecoveryMode mode) const
+{
+    // Orca GCodeWriter::enable_power_loss_recovery (non Bambu printers)
+    if (mode == Domain::PowerLossRecoveryMode::PrinterConfiguration || FLAVOR_IS_NOT(gcfMarlinFirmware))
+        return {};
+    std::string gcode = mode == Domain::PowerLossRecoveryMode::Enable ? "M413 S1" : "M413 S0";
+    if (this->config.gcode_comments)
+        gcode += " ; set Power-loss Recovery";
+    return gcode + "\n";
+}
+
+bool GCodeWriter::klipper_velocity_limit() const
+{
+    return FLAVOR_IS(gcfKlipper) && this->config.accel_to_decel_enable;
+}
+
+std::string GCodeWriter::set_jerk_xy(double jerk)
+{
+    // Orca GCodeWriter::set_jerk_xy
+    if (jerk < 0.01 || std::abs(jerk - m_last_jerk) < EPSILON)
+        return {};
+    m_last_jerk = jerk;
+
+    std::ostringstream gcode;
+    if (FLAVOR_IS(gcfKlipper)) {
+        if (config.max_jerk_x > 0 && jerk > config.max_jerk_x)
+            jerk = config.max_jerk_x;
+        if (config.max_jerk_y > 0 && jerk > config.max_jerk_y)
+            jerk = config.max_jerk_y;
+        gcode << "SET_VELOCITY_LIMIT SQUARE_CORNER_VELOCITY=" << jerk;
+    } else if (FLAVOR_IS(gcfRepetier)) {
+        double jerk_xy = jerk;
+        if (config.max_jerk_x > 0 && jerk_xy > config.max_jerk_x)
+            jerk_xy = config.max_jerk_x;
+        if (config.max_jerk_y > 0 && jerk_xy > config.max_jerk_y)
+            jerk_xy = config.max_jerk_y;
+        gcode << "M207 X" << jerk_xy;
+    } else {
+        double jerk_x = jerk;
+        double jerk_y = jerk;
+        if (config.max_jerk_x > 0 && jerk > config.max_jerk_x)
+            jerk_x = config.max_jerk_x;
+        if (config.max_jerk_y > 0 && jerk > config.max_jerk_y)
+            jerk_y = config.max_jerk_y;
+        gcode << "M205 X" << jerk_x << " Y" << jerk_y;
+    }
+    if (this->config.gcode_comments)
+        gcode << " ; adjust jerk";
+    gcode << "\n";
+    return gcode.str();
+}
+
+std::string GCodeWriter::set_accel_and_jerk(unsigned int acceleration, double jerk)
+{
+    // Orca GCodeWriter::set_accel_and_jerk (Klipper)
+    if (config.max_acceleration > 0 && acceleration > config.max_acceleration)
+        acceleration = config.max_acceleration;
+    if (config.max_jerk_x > 0 && jerk > config.max_jerk_x)
+        jerk = config.max_jerk_x;
+    if (config.max_jerk_y > 0 && jerk > config.max_jerk_y)
+        jerk = config.max_jerk_y;
+
+    const bool set_acceleration = acceleration != 0 && acceleration != m_last_acceleration;
+    const bool set_jerk         = jerk > 0.01 && std::abs(jerk - m_last_jerk) >= EPSILON;
+    if (!set_acceleration && !set_jerk)
+        return {};
+
+    std::string gcode = "SET_VELOCITY_LIMIT";
+    if (set_acceleration) {
+        gcode += " ACCEL=" + std::to_string(acceleration);
+        if (this->config.accel_to_decel_enable)
+            gcode += " ACCEL_TO_DECEL=" + float_to_string_decimal_point(acceleration * this->config.accel_to_decel_factor / 100);
+        m_last_acceleration = acceleration;
+    }
+    if (set_jerk) {
+        gcode += " SQUARE_CORNER_VELOCITY=" + float_to_string_decimal_point(jerk);
+        m_last_jerk = jerk;
+    }
+    if (this->config.gcode_comments)
+        gcode += " ; adjust VELOCITY_LIMIT(accel/jerk)";
+    gcode += "\n";
+    return gcode;
 }
 
 std::string GCodeWriter::set_junction_deviation(const double junction_deviation)
@@ -289,6 +378,9 @@ std::string GCodeWriter::update_progress(unsigned int num, unsigned int tot, boo
 
 std::string GCodeWriter::toolchange_prefix() const
 {
+    // Orca: manual filament change - a tag the G-code processor takes as the tool change, no T command
+    if (config.manual_filament_change)
+        return "; MANUAL_TOOL_CHANGE T";
     return FLAVOR_IS(gcfMakerWare) ? "M135 T" :
            FLAVOR_IS(gcfSailfish)  ? "M108 T" : "T";
 }
@@ -313,6 +405,17 @@ std::string GCodeWriter::toolchange(unsigned int extruder_id)
     return gcode.str();
 }
 
+std::string GCodeWriter::set_exhaust_fan(int speed) const
+{
+    // Orca GCodeWriter::set_exhaust_fan
+    std::ostringstream gcode;
+    gcode << "M106" << " P3" << " S" << (int)(speed / 100.0 * 255);
+    if (this->config.gcode_comments)
+        gcode << (speed == 0 ? " ; disable exhaust fan " : " ; enable exhaust fan ");
+    gcode << "\n";
+    return gcode.str();
+}
+
 std::string GCodeWriter::set_speed(double F, const std::string_view comment, const std::string_view cooling_marker) const
 {
     assert(F > 0.);
@@ -322,6 +425,7 @@ std::string GCodeWriter::set_speed(double F, const std::string_view comment, con
     w.emit_f(F);
     w.emit_comment(this->config.gcode_comments, comment);
     w.emit_string(cooling_marker);
+    m_current_speed = F;
     return w.string();
 }
 
@@ -329,7 +433,7 @@ std::string GCodeWriter::travel_to_xy_force(const Domain::Vec2d &point, const st
 {
     GCodeG1Formatter w;
     w.emit_xy(point);
-    w.emit_f(this->config.travel_speed * 60.0);
+    w.emit_f(this->travel_speed() * 60.0);
     w.emit_comment(this->config.gcode_comments, comment);
     m_pos.head<2>() = point.head<2>();
     return w.string();
@@ -388,7 +492,7 @@ std::string GCodeWriter::travel_to_xyz_force(const Domain::Vec3d &to, const std:
     GCodeG1Formatter w;
     w.emit_xyz(to);
 
-    double speed = this->config.travel_speed;
+    double speed = this->travel_speed();
     const double speed_z = this->config.travel_speed_z;
 
     if (speed_z) {
@@ -422,7 +526,7 @@ std::string GCodeWriter::travel_to_z_force(double z, const std::string_view comm
 {
     double speed = this->config.travel_speed_z;
     if (speed == 0.)
-        speed = this->config.travel_speed;
+        speed = this->travel_speed();
 
     GCodeG1Formatter w;
     w.emit_z(z);
@@ -514,6 +618,13 @@ std::string GCodeWriter::retract_for_toolchange(bool before_wipe)
     );
 }
 
+std::string GCodeWriter::retract_to(double length, bool toolchange)
+{
+    return toolchange ?
+        this->_retract(length, m_extruder->retract_restart_extra_toolchange(), "retract for toolchange") :
+        this->_retract(length, m_extruder->retract_restart_extra(), "retract");
+}
+
 std::string GCodeWriter::_retract(double length, double restart_extra, const std::string_view comment)
 {
     assert(std::abs(length) < 1000.0);
@@ -581,9 +692,11 @@ void GCodeWriter::update_position(const Domain::Vec3d &new_pos)
     m_pos = new_pos;
 }
 
-std::string GCodeWriter::set_fan(const GCodeFlavor gcode_flavor, bool gcode_comments, unsigned int speed)
+std::string GCodeWriter::set_fan(const GCodeFlavor gcode_flavor, bool gcode_comments, unsigned int speed, unsigned int min_pwm)
 {
     std::ostringstream gcode;
+    if (speed > 0 && min_pwm > 0 && speed < min_pwm)
+        speed = min_pwm;
     if (speed == 0) {
         switch (gcode_flavor) {
         case gcfTeacup:
@@ -618,6 +731,17 @@ std::string GCodeWriter::set_fan(const GCodeFlavor gcode_flavor, bool gcode_comm
 std::string GCodeWriter::set_fan(unsigned int speed) const
 {
     return GCodeWriter::set_fan(this->config.gcode_flavor, this->config.gcode_comments, speed);
+}
+
+std::string GCodeWriter::set_additional_fan(bool gcode_comments, unsigned int speed)
+{
+    // Orca GCodeWriter::set_additional_fan
+    std::ostringstream gcode;
+    gcode << "M106 " << "P2 " << "S" << (int)(255.0 * speed / 100.0);
+    if (gcode_comments)
+        gcode << (speed == 0 ? " ; disable additional fan " : " ; enable additional fan ");
+    gcode << "\n";
+    return gcode.str();
 }
 
 std::string GCodeWriter::set_pressure_advance(const double pressure_advance, const std::string& vendor_id) const

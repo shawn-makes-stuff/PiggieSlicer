@@ -1,0 +1,447 @@
+kind: printer
+id: nvgQozJ2DqhJhv8Hy25iFg
+variants:
+- condition: printer.model == "Flashforge AD5X"
+  name: Flashforge AD5X
+  id: AmIOMR5WvNGplOrECFWXEQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.25
+    id: Bil0qGZq3DAyNzhO6gvv8Q
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.12mm Standard @Flashforge AD5M 0.25 Nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 0
+      extruder_clearance_height: 26
+      extruder_clearance_radius: 58
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G1 E-3 F3600
+        G0 X50 Y50 F30000
+        M104 S0 ; turn off temperature
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: |-
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        M109 S[first_layer_temperature]
+        G90
+        M83
+        G1 Z2 F6000
+        G1 X50 Y220 Z0.25 F4800
+        G1 X70 E1.8 F900
+        G1 X200 E6 F1800
+        G0 Y219.6
+        G1 X130 E3 F1800
+        G92 E0
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 220x0
+      - 220x220
+      - '0x220'
+      max_print_height: 220
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 140x110/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: CrOcEsOcQ8PAtE1I0OuYsQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard @Flashforge AD5M Pro 0.4 Nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 0
+      extruder_clearance_height: 26
+      extruder_clearance_radius: 58
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G1 E-3 F3600
+        G0 X50 Y50 F30000
+        M104 S0 ; turn off temperature
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: |-
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        M109 S[first_layer_temperature]
+        G90
+        M83
+        G1 Z2 F6000
+        G1 X50 Y220 Z0.25 F4800
+        G1 X70 E3 F900
+        G1 X200 E10 F1800
+        G0 Y219.6
+        G1 X130 E5 F1800
+        G92 E0
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 220x0
+      - 220x220
+      - '0x220'
+      max_print_height: 220
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 140x110/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: JKbAL4G8Pq3J9amGkmClqw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.30mm Standard @Flashforge AD5M Pro 0.6 Nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 0
+      extruder_clearance_height: 26
+      extruder_clearance_radius: 58
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G1 E-3 F3600
+        G0 X50 Y50 F30000
+        M104 S0 ; turn off temperature
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 35.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: |-
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        M109 S[first_layer_temperature]
+        G90
+        M83
+        G1 Z2 F6000
+        G1 X50 Y220 Z0.25 F4800
+        G1 X70 E3 F900
+        G1 X200 E10 F1800
+        G0 Y219.6
+        G1 X130 E5 F1800
+        G92 E0
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 220x0
+      - 220x220
+      - '0x220'
+      max_print_height: 220
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 140x110/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: pN9hNQmwij0qyX1DCqEDmQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.40mm Standard @Flashforge AD5M Pro 0.8 Nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 0
+      extruder_clearance_height: 26
+      extruder_clearance_radius: 58
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G1 E-3 F3600
+        G0 X50 Y50 F30000
+        M104 S0 ; turn off temperature
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: |-
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        M109 S[first_layer_temperature]
+        G90
+        M83
+        G1 Z2 F6000
+        G1 X50 Y220 Z0.25 F4800
+        G1 X70 E3 F900
+        G1 X200 E10 F1800
+        G0 Y219.6
+        G1 X130 E5 F1800
+        G92 E0
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 220x0
+      - 220x220
+      - '0x220'
+      max_print_height: 220
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 140x110/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

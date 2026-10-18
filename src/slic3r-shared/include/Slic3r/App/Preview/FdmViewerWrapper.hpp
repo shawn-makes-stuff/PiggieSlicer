@@ -102,6 +102,7 @@ public:
     );
 
     void set_extrusion_role_color(Domain::GCodeExtrusionRole role, const Domain::ColorRGB& color) { return m_viewer.set_extrusion_role_color(role, color); }
+    float extrusion_role_estimated_time(Domain::GCodeExtrusionRole role) const { return m_viewer.extrusion_role_estimated_time(role); }
     
     libvgcode::ViewType view_type() const { return m_viewer.view_type(); }
     void set_view_type(libvgcode::ViewType type);
@@ -157,6 +158,9 @@ public:
 
     const libvgcode::Interval& layers_range() const { return m_viewer.layers_range(); }
     void set_layers_range(libvgcode::Interval::value_type min, libvgcode::Interval::value_type max);
+    /// The preview's search: moves the sliders to the next G-code line (after the current one,
+    /// wrapping) that contains the text, case-insensitive. False when none does.
+    bool find_gcode_text(const std::string& text);
 
     const libvgcode::GCodeEvents& gcode_events() const { return m_viewer.gcode_events(); }
     uint8_t used_extruders_count() const { return m_viewer.used_extruders_count(); }

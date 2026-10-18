@@ -82,6 +82,7 @@ std::string SpiralVase::process_layer(const std::string &gcode, bool last_layer)
     std::string        new_gcode, transition_gcode;
     std::vector<Vec2f> current_layer;
     m_reader.parse_buffer(gcode, [z, total_layer_length, layer_height, transition_in, transition_out, smooth_spiral, max_xy_smoothing = m_max_xy_smoothing,
+                                  starting_flow_ratio = m_starting_flow_ratio, finishing_flow_ratio = m_finishing_flow_ratio,
                                   &len, &last_point, &new_gcode, &transition_gcode, &current_layer, &previous_layer_distancer]
         (GCodeReader &reader, GCodeReader::GCodeLine line) {
         if (line.cmd_is("G1")) {
@@ -96,14 +97,14 @@ std::string SpiralVase::process_layer(const std::string &gcode, bool last_layer)
                     len += dist_XY;
                     const float factor = len / total_layer_length;
                     if (transition_in)
-                        // Transition layer, interpolate the amount of extrusion from zero to the final value.
-                        line.set(reader, E, line.e() * factor, 5);
+                        // Transition layer, interpolate the amount of extrusion from spiral_starting_flow_ratio to the final value.
+                        line.set(reader, E, line.e() * (starting_flow_ratio + factor * (1.f - starting_flow_ratio)), 5);
                     else if (transition_out) {
                         // We want the last layer to ramp down extrusion, but without changing z height!
                         // So clone the line before we mess with its Z and duplicate it into a new layer that ramps down E
                         // We add this new layer at the very end
                         GCodeReader::GCodeLine transition_line(line);
-                        transition_line.set(reader, E, line.e() * (1.f - factor), 5);
+                        transition_line.set(reader, E, line.e() * (finishing_flow_ratio + (1.f - factor) * (1.f - finishing_flow_ratio)), 5);
                         transition_gcode += transition_line.raw() + '\n';
                     }
 

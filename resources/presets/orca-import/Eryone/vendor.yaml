@@ -1,0 +1,313 @@
+kind: vendor
+id: Eryone
+name: Eryone
+version: 2.4.0+orca.02.04.00.07
+features:
+  printer:
+    supports_02_nozzle:
+      default: false
+      user_editable: false
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_05_nozzle:
+      default: false
+      user_editable: false
+    supports_06_nozzle:
+      default: false
+      user_editable: false
+    supports_08_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.2
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: Eryone ER20
+  base_model: Eryone ER20
+  printer_configs_order:
+  - Eryone-ER20-0-2-nozzle
+  - Eryone-ER20-0-4-nozzle
+  - Eryone-ER20-0-5-nozzle
+  - Eryone-ER20-0-6-nozzle
+  - Eryone-ER20-0-8-nozzle
+- label: Eryone ER20 Klipper
+  base_model: Eryone ER20 Klipper
+  printer_configs_order:
+  - Eryone-ER20-Klipper-0-2-nozzle
+  - Eryone-ER20-Klipper-0-4-nozzle
+  - Eryone-ER20-Klipper-0-5-nozzle
+  - Eryone-ER20-Klipper-0-6-nozzle
+  - Eryone-ER20-Klipper-0-8-nozzle
+- label: Thinker X400
+  base_model: Thinker X400
+  printer_configs_order:
+  - Thinker-X400-0-2-nozzle
+  - Thinker-X400-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: Eryone ER20
+id: Eryone ER20
+model:
+  base_model: Eryone ER20
+  model: Eryone ER20
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: eryone_er20_buildplate_model.stl
+  bed_texture: Eryone ER20_texture.svg
+  thumbnail: Eryone ER20_cover.png
+---
+kind: printer
+technology: FFF
+name: Eryone ER20 Klipper
+id: Eryone ER20 Klipper
+model:
+  base_model: Eryone ER20 Klipper
+  model: Eryone ER20 Klipper
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_06_nozzle:
+    default: true
+  supports_08_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: eryone_er20_buildplate_model.stl
+  bed_texture: Eryone ER20_texture.svg
+  thumbnail: Eryone ER20 Klipper_cover.png
+---
+kind: printer
+technology: FFF
+name: Thinker X400
+id: Thinker X400
+model:
+  base_model: Thinker X400
+  model: Thinker X400
+tool_count: 1
+features:
+  supports_02_nozzle:
+    default: true
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: X400_bed.stl
+  bed_texture: Thinker_texture.svg
+  thumbnail: Thinker X400_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.2'
+name: 0.2 nozzle
+condition: printer.supports_02_nozzle
+features:
+  nozzle_diameter:
+    default: 0.2
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.5'
+name: 0.5 nozzle
+condition: printer.supports_05_nozzle
+features:
+  nozzle_diameter:
+    default: 0.5
+---
+kind: tool
+technology: FFF
+id: '0.6'
+name: 0.6 nozzle
+condition: printer.supports_06_nozzle
+features:
+  nozzle_diameter:
+    default: 0.6
+---
+kind: tool
+technology: FFF
+id: '0.8'
+name: 0.8 nozzle
+condition: printer.supports_08_nozzle
+features:
+  nozzle_diameter:
+    default: 0.8
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: Eryone-ER20-0-2-nozzle
+name: Eryone ER20 0.2 nozzle
+printer: Eryone ER20
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-0-4-nozzle
+name: Eryone ER20 0.4 nozzle
+printer: Eryone ER20
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-0-5-nozzle
+name: Eryone ER20 0.5 nozzle
+printer: Eryone ER20
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-0-6-nozzle
+name: Eryone ER20 0.6 nozzle
+printer: Eryone ER20
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-0-8-nozzle
+name: Eryone ER20 0.8 nozzle
+printer: Eryone ER20
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-Klipper-0-2-nozzle
+name: Eryone ER20 Klipper 0.2 nozzle
+printer: Eryone ER20 Klipper
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-Klipper-0-4-nozzle
+name: Eryone ER20 Klipper 0.4 nozzle
+printer: Eryone ER20 Klipper
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-Klipper-0-5-nozzle
+name: Eryone ER20 Klipper 0.5 nozzle
+printer: Eryone ER20 Klipper
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-Klipper-0-6-nozzle
+name: Eryone ER20 Klipper 0.6 nozzle
+printer: Eryone ER20 Klipper
+tools:
+- tool: '0.6'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Eryone-ER20-Klipper-0-8-nozzle
+name: Eryone ER20 Klipper 0.8 nozzle
+printer: Eryone ER20 Klipper
+tools:
+- tool: '0.8'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Thinker-X400-0-2-nozzle
+name: Thinker X400 0.2 nozzle
+printer: Thinker X400
+tools:
+- tool: '0.2'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: Thinker-X400-0-4-nozzle
+name: Thinker X400 0.4 nozzle
+printer: Thinker X400
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

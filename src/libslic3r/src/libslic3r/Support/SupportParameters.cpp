@@ -48,6 +48,12 @@ SupportParameters::SupportParameters(const PrintObject &object)
     this->support_material_interface_flow    = Slic3r::support_material_interface_flow(&object, float(slicing_params.layer_height));
     this->raft_interface_flow                = support_material_interface_flow;
 
+    // Orca support_ironing
+    this->ironing         = object_config.get<bool>("support_ironing");
+    this->ironing_flow    = support_material_interface_flow.with_height(support_material_interface_flow.height() * 0.01 * object_config.get<Domain::Percentage>("support_ironing_flow").value);
+    this->ironing_spacing = float(std::max(0.05, object_config.get<double>("support_ironing_spacing")));
+    this->ironing_pattern = object_config.get<Domain::InfillPattern>("support_ironing_pattern");
+
     // Calculate a minimum support layer height as a minimum over all extruders, but not smaller than 10um.
     this->support_layer_height_min = scaled<coord_t>(0.01);
     for (auto lh : print_config.get<std::vector<double>>("min_layer_height"))
@@ -70,6 +76,7 @@ SupportParameters::SupportParameters(const PrintObject &object)
         bridge_flow_ratio += region.extruder_config_value<double>("bridge_flow_ratio", frExternalPerimeter);
     }
     this->gap_xy = object_config.get<Domain::FloatOrPercentage>("support_material_xy_spacing").get_abs_value(external_perimeter_width);
+    this->gap_xy_first_layer = object_config.get<double>("support_object_first_layer_gap");
     bridge_flow_ratio /= object.num_printing_regions();
 
     this->support_material_bottom_interface_flow = slicing_params.soluble_interface || ! object_config.get<bool>("thick_bridges") ?
@@ -86,9 +93,12 @@ SupportParameters::SupportParameters(const PrintObject &object)
             this->can_merge_support_regions = true;
     }
 
-    double interface_spacing = object_config.get<double>("support_material_interface_spacing") + this->support_material_interface_flow.spacing();
+    // Orca: the top interface (and the raft interface) solid when ironed; the bottom interface spacing of its own
+    double interface_spacing = (this->ironing ? 0. : object_config.get<double>("support_material_interface_spacing")) + this->support_material_interface_flow.spacing();
     this->interface_density  = std::min(1., this->support_material_interface_flow.spacing() / interface_spacing);
-    double raft_interface_spacing = object_config.get<double>("support_material_interface_spacing") + this->raft_interface_flow.spacing();
+    double bottom_interface_spacing = object_config.get<double>("support_bottom_interface_spacing") + this->support_material_interface_flow.spacing();
+    this->bottom_interface_density  = std::min(1., this->support_material_interface_flow.spacing() / bottom_interface_spacing);
+    double raft_interface_spacing = (this->ironing ? 0. : object_config.get<double>("support_material_interface_spacing")) + this->raft_interface_flow.spacing();
     this->raft_interface_density = std::min(1., this->raft_interface_flow.spacing() / raft_interface_spacing);
     double support_spacing   = object_config.get<double>("support_material_spacing") + this->support_material_flow.spacing();
     this->support_density    = std::min(1., this->support_material_flow.spacing() / support_spacing);
@@ -104,11 +114,21 @@ SupportParameters::SupportParameters(const PrintObject &object)
         this->support_density > 0.95 || this->with_sheath ? Domain::InfillPattern::ipRectilinear : Domain::InfillPattern::ipSupportBase;
     this->interface_fill_pattern = (this->interface_density > 0.95 ? Domain::InfillPattern::ipRectilinear : Domain::InfillPattern::ipSupportBase);
     this->raft_interface_fill_pattern = this->raft_interface_density > 0.95 ? Domain::InfillPattern::ipRectilinear : Domain::InfillPattern::ipSupportBase;
-    this->contact_fill_pattern   =
-        (object_config.get<Domain::SupportMaterialInterfacePattern>("support_material_interface_pattern") == Domain::SupportMaterialInterfacePattern::smipAuto && slicing_params.soluble_interface) ||
-        object_config.get<Domain::SupportMaterialInterfacePattern>("support_material_interface_pattern") == Domain::SupportMaterialInterfacePattern::smipConcentric ?
-        Domain::InfillPattern::ipConcentric :
-        (this->interface_density > 0.95 ? Domain::InfillPattern::ipRectilinear : Domain::InfillPattern::ipSupportBase);
+    this->support_interface_pattern = object_config.get<Domain::SupportMaterialInterfacePattern>("support_material_interface_pattern");
+    // Orca: the contact density of the top interface, or of the bottom one without top interfaces
+    const double contact_interface_density = this->has_top_contacts ? this->interface_density : this->bottom_interface_density;
+    if (this->support_interface_pattern == Domain::SupportMaterialInterfacePattern::smipGrid)
+        this->contact_fill_pattern = Domain::InfillPattern::ipGrid;
+    else if (this->support_interface_pattern == Domain::SupportMaterialInterfacePattern::smipRectilinearInterlaced)
+        this->contact_fill_pattern = Domain::InfillPattern::ipRectilinear;
+    else if (this->support_interface_pattern == Domain::SupportMaterialInterfacePattern::smipSpiralInset)
+        this->contact_fill_pattern = Domain::InfillPattern::ipSpiralInset;
+    else
+        this->contact_fill_pattern =
+            (this->support_interface_pattern == Domain::SupportMaterialInterfacePattern::smipAuto && slicing_params.soluble_interface) ||
+            this->support_interface_pattern == Domain::SupportMaterialInterfacePattern::smipConcentric ?
+            Domain::InfillPattern::ipConcentric :
+            (contact_interface_density > 0.95 ? Domain::InfillPattern::ipRectilinear : Domain::InfillPattern::ipSupportBase);
 
     this->base_angle            = deg2rad(float(object_config.get<double>("support_material_angle")));
     this->interface_angle       = deg2rad(float(object_config.get<double>("support_material_angle") + 90.));

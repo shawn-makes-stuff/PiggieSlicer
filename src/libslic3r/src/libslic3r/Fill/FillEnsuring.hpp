@@ -9,6 +9,9 @@ namespace Slic3r {
 class PrintRegionConfigView;
 class Surface;
 
+// The vertical sections of a surface without the short ones vibrating between the long ones.
+std::vector<Lines> filter_vibrating_extrusions(const std::vector<Lines> &lines_sections);
+
 ThickPolylines make_fill_polylines(
     const Fill *fill, const Surface *surface, const FillParams &params, bool stop_vibrations, bool fill_gaps, bool connect_extrusions);
 

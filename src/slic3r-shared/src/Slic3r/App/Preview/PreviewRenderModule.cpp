@@ -1,7 +1,8 @@
 #include "Slic3r/App/Preview/PreviewRenderModule.hpp"
+#include "Slic3r/App/SearchBar.hpp"
+#include "Slic3r/App/TopBar.hpp"
 
 #include "Slic3r/App/Preview/PreviewCameraGizmo.hpp"
-#include "Slic3r/App/Preview/SidebarAutoReslice.hpp"
 #include "Slic3r/App/Render/Device.hpp"
 #include "Slic3r/App/Render/CommandBuffer.hpp"
 #include "Slic3r/App/Render/ScopedDebugGroup.hpp"
@@ -24,6 +25,7 @@
 #include "Slic3r/App/LogicalPrinterSettingsDialog.hpp"
 #include "Slic3r/App/PhysicalPrinterSettingsDialog.hpp"
 #include "Slic3r/App/PhysicalPrinterAdvancedSettingsDialog.hpp"
+#include "Slic3r/App/FlushingVolumesDialog.hpp"
 #include "Slic3r/App/PrinterAdvancedSettingsDialog.hpp"
 #include "Slic3r/App/PrinterAddDialog.hpp"
 #include "Slic3r/App/PrintSettingsDialog.hpp"
@@ -233,11 +235,11 @@ void PreviewRenderModule::render_imgui(Render::CommandBuffer& cmd_buffer)
         && printer_technology == Domain::PrinterTechnology::FFF;
 
     if (m_layout) {
-        m_button_gcode_inspect->set_visible(gcode_window_enabled);
-        if (m_button_gcode_inspect->checked() && !gcode_window_enabled) {
-            m_button_gcode_inspect->set_checked(false);
-        }
+        // the G-code viewer is a sidebar panel (collapsible), shown with G-code
+        m_gcode_window->set_visible(gcode_window_enabled);
         m_legend->set_visible(gcode_window_enabled);
+        if (m_layout->sliced_info())
+            m_layout->sliced_info()->set_visible(gcode_window_enabled);
         m_slider_layers->set_visible(m_fdm_viewer.has_data());
         m_sla_slider_layers->set_visible(m_sla_viewer.has_data());
         m_slider_gcode->set_visible(m_fdm_viewer.has_data());
@@ -324,7 +326,7 @@ void PreviewRenderModule::on_selected_bed_instances_changed(
 
     m_object_list->update_sliced_info();
 
-    if (m_active && m_sidebar_auto_reslice->is_enabled()) {
+    if (m_active && AppServices::instance().app_config().get<bool>("auto_reslice")) {
         m_project_interactor.slicing_interactor().enable_auto_slicing(
             m_project_interactor.selected_bed_slicing_id()
         );
@@ -489,7 +491,7 @@ void PreviewRenderModule::on_activated()
     update_viewer();
     update_scene_aabb();
 
-    if (m_sidebar_auto_reslice->is_enabled()) {
+    if (AppServices::instance().app_config().get<bool>("auto_reslice")) {
         m_project_interactor.slicing_interactor().enable_auto_slicing(
             m_project_interactor.selected_bed_slicing_id()
         );
@@ -502,7 +504,7 @@ void PreviewRenderModule::on_deactivated()
 {
     m_active = false;
     Slic3r::App::set_global_lighting(m_scene_presenter->scene().lights());
-    m_project_interactor.slicing_interactor().disable_auto_slicing();
+    // auto slicing stays on in Prepare (its toggle is there)
 
     // update the camera synch data only if the preview was already synchronized with the plater
     if (m_scene_presenter->camera_synch_data().has_value()) {
@@ -651,23 +653,6 @@ void PreviewRenderModule::register_commands()
             [this]() { m_scene_presenter->toggle_shells_visibility(); }
         )
     );
-
-    m_command_registry.register_command(
-        std::make_unique<UIItemCommand>(
-            CommandName::SwitchToInspect,
-            [this]() {},
-            UIItemCommandExtraOpts{
-                .checked =
-                    [this]()
-                {
-                    return m_layout->sidebar_stack_layout()->is_current_item(
-                        SidebarStackLayout::ItemType::GCode
-                    );
-                },
-                .checked_changed = [this](bool checked) { update_current_right_sidebar(); }
-            }
-        )
-    );
 }
 
 void PreviewRenderModule::bind_commands() {
@@ -684,16 +669,12 @@ void PreviewRenderModule::bind_commands() {
     m_command_binding_manager.bind_tb_item(CommandName::ShowToolMarker, m_button_tool_marker);
     m_command_binding_manager.bind_tb_item(CommandName::ShowShell, m_button_shells);
     m_command_binding_manager.bind_tb_item(CommandName::SwitchToPlater, m_button_plater_switch);
-    m_command_binding_manager.bind_tb_item(CommandName::SwitchToInspect, m_button_gcode_inspect);
 }
 
 void PreviewRenderModule::update_current_right_sidebar()
 {
-    if (m_button_gcode_inspect->checked()) {
-        m_layout->sidebar_stack_layout()->switch_to_item(SidebarStackLayout::ItemType::GCode);
-    } else {
-        m_layout->sidebar_stack_layout()->switch_to_item(SidebarStackLayout::ItemType::Bed);
-    }
+    // the G-code viewer is its own sidebar panel now (PreviewRenderLayout)
+    m_layout->sidebar_stack_layout()->switch_to_item(SidebarStackLayout::ItemType::Bed);
 }
 
 void PreviewRenderModule::init_gizmos()
@@ -834,6 +815,17 @@ void PreviewRenderModule::init_scene_layout()
         *m_project_saver,
         m_plugin_system
     );
+    // the preview's search works on what the preview shows: typing filters the legend, Enter
+    // jumps to the next G-code line containing the text
+    m_top_bar->search_bar()->set_context_search(SearchBar::ContextSearch{
+        .hint = _u8L("Search G-code and legend..."),
+        .text_changed = [this](const std::string& text) { m_legend->set_filter(text); request_render(); },
+        .entered = [this](const std::string& text)
+        {
+            if (m_fdm_viewer.find_gcode_text(text))
+                request_render();
+        }
+    });
 
     m_object_list = Passthrough(std::make_unique<ObjectListWindow>(&m_project_interactor, false));
     m_object_list->set_collapsed(m_render_module_navigator->object_list_collapsed());
@@ -846,11 +838,23 @@ void PreviewRenderModule::init_scene_layout()
     m_pop_notification_list_view = std::make_unique<PopNotification::PopNotificationListView>(
         AppServices::instance().pop_notification_center().observable_list()
     );
-    m_sidebar_auto_reslice = std::make_unique<SidebarAutoReslice>(m_project_interactor);
 
     m_sidebar_action_buttons =
         std::make_unique<SidebarPreviewActionButtons>(m_render_module_navigator);
     m_sidebar_action_buttons->on_init(&m_project_interactor);
+    m_sidebar_bed->set_connection_action(
+        [this, editor = &m_sidebar_action_buttons->physical_printer_advanced_settings_dialog()](Yoga::Item* anchor)
+        {
+            if (editor->opened()) {
+                m_render_module_navigator->set_opened_dialog(nullptr);
+                return;
+            }
+            // edit this printer's network printer, or add one (opens toward the top, by the Printer section)
+            m_project_interactor.physical_printer_interactor().edit_network_printer_for_current();
+            editor->attach_to_item(anchor, Yoga::Position::Right, 40_fpx, Yoga::AlignU::Start);
+            m_render_module_navigator->set_opened_dialog(editor);
+        }
+    );
 
     m_layout.reset(new PreviewRenderLayout(
         *m_render_module_navigator,
@@ -868,7 +872,6 @@ void PreviewRenderModule::init_scene_layout()
         m_slider_layers.release(),
         m_sla_slider_layers.release(),
         m_slider_gcode.release(),
-        m_sidebar_auto_reslice.release(),
         m_number_entry_dialog.release(),
         m_invalid_data_dialog.release(),
         m_crashed_projects_dialog.release(),
@@ -985,12 +988,12 @@ void PreviewRenderModule::init_scene_layout()
         ToolBarSwitchButton::SwitchPosition::Right
     );
     preview_button->set_checked(true);
+    // Prepare / Preview are tabs of the left bar now; the switch stays bound to its commands
+    m_button_plater_switch->set_visible(false);
+    preview_button->set_visible(false);
+    m_layout->mode_toolbar()->set_visible(false); // else an empty box beside the sidebar (as Plater)
 
-    m_button_gcode_inspect = m_layout->add_toolbar_item_checkable(
-        ToolbarID::Mode,
-        Render::Icon::LayersInspect,
-        _u8L("G-code inspect")
-    );
+    // no "G-code inspect" switch: the G-code viewer is always a sidebar panel
 
     // Initialize toolbar buttons visibility
     update_toolbar_visibility();
@@ -1019,8 +1022,6 @@ void PreviewRenderModule::update_toolbar_visibility()
     m_button_shells
         ->set_visible(fdm_has_gcode /*m_fdm_viewer.mode() != FdmViewerWrapperMode::GCodeViewer*/);
     m_button_wipes->set_visible(fdm_has_gcode);
-
-    // m_button_gcode_inspect
 }
 
 void PreviewRenderModule::init_dialog_navigation()
@@ -1031,19 +1032,18 @@ void PreviewRenderModule::init_dialog_navigation()
         &m_sidebar_bed->printer_add_dialog(),
         &m_sidebar_bed->logical_printer_settings_dialog()
     );
+    // printer settings open on their own (sidebar printer cog, like Orca's printer edit button)
     m_dialog_navigation.insert_dialog(
-        &m_sidebar_bed->logical_printer_settings_dialog().printer_advanced_settings_dialog(),
-        &m_sidebar_bed->logical_printer_settings_dialog()
+        &m_sidebar_bed->logical_printer_settings_dialog().printer_advanced_settings_dialog()
     );
     m_dialog_navigation.insert_dialog(
-        &m_sidebar_bed->logical_printer_settings_dialog().color_mix_dialog(),
-        &m_sidebar_bed->logical_printer_settings_dialog()
-    );
+        &m_sidebar_bed->logical_printer_settings_dialog().color_mix_dialog()
+    ); // its own root: opened from the filament section (SidebarBed)
 
     m_dialog_navigation.insert_dialog(&m_sidebar_bed->material_selection_dialog());
+    // its own root: the filament cog opens it without the material list (SidebarBed)
     m_dialog_navigation.insert_dialog(
-        &m_sidebar_bed->material_selection_dialog().material_settings_dialog(),
-        &m_sidebar_bed->material_selection_dialog()
+        &m_sidebar_bed->material_selection_dialog().material_settings_dialog()
     );
 
     m_dialog_navigation.insert_dialog(&m_sidebar_print->print_settings_dialog());
@@ -1051,10 +1051,10 @@ void PreviewRenderModule::init_dialog_navigation()
     m_dialog_navigation.insert_dialog(m_preset_updater_dialog.get());
 
     m_dialog_navigation.insert_dialog(&m_sidebar_action_buttons->physical_printer_settings_dialog());
-    m_dialog_navigation.insert_dialog(
-        &m_sidebar_action_buttons->physical_printer_advanced_settings_dialog(),
-        &m_sidebar_action_buttons->physical_printer_settings_dialog()
-    );
+    // the network printer editor opens on its own (Printer section's network printer button, as
+    // Orca's printer connection dialog); from the destination list it returns there when closed
+    m_dialog_navigation.insert_dialog(&m_sidebar_action_buttons->physical_printer_advanced_settings_dialog());
+    m_dialog_navigation.insert_dialog(&m_sidebar_bed->flushing_volumes_dialog());
 }
 
 void PreviewRenderModule::update_fdm_viewer_data(const Domain::SlicingId id)
@@ -1093,6 +1093,9 @@ void PreviewRenderModule::update_fdm_viewer_data(const Domain::SlicingId id)
     }
 
     m_fdm_viewer.load_from_result(*fdm_result, bed_instance->transformation.get_matrix());
+    if (m_layout && m_layout->sliced_info())
+        if (const auto* stats = std::get_if<Domain::FullPrintStatistics>(&fdm_result->get().print_statistics))
+            m_layout->sliced_info()->update(*stats, m_fdm_viewer);
 
     update_toolbar_visibility();
 

@@ -37,9 +37,8 @@ protected:
         float pattern_shift;
     };
     bool fill_surface_by_multilines(const Surface *surface, FillParams params, const std::initializer_list<SweepParams> &sweep_params, Polylines &polylines_out);
-
-    // The extended bounding box of the whole object that covers any rotation of every layer.
-    BoundingBox extended_object_bounding_box() const;
+    // Orca: the non-crossing multiline patterns; 0 = grid, 1 = triangles, 2 = tri-hexagon (stars), 3 = cubic
+    bool fill_surface_trapezoidal(const Surface *surface, FillParams params, Polylines &polylines_out, int Pattern_type);
 };
 
 class FillAlignedRectilinear : public FillRectilinear
@@ -78,6 +77,19 @@ public:
     ~FillGrid() override = default;
     Polylines fill_surface(const Surface *surface, const FillParams &params) override;
     bool is_self_crossing() override { return true; }
+
+protected:
+	// The grid fill will keep the angle constant between the layers, see the implementation of Slic3r::Fill.
+    float _layer_angle(size_t idx) const override { return 0.f; }
+};
+
+// Orca's Lateral Lattice
+class FillLateralLattice : public FillRectilinear
+{
+public:
+    Fill* clone() const override { return new FillLateralLattice(*this); }
+    ~FillLateralLattice() override = default;
+    Polylines fill_surface(const Surface *surface, const FillParams &params) override;
 
 protected:
 	// The grid fill will keep the angle constant between the layers, see the implementation of Slic3r::Fill.
@@ -123,6 +135,28 @@ protected:
     float _layer_angle(size_t idx) const override { return 0.f; }
 };
 
+// Orca's Quarter Cubic
+class FillQuarterCubic : public FillRectilinear
+{
+public:
+    Fill* clone() const override { return new FillQuarterCubic(*this); }
+    ~FillQuarterCubic() override = default;
+    Polylines fill_surface(const Surface *surface, const FillParams &params) override;
+
+protected:
+	// The grid fill will keep the angle constant between the layers, see the implementation of Slic3r::Fill.
+    float _layer_angle(size_t idx) const override { return 0.f; }
+};
+
+// Orca's Lateral Honeycomb
+class FillLateralHoneycomb : public FillAlignedRectilinear
+{
+public:
+    Fill* clone() const override { return new FillLateralHoneycomb(*this); }
+    ~FillLateralHoneycomb() override = default;
+    Polylines fill_surface(const Surface *surface, const FillParams &params) override;
+};
+
 class FillSupportBase : public FillRectilinear
 {
 public:
@@ -142,6 +176,31 @@ public:
     ~FillZigZag() override = default;
 
     bool has_consistent_pattern() const override { return true; }
+};
+
+// Orca's Cross Zag: the zig zag shifted every layer
+class FillCrossZag : public FillRectilinear
+{
+public:
+    Fill *clone() const override { return new FillCrossZag(*this); }
+    ~FillCrossZag() override = default;
+
+    bool has_consistent_pattern() const override { return true; }
+};
+
+// Orca's Locked Zag: a cross zag skin locked onto a zig zag skeleton
+class FillLockedZag : public FillRectilinear
+{
+public:
+    Fill *clone() const override { return new FillLockedZag(*this); }
+    ~FillLockedZag() override = default;
+    LockRegionParam lock_param;
+
+    bool has_consistent_pattern() const override { return true; }
+    void set_lock_region_param(const LockRegionParam &lock_param) override { this->lock_param = lock_param;};
+    void fill_surface_locked_zag(const Surface *                          surface,
+                                 const FillParams &                       params,
+                                 std::vector<std::pair<Polylines, Flow>> &multi_width_polyline);
 };
 
 Points sample_grid_pattern(const ExPolygon &expolygon, coord_t spacing, const BoundingBox &global_bounding_box);

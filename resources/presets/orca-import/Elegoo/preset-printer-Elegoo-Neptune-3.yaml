@@ -1,0 +1,409 @@
+kind: printer
+id: /Y6d+5NG+PaeobtJHWKZWw
+variants:
+- condition: printer.model == "Elegoo Neptune 3"
+  name: Elegoo Neptune 3
+  id: Z0Sq+Cz9OcKSfkDX7xdX0w
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: ZsOVvYxrrOKUdDl6JNXgtg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      change_extrusion_role_gcode: ''
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 90
+      default_print: 0.20mm Standard
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      enable_filament_ramming: false
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |
+        ;LAYER:{layer_num+1}
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+2, max_print_height)} F600 ; Move print head up{endif}
+        G1 X5 Y{print_bed_max[1]*0.8} F{travel_speed*60} ; present print
+        {if max_layer_z < max_print_height-10}G1 Z{z_offset+min(max_layer_z+70, max_print_height-10)} F600 ; Move print head further up{endif}
+        {if max_layer_z < max_print_height*0.6}G1 Z{max_print_height*0.6} F600 ; Move print head further up{endif}
+        M140 S0 ; turn off heatbed
+        M104 S0 ; turn off temperature
+        M107 ; turn off fan
+        M84 X Y E ; disable motors
+      machine_max_acceleration_e:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_extruding:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_x:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_y:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 8.0
+      - 8.0
+      machine_max_jerk_y:
+      - 8.0
+      - 8.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.04
+      - 0.0
+      machine_max_feedrate_e:
+      - 70.0
+      - 70.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: ''
+      start_gcode: |
+        ;;===== date: 20240520 =====================
+        ;M413 S0 ; disable Power Loss Recovery
+        ;[printer_model]
+        ;initial_filament:{filament_type[initial_extruder]}
+        ;curr_bed_type={sheet_type}
+        M220 S100 ;Set the feed speed to 100%
+        M221 S100 ;Set the flow rate to 100%
+        M104 S140
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        G90
+        G28 ; home all axis
+        ;G29 ; run abl mesh
+        M420 S1 ; load mesh
+        ;
+        G1 Z10 F300
+        G1 X{print_bed_max[0]*0.5-50} Y0.5 F6000
+        G1 Z0.4 F300
+        M109 S[first_layer_temperature]
+        G92 E0 ;Reset Extruder
+        G1 X{print_bed_max[0]*0.5+50} E30 F400 ;Draw the first line
+        G1 Z0.6 F120.0 ;Move to side a little
+        G1 X{print_bed_max[0]*0.5+47} F3000
+        G92 E0 ;Reset Extruder
+        ;LAYER_COUNT:[total_layer_count]
+        ;LAYER:0
+      parking_pos_retraction: 90
+      bed_shape:
+      - '0x0'
+      - 235x0
+      - 235x235
+      - '0x235'
+      max_print_height: 280
+      printer_notes: ''
+      between_objects_gcode: ''
+      purge_in_prime_tower: false
+      single_extruder_multi_material: true
+      support_air_filtration: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 320x320/PNG, 160x160/PNG
+      custom_parameters_printer: '{"parallel_printheads_count": 1}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: 6iFvq9UedTF9vhPTC6nndA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      change_extrusion_role_gcode: ''
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 90
+      default_print: 0.30mm Standard
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      enable_filament_ramming: false
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |
+        ;LAYER:{layer_num+1}
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+2, max_print_height)} F600 ; Move print head up{endif}
+        G1 X5 Y{print_bed_max[1]*0.8} F{travel_speed*60} ; present print
+        {if max_layer_z < max_print_height-10}G1 Z{z_offset+min(max_layer_z+70, max_print_height-10)} F600 ; Move print head further up{endif}
+        {if max_layer_z < max_print_height*0.6}G1 Z{max_print_height*0.6} F600 ; Move print head further up{endif}
+        M140 S0 ; turn off heatbed
+        M104 S0 ; turn off temperature
+        M107 ; turn off fan
+        M84 X Y E ; disable motors
+      machine_max_acceleration_e:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_extruding:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_x:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_y:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 8.0
+      - 8.0
+      machine_max_jerk_y:
+      - 8.0
+      - 8.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.04
+      - 0.0
+      machine_max_feedrate_e:
+      - 70.0
+      - 70.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: ''
+      start_gcode: |
+        ;;===== date: 20240520 =====================
+        ;M413 S0 ; disable Power Loss Recovery
+        ;[printer_model]
+        ;initial_filament:{filament_type[initial_extruder]}
+        ;curr_bed_type={sheet_type}
+        M220 S100 ;Set the feed speed to 100%
+        M221 S100 ;Set the flow rate to 100%
+        M104 S140
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        G90
+        G28 ; home all axis
+        ;G29 ; run abl mesh
+        M420 S1 ; load mesh
+        ;
+        G1 Z10 F300
+        G1 X{print_bed_max[0]*0.5-50} Y0.5 F6000
+        G1 Z0.4 F300
+        M109 S[first_layer_temperature]
+        G92 E0 ;Reset Extruder
+        G1 X{print_bed_max[0]*0.5+50} E30 F400 ;Draw the first line
+        G1 Z0.6 F120.0 ;Move to side a little
+        G1 X{print_bed_max[0]*0.5+47} F3000
+        G92 E0 ;Reset Extruder
+        ;LAYER_COUNT:[total_layer_count]
+        ;LAYER:0
+      parking_pos_retraction: 90
+      bed_shape:
+      - '0x0'
+      - 235x0
+      - 235x235
+      - '0x235'
+      max_print_height: 280
+      printer_notes: ''
+      between_objects_gcode: ''
+      purge_in_prime_tower: false
+      single_extruder_multi_material: true
+      support_air_filtration: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 320x320/PNG, 160x160/PNG
+      custom_parameters_printer: '{"parallel_printheads_count": 1}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: IkQiv/JTvKHRw3GX0tHJJA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      change_extrusion_role_gcode: ''
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 90
+      default_print: 0.40mm Standard
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      enable_filament_ramming: false
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |
+        ;LAYER:{layer_num+1}
+      end_gcode: |-
+        {if max_layer_z < max_print_height}G1 Z{z_offset+min(max_layer_z+2, max_print_height)} F600 ; Move print head up{endif}
+        G1 X5 Y{print_bed_max[1]*0.8} F{travel_speed*60} ; present print
+        {if max_layer_z < max_print_height-10}G1 Z{z_offset+min(max_layer_z+70, max_print_height-10)} F600 ; Move print head further up{endif}
+        {if max_layer_z < max_print_height*0.6}G1 Z{max_print_height*0.6} F600 ; Move print head further up{endif}
+        M140 S0 ; turn off heatbed
+        M104 S0 ; turn off temperature
+        M107 ; turn off fan
+        M84 X Y E ; disable motors
+      machine_max_acceleration_e:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_extruding:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_x:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_y:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 8.0
+      - 8.0
+      machine_max_jerk_y:
+      - 8.0
+      - 8.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.04
+      - 0.0
+      machine_max_feedrate_e:
+      - 70.0
+      - 70.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: ''
+      start_gcode: |
+        ;;===== date: 20240520 =====================
+        ;M413 S0 ; disable Power Loss Recovery
+        ;[printer_model]
+        ;initial_filament:{filament_type[initial_extruder]}
+        ;curr_bed_type={sheet_type}
+        M220 S100 ;Set the feed speed to 100%
+        M221 S100 ;Set the flow rate to 100%
+        M104 S140
+        M190 S[first_layer_bed_temperature[initial_extruder]]
+        G90
+        G28 ; home all axis
+        ;G29 ; run abl mesh
+        M420 S1 ; load mesh
+        ;
+        G1 Z10 F300
+        G1 X{print_bed_max[0]*0.5-50} Y0.5 F6000
+        G1 Z0.4 F300
+        M109 S[first_layer_temperature]
+        G92 E0 ;Reset Extruder
+        G1 X{print_bed_max[0]*0.5+50} E30 F400 ;Draw the first line
+        G1 Z0.6 F120.0 ;Move to side a little
+        G1 X{print_bed_max[0]*0.5+47} F3000
+        G92 E0 ;Reset Extruder
+        ;LAYER_COUNT:[total_layer_count]
+        ;LAYER:0
+      parking_pos_retraction: 90
+      bed_shape:
+      - '0x0'
+      - 235x0
+      - 235x235
+      - '0x235'
+      max_print_height: 280
+      printer_notes: ''
+      between_objects_gcode: ''
+      purge_in_prime_tower: false
+      single_extruder_multi_material: true
+      support_air_filtration: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 320x320/PNG, 160x160/PNG
+      custom_parameters_printer: '{"parallel_printheads_count": 1}'

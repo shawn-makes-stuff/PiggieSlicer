@@ -1,6 +1,7 @@
 #include <Slic3r/Log.hpp>
 #include <oneapi/tbb/blocked_range.h>
 #include <oneapi/tbb/parallel_for.h>
+#include <atomic>
 #include <algorithm>
 #include <functional>
 #include <string>
@@ -8,6 +9,8 @@
 #include <cassert>
 #include <cstddef>
 
+#include "Slic3r/Biz/Algorithms/DouglasPeucker.hpp"
+#include "libslic3r/HwConfigUtils.hpp"
 #include "libslic3r/ClipperUtils.hpp"
 #include "libslic3r/ElephantFootCompensation.hpp"
 #include "libslic3r/I18N_private.hpp"
@@ -531,6 +534,39 @@ std::string fix_slicing_errors(LayerPtrs &layers, const std::function<void()> &t
 // 5) Applies size compensation (offsets the slices in XY plane)
 // 6) Replaces bad slices by the slices reconstructed from the upper/lower layer
 // Resulting expolygons of layer regions are marked as Internal.
+// Orca PrintObject::_shrink_contour_holes: offset the contours and the holes of the expolygons
+// separately (a positive hole_delta makes the holes bigger)
+static ExPolygons shrink_contour_holes(double contour_delta, double hole_delta, const ExPolygons& polys)
+{
+    ExPolygons new_ex_polys;
+    for (const ExPolygon& ex_poly : polys) {
+        Polygons contours;
+        Polygons holes;
+        for (const Polygon& hole : ex_poly.holes) {
+            if (hole_delta != 0) {
+                for (Polygon& new_hole : offset(hole, float(-hole_delta))) {
+                    Algorithms::Polygon::make_counter_clockwise(new_hole);
+                    holes.emplace_back(std::move(new_hole));
+                }
+            } else {
+                holes.push_back(hole);
+                Algorithms::Polygon::make_counter_clockwise(holes.back());
+            }
+        }
+        if (contour_delta != 0) {
+            Polygons new_contours = offset(ex_poly.contour, float(contour_delta));
+            if (new_contours.empty())
+                continue;
+            contours.insert(contours.end(), std::make_move_iterator(new_contours.begin()), std::make_move_iterator(new_contours.end()));
+        } else {
+            contours.push_back(ex_poly.contour);
+        }
+        ExPolygons temp = diff_ex(union_(contours), union_(holes));
+        new_ex_polys.insert(new_ex_polys.end(), std::make_move_iterator(temp.begin()), std::make_move_iterator(temp.end()));
+    }
+    return union_ex(new_ex_polys);
+}
+
 void PrintObject::slice()
 {
     if (! this->set_started(posSlice))
@@ -541,7 +577,7 @@ void PrintObject::slice()
     m_print->throw_if_canceled();
     m_typed_slices = false;
     this->clear_layers();
-    m_layers = new_layers(this, generate_object_layers(m_slicing_params, layer_height_profile));
+    m_layers = new_layers(this, generate_object_layers(m_slicing_params, layer_height_profile, m_config.get<bool>("precise_z_height")));
     this->slice_volumes();
     m_print->throw_if_canceled();
 #if 0
@@ -877,6 +913,271 @@ void apply_fuzzy_skin_segmentation(PrintObject &print_object, ThrowOnCancel thro
 // Resulting expolygons of layer regions are marked as Internal.
 //
 // this should be idempotent
+// Orca doesVolumeIntersect: two volumes are connected if their slices overlap on a layer or the layers next to it.
+static bool volumes_intersect(const VolumeSlices &vs1, const VolumeSlices &vs2)
+{
+    if (vs1.volume_id == vs2.volume_id)
+        return true;
+    // two volumes in the same object should have same number of layers, otherwise the slicing is incorrect.
+    if (vs1.slices.size() != vs2.slices.size())
+        return false;
+    const auto overlaps = [](const ExPolygons &a, const ExPolygons &b) {
+        for (const ExPolygon &ea : a)
+            for (const ExPolygon &eb : b)
+                if (Algorithms::ExPolygon::overlaps(ea, eb))
+                    return true;
+        return false;
+    };
+    std::atomic<bool> is_intersect{ false };
+    tbb::parallel_for(tbb::blocked_range<int>(0, int(vs1.slices.size())), [&vs1, &vs2, &is_intersect, &overlaps](const tbb::blocked_range<int> &range) {
+        for (int i = range.begin(); i != range.end() && ! is_intersect; ++i) {
+            if (vs1.slices[i].empty())
+                continue;
+            if (overlaps(vs1.slices[i], vs2.slices[i]) ||
+                (i + 1 != int(vs2.slices.size()) && overlaps(vs1.slices[i], vs2.slices[i + 1])) ||
+                (i - 1 >= 0 && overlaps(vs1.slices[i], vs2.slices[i - 1])))
+                is_intersect = true;
+        }
+    });
+    return is_intersect;
+}
+
+// Orca groupingVolumesForBrim (groupingVolumes, findPartVolumes, applyNegtiveVolumes): the model parts grouped by their
+// connections, with their first layer slices less the negative volumes.
+static std::vector<PrintObject::VolumeGroupSlices> group_volumes_for_brim(
+    const std::vector<VolumeSlices> &volume_slices, const Domain::ModelVolumePtrs &model_volumes, const double resolution)
+{
+    const auto volume_of = [&model_volumes](const Domain::ObjectID id) -> const Domain::ModelVolume* {
+        for (const Domain::ModelVolume *mv : model_volumes)
+            if (mv->id() == id)
+                return mv;
+        return nullptr;
+    };
+    std::vector<VolumeSlices> parts;
+    for (const VolumeSlices &vs : volume_slices)
+        if (const Domain::ModelVolume *mv = volume_of(vs.volume_id); mv != nullptr && mv->is_model_part())
+            parts.push_back(vs);
+
+    const double offset_value = 0.05 / SCALING_FACTOR;
+    for (VolumeSlices &vs : parts)
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, vs.slices.size()), [&vs, resolution, offset_value](const tbb::blocked_range<size_t> &range) {
+            for (size_t k = range.begin(); k != range.end(); ++k) {
+                for (ExPolygon &poly_ex : vs.slices[k])
+                    Algorithms::DouglasPeucker::douglas_peucker(poly_ex, resolution);
+                vs.slices[k] = offset_ex(vs.slices[k], float(offset_value));
+            }
+        });
+
+    std::vector<int> group_index(parts.size(), -1);
+    for (size_t i = 0; i != parts.size(); ++i) {
+        if (group_index[i] < 0)
+            group_index[i] = int(i);
+        for (size_t j = i + 1; j != parts.size(); ++j)
+            if (volumes_intersect(parts[i], parts[j])) {
+                if (group_index[j] < 0)
+                    group_index[j] = group_index[i];
+                if (group_index[j] != group_index[i]) {
+                    const int retain = std::min(group_index[i], group_index[j]);
+                    const int cover  = std::max(group_index[i], group_index[j]);
+                    for (int &gi : group_index)
+                        if (gi == cover)
+                            gi = retain;
+                }
+            }
+    }
+    std::vector<int> group_vector;
+    for (int gi : group_index)
+        if (std::find(group_vector.begin(), group_vector.end(), gi) == group_vector.end())
+            group_vector.push_back(gi);
+
+    std::vector<PrintObject::VolumeGroupSlices> groups;
+    for (int gv : group_vector) {
+        PrintObject::VolumeGroupSlices gvs;
+        for (size_t i = 0; i != parts.size(); ++i)
+            if (group_index[i] == gv) {
+                gvs.volume_ids.push_back(parts[i].volume_id);
+                if (! parts[i].slices.empty())
+                    append(gvs.slices, parts[i].slices.front());
+            }
+        // the slices of a group should be unioned
+        gvs.slices = offset_ex(union_ex(gvs.slices), float(-offset_value));
+        for (ExPolygon &poly_ex : gvs.slices)
+            Algorithms::DouglasPeucker::douglas_peucker(poly_ex, resolution);
+        groups.push_back(std::move(gvs));
+    }
+
+    // less the negative volumes
+    ExPolygons neg_total;
+    for (const VolumeSlices &vs : volume_slices)
+        if (const Domain::ModelVolume *mv = volume_of(vs.volume_id); mv != nullptr && mv->is_negative_volume() && ! vs.slices.empty())
+            append(neg_total, vs.slices.front());
+    if (! neg_total.empty())
+        for (PrintObject::VolumeGroupSlices &g : groups) {
+            g.slices = diff_ex(g.slices, neg_total);
+            for (ExPolygon &poly_ex : g.slices)
+                Algorithms::DouglasPeucker::douglas_peucker(poly_ex, resolution);
+        }
+    return groups;
+}
+
+// Orca reGroupingLayerPolygons: the actual first layer slices sorted into the volume groups (each into the group
+// covering the most of it).
+static void regroup_layer_polygons(std::vector<PrintObject::VolumeGroupSlices> &groups, const ExPolygons &eps, const double resolution)
+{
+    std::vector<int> eps_index(eps.size(), -1);
+    std::vector<PrintObject::VolumeGroupSlices> groups_simplified = groups;
+    ExPolygons eps_simplified = eps;
+    for (ExPolygon &poly_ex : eps_simplified)
+        Algorithms::DouglasPeucker::douglas_peucker(poly_ex, resolution);
+    for (PrintObject::VolumeGroupSlices &g : groups_simplified)
+        for (ExPolygon &poly_ex : g.slices)
+            Algorithms::DouglasPeucker::douglas_peucker(poly_ex, resolution);
+
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, eps_simplified.size()), [&eps_simplified, &groups_simplified, &eps_index](const tbb::blocked_range<size_t> &range) {
+        for (size_t ie = range.begin(); ie != range.end(); ++ie) {
+            if (Algorithms::ExPolygon::area(eps_simplified[ie]) <= 0)
+                continue;
+            double min_area = Algorithms::ExPolygon::area(eps_simplified[ie]);
+            for (size_t iv = 0; iv != groups_simplified.size(); ++iv) {
+                const double area = Algorithms::ExPolygon::area(diff_ex(ExPolygons{ eps_simplified[ie] }, groups_simplified[iv].slices));
+                if (area < min_area) {
+                    min_area      = area;
+                    eps_index[ie] = int(iv);
+                }
+            }
+        }
+    });
+
+    for (PrintObject::VolumeGroupSlices &g : groups)
+        g.slices.clear();
+    for (size_t ie = 0; ie != eps.size(); ++ie)
+        if (eps_index[ie] >= 0)
+            groups[eps_index[ie]].slices.push_back(eps[ie]);
+}
+
+// Orca create_polyholes (from SuperSlicer): the polyhole(s) of a hole of a radius: edges by the nozzle diameter,
+// rotated copies for a twisted polyhole.
+static Polygons create_polyholes(const Point center, const coord_t radius, const coord_t nozzle_diameter, bool multiple, int max_edges)
+{
+    // n = max(round(2 * d), 3); // for 0.4mm nozzle
+    const size_t nb_edges = size_t(std::min(max_edges, std::max(3, int(std::round(4.0 * unscaled(radius) * 0.4 / unscaled(nozzle_diameter))))));
+    // cylinder(h = h, r = d / cos (180 / n), $fn = n);
+    int   nb_polyhole = 1;
+    float rotation    = 0;
+    if (multiple) {
+        nb_polyhole = 5;
+        rotation    = 2 * float(PI) / (nb_edges * nb_polyhole);
+    }
+    Polygons list(nb_polyhole);
+    for (int i_poly = 0; i_poly < nb_polyhole; i_poly++) {
+        // alternated
+        Polygon    &pts        = ((i_poly % 2) == 0) ? list[i_poly / 2] : list[(nb_polyhole + 1) / 2 + i_poly / 2];
+        const float new_radius = radius / float(std::cos(PI / nb_edges));
+        for (size_t i_edge = 0; i_edge < nb_edges; ++i_edge) {
+            const float angle = rotation * i_poly + (float(PI) * 2 * float(i_edge)) / nb_edges;
+            pts.points.emplace_back(coord_t(center.x() + new_radius * cos(angle)), coord_t(center.y() + new_radius * sin(angle)));
+        }
+        Algorithms::Polygon::make_clockwise(pts);
+    }
+    return list;
+}
+
+// Orca _transform_hole_to_polyholes (from SuperSlicer): the round holes spanning at least 2 layers (or on the first
+// layer only) replaced by polyholes, in the region slices and the layer slices.
+void PrintObject::transform_hole_to_polyholes()
+{
+    // the circular holes per layer: center, max diameter, extruder, max variation, twist, max edges
+    using HoleId = std::tuple<Point, float, int, coord_t, bool, int>;
+    std::vector<std::vector<std::pair<HoleId, Polygon*>>> layerid2center(m_layers.size());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, m_layers.size()), [this, &layerid2center](const tbb::blocked_range<size_t> &range) {
+        for (size_t layer_idx = range.begin(); layer_idx < range.end(); ++layer_idx) {
+            m_print->throw_if_canceled();
+            Layer *layer = m_layers[layer_idx];
+            for (LayerRegion *layerm : layer->m_regions) {
+                const PrintRegion &region = layerm->region();
+                if (! region.config().get<bool>("hole_to_polyhole"))
+                    continue;
+                for (Surface &surf : layerm->m_slices.surfaces)
+                    for (Polygon &hole : surf.expolygon.holes) {
+                        // Orca tests convex_points(PI), which selects no point: any hole of more than 8 points
+                        if (hole.points.size() <= 8)
+                            continue;
+                        // the circle's center
+                        const Point center = hole.centroid();
+                        double diameter_min = std::numeric_limits<float>::max(), diameter_max = 0, diameter_sum = 0;
+                        for (const Point &pt : hole.points) {
+                            const double dist = (pt - center).cast<double>().norm();
+                            diameter_min = std::min(diameter_min, dist);
+                            diameter_max = std::max(diameter_max, dist);
+                            diameter_sum += dist;
+                        }
+                        // the centers of the lines too, to tell from a rectangle
+                        double diameter_line_min = std::numeric_limits<float>::max(), diameter_line_max = 0;
+                        for (const Line &l : Algorithms::Polygon::to_lines(hole)) {
+                            const double dist = (Point((l.a + l.b) / 2) - center).cast<double>().norm();
+                            diameter_line_min = std::min(diameter_line_min, dist);
+                            diameter_line_max = std::max(diameter_line_max, dist);
+                        }
+                        const coord_t max_variation = std::max(coord_t(SCALED_EPSILON), coord_t(scale_(
+                            region.config().get<Domain::FloatOrPercentage>("hole_to_polyhole_threshold").get_abs_value(unscaled(diameter_sum / hole.points.size())))));
+                        if (diameter_max - diameter_min < max_variation * 2 && diameter_line_max - diameter_line_min < max_variation * 2)
+                            layerid2center[layer_idx].emplace_back(
+                                HoleId{ center, float(diameter_max), int(region.extruder(frExternalPerimeter)), max_variation,
+                                        region.config().get<bool>("hole_to_polyhole_twisted"), region.config().get<int>("hole_to_polyhole_max_edges") },
+                                &hole);
+                    }
+            }
+        }
+    });
+
+    // the holes spanning at least 2 layers, by center and diameter
+    std::map<HoleId, std::vector<std::pair<Polygon*, int>>> id2layerz2hole;
+    const size_t min_nb_layers = 2;
+    for (size_t layer_idx = 0; layer_idx < m_layers.size(); ++layer_idx)
+        for (size_t hole_idx = 0; hole_idx < layerid2center[layer_idx].size(); ++hole_idx) {
+            HoleId &id    = layerid2center[layer_idx][hole_idx].first;
+            float   max_z = float(m_layers[layer_idx]->print_z);
+            std::vector<std::pair<Polygon*, int>> holes;
+            holes.emplace_back(layerid2center[layer_idx][hole_idx].second, int(layer_idx));
+            for (size_t search_layer_idx = layer_idx + 1; search_layer_idx < m_layers.size(); ++search_layer_idx) {
+                if (m_layers[search_layer_idx]->print_z - m_layers[search_layer_idx]->height - max_z > EPSILON)
+                    break;
+                // another polygon of the same id
+                for (size_t search_hole_idx = 0; search_hole_idx < layerid2center[search_layer_idx].size(); ++search_hole_idx) {
+                    const HoleId &search_id = layerid2center[search_layer_idx][search_hole_idx].first;
+                    if (std::get<2>(id) == std::get<2>(search_id) &&
+                        (std::get<0>(id) - std::get<0>(search_id)).cast<double>().norm() < std::get<3>(id) &&
+                        std::abs(std::get<1>(id) - std::get<1>(search_id)) < std::get<3>(id)) {
+                        max_z = float(m_layers[search_layer_idx]->print_z);
+                        holes.emplace_back(layerid2center[search_layer_idx][search_hole_idx].second, int(search_layer_idx));
+                        layerid2center[search_layer_idx].erase(layerid2center[search_layer_idx].begin() + search_hole_idx);
+                        --search_hole_idx;
+                        break;
+                    }
+                }
+            }
+            // a straight hole, or a first layer hole (the first layer compensation)
+            if (holes.size() >= min_nb_layers || (holes.size() == 1 && holes[0].second == 0))
+                id2layerz2hole.emplace(std::move(id), std::move(holes));
+        }
+
+    // a polyhole per id replacing the holes' points
+    for (auto &entry : id2layerz2hole) {
+        const coord_t  nozzle_diameter = scaled<coord_t>(Biz::Slicing::get_nozzle_diameter(m_print->config().hw_config(), std::get<2>(entry.first) - 1));
+        const Polygons polyholes       = create_polyholes(std::get<0>(entry.first), coord_t(std::get<1>(entry.first)), nozzle_diameter,
+                                                          std::get<4>(entry.first), std::get<5>(entry.first));
+        for (auto &poly_to_replace : entry.second) {
+            const Polygon &polyhole = polyholes[poly_to_replace.second % polyholes.size()];
+            // the clone in the layer slices
+            for (ExPolygon &explo_slice : m_layers[poly_to_replace.second]->lslices)
+                for (Polygon &poly_slice : explo_slice.holes)
+                    if (poly_slice.points == poly_to_replace.first->points)
+                        poly_slice.points = polyhole.points;
+            poly_to_replace.first->points = polyhole.points;
+        }
+    }
+}
+
 void PrintObject::slice_volumes()
 {
     SPDLOG_INFO("Slicing volumes... {}", log_memory_info());
@@ -892,11 +1193,14 @@ void PrintObject::slice_volumes()
     }
 
     std::vector<float>                   slice_zs      = zs_from_layers(m_layers);
-    std::vector<std::vector<ExPolygons>> region_slices = slices_to_regions(this->model_object()->volumes, *m_shared_regions, slice_zs,
-        slice_volumes_inner(
+    std::vector<VolumeSlices>            volume_slices = slice_volumes_inner(
             print->config(), this->config(), this->trafo_centered(),
-            this->model_object()->volumes, m_shared_regions->layer_ranges, slice_zs, throw_on_cancel_callback),
-        throw_on_cancel_callback);
+            this->model_object()->volumes, m_shared_regions->layer_ranges, slice_zs, throw_on_cancel_callback);
+    // Orca groupingVolumesForBrim: the model parts grouped by their connections, for the auto brim
+    const double resolution = scaled<double>(print->config().get<double>("resolution"));
+    m_first_layer_volume_groups = group_volumes_for_brim(volume_slices, this->model_object()->volumes, resolution);
+    std::vector<std::vector<ExPolygons>> region_slices = slices_to_regions(this->model_object()->volumes, *m_shared_regions, slice_zs,
+        std::move(volume_slices), throw_on_cancel_callback);
 
     for (size_t region_id = 0; region_id < region_slices.size(); ++ region_id) {
         std::vector<ExPolygons> &by_layer = region_slices[region_id];
@@ -915,6 +1219,10 @@ void PrintObject::slice_volumes()
     }
     if (! m_layers.empty())
         m_layers.back()->upper_layer = nullptr;
+    m_print->throw_if_canceled();
+
+    // Orca make_overhang_printable
+    this->apply_conical_overhang();
     m_print->throw_if_canceled();
 
     // Is any ModelVolume multi-material painted?
@@ -980,22 +1288,30 @@ void PrintObject::slice_volumes()
         	// Only enable Elephant foot compensation if printing directly on the print bed.
             float(scale_(m_config.get<double>("elefant_foot_compensation"))) :
         	0.f;
-        // Uncompensated slices for the first layer in case the Elephant foot compensation is applied.
-	    ExPolygons  lslices_1st_layer;
+        // Orca: hole compensation (on top of 3.0's XY size compensation, which moves the holes too)
+        const auto   xy_hole_scaled = (num_extruders > 1 && this->is_mm_painted()) ? scaled<float>(0.f) : scaled<float>(m_config.get<double>("xy_hole_compensation"));
+        // Orca: the elephant foot compensation fades out over elefant_foot_compensation_layers layers
+        const int    elfoot_layers = std::max(1, m_config.get<int>("elefant_foot_compensation_layers"));
+        // Uncompensated slices of the layers the Elephant foot compensation is applied to.
+	    std::vector<ExPolygons> lslices_elfoot_uncompensated(
+            elephant_foot_compensation_scaled > 0 ? std::min(size_t(elfoot_layers), m_layers.size()) : 0);
 	    tbb::parallel_for(
 	        tbb::blocked_range<size_t>(0, m_layers.size()),
-			[this, xy_compensation_scaled, elephant_foot_compensation_scaled, &lslices_1st_layer](const tbb::blocked_range<size_t>& range) {
+			[this, xy_compensation_scaled, xy_hole_scaled, elfoot_layers, elephant_foot_compensation_scaled, &lslices_elfoot_uncompensated](const tbb::blocked_range<size_t>& range) {
 	            for (size_t layer_id = range.begin(); layer_id < range.end(); ++ layer_id) {
 	                m_print->throw_if_canceled();
 	                Layer *layer = m_layers[layer_id];
 	                // Apply size compensation and perform clipping of multi-part objects.
-	                float elfoot = (layer_id == 0) ? elephant_foot_compensation_scaled : 0.f;
+	                float elfoot = elephant_foot_compensation_scaled > 0 && layer_id < size_t(elfoot_layers) ?
+	                    elephant_foot_compensation_scaled - (elephant_foot_compensation_scaled / elfoot_layers) * layer_id :
+	                    0.f;
 	                if (layer->m_regions.size() == 1) {
 	                    // Optimized version for a single region layer.
 	                    // Single region, growing or shrinking.
 	                    LayerRegion *layerm = layer->m_regions.front();
 	                    if (elfoot > 0) {
-		                    // Apply the elephant foot compensation and store the 1st layer slices without the Elephant foot compensation applied.
+		                    // Apply the elephant foot compensation and store the layer's slices without the Elephant foot compensation applied.
+		                    ExPolygons& lslices_1st_layer = lslices_elfoot_uncompensated[layer_id];
 		                    lslices_1st_layer = to_expolygons(std::move(layerm->m_slices.surfaces));
 		                    float delta = xy_compensation_scaled;
 	                        if (delta > elfoot) {
@@ -1011,6 +1327,8 @@ void PrintObject::slice_volumes()
 								stInternal);
 							if (xy_compensation_scaled < 0.f)
 								lslices_1st_layer = offset_ex(std::move(lslices_1st_layer), xy_compensation_scaled);
+							if (xy_hole_scaled != 0.f)
+								lslices_1st_layer = shrink_contour_holes(0., xy_hole_scaled, lslices_1st_layer);
 	                    } else if (xy_compensation_scaled < 0.f) {
 	                        // Apply the XY compensation.
 	                        layerm->m_slices.set(
@@ -1023,6 +1341,7 @@ void PrintObject::slice_volumes()
 	                        Polygons trimming;
 	                        static const float eps = float(scale_(m_config.get<double>("slice_closing_radius")) * 1.5);
 	                        if (elfoot > 0.f) {
+	                        	ExPolygons& lslices_1st_layer = lslices_elfoot_uncompensated[layer_id];
 	                        	lslices_1st_layer = offset_ex(layer->merged(eps), std::min(xy_compensation_scaled, 0.f) - eps);
 								trimming = Algorithms::ExPolygon::to_polygons(Slic3r::elephant_foot_compensation(lslices_1st_layer,
 									layer->m_regions.front()->flow(frExternalPerimeter), unscale<double>(elfoot)));
@@ -1030,6 +1349,30 @@ void PrintObject::slice_volumes()
 		                        trimming = offset(layer->merged(float(SCALED_EPSILON)), xy_compensation_scaled - float(SCALED_EPSILON));
 	                        for (size_t region_id = 0; region_id < layer->m_regions.size(); ++ region_id)
 	                            layer->m_regions[region_id]->trim_surfaces(trimming);
+	                    }
+	                }
+	                // Orca: the hole compensation (contour compensation 0 here: 3.0's XY size compensation is applied above)
+	                if (xy_hole_scaled != 0.f) {
+	                    if (layer->m_regions.size() == 1) {
+	                        LayerRegion *layerm = layer->m_regions.front();
+	                        layerm->m_slices.set(
+	                            shrink_contour_holes(0., xy_hole_scaled, to_expolygons(std::move(layerm->m_slices.surfaces))),
+	                            stInternal);
+	                    } else if (xy_hole_scaled > 0.f) {
+	                        // Orca: bigger holes in a multi-region layer: holes of the merged layer, the regions
+	                        // clipped to it (Orca's smaller holes leave the regions as they are)
+	                        const ExPolygons merged = shrink_contour_holes(0., xy_hole_scaled, union_ex(layer->merged(float(SCALED_EPSILON))));
+	                        Polygons processed;
+	                        for (size_t region_id = 0; region_id < layer->m_regions.size(); ++ region_id) {
+	                            ExPolygons slices = intersection_ex(
+	                                offset_ex(to_expolygons(std::move(layer->m_regions[region_id]->m_slices.surfaces)), xy_hole_scaled),
+	                                merged);
+	                            if (region_id > 0)
+	                                slices = diff_ex(Algorithms::ExPolygon::to_polygons(slices), processed);
+	                            if (region_id + 1 < layer->m_regions.size())
+	                                append(processed, Algorithms::ExPolygon::to_polygons(slices));
+	                            layer->m_regions[region_id]->m_slices.set(std::move(slices), stInternal);
+	                        }
 	                    }
 	                }
 	                // Merge all regions' slices to get islands sorted topologically, chain them by a shortest path in separate index list
@@ -1041,15 +1384,89 @@ void PrintObject::slice_volumes()
 	    	// Store the uncompensated value there.
             //FIXME is this operation needed? MMU painting and brim now have to do work arounds to work with compensated layer, not with the uncompensated layer.
             // There may be subtle issues removing this block such as support raft sticking too well with the first object layer.
-            Layer &layer = *m_layers.front();
-	    	assert(layer.id() == 0);
-			layer.lslices = std::move(lslices_1st_layer);
-            layer.lslice_indices_sorted_by_print_order = chain_expolygons(layer.lslices);
+            for (size_t i = 0; i < lslices_elfoot_uncompensated.size(); ++ i) {
+                Layer &layer = *m_layers[i];
+                assert(layer.id() == i);
+                layer.lslices = std::move(lslices_elfoot_uncompensated[i]);
+                layer.lslice_indices_sorted_by_print_order = chain_expolygons(layer.lslices);
+            }
 		}
 	}
 
+    // Orca hole_to_polyhole, then the actual first layer slices sorted into the volume groups (groupingVolumesForBrim)
+    this->transform_hole_to_polyholes();
+    if (! m_layers.empty())
+        regroup_layer_polygons(m_first_layer_volume_groups, m_layers.front()->lslices, resolution);
+
     m_print->throw_if_canceled();
     SPDLOG_DEBUG("Slicing volumes - make_slices in parallel - end");
+}
+
+// Orca apply_conical_overhang: from the top, each layer gets the layer above shrunk by what the angle bridges per layer,
+// so the overhangs turn into printable cones (the holes in the base of the model up to the hole size kept open).
+void PrintObject::apply_conical_overhang()
+{
+    if (m_layers.empty())
+        return;
+    const double conical_overhang_angle = this->config().get<double>("make_overhang_printable_angle");
+    if (conical_overhang_angle == 90.0)
+        return;
+    const double angle_radians = conical_overhang_angle * M_PI / 180.;
+    const double max_hole_area = this->config().get<double>("make_overhang_printable_hole_size"); // in MM^2
+    const double tan_angle     = tan(angle_radians); // the XY-component of the angle
+    const double layer_thickness            = m_config.get<double>("layer_height");
+    const double max_dist_from_lower_layer  = tan_angle * layer_thickness; // max dist which can be bridged, in MM
+    const double scaled_max_dist_from_lower_layer = -float(scale_(max_dist_from_lower_layer));
+    const double scaled_max_hole_area             = float(scale_(scale_(max_hole_area)));
+
+    for (auto i = m_layers.rbegin() + 1; i != m_layers.rend(); ++i) {
+        m_print->throw_if_canceled();
+        Layer *layer       = *i;
+        Layer *upper_layer = layer->upper_layer;
+        if (upper_layer->empty())
+            continue;
+        // the whole layer disabled
+        if (std::all_of(layer->m_regions.begin(), layer->m_regions.end(), [](const LayerRegion *r) {
+                return r->slices().empty() || ! r->region().config().get<bool>("make_overhang_printable"); }))
+            continue;
+
+        // the layers merged, to offset them uniformly (the model could break at a region boundary otherwise)
+        ExPolygons upper_poly   = union_ex(upper_layer->merged(float(SCALED_EPSILON)));
+        const ExPolygons current_poly = union_ex(layer->merged(float(SCALED_EPSILON)));
+
+        // A hole in the base of the model the layer above covers completely is cut from the layer above, against
+        // closing it up.
+        if (scaled_max_hole_area > 0.0)
+            for (const ExPolygon &layer_polygon : current_poly)
+                for (const Polygon &hole : layer_polygon.holes)
+                    if (std::abs(hole.area()) < scaled_max_hole_area) {
+                        const ExPolygon  hole_poly(hole);
+                        const ExPolygons hole_with_above = intersection_ex(upper_poly, hole_poly);
+                        if (! hole_with_above.empty() && xor_ex(hole_with_above, hole_poly).empty())
+                            upper_poly = diff_ex(upper_poly, ExPolygons{ hole_poly });
+                    }
+
+        // the upper layer offset, to be added to this one
+        upper_poly = offset_ex(upper_poly, float(scaled_max_dist_from_lower_layer));
+
+        for (size_t region_id = 0; region_id < this->num_printing_regions(); ++region_id) {
+            if (! upper_layer->m_regions[region_id]->region().config().get<bool>("make_overhang_printable"))
+                continue;
+            // the part of the upper poly of this region, without the islands this layer covers already
+            ExPolygons p = union_ex(intersection_ex(upper_layer->m_regions[region_id]->slices().surfaces, upper_poly));
+            p.erase(std::remove_if(p.begin(), p.end(), [&current_poly](const ExPolygon &ex) { return diff_ex(ExPolygons{ ex }, current_poly).empty(); }), p.end());
+            // added to this region
+            const ExPolygons layer_polygons = to_expolygons(layer->m_regions[region_id]->slices().surfaces);
+            layer->m_regions[region_id]->m_slices.set(union_ex(layer_polygons, p), stInternal);
+            // and taken from the others, against overlapping regions
+            for (size_t other_region = 0; other_region < this->num_printing_regions(); ++other_region) {
+                if (other_region == region_id)
+                    continue;
+                const ExPolygons s = to_expolygons(layer->m_regions[other_region]->slices().surfaces);
+                layer->m_regions[other_region]->m_slices.set(diff_ex(s, p, ApplySafetyOffset::Yes), stInternal);
+            }
+        }
+    }
 }
 
 std::vector<Polygons> PrintObject::slice_support_volumes(const Domain::ModelVolumeType model_volume_type) const

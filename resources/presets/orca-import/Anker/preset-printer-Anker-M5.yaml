@@ -1,0 +1,351 @@
+kind: printer
+id: RztXIQ3XmC10mo/mfxzgLQ
+variants:
+- condition: printer.model == "Anker M5"
+  name: Anker M5
+  id: pw/63tX6CtWAGztt2oCXgA
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: ccvJx2Blef+yz43afKT1AA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |+
+        ;BEFORE_LAYER_CHANGE
+        G92 E0.0
+        ;[layer_z]
+
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Standard 0.2mm nozzle @Anker
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 45
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        M104 S0
+        M140 S0
+        ;Retract the filament
+        G92 E1
+        G1 E-1 F300
+        G28 X0 Y0
+        M18
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 6000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 6000.0
+      machine_max_acceleration_x:
+      - 6000.0
+      machine_max_acceleration_y:
+      - 6000.0
+      machine_max_acceleration_z:
+      - 300.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      machine_max_feedrate_x:
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      machine_max_feedrate_z:
+      - 30.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: "M4899 T3 ; Enable v3 jerk and S-curve acceleration \nM104 S150 ; Set hotend temp to 150 degrees to prevent ooze\nM190 S{first_layer_bed_temperature[0]} ; set and wait for bed temp to stabilize\nM109 S{first_layer_temperature[0]} ; set final nozzle temp to stabilize\nG28 ;Home\n;LAYER_COUNT:{total_layer_count}"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 235x0
+      - 235x235
+      - '0x235'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.25
+    id: E7/40LdjlUAqP4Y0Ki20bg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |+
+        ;BEFORE_LAYER_CHANGE
+        G92 E0.0
+        ;[layer_z]
+
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Standard 0.25mm nozzle @Anker
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 45
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        M104 S0
+        M140 S0
+        ;Retract the filament
+        G92 E1
+        G1 E-1 F300
+        G28 X0 Y0
+        M18
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 6000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 6000.0
+      machine_max_acceleration_x:
+      - 6000.0
+      machine_max_acceleration_y:
+      - 6000.0
+      machine_max_acceleration_z:
+      - 300.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      machine_max_feedrate_x:
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      machine_max_feedrate_z:
+      - 30.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: "M4899 T3 ; Enable v3 jerk and S-curve acceleration \nM104 S150 ; Set hotend temp to 150 degrees to prevent ooze\nM190 S{first_layer_bed_temperature[0]} ; set and wait for bed temp to stabilize\nM109 S{first_layer_temperature[0]} ; set final nozzle temp to stabilize\nG28 ;Home\n;LAYER_COUNT:{total_layer_count}"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 235x0
+      - 235x235
+      - '0x235'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: YfnZZ8LdNwe4ncXQDekdwg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |+
+        ;BEFORE_LAYER_CHANGE
+        G92 E0.0
+        ;[layer_z]
+
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Anker
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 45
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        M104 S0
+        M140 S0
+        ;Retract the filament
+        G92 E1
+        G1 E-1 F300
+        G28 X0 Y0
+        M18
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 6000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 6000.0
+      machine_max_acceleration_x:
+      - 6000.0
+      machine_max_acceleration_y:
+      - 6000.0
+      machine_max_acceleration_z:
+      - 300.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      machine_max_feedrate_x:
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      machine_max_feedrate_z:
+      - 30.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: "M4899 T3 ; Enable v3 jerk and S-curve acceleration \nM104 S150 ; Set hotend temp to 150 degrees to prevent ooze\nM190 S{first_layer_bed_temperature[0]} ; set and wait for bed temp to stabilize\nM109 S{first_layer_temperature[0]} ; set final nozzle temp to stabilize\nG28 ;Home\n;LAYER_COUNT:{total_layer_count}"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 235x0
+      - 235x235
+      - '0x235'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: q1laU7jOxIo3EyKH6Otq6A
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |+
+        ;BEFORE_LAYER_CHANGE
+        G92 E0.0
+        ;[layer_z]
+
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard 0.6 nozzle @Anker
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 30
+      extruder_clearance_radius: 45
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        M104 S0
+        M140 S0
+        ;Retract the filament
+        G92 E1
+        G1 E-1 F300
+        G28 X0 Y0
+        M18
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 6000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 6000.0
+      machine_max_acceleration_x:
+      - 6000.0
+      machine_max_acceleration_y:
+      - 6000.0
+      machine_max_acceleration_z:
+      - 300.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.3
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      machine_max_feedrate_x:
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      machine_max_feedrate_z:
+      - 30.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: "M4899 T3 ; Enable v3 jerk and S-curve acceleration \nM104 S150 ; Set hotend temp to 150 degrees to prevent ooze\nM190 S{first_layer_bed_temperature[0]} ; set and wait for bed temp to stabilize\nM109 S{first_layer_temperature[0]} ; set final nozzle temp to stabilize\nG28 ;Home\n;LAYER_COUNT:{total_layer_count}"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 235x0
+      - 235x235
+      - '0x235'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'

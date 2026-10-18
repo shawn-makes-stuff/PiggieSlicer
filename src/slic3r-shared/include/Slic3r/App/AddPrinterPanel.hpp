@@ -23,7 +23,9 @@ class AddPrinterPanel : public Yoga::Item, public Biz::Preset::IPresetChangedLis
 public:
     struct Printer
     {
-        std::string preset_item_id;
+        /// the vendor's printer template (not built yet: the picker lists every template and only
+        /// an added printer is built and evaluated, docs/design/STARTUP_FIX.md)
+        std::string template_id;
         Domain::Preset::HwPrinterConfig default_config;
         Biz::Preset::PresetInteractor::ToolItems tools;
         Biz::Preset::PresetInteractor::SheetItems sheets;
@@ -59,6 +61,8 @@ private:
     std::optional<std::string> m_selected_vendor;
     std::string m_vendor_name;
     std::vector<PrinterFamily> m_printer_families;
+    /// every vendor's families (vendor name, family), built for a search
+    std::vector<std::pair<std::string, PrinterFamily>> m_all_families;
 
     Yoga::ButtonGroup m_vendor_button_group;
     std::map<Yoga::AbstractButton*, std::string> m_button_vendors;
@@ -74,6 +78,7 @@ private:
 
     void reload();
     void reload_vendor_buttons(const Domain::Preset::Bundle& preset_bundle);
+    std::vector<PrinterFamily> families_of(const std::string& vendor_id) const;
     void rebuild_printer_families();
     void rebuild_printer_view();
     void clear_printer_items();

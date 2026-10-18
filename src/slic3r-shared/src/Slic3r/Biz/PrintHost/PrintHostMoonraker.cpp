@@ -8,6 +8,10 @@
 #include <boost/algorithm/string.hpp>
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
+#include <cctype>
+#include <map>
+
 namespace fs = boost::filesystem;
 
 namespace Slic3r::Biz::PrintHost {
@@ -211,6 +215,306 @@ void PrintHostMoonraker::set_auth(Network::IHttp* http) const
     if (!auth->ca_file.empty()) {
         http->ca_file(auth->ca_file);
     }
+}
+
+// ---- Filament lanes of a multi-material unit ----
+// Ported from OrcaSlicer v2.5.0-alpha src/slic3r/Utils/MoonrakerPrinterAgent.cpp
+// (fetch_moonraker_filament_data, fetch_hh_filament_info, normalize_color_value,
+// map_filament_type_to_generic_id). Copyright (c) the OrcaSlicer authors, AGPL-3.0.
+
+namespace {
+
+std::string safe_json_string(const nlohmann::json& obj, const char* key)
+{
+    auto it = obj.find(key);
+    if (it != obj.end() && it->is_string())
+        return it->get<std::string>();
+    return "";
+}
+
+int safe_json_int(const nlohmann::json& obj, const char* key)
+{
+    auto it = obj.find(key);
+    if (it != obj.end() && it->is_number())
+        return it->get<int>();
+    return 0;
+}
+
+std::string safe_array_string(const nlohmann::json& arr, int idx)
+{
+    if (arr.is_array() && idx >= 0 && idx < static_cast<int>(arr.size()) && arr[idx].is_string())
+        return arr[idx].get<std::string>();
+    return "";
+}
+
+int safe_array_int(const nlohmann::json& arr, int idx)
+{
+    if (arr.is_array() && idx >= 0 && idx < static_cast<int>(arr.size()) && arr[idx].is_number())
+        return arr[idx].get<int>();
+    return 0;
+}
+
+// Orca stores "RRGGBBAA"; the slicer uses "#RRGGBB" (empty when unknown).
+std::string to_slicer_color(const std::string& color)
+{
+    const std::string normalized = normalize_lane_color(color);
+    if (normalized == "00000000")
+        return {};
+    return "#" + normalized.substr(0, 6);
+}
+
+} // namespace
+
+std::string normalize_lane_color(const std::string& color)
+{
+    std::string value = color;
+    boost::trim(value);
+
+    // Remove 0x or 0X prefix if present
+    if (value.size() >= 2 && (value.rfind("0x", 0) == 0 || value.rfind("0X", 0) == 0)) {
+        value = value.substr(2);
+    }
+    // Remove # prefix if present
+    if (!value.empty() && value[0] == '#') {
+        value = value.substr(1);
+    }
+
+    // Extract only hex digits
+    std::string normalized;
+    for (char c : value) {
+        if (std::isxdigit(static_cast<unsigned char>(c))) {
+            normalized.push_back(static_cast<char>(std::toupper(static_cast<unsigned char>(c))));
+        }
+    }
+
+    // If 6 hex digits, add FF alpha
+    if (normalized.size() == 6) {
+        normalized += "FF";
+    }
+
+    // Validate length - return default if invalid
+    if (normalized.size() != 8) {
+        return "00000000";
+    }
+
+    return normalized;
+}
+
+std::string generic_filament_family(const std::string& material)
+{
+    std::string upper = material;
+    boost::trim(upper);
+    std::transform(upper.begin(), upper.end(), upper.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
+
+    // Normalize reported material names (trimmed, uppercased) to a generic family.
+    static const std::map<std::string, std::string> type_to_family = {
+        // PLA variants
+        {"PLA", "PLA"},
+        {"PLA-CF", "PLA-CF"},
+        {"PLA SILK", "PLA Silk"},
+        {"PLA-SILK", "PLA Silk"},
+        {"PLA HIGH SPEED", "PLA High Speed"},
+        {"PLA-HS", "PLA High Speed"},
+        {"PLA HS", "PLA High Speed"},
+
+        // ABS/ASA variants
+        {"ABS", "ABS"},
+        {"ASA", "ASA"},
+
+        // PETG/PET variants
+        {"PETG", "PETG"},
+        {"PET", "PETG"},
+        {"PCTG", "PCTG"},
+
+        // PA/Nylon variants
+        {"PA", "PA"},
+        {"NYLON", "PA"},
+        {"PA-CF", "PA-CF"},
+        {"PPA", "PPA-CF"},
+        {"PPA-CF", "PPA-CF"},
+        {"PPA-GF", "PPA-GF"},
+
+        // PC variants
+        {"PC", "PC"},
+
+        // PP/PE variants
+        {"PE", "PE"},
+        {"PP", "PP"},
+
+        // Support materials
+        {"PVA", "PVA"},
+        {"HIPS", "HIPS"},
+        {"BVOH", "BVOH"},
+
+        // TPU variants
+        {"TPU", "TPU"},
+
+        // Other materials
+        {"EVA", "EVA"},
+        {"PHA", "PHA"},
+        {"COPE", "CoPE"},
+        {"SBS", "SBS"},
+    };
+
+    auto it = type_to_family.find(upper);
+    return it == type_to_family.end() ? std::string{} : it->second;
+}
+
+std::optional<std::vector<FilamentLane>> parse_moonraker_lane_data(const std::string& body)
+{
+    auto json = nlohmann::json::parse(body, nullptr, false, true);
+    if (json.is_discarded())
+        return std::nullopt;
+
+    // Expected structure: { "result": { "namespace": "lane_data", "value": { "lane1": {...}, ... } } }
+    if (!json.contains("result") || !json["result"].contains("value") || !json["result"]["value"].is_object())
+        return std::nullopt;
+
+    std::vector<FilamentLane> lanes;
+    for (const auto& [lane_key, lane_obj] : json["result"]["value"].items()) {
+        if (!lane_obj.is_object())
+            continue;
+
+        // Extract lane index from the "lane" field (tool number, 0-based)
+        const std::string lane_str = safe_json_string(lane_obj, "lane");
+        int lane_index = -1;
+        if (!lane_str.empty()) {
+            try {
+                lane_index = std::stoi(lane_str);
+            } catch (...) {
+                lane_index = -1;
+            }
+        }
+        if (lane_index < 0)
+            continue;
+
+        FilamentLane lane;
+        lane.index       = lane_index;
+        lane.material    = safe_json_string(lane_obj, "material");
+        lane.color       = to_slicer_color(safe_json_string(lane_obj, "color"));
+        lane.nozzle_temp = safe_json_int(lane_obj, "nozzle_temp");
+        lane.bed_temp    = safe_json_int(lane_obj, "bed_temp");
+        lanes.push_back(lane);
+    }
+
+    if (lanes.empty())
+        return std::nullopt;
+    return lanes;
+}
+
+std::optional<std::vector<FilamentLane>> parse_happy_hare_gates(const std::string& body)
+{
+    auto json = nlohmann::json::parse(body, nullptr, false, true);
+    if (json.is_discarded())
+        return std::nullopt;
+
+    // Expected structure: { "result": { "status": { "mmu": { ... } } } }
+    if (!json.contains("result") || !json["result"].contains("status")
+        || !json["result"]["status"].contains("mmu") || !json["result"]["status"]["mmu"].is_object())
+        return std::nullopt;
+
+    const auto& mmu = json["result"]["status"]["mmu"];
+    // Empty mmu object means Happy Hare is not installed
+    if (mmu.empty() || !mmu.contains("num_gates") || !mmu["num_gates"].is_number())
+        return std::nullopt;
+
+    const int num_gates = mmu["num_gates"].get<int>();
+    if (num_gates <= 0)
+        return std::nullopt;
+
+    const auto empty = nlohmann::json::array();
+    const auto& gate_status      = mmu.contains("gate_status") ? mmu["gate_status"] : empty;
+    const auto& gate_material    = mmu.contains("gate_material") ? mmu["gate_material"] : empty;
+    const auto& gate_color       = mmu.contains("gate_color") ? mmu["gate_color"] : empty;
+    const auto& gate_temperature = mmu.contains("gate_temperature") ? mmu["gate_temperature"] : empty;
+    if (!gate_status.is_array() || !gate_material.is_array() || !gate_color.is_array()
+        || !gate_temperature.is_array())
+        return std::nullopt;
+
+    std::vector<FilamentLane> lanes;
+    for (int gate_idx = 0; gate_idx < num_gates; ++gate_idx) {
+        // gate_status: -1 = unknown, 0 = empty, 1 or 2 = available
+        if (safe_array_int(gate_status, gate_idx) <= 0)
+            continue;
+        FilamentLane lane;
+        lane.index       = gate_idx;
+        lane.material    = safe_array_string(gate_material, gate_idx);
+        // Skip if no material type (empty gate)
+        if (lane.material.empty())
+            continue;
+        lane.color       = to_slicer_color(safe_array_string(gate_color, gate_idx));
+        lane.nozzle_temp = safe_array_int(gate_temperature, gate_idx);
+        lanes.push_back(lane);
+    }
+
+    if (lanes.empty())
+        return std::nullopt;
+    return lanes;
+}
+
+std::optional<std::string> PrintHostMoonraker::get(const std::string& path, std::string& msg, RetryFn retry_fn) const
+{
+    const PhysicalPrinter::PrinterUpload* auth = std::get_if<PhysicalPrinter::PrinterUpload>(&m_print_host_config.payload);
+    ASSERT(auth);
+
+    std::optional<std::string> result;
+    std::unique_ptr<Network::IHttp> http = Network::IHttp::create(
+        Network::IHttp::RequestMethod::Get,
+        make_url(path),
+        retry_fn
+    );
+    set_auth(http.get());
+    http->timeout_connection(5)
+        .timeout_total(10)
+        .on_complete([&](std::string body, unsigned status) {
+            if (status == 200)
+                result = std::move(body);
+            else
+                msg = format_error(body, "", status);
+        })
+        .on_error([&](std::string body, std::string error, unsigned status) {
+            msg = format_error(body, error, status);
+        })
+#ifdef _WIN32
+        .ssl_revoke_best_effort(auth->ssl_revoke_best_effort)
+#endif // _WIN32
+        .perform_sync();
+    return result;
+}
+
+std::optional<std::vector<FilamentLane>> PrintHostMoonraker::fetch_filament_lanes(std::string& msg, RetryFn retry_fn) const
+{
+    // Moonraker lane data first (AFC and recent Happy Hare publish it), then Happy Hare's own status.
+    if (auto body = get("server/database/item?namespace=lane_data", msg, retry_fn)) {
+        if (auto lanes = parse_moonraker_lane_data(*body))
+            return lanes;
+    }
+    if (auto body = get("printer/objects/query?mmu", msg, retry_fn)) {
+        if (auto lanes = parse_happy_hare_gates(*body))
+            return lanes;
+    }
+    if (msg.empty())
+        msg = _u8L("The printer reports no multi-material unit lanes.");
+    return std::nullopt;
+}
+
+std::optional<std::vector<FilamentLane>> fetch_filament_lanes(
+    const PhysicalPrinter::PhysicalPrinterConfig& printer,
+    std::string& msg,
+    IPrintHost::RetryFn retry_fn
+)
+{
+    const auto* upload = std::get_if<PhysicalPrinter::PrinterUpload>(&printer.payload);
+    if (upload == nullptr || upload->type != Domain::PrintHostType::Moonraker) {
+        msg = _u8L("Filament sync needs a printer connected through Moonraker.");
+        return std::nullopt;
+    }
+    const PrintHostMoonraker host{
+        printer,
+        PrintHostJobData{std::monostate{}, {}, PrintHostExportFormat::Undefined}
+    };
+    return host.fetch_filament_lanes(msg, std::move(retry_fn));
 }
 
 } // namespace Slic3r::Biz::PrintHost

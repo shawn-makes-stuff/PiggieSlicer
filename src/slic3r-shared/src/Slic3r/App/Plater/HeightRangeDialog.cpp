@@ -83,7 +83,7 @@ HeightRangeDialog::HeightRangeDialog(IConfigBoxSetter* config_box_setter) :
 
     m_layer_range_settings_dialog =
         this->emplace_back<LayerRangeSettingsDialog>(m_config_box_setter);
-    m_layer_range_settings_dialog->attach_to_item(this, Position::Left);
+    m_layer_range_settings_dialog->attach_to_item(this, Position::Right);
 }
 
 void HeightRangeDialog::clear_overrides()

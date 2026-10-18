@@ -40,6 +40,7 @@
 
 
 #include <wx/panel.h>
+#include <wx/stattext.h>
 #include <wx/notebook.h>
 #include <wx/string.h>
 #include <wx/display.h>
@@ -82,7 +83,7 @@ MainFrame::MainFrame(
     Navigator& navigator,
     std::shared_ptr<ProjectSaver> project_saver
 ) :
-    wxFrame(nullptr, wxID_ANY, from_u8(::Slic3r::BUILD_ID), wxDefaultPosition,wxDefaultSize,
+    wxFrame(nullptr, wxID_ANY, from_u8(::Slic3r::APP_NAME), wxDefaultPosition,wxDefaultSize,
         wxDEFAULT_FRAME_STYLE, from_u8("mainframe")),
     m_workbench(workbench),
     m_project_interactor(project_interactor),
@@ -98,6 +99,12 @@ MainFrame::MainFrame(
     // Load the icon either from the exe, or from the ico file.
 #if _WIN32
     SetIcons(main_frame_icon_bundle());
+    // the taskbar asks for the window's icon while the app is still starting; when it gets no
+    // answer in time it takes the window class's, which has none: give the class the icon too
+    ::SetClassLongPtr(GetHWND(), GCLP_HICON,
+        LONG_PTR(GetIcons().GetIcon(wxSize(::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON))).GetHICON()));
+    ::SetClassLongPtr(GetHWND(), GCLP_HICONSM,
+        LONG_PTR(GetIcons().GetIcon(wxSize(::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON))).GetHICON()));
 #else
     SetIcon(main_frame_icon());
 #endif
@@ -108,9 +115,18 @@ MainFrame::MainFrame(
 
     AppServices::instance().app_config_interactor().add_listener<IAppConfigChangedListener>(this);
     project_interactor.physical_printer_interactor().add_listener<Biz::PhysicalPrinter::IPhysicalPrinterChangedListener>(this);
+    project_interactor.status_cache().add_listener<Biz::IStatusCacheChangedListener>(this);
+    project_interactor.scene_interactor().add_listener<Biz::ISelectedBedInstancesChangedListener>(this);
 
     localization().add_listener<ILanguageChangedListener>(this);
     update_min_size();
+#ifdef _WIN32
+    // recompute the non-client area without the caption (MSWWindowProc), when the preference is on
+    m_custom_caption = AppServices::instance().app_config().get<bool>("custom_title_bar");
+    if (m_custom_caption)
+    ::SetWindowPos(GetHWND(), nullptr, 0, 0, 0, 0,
+        SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+#endif
 
 #if defined(__WXGTK__)
     GtkSettings* gtk_settings = gtk_settings_get_for_screen(gtk_widget_get_screen(GetHandle()));
@@ -226,15 +242,22 @@ MainFrame::MainFrame(
             this->setup_macos_native_menu_bar();
 #endif
             this->update_accel_table();
+            this->update_mode_buttons();
         });
     };
 
     m_navigator.callbacks().modal_dialog_changed = [this](ModalDialog dialog)
     {
+
         m_left_bar->GetLeftBarCtrl()->preferences_btn()->Enable(
             dialog == ModalDialog::Preferences || dialog == ModalDialog::None
         );
         m_left_bar->GetTabsBarCtrl()->enable_buttons(dialog == ModalDialog::None);
+        m_left_bar->GetLeftBarCtrl()->prepare_btn()->Enable(dialog == ModalDialog::None);
+        if (dialog == ModalDialog::None)
+            update_mode_buttons(); // Preview also needs a sliced bed
+        else
+            m_left_bar->GetLeftBarCtrl()->preview_btn()->Enable(false);
 
         m_left_bar->GetLeftBarCtrl()->preferences_btn()->set_selected(
             dialog == ModalDialog::Preferences
@@ -251,6 +274,41 @@ MainFrame::MainFrame(
     }));
 }
 
+#ifdef _WIN32
+WXLRESULT MainFrame::MSWWindowProc(WXUINT msg, WXWPARAM wParam, WXLPARAM lParam)
+{
+    if (!m_custom_caption)
+        return wxFrame::MSWWindowProc(msg, wParam, lParam);
+    const int frame_x = ::GetSystemMetrics(SM_CXFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER);
+    const int frame_y = ::GetSystemMetrics(SM_CYFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER);
+    if (msg == WM_NCCALCSIZE && wParam) {
+        // keep the side and bottom resize borders, drop the caption
+        RECT& rc = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam)->rgrc[0];
+        rc.left += frame_x;
+        rc.right -= frame_x;
+        rc.bottom -= frame_y;
+        // a maximized window hangs over the screen edge by its frame
+        if (IsMaximized())
+            rc.top += frame_y;
+        return 0;
+    }
+    if (msg == WM_NCHITTEST && !IsMaximized()) {
+        // the top edge resizes, as the caption's edge did
+        RECT rc;
+        ::GetWindowRect(GetHWND(), &rc);
+        const POINT pt{int(short(LOWORD(lParam))), int(short(HIWORD(lParam)))};
+        if (pt.y >= rc.top && pt.y < rc.top + frame_y) {
+            if (pt.x < rc.left + frame_x * 2)
+                return HTTOPLEFT;
+            if (pt.x >= rc.right - frame_x * 2)
+                return HTTOPRIGHT;
+            return HTTOP;
+        }
+    }
+    return wxFrame::MSWWindowProc(msg, wParam, lParam);
+}
+#endif
+
 MainFrame::~MainFrame()
 {
 #ifdef USE_NATIVE_MENU
@@ -261,6 +319,8 @@ MainFrame::~MainFrame()
     }
 #endif
     localization().remove_listener<ILanguageChangedListener>(this);
+    m_project_interactor.status_cache().remove_listener<Biz::IStatusCacheChangedListener>(this);
+    m_project_interactor.scene_interactor().remove_listener<Biz::ISelectedBedInstancesChangedListener>(this);
 #if defined(__WXGTK__)
     g_signal_handler_disconnect(gtk_settings_get_for_screen(gtk_widget_get_screen(GetHandle())), m_dpi_signal_id);
 #endif
@@ -497,10 +557,9 @@ void MainFrame::init_left_bar(Biz::ProjectInteractor& project_interactor)
     m_left_bar->set_compact_mode(true);
 
     init_slicing_page();
-    if (project_interactor.physical_printer_interactor().is_printer_upload_selected()) {
-        init_physical_printer_page(project_interactor);
-    }
+    init_physical_printer_page(project_interactor);
     init_preferences_button();
+    bind_mode_buttons();
 }
 
 void MainFrame::init_preferences_button()
@@ -546,6 +605,59 @@ void MainFrame::init_slicing_page()
 {
     m_canvas = std::make_unique<Platform::WX::WXRenderCanvas>(m_left_bar,  static_cast<int>(LeftBarTabs::Slicing));
     m_left_bar->AddNewPage(m_canvas.get(), WX::_L("Slicing"), "lb_slicing");
+    // the Slicing page is shown by the Prepare / Preview buttons instead of its own
+    m_left_bar->GetTabsBarCtrl()->ShowPageButton(m_left_bar->FindPage(m_canvas.get()), false);
+}
+
+void MainFrame::bind_mode_buttons()
+{
+    auto bind = [this](TabsBarCtrl::Button* button, Render::ModuleType type)
+    {
+        button->Bind(
+            wxEVT_BUTTON,
+            [this, type](wxCommandEvent&)
+            {
+                ensure_slicing_page_selected();
+                m_navigator.navigate_to_module_type(type);
+                update_mode_buttons();
+            }
+        );
+    };
+    bind(m_left_bar->GetLeftBarCtrl()->prepare_btn(), Render::ModuleType::Plater);
+    bind(m_left_bar->GetLeftBarCtrl()->preview_btn(), Render::ModuleType::Preview);
+}
+
+void MainFrame::update_mode_buttons()
+{
+    const wxWindow* page      = m_left_bar->GetCurrentPage();
+    const bool slicing        = page && page->GetId() == static_cast<wxWindowID>(LeftBarTabs::Slicing);
+    const Render::ModuleType type = m_navigator.current_module_type();
+    m_left_bar->GetLeftBarCtrl()->prepare_btn()->set_selected(slicing && type == Render::ModuleType::Plater);
+    m_left_bar->GetLeftBarCtrl()->preview_btn()->set_selected(slicing && type == Render::ModuleType::Preview);
+
+    bool sliced = false;
+    const Domain::SelectionId project_id = m_project_interactor.selected_project_id();
+    if (project_id != Domain::INVALID_ID) {
+        for (const auto& bed : m_project_interactor.scene_interactor().selected_bed_instances()) {
+            const auto status = m_project_interactor.status_cache().get_status({project_id, bed.get().id().id});
+            sliced |= status.has_value() && status->code == Biz::Slicing::StatusCode::Finished;
+        }
+    }
+    m_left_bar->GetLeftBarCtrl()->preview_btn()->Enable(sliced || type == Render::ModuleType::Preview);
+    m_left_bar->GetLeftBarCtrl()->Refresh();
+}
+
+void MainFrame::on_status_cache_status_code_changed(const Domain::SlicingId id)
+{
+    wxTheApp->CallAfter([this]() { update_mode_buttons(); });
+}
+
+void MainFrame::on_selected_bed_instances_changed(
+    Domain::SelectionId project_id,
+    const Biz::Scene::BedSelection& bed_selection
+)
+{
+    wxTheApp->CallAfter([this]() { update_mode_buttons(); });
 }
 
 static std::string build_physical_printer_url(const std::string& host)
@@ -564,12 +676,29 @@ void MainFrame::init_physical_printer_page(Biz::ProjectInteractor& project_inter
     const auto selected_printer = project_interactor.physical_printer_interactor().selected_physical_printer_data();
     const auto* payload = std::get_if<Slic3r::Biz::PhysicalPrinter::PrinterUpload>(&selected_printer.payload);
     if (!payload) {
+        // Orca's Device tab is always there; without a network printer it says how to get one
+        wxPanel* panel = new wxPanel(m_left_bar, static_cast<int>(LeftBarTabs::PhysicalPrinter));
+        wxStaticText* text = new wxStaticText(
+            panel,
+            wxID_ANY,
+            WX::_L("No network printer selected.\nAdd one with the network printer button in the Printer section, then pick it under Select Destination."),
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_CENTRE_HORIZONTAL
+        );
+        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+        sizer->AddStretchSpacer();
+        sizer->Add(text, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 20);
+        sizer->AddStretchSpacer();
+        panel->SetSizer(sizer);
+        m_left_bar->InsertNewPage(get_tab_insert_index(m_left_bar, LeftBarTabs::PhysicalPrinter), panel, WX::_L("Device"), "lb_printers");
+        m_physical_printer_page_added = true;
         return;
     }
     std::string url = build_physical_printer_url(selected_printer.host);
     std::unique_ptr<App::Browser::BrowserLogicPhysicalPrinter> logic = std::make_unique<App::Browser::BrowserLogicPhysicalPrinter>(url, payload->api_key, payload->username, payload->password);
     WX::WebView::AbstractWebViewPanel* webview_panel = WebView::new_web_view_panel(m_left_bar, static_cast<int>(LeftBarTabs::PhysicalPrinter), std::move(logic), false);
-    m_left_bar->InsertNewPage(get_tab_insert_index(m_left_bar, LeftBarTabs::PhysicalPrinter), webview_panel, WX::_L("Physical Printer"), "lb_printers");
+    m_left_bar->InsertNewPage(get_tab_insert_index(m_left_bar, LeftBarTabs::PhysicalPrinter), webview_panel, WX::_L("Device"), "lb_printers");
     webview_panel->set_switch_left_tab_fn(std::bind(&MainFrame::switch_left_tab, this, std::placeholders::_1, std::placeholders::_2));
     m_physical_printer_page_added = true;
 }
@@ -579,7 +708,8 @@ void MainFrame::complete_and_bind_left_bar()
     int slicing_page_id = m_left_bar->FindPage(m_canvas.get());
     m_left_bar->SetSelection(slicing_page_id);
 
-    m_left_bar->Bind(wxEVT_BOOKCTRL_PAGE_CHANGED, [](wxBookCtrlEvent& e) {});
+    m_left_bar->Bind(wxEVT_BOOKCTRL_PAGE_CHANGED, [this](wxBookCtrlEvent& e) { update_mode_buttons(); });
+    update_mode_buttons();
 }
 
 static size_t get_tab_index_by_id(LeftBar* left_bar, LeftBarTabs page_id)
@@ -613,16 +743,11 @@ void MainFrame::on_selected_physical_printer_changed()
     ASSERT(m_left_bar);
 
 
-    bool show_physicial_printer_page = m_project_interactor.physical_printer_interactor().is_printer_upload_selected();
-    
     if (m_physical_printer_page_added) {
         remove_left_bar_page(LeftBarTabs::PhysicalPrinter);
         m_physical_printer_page_added = false;
     }
-
-    if (!m_physical_printer_page_added && show_physicial_printer_page) {
-        init_physical_printer_page(m_project_interactor);
-    }
+    init_physical_printer_page(m_project_interactor);
 
     ensure_slicing_page_selected();
 }

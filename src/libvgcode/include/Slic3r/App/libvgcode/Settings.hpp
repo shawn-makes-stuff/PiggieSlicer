@@ -54,7 +54,9 @@ struct Settings
 				true, // SupportMaterial
 				true, // SupportMaterialInterface
 				true, // WipeTower
-				true  // Custom
+				true, // Custom
+				true, // InternalBridgeInfill
+				true  // Brim
 		};
 };
 

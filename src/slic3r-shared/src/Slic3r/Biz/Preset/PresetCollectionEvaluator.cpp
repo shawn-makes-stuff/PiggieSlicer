@@ -52,6 +52,15 @@ void override_feature_values(FeatureValueMap& dest, const FeatureValueMap& overr
         dest[key] = value;
 }
 
+// Keys a user preset sets in its own nodes (a saved user preset stores only its changes)
+void collect_own_keys(std::set<std::string>& keys, const PresetNode& node)
+{
+    for (const auto& [key, value] : node.values)
+        keys.insert(key);
+    for (const auto& variant : node.variants)
+        collect_own_keys(keys, variant);
+}
+
 }
 
 PresetCollectionEvaluator::PresetCollectionEvaluator(
@@ -115,6 +124,12 @@ PresetEvaluator::EvalPresetContexts PresetCollectionEvaluator::eval_preset(
     PresetEvaluator::EvalPresetContexts ret;
     for (const auto& preset : m_presets) {
         auto eval_presets = eval_preset(preset, preset.id, preset.origin, {{preset.id}}, overrides);
+        if (preset.origin == PresetOrigin::User) {
+            std::set<std::string> user_keys;
+            collect_own_keys(user_keys, preset);
+            for (auto& ep : eval_presets)
+                ep.user_keys = user_keys;
+        }
         auto it           = only_public ?
                       std::remove_if(
                 eval_presets.begin(),
@@ -148,6 +163,9 @@ PresetEvaluator::EvalPresetContexts PresetCollectionEvaluator::eval_preset(
                     return included;
                 };
 
+                std::set<std::string> user_keys;
+                if (preset.origin == PresetOrigin::User)
+                    collect_own_keys(user_keys, preset);
                 return eval_preset(
                            preset,
                            preset.id,
@@ -156,7 +174,8 @@ PresetEvaluator::EvalPresetContexts PresetCollectionEvaluator::eval_preset(
                            {{
                              .origin    = preset.origin,
                              .root_id   = preset.id,
-                             .user_file = preset.user_file
+                             .user_file = preset.user_file,
+                             .user_keys = std::move(user_keys)
                            }},
                            overrides.empty() ? ValueMaps{{}} : overrides,
                            expr_combine

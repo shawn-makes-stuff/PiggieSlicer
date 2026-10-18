@@ -1,0 +1,800 @@
+kind: vendor
+id: FELIX Printers
+name: FELIX Printers
+version: 1.0.0+orca.1.0.0
+features:
+  printer:
+    supports_025_nozzle:
+      default: false
+      user_editable: false
+    supports_035_nozzle:
+      default: false
+      user_editable: false
+    supports_05_nozzle:
+      default: false
+      user_editable: false
+    supports_07_nozzle:
+      default: false
+      user_editable: false
+    supports_1_nozzle:
+      default: false
+      user_editable: false
+    supports_2_nozzle:
+      default: false
+      user_editable: false
+    supports_3_nozzle:
+      default: false
+      user_editable: false
+    supports_4_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.25
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: FELIX Food Double
+  base_model: FELIX Food Double
+  printer_configs_order:
+  - FELIX-Food-Double-0-50mm-nozzle
+  - FELIX-Food-Double-1-00mm-nozzle
+  - FELIX-Food-Double-2-00mm-nozzle
+  - FELIX-Food-Double-3-00mm-nozzle
+  - FELIX-Food-Double-4-00mm-nozzle
+- label: FELIX Food Single
+  base_model: FELIX Food Single
+  printer_configs_order:
+  - FELIX-Food-Single-0-50mm-nozzle
+  - FELIX-Food-Single-1-00mm-nozzle
+  - FELIX-Food-Single-2-00mm-nozzle
+  - FELIX-Food-Single-3-00mm-nozzle
+  - FELIX-Food-Single-4-00mm-nozzle
+- label: FELIX Food Switch
+  base_model: FELIX Food Switch
+  printer_configs_order:
+  - FELIX-Food-Switch-0-50mm-nozzle
+  - FELIX-Food-Switch-1-00mm-nozzle
+  - FELIX-Food-Switch-2-00mm-nozzle
+  - FELIX-Food-Switch-3-00mm-nozzle
+  - FELIX-Food-Switch-4-00mm-nozzle
+- label: FELIX Pro 3
+  base_model: FELIX Pro 3
+  printer_configs_order:
+  - FELIX-Pro-3-0-25mm-nozzle
+  - FELIX-Pro-3-0-35mm-nozzle
+  - FELIX-Pro-3-0-50mm-nozzle
+  - FELIX-Pro-3-0-70mm-nozzle
+- label: FELIX Pro L 3.0
+  base_model: FELIX Pro L 3.0
+  printer_configs_order:
+  - FELIX-Pro-L-3-0-0-25mm-nozzle
+  - FELIX-Pro-L-3-0-0-35mm-nozzle
+  - FELIX-Pro-L-3-0-0-50mm-nozzle
+  - FELIX-Pro-L-3-0-0-70mm-nozzle
+- label: FELIX Pro XL 3.0
+  base_model: FELIX Pro XL 3.0
+  printer_configs_order:
+  - FELIX-Pro-XL-3-0-0-25mm-nozzle
+  - FELIX-Pro-XL-3-0-0-35mm-nozzle
+  - FELIX-Pro-XL-3-0-0-50mm-nozzle
+  - FELIX-Pro-XL-3-0-0-70mm-nozzle
+- label: FELIX Tec 4
+  base_model: FELIX Tec 4
+  printer_configs_order:
+  - FELIX-Tec-4-0-25mm-nozzle
+  - FELIX-Tec-4-0-35mm-nozzle
+  - FELIX-Tec-4-0-50mm-nozzle
+  - FELIX-Tec-4-0-70mm-nozzle
+---
+kind: printer
+technology: FFF
+name: FELIX Food Double
+id: FELIX Food Double
+model:
+  base_model: FELIX Food Double
+  model: FELIX Food Double
+tool_count: 2
+features:
+  supports_05_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_2_nozzle:
+    default: true
+  supports_3_nozzle:
+    default: true
+  supports_4_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: FELIX_Food_Series_Buildplate.stl
+  bed_texture: FELIX Food Series build plate texture.svg
+  thumbnail: FELIX Food Double_cover.png
+---
+kind: printer
+technology: FFF
+name: FELIX Food Single
+id: FELIX Food Single
+model:
+  base_model: FELIX Food Single
+  model: FELIX Food Single
+tool_count: 1
+features:
+  supports_05_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_2_nozzle:
+    default: true
+  supports_3_nozzle:
+    default: true
+  supports_4_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: FELIX_Food_Series_Buildplate.stl
+  bed_texture: FELIX Food Series build plate texture.svg
+  thumbnail: FELIX Food Single_cover.png
+---
+kind: printer
+technology: FFF
+name: FELIX Food Switch
+id: FELIX Food Switch
+model:
+  base_model: FELIX Food Switch
+  model: FELIX Food Switch
+tool_count: 2
+features:
+  supports_05_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  supports_2_nozzle:
+    default: true
+  supports_3_nozzle:
+    default: true
+  supports_4_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: FELIX_Food_Series_Buildplate.stl
+  bed_texture: FELIX Food Series build plate texture.svg
+  thumbnail: FELIX Food Switch_cover.png
+---
+kind: printer
+technology: FFF
+name: FELIX Pro 3
+id: FELIX Pro 3
+model:
+  base_model: FELIX Pro 3
+  model: FELIX Pro 3
+tool_count: 2
+features:
+  supports_025_nozzle:
+    default: true
+  supports_035_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: FELIX_Pro_Series_Buildplate.stl
+  bed_texture: FELIX Pro Series build plate texture.svg
+  thumbnail: FELIX Pro 3_cover.png
+---
+kind: printer
+technology: FFF
+name: FELIX Pro L 3.0
+id: FELIX Pro L 3.0
+model:
+  base_model: FELIX Pro L 3.0
+  model: FELIX Pro L 3.0
+tool_count: 2
+features:
+  supports_025_nozzle:
+    default: true
+  supports_035_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: FELIX_Pro_L_Series_Buildplate.stl
+  bed_texture: FELIX Pro L Series build plate texture.svg
+  thumbnail: FELIX Pro L 3.0_cover.png
+---
+kind: printer
+technology: FFF
+name: FELIX Pro XL 3.0
+id: FELIX Pro XL 3.0
+model:
+  base_model: FELIX Pro XL 3.0
+  model: FELIX Pro XL 3.0
+tool_count: 2
+features:
+  supports_025_nozzle:
+    default: true
+  supports_035_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: FELIX_Pro_XL_Series_Buildplate.stl
+  bed_texture: FELIX Pro XL Series build plate.svg
+  thumbnail: FELIX Pro XL 3.0_cover.png
+---
+kind: printer
+technology: FFF
+name: FELIX Tec 4
+id: FELIX Tec 4
+model:
+  base_model: FELIX Tec 4
+  model: FELIX Tec 4
+tool_count: 2
+features:
+  supports_025_nozzle:
+    default: true
+  supports_035_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  multi_extruder:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: FELIX_Tec_Series_Buildplate.stl
+  bed_texture: FELIX Tec 4 Series build plate.svg
+  thumbnail: FELIX Tec 4_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.25'
+name: 0.25 nozzle
+condition: printer.supports_025_nozzle
+features:
+  nozzle_diameter:
+    default: 0.25
+---
+kind: tool
+technology: FFF
+id: '0.35'
+name: 0.35 nozzle
+condition: printer.supports_035_nozzle
+features:
+  nozzle_diameter:
+    default: 0.35
+---
+kind: tool
+technology: FFF
+id: '0.5'
+name: 0.5 nozzle
+condition: printer.supports_05_nozzle
+features:
+  nozzle_diameter:
+    default: 0.5
+---
+kind: tool
+technology: FFF
+id: '0.7'
+name: 0.7 nozzle
+condition: printer.supports_07_nozzle
+features:
+  nozzle_diameter:
+    default: 0.7
+---
+kind: tool
+technology: FFF
+id: '1.0'
+name: 1.0 nozzle
+condition: printer.supports_1_nozzle
+features:
+  nozzle_diameter:
+    default: 1.0
+---
+kind: tool
+technology: FFF
+id: '2.0'
+name: 2.0 nozzle
+condition: printer.supports_2_nozzle
+features:
+  nozzle_diameter:
+    default: 2.0
+---
+kind: tool
+technology: FFF
+id: '3.0'
+name: 3.0 nozzle
+condition: printer.supports_3_nozzle
+features:
+  nozzle_diameter:
+    default: 3.0
+---
+kind: tool
+technology: FFF
+id: '4.0'
+name: 4.0 nozzle
+condition: printer.supports_4_nozzle
+features:
+  nozzle_diameter:
+    default: 4.0
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: FELIX-Food-Double-0-50mm-nozzle
+name: FELIX Food Double 0.50mm nozzle
+printer: FELIX Food Double
+tool_count: 2
+tools:
+- tool: '0.5'
+  features:
+    extruder_index: 0
+- tool: '0.5'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Double-1-00mm-nozzle
+name: FELIX Food Double 1.00mm nozzle
+printer: FELIX Food Double
+tool_count: 2
+tools:
+- tool: '1.0'
+  features:
+    extruder_index: 0
+- tool: '1.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Double-2-00mm-nozzle
+name: FELIX Food Double 2.00mm nozzle
+printer: FELIX Food Double
+tool_count: 2
+tools:
+- tool: '2.0'
+  features:
+    extruder_index: 0
+- tool: '2.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Double-3-00mm-nozzle
+name: FELIX Food Double 3.00mm nozzle
+printer: FELIX Food Double
+tool_count: 2
+tools:
+- tool: '3.0'
+  features:
+    extruder_index: 0
+- tool: '3.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Double-4-00mm-nozzle
+name: FELIX Food Double 4.00mm nozzle
+printer: FELIX Food Double
+tool_count: 2
+tools:
+- tool: '4.0'
+  features:
+    extruder_index: 0
+- tool: '4.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Single-0-50mm-nozzle
+name: FELIX Food Single 0.50mm nozzle
+printer: FELIX Food Single
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Single-1-00mm-nozzle
+name: FELIX Food Single 1.00mm nozzle
+printer: FELIX Food Single
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Single-2-00mm-nozzle
+name: FELIX Food Single 2.00mm nozzle
+printer: FELIX Food Single
+tools:
+- tool: '2.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Single-3-00mm-nozzle
+name: FELIX Food Single 3.00mm nozzle
+printer: FELIX Food Single
+tools:
+- tool: '3.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Single-4-00mm-nozzle
+name: FELIX Food Single 4.00mm nozzle
+printer: FELIX Food Single
+tools:
+- tool: '4.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Switch-0-50mm-nozzle
+name: FELIX Food Switch 0.50mm nozzle
+printer: FELIX Food Switch
+tool_count: 2
+tools:
+- tool: '0.5'
+  features:
+    extruder_index: 0
+- tool: '0.5'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Switch-1-00mm-nozzle
+name: FELIX Food Switch 1.00mm nozzle
+printer: FELIX Food Switch
+tool_count: 2
+tools:
+- tool: '1.0'
+  features:
+    extruder_index: 0
+- tool: '1.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Switch-2-00mm-nozzle
+name: FELIX Food Switch 2.00mm nozzle
+printer: FELIX Food Switch
+tool_count: 2
+tools:
+- tool: '2.0'
+  features:
+    extruder_index: 0
+- tool: '2.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Switch-3-00mm-nozzle
+name: FELIX Food Switch 3.00mm nozzle
+printer: FELIX Food Switch
+tool_count: 2
+tools:
+- tool: '3.0'
+  features:
+    extruder_index: 0
+- tool: '3.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Food-Switch-4-00mm-nozzle
+name: FELIX Food Switch 4.00mm nozzle
+printer: FELIX Food Switch
+tool_count: 2
+tools:
+- tool: '4.0'
+  features:
+    extruder_index: 0
+- tool: '4.0'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-3-0-25mm-nozzle
+name: FELIX Pro 3 0.25mm nozzle
+printer: FELIX Pro 3
+tool_count: 2
+tools:
+- tool: '0.25'
+  features:
+    extruder_index: 0
+- tool: '0.25'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-3-0-35mm-nozzle
+name: FELIX Pro 3 0.35mm nozzle
+printer: FELIX Pro 3
+tool_count: 2
+tools:
+- tool: '0.35'
+  features:
+    extruder_index: 0
+- tool: '0.35'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-3-0-50mm-nozzle
+name: FELIX Pro 3 0.50mm nozzle
+printer: FELIX Pro 3
+tool_count: 2
+tools:
+- tool: '0.5'
+  features:
+    extruder_index: 0
+- tool: '0.5'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-3-0-70mm-nozzle
+name: FELIX Pro 3 0.70mm nozzle
+printer: FELIX Pro 3
+tool_count: 2
+tools:
+- tool: '0.7'
+  features:
+    extruder_index: 0
+- tool: '0.7'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-L-3-0-0-25mm-nozzle
+name: FELIX Pro L 3.0 0.25mm nozzle
+printer: FELIX Pro L 3.0
+tool_count: 2
+tools:
+- tool: '0.25'
+  features:
+    extruder_index: 0
+- tool: '0.25'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-L-3-0-0-35mm-nozzle
+name: FELIX Pro L 3.0 0.35mm nozzle
+printer: FELIX Pro L 3.0
+tool_count: 2
+tools:
+- tool: '0.35'
+  features:
+    extruder_index: 0
+- tool: '0.35'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-L-3-0-0-50mm-nozzle
+name: FELIX Pro L 3.0 0.50mm nozzle
+printer: FELIX Pro L 3.0
+tool_count: 2
+tools:
+- tool: '0.5'
+  features:
+    extruder_index: 0
+- tool: '0.5'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-L-3-0-0-70mm-nozzle
+name: FELIX Pro L 3.0 0.70mm nozzle
+printer: FELIX Pro L 3.0
+tool_count: 2
+tools:
+- tool: '0.7'
+  features:
+    extruder_index: 0
+- tool: '0.7'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-XL-3-0-0-25mm-nozzle
+name: FELIX Pro XL 3.0 0.25mm nozzle
+printer: FELIX Pro XL 3.0
+tool_count: 2
+tools:
+- tool: '0.25'
+  features:
+    extruder_index: 0
+- tool: '0.25'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-XL-3-0-0-35mm-nozzle
+name: FELIX Pro XL 3.0 0.35mm nozzle
+printer: FELIX Pro XL 3.0
+tool_count: 2
+tools:
+- tool: '0.35'
+  features:
+    extruder_index: 0
+- tool: '0.35'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-XL-3-0-0-50mm-nozzle
+name: FELIX Pro XL 3.0 0.50mm nozzle
+printer: FELIX Pro XL 3.0
+tool_count: 2
+tools:
+- tool: '0.5'
+  features:
+    extruder_index: 0
+- tool: '0.5'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Pro-XL-3-0-0-70mm-nozzle
+name: FELIX Pro XL 3.0 0.70mm nozzle
+printer: FELIX Pro XL 3.0
+tool_count: 2
+tools:
+- tool: '0.7'
+  features:
+    extruder_index: 0
+- tool: '0.7'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Tec-4-0-25mm-nozzle
+name: FELIX Tec 4 0.25mm nozzle
+printer: FELIX Tec 4
+tool_count: 2
+tools:
+- tool: '0.25'
+  features:
+    extruder_index: 0
+- tool: '0.25'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Tec-4-0-35mm-nozzle
+name: FELIX Tec 4 0.35mm nozzle
+printer: FELIX Tec 4
+tool_count: 2
+tools:
+- tool: '0.35'
+  features:
+    extruder_index: 0
+- tool: '0.35'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Tec-4-0-50mm-nozzle
+name: FELIX Tec 4 0.50mm nozzle
+printer: FELIX Tec 4
+tool_count: 2
+tools:
+- tool: '0.5'
+  features:
+    extruder_index: 0
+- tool: '0.5'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate
+---
+kind: printer_config
+id: FELIX-Tec-4-0-70mm-nozzle
+name: FELIX Tec 4 0.70mm nozzle
+printer: FELIX Tec 4
+tool_count: 2
+tools:
+- tool: '0.7'
+  features:
+    extruder_index: 0
+- tool: '0.7'
+  features:
+    extruder_index: 1
+sheet: high_temp_plate

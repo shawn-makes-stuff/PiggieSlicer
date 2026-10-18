@@ -1,0 +1,407 @@
+kind: printer
+id: wcWZaU/DVFDyHy/rKI66kA
+variants:
+- condition: printer.model == "Eryone ER20 Klipper"
+  name: Eryone ER20 Klipper
+  id: MhoeiWEH3xT8yn5Y6LSq3A
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: NsVPgLFIa+Qc01OMq4dNvg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Standard @Eryone ER20 Klipper 0.2 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 4000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3500.0
+      machine_max_acceleration_x:
+      - 3500.0
+      machine_max_acceleration_y:
+      - 3000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 250.0
+      machine_max_feedrate_y:
+      - 250.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 190
+      printer_notes: optimized Eryone ER20 Klipper configuration with E3D Hotend, BMG directdrive, printable height limited to 190 because of the top of the directdrive and Z-Sync mod
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: LVpWWH/JlRS23Kw3NFnuxQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Eryone ER20 Klipper
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 4000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3500.0
+      machine_max_acceleration_x:
+      - 3500.0
+      machine_max_acceleration_y:
+      - 3000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 250.0
+      machine_max_feedrate_y:
+      - 250.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 190
+      printer_notes: optimized Eryone ER20 Klipper configuration with E3D Hotend, BMG directdrive, printable height limited to 190 because of the top of the directdrive and Z-Sync mod
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.5
+    id: UOG9HPNcZtPCsXDEipBBcA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.25mm Standard @Eryone ER20 Klipper 0.5 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 4000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3500.0
+      machine_max_acceleration_x:
+      - 3500.0
+      machine_max_acceleration_y:
+      - 3000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 250.0
+      machine_max_feedrate_y:
+      - 250.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 190
+      printer_notes: optimized Eryone ER20 Klipper configuration with E3D Hotend, BMG directdrive, printable height limited to 190 because of the top of the directdrive and Z-Sync mod
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: VPKj/dkPZn+b4rDBg/ow+Q
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard @Eryone ER20 Klipper 0.6 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 4000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3500.0
+      machine_max_acceleration_x:
+      - 3500.0
+      machine_max_acceleration_y:
+      - 3000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 250.0
+      machine_max_feedrate_y:
+      - 250.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 190
+      printer_notes: optimized Eryone ER20 Klipper configuration with E3D Hotend, BMG directdrive, printable height limited to 190 because of the top of the directdrive and Z-Sync mod
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: wqiJ6IwJvFpRL4gJ6LYukA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.40mm Standard @Eryone ER20 Klipper 0.8 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: END_PRINT
+      machine_max_acceleration_e:
+      - 4000.0
+      machine_max_acceleration_extruding:
+      - 4000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3500.0
+      machine_max_acceleration_x:
+      - 3500.0
+      machine_max_acceleration_y:
+      - 3000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 3.0
+      machine_max_jerk_x:
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 250.0
+      machine_max_feedrate_y:
+      - 250.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature[initial_extruder]]
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 190
+      printer_notes: optimized Eryone ER20 Klipper configuration with E3D Hotend, BMG directdrive, printable height limited to 190 because of the top of the directdrive and Z-Sync mod
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'

@@ -33,6 +33,8 @@ enum class ExtrusionRoleModifier : uint16_t
     // Indicator that the extrusion role was mixed from multiple differing extrusion roles,
     // for example from Support and SupportInterface.
     Mixed,
+    // Orca: brim, a kind of skirt
+    Brim,
     // Stopper, there should be maximum 16 modifiers defined for uint16_t bit mask.
     Count
 };
@@ -73,13 +75,16 @@ struct ExtrusionRole : public ExtrusionRoleModifiers
     static constexpr const ExtrusionRoleModifiers Ironing{ ExtrusionRoleModifier::Infill | ExtrusionRoleModifier::Solid | ExtrusionRoleModifier::Ironing | ExtrusionRoleModifier::External };
     // Visible bridging infill at the bottom of an object.
     static constexpr const ExtrusionRoleModifiers BridgeInfill{ ExtrusionRoleModifier::Infill | ExtrusionRoleModifier::Solid | ExtrusionRoleModifier::Bridge | ExtrusionRoleModifier::External };
-//    static constexpr const ExtrusionRoleModifiers InternalBridgeInfill{ ExtrusionRoleModifier::Infill | ExtrusionRoleModifier::Solid | ExtrusionRoleModifier::Bridge };
+    // Orca: bridging infill inside the object (over sparse infill)
+    static constexpr const ExtrusionRoleModifiers InternalBridgeInfill{ ExtrusionRoleModifier::Infill | ExtrusionRoleModifier::Solid | ExtrusionRoleModifier::Bridge };
     // Gap fill extrusion, currently used for any variable width extrusion: Thin walls outside of the outer extrusion,
     // gap fill in between perimeters, gap fill between the inner perimeter and infill.
     //FIXME revise GapFill and ThinWall types, split Gap Fill to Gap Fill and ThinWall.
     static constexpr const ExtrusionRoleModifiers GapFill{ ExtrusionRoleModifier::Thin }; // | ExtrusionRoleModifier::External };
 //    static constexpr const ExtrusionRoleModifiers ThinWall{ ExtrusionRoleModifier::Thin };
     static constexpr const ExtrusionRoleModifiers Skirt{ ExtrusionRoleModifier::Skirt };
+    // Orca: brim, a skirt (is_skirt()) with its own G-code role
+    static constexpr const ExtrusionRoleModifiers Brim{ ExtrusionRoleModifier::Skirt | ExtrusionRoleModifier::Brim };
     // Support base material, printed with non-soluble plastic.
     static constexpr const ExtrusionRoleModifiers SupportMaterial{ ExtrusionRoleModifier::Support };
     // Support interface material, printed with soluble plastic.
@@ -102,7 +107,7 @@ struct ExtrusionRole : public ExtrusionRoleModifiers
     bool is_support_interface() const { return this->is_support() && this->is_external(); }
     bool is_mixed() const { return this->ExtrusionRoleModifiers::has(ExtrusionRoleModifier::Mixed); }
 
-    // Brim is currently marked as skirt.
+    // Brim is a skirt too.
     bool is_skirt() const { return this->ExtrusionRoleModifiers::has(ExtrusionRoleModifier::Skirt); }
 };
 

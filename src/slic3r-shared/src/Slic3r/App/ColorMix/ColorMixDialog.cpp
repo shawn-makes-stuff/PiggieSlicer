@@ -617,7 +617,8 @@ void ColorMixDialog::update_from_project()
 
 void ColorMixDialog::close_action()
 {
-    m_navigator.set_opened_dialog(m_logical_printer_settings_dialog);
+    // opened on its own from the sidebar's filament section
+    m_navigator.set_opened_dialog(nullptr);
 }
 
 void ColorMixDialog::on_accept_clicked()

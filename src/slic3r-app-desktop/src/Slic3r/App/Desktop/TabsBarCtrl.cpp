@@ -88,6 +88,16 @@ TabsBarCtrl::Button::Button(wxWindow* parent, const ButtonAppearance& appear, wx
     );
 }
 
+// label colour: greyed like the icon (init_bitmaps) when the button is disabled
+static wxColour label_color(const wxWindow& button, const wxColour& enabled_color)
+{
+    if (button.IsEnabled())
+        return enabled_color;
+    return wxColour(from_u8(Slic3r::Biz::Algorithms::Color::encode_color(
+        AppServices::instance().theme().color(Platform::Color::Text, Platform::ColorGroup::Disabled)
+    )));
+}
+
 void TabsBarCtrl::Button::init_bitmaps()
 {
 
@@ -283,7 +293,7 @@ void TabsBarCtrl::Button::render()
                 pt.x += (rc.width - pt.x - labelSize.x) / 2;
             pt.y = (rc.height - labelSize.y) / 2;
 
-            dc.SetTextForeground(m_foreground_color);
+            dc.SetTextForeground(label_color(*this, m_foreground_color));
             dc.SetFont(GetFont());
             dc.DrawText(text, pt);
 
@@ -314,7 +324,7 @@ void TabsBarCtrl::Button::render()
         // Draw text
 
         if (!text.IsEmpty()) {
-            dc.SetTextForeground(m_foreground_color);
+            dc.SetTextForeground(label_color(*this, m_foreground_color));
             dc.SetFont(GetFont());
 
             wxArrayString lines = wxSplit(text, ' ');
@@ -539,7 +549,7 @@ void TabsBarCtrl::set_compact_mode(bool compact_mode)
 
     refresh_buttons();
 
-    m_first_sizer->GetItem(size_t(0))->SetFlag(align | margin_flags);
+    m_first_sizer->GetItem(m_buttons_sizer)->SetFlag(align | margin_flags);
     m_buttons_sizer->SetHGap((m_orient == wxVERTICAL && m_compact_mode) ? 0 : m_btn_margin);
 
     on_compact_mode_changed();
@@ -663,6 +673,12 @@ void TabsBarCtrl::RemovePage(size_t n)
 
     refresh_buttons();
 
+    m_sizer->Layout();
+}
+
+void TabsBarCtrl::ShowPageButton(size_t n, bool show)
+{
+    m_pageButtons[n]->Show(show);
     m_sizer->Layout();
 }
 

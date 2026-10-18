@@ -105,7 +105,8 @@ void SidebarPreviewActionButtons::update_buttons()
     );
     m_primary_button->set_background_border_width(0.f);
     m_primary_button->callbacks().action = []() {};
-    m_navigation_button->set_visible(true);
+    // Prepare / Preview are left bar tabs (Orca's top tabs): no back button next to Export
+    m_navigation_button->set_visible(false);
 
     using Biz::Slicing::StatusCode;
     switch (status.code) {

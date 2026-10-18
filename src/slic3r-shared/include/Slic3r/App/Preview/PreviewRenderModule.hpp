@@ -14,7 +14,6 @@
 #include "Slic3r/App/Preview/FdmViewerWrapper.hpp"
 #include "Slic3r/App/Preview/SlaViewerWrapper.hpp"
 #include "Slic3r/App/Preview/SidebarPreviewActionButtons.hpp"
-#include "Slic3r/App/Preview/SidebarAutoReslice.hpp"
 #include <Slic3r/App/Preview/LegendWindow.hpp>
 #include <Slic3r/App/Preview/GCodeWindow.hpp>
 #include <Slic3r/App/Preview/DoubleSliderForGCode.hpp>
@@ -199,7 +198,6 @@ private:
     Yoga::Passthrough<DoubleSliderForGcode> m_slider_gcode;
     Yoga::Passthrough<DoubleSliderForLayers> m_slider_layers;
     Yoga::Passthrough<DoubleSliderForLayers> m_sla_slider_layers;
-    Yoga::Passthrough<SidebarAutoReslice> m_sidebar_auto_reslice;
     Yoga::Passthrough<PreferencesDialog> m_preferences_dialog;
     Yoga::Passthrough<NumberEntryDialog> m_number_entry_dialog;
     Yoga::Passthrough<CrashedProjectsDialog> m_crashed_projects_dialog;

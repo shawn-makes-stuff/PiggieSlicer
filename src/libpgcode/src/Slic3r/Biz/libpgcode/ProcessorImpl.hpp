@@ -177,6 +177,8 @@ private:
     void process_M204(const GCodeReader::GCodeReader::GCodeLine& line);
     // Advanced settings
     void process_M205(const GCodeReader::GCodeReader::GCodeLine& line);
+    // Orca: Klipper's SET_VELOCITY_LIMIT (ACCEL, SQUARE_CORNER_VELOCITY, VELOCITY)
+    void process_SET_VELOCITY_LIMIT(const GCodeReader::GCodeReader::GCodeLine& line);
     // Set Feedrate Percentage
     void process_M220(const GCodeReader::GCodeReader::GCodeLine& line);
     // Set extrude factor override percentage

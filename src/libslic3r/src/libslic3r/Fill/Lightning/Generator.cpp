@@ -60,11 +60,13 @@ Generator::Generator(const PrintObject &print_object, const double fill_density,
         .get_abs_value(default_infill_extrusion_width)
     };
     m_infill_extrusion_width = scaled<float>(input_extrusion_width != 0. ? input_extrusion_width : default_infill_extrusion_width);
-    m_supporting_radius      = coord_t(m_infill_extrusion_width * 100. / fill_density);
+    // Orca fill_multiline: the branches are printed as wide as the lines of a branch
+    m_supporting_radius      = coord_t(m_infill_extrusion_width * 100. * region->config().get<int>("fill_multiline") / fill_density);
 
-    const double lightning_infill_overhang_angle      = M_PI / 4; // 45 degrees
-    const double lightning_infill_prune_angle         = M_PI / 4; // 45 degrees
-    const double lightning_infill_straightening_angle = M_PI / 4; // 45 degrees
+    // Orca lightning_overhang_angle / lightning_prune_angle / lightning_straightening_angle
+    const double lightning_infill_overhang_angle      = region->config().get<double>("lightning_overhang_angle") * M_PI / 180.0;
+    const double lightning_infill_prune_angle         = region->config().get<double>("lightning_prune_angle") * M_PI / 180.0;
+    const double lightning_infill_straightening_angle = region->config().get<double>("lightning_straightening_angle") * M_PI / 180.0;
     m_wall_supporting_radius                          = coord_t(layer_thickness * std::tan(lightning_infill_overhang_angle));
     m_prune_length                                    = coord_t(layer_thickness * std::tan(lightning_infill_prune_angle));
     m_straightening_max_distance                      = coord_t(layer_thickness * std::tan(lightning_infill_straightening_angle));

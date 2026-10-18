@@ -198,7 +198,7 @@ load_legacy_preset_metadata(const LegacyPresetMetadata& legacy_preset, const Dom
             return;
         }
 
-        ASSERT(hw_config.feeders.size() == 1);
+        // printer level conditions see the first feeder (see append_printer_values())
         const auto& feeder_model = hw_config.feeders.begin()->second.model;
         dest.push_back(
             fmt::format(

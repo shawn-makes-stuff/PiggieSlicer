@@ -1,0 +1,145 @@
+kind: printer
+id: fiGcftfpOrWREc0avCAiQg
+variants:
+- condition: printer.model == "IdeaFormer IR3 V2"
+  name: IdeaFormer IR3 V2
+  id: Z8E22m+RPXxHGZVXl0061w
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: u8Nt0HmF00FSJQJolTVG7g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @IdeaFormer IR3 V2
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: 'G92 E0 ; belt: reset extruder at layer change (relative E)'
+      end_gcode: |
+        ; === IdeaFormer IR3 V2 Belt Printer End ===
+        M400 ; wait for moves to finish
+        M104 S0 ; heater off
+        M140 S0 ; bed off
+        G92 E0 ; zero extruder
+        G1 E-5 F300 ; retract 5mm
+        G4 P5000 ; wait for ooze
+        G91 ; relative mode - keep every end move relative on a belt
+        G1 Y20 F1000 ; raise gantry 20mm for clearance over the part
+        G1 Z676 F3000 ; advance belt one full machine-depth to eject the part and clean the belt
+        G90 ; back to absolute
+        G28 X ; home X only - NEVER 'G28' all: that homes Z/belt and reverses the whole print back into the gantry
+        FMS_off ; filament motion sensor off
+        BED_MESH_CLEAR
+        M84 ; disable motors
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_retracting:
+      - 1000.0
+      - 1000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_z:
+      - 100.0
+      - 100.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.4
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 60.0
+      - 60.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        ; === IdeaFormer IR3 V2 Belt Printer Start ===
+        ; Axes: X=lateral, Y=gantry height (probe), Z=belt
+        G90 ; absolute positioning
+        M82 ; absolute extruder
+        G21 ; millimeters
+        G28 ; home all axes
+        G1 Y20 F500 ; lift nozzle 20mm from belt
+        ; Bed + hotend temps come from the active filament profile. Belt PLA requires 75 C bed — use Generic/eSun PLA @IdeaFormer IR3 V2 filament presets to get it automatically.
+        M140 S{custom_parameter_filament_hot_plate_temp_initial_layer[current_extruder]} ; set bed temp
+        M104 S[first_layer_temperature] ; hotend temp
+        M109 S[first_layer_temperature] ; wait hotend
+        M190 S{custom_parameter_filament_hot_plate_temp_initial_layer[current_extruder]} ; wait bed
+        ; --- Purge blob ---
+        G92 E0 ; zero extruder
+        G1 Y.1 ; nozzle 0.1mm above belt
+        G1 E15 F1000 ; purge 15mm blob
+        G1 Z20 E25 F800 ; belt advance 20mm + extrude
+        G1 E23 ; retract 2mm
+        G28 Y ; re-probe belt surface
+        G1 E25 ; de-retract
+        ; --- Prime lines (full 250mm bed width) ---
+        FMS_on ; filament motion sensor
+        G1 X250 E50 F2000 ; prime line 1
+        G92 Z0 ; reset belt origin
+        G1 Z.4 ; belt advance 0.4mm
+        G1 X0 E75 ; prime line 2
+        G1 F1000 ; default feedrate
+        G92 E0 Z0 ; zero extruder + belt = print origin
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x2000
+      - '0x2000'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

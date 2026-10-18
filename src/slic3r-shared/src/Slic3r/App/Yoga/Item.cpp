@@ -695,6 +695,15 @@ void Item::set_orientation(Orientation orientation)
     }
 }
 
+void Item::set_flex_basis(std::optional<float> flex_basis)
+{
+    if (flex_basis)
+        YGNodeStyleSetFlexBasis(m_node, *flex_basis);
+    else
+        YGNodeStyleSetFlexBasisAuto(m_node);
+    set_style_dirty();
+}
+
 void Item::set_flex_grow(const Unit& flex_grow)
 {
     if (flex_grow != m_flex_grow.source) {

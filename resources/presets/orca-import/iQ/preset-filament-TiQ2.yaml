@@ -1,0 +1,582 @@
+kind: filament
+id: oAGhuKi5RGSCq7+j0MPS6A
+name: Fiberthree PACF Pro P1 @iQ TiQ2 0.4 Nozzle
+condition: (printer.model == "TiQ2" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: '#000000'
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.5
+  filament_cooling_initial_speed: 10
+  filament_cooling_moves: 2
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+    {if current_extruder==0}
+    G1 Z{layer_z+2} F900 ; safe distance for T0 while tool change
+    G1 X-17 Y1 F9000
+    G1 X-17 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {endif}
+
+    {if current_extruder==1}
+    {if current_extruder==0}T1{endif}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  extrusion_multiplier: 1.089
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 40
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 4
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 29
+  start_filament_gcode: |
+    ; Filament gcode
+    {if current_extruder==0}
+    G1 X-17 Y1 F9000
+    G1 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {if layer_z==0}G1 Z{first_layer_height + 2.0}{endif}
+    {if layer_z==0}G1 X{first_layer_print_min[0]} Y{first_layer_print_min[1]}{endif}
+    {if layer_z==0}G1 Z{layer_z}{endif}
+    {endif}
+
+    {if current_extruder==1}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PACF Pro
+  filament_unloading_speed: 100
+  filament_unloading_speed_start: 100
+  filament_vendor: iQ Materials
+  full_fan_speed_layer: 0
+  temperature: 265
+  first_layer_temperature: 265
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  idle_temperature: 250
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: c7gaYg3dMYZcVfptNTvXbw
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Engineering Plate"
+  id: mvqbQzzJu4UCYJDqSabpYg
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: jKmAXr7JVC9kdakv4EYMFA
+  values:
+    bed_temperature: 75
+    first_layer_bed_temperature: 75
+- condition: sheet.type == "Textured PEI Plate"
+  id: +PTc6pX39kdmf3vovbENgA
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: cLbm+NlV09DerwSFPOVQKw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: xC5JE4ZLBkxbm5Xy381wmQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: AuVNLNXu6jIGGEJUOPuX4A
+name: Fiberthree PACF Pro P2 @iQ TiQ2 0.4 Nozzle
+condition: (printer.model == "TiQ2" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: '#000000'
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.5
+  filament_cooling_initial_speed: 10
+  filament_cooling_moves: 2
+  filament_cost: 200
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: |-
+    ; filament end gcode
+    {if current_extruder==0}
+    G1 Z{layer_z+2} F900 ; safe distance for T0 while tool change
+    G1 X-17 Y1 F9000
+    G1 X-17 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {endif}
+
+    {if current_extruder==1}
+    {if current_extruder==0}T1{endif}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  extrusion_multiplier: 1.1
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 40
+  filament_multitool_ramming_volume: 10
+  filament_notes: Filament file version 1.0 20251103
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 4
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 29
+  start_filament_gcode: |-
+    ; Filament gcode
+    {if current_extruder==0}
+    G1 X-17 Y1 F9000
+    G1 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {if layer_z==0}G1 Z{first_layer_height + 2.0}{endif}
+    {if layer_z==0}G1 X{first_layer_print_min[0]} Y{first_layer_print_min[1]}{endif}
+    {if layer_z==0}G1 Z{layer_z}{endif}
+    {endif}
+
+    {if current_extruder==1}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PACF Pro
+  filament_unloading_speed: 100
+  filament_unloading_speed_start: 100
+  filament_vendor: iQ Materials
+  full_fan_speed_layer: 0
+  temperature: 275
+  first_layer_temperature: 275
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  idle_temperature: 240
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: BmHc5IFCEqfekS7NDlyqmQ
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Engineering Plate"
+  id: vIaC3Z/oNz91agLaYdgAjg
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: C9sKsnpBrtqUmAqNub7svw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: a7pUgUV0jzvzGZDJUeOEbQ
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: kNZ5lYlc2LcR649mymVjIQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 5XGh2YbrWJLgq/NvXLhtSA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: YBgZZhKXvwqu5zWq09VlHw
+name: Grauts HPP4GF25 P1 @iQ TiQ2 0.4 Nozzle
+condition: (printer.model == "TiQ2" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: '#000000'
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.5
+  filament_cooling_initial_speed: 10
+  filament_cooling_moves: 2
+  filament_cost: 70.58
+  filament_density: 1.09
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+    {if current_extruder==0}
+    G1 Z{layer_z+2} F900 ; safe distance for T0 while tool change
+    G1 X-17 Y1 F9000
+    G1 X-17 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {endif}
+
+    {if current_extruder==1}
+    {if current_extruder==0}T1{endif}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  extrusion_multiplier: 0.926
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 40
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 4
+  retract_speed: 40
+  filament_soluble: false
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 29
+  start_filament_gcode: |
+    ; Filament gcode
+    {if current_extruder==0}
+    G1 X-17 Y1 F9000
+    G1 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {if layer_z==0}G1 Z{first_layer_height + 2.0}{endif}
+    {if layer_z==0}G1 X{first_layer_print_min[0]} Y{first_layer_print_min[1]}{endif}
+    {if layer_z==0}G1 Z{layer_z}{endif}
+    {endif}
+
+    {if current_extruder==1}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: HPP4GF25
+  filament_unloading_speed: 100
+  filament_unloading_speed_start: 100
+  filament_vendor: iQ Materials
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 1.006%
+  filament_shrinkage_compensation_z: 1%
+  idle_temperature: 180
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 60}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: w+WuteBuzoceh1kxtPAr1w
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Engineering Plate"
+  id: 3hzscz4fZmns6a2GkNbBeQ
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: ESg9aS889eArj5LbNjeuOg
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: +vjCLMCZxZu8thwQ3NhGLg
+  values:
+    bed_temperature: 105
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: 92ocVqKMPaGYmUz0Dl33kQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 3eothYVnQ/EiSNXMfsaCPA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 8u6Xgv9mszlV3xOBNz5YAQ
+name: Polymaker PETG Polymax black P1 @iQ TiQ2 0.4 Nozzle
+condition: (printer.model == "TiQ2" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1000
+  filament_colour: '#000000'
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 29.99
+  filament_density: 1.25
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+    {if current_extruder==0}
+    G1 Z{layer_z+2} F900 ; safe distance for T0 while tool change
+    G1 X-17 Y1 F9000
+    G1 X-17 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {endif}
+
+    {if current_extruder==1}
+    {if current_extruder==0}T1{endif}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  extrusion_multiplier: 0.9405
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+    {if current_extruder==0}
+    G1 X-17 Y1 F9000
+    G1 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {if layer_z==0}G1 Z{first_layer_height + 2.0}{endif}
+    {if layer_z==0}G1 X{first_layer_print_min[0]} Y{first_layer_print_min[1]}{endif}
+    {if layer_z==0}G1 Z{layer_z}{endif}
+    {endif}
+
+    {if current_extruder==1}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: PETG Polymax
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: iQ Materials
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 250
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  idle_temperature: 210
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: rBmNAADcA5j9A1t2sRkYgg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: qTS3e9Do+taQkCzU/ien5Q
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "High Temp Plate"
+  id: joCRyKafJnT7ReX6na/Zmw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: BuRSWHSOWeeJSiiS7nO3tQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: kXa5HS9FaaROR993hE7tiA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 0VJ5pxGj7GrKB7aWHsMB4g
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: ZyeruPjgJoE2M5KTtZVPIQ
+name: VXL90 TiQ2 P2 @iQ TiQ2 0.4 Nozzle
+condition: (printer.model == "TiQ2" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: '#FFFFFF'
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.5
+  filament_cooling_initial_speed: 10
+  filament_cooling_moves: 2
+  filament_cost: 150
+  filament_density: 1.1
+  filament_diameter: 1.75
+  end_filament_gcode: |-
+    ; filament end gcode
+    {if current_extruder==0}
+    G1 Z{layer_z+2} F900 ; safe distance for T0 while tool change
+    G1 X-17 Y1 F9000
+    G1 X-17 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {endif}
+
+    {if current_extruder==1}
+    {if current_extruder==0}T1{endif}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  extrusion_multiplier: 1
+  filament_loading_speed: 10
+  filament_loading_speed_start: 50
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: Filament file version 1.0 20251103
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 4
+  filament_soluble: true
+  filament_stamping_distance: 45
+  filament_stamping_loading_speed: 29
+  start_filament_gcode: |-
+    ; Filament gcode
+    {if current_extruder==0}
+    G1 X-17 Y1 F9000
+    G1 Y45 F9000
+    G1 Y1 F9000
+    G1 Y45 F9000
+    {if layer_z==0}G1 Z{first_layer_height + 2.0}{endif}
+    {if layer_z==0}G1 X{first_layer_print_min[0]} Y{first_layer_print_min[1]}{endif}
+    {if layer_z==0}G1 Z{layer_z}{endif}
+    {endif}
+
+    {if current_extruder==1}
+    G1 X-23 Y3 F9000
+    G1 Y45 F9000
+    G1 Y3 F9000
+    G1 Y45 F9000
+    {endif}
+  filament_toolchange_delay: 0
+  filament_type: VXL90 Xioneer
+  filament_unloading_speed: 100
+  filament_unloading_speed_start: 100
+  filament_vendor: iQ Materials
+  full_fan_speed_layer: 0
+  temperature: 235
+  first_layer_temperature: 235
+  pressure_advance_value: 0.4
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  idle_temperature: 205
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 5dqscZly+SqYQc3mDEgxIw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: S8uSMNtQ6zAICLsgb4DSQA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: Nx2qP/okF7okeS8c8iWxOw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: zGdMUaqLzYs8hG8vWZo/6Q
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: gBuebJmcqYeACfnJNotiyQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: a9mZICQqZ3qL1ZYSvJzR/g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35

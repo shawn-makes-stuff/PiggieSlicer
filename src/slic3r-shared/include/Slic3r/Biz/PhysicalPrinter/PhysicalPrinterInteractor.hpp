@@ -97,6 +97,11 @@ public:
     /// Prepares the editor to add a new printer.
     void on_dialog_button_add_new();
 
+    /// Prepares the editor for the current printer's network printer (the Printer section's
+    /// connection button): the selected one if it is a network printer for this printer, else a
+    /// saved one that is (selecting it), else a new one.
+    void edit_network_printer_for_current();
+
     bool is_connection_testable() const;
 
     bool is_connection_test_in_flight() const;

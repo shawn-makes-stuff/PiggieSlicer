@@ -1,0 +1,830 @@
+kind: filament
+id: Yx/H8AovYg/VhKpOWXndhw
+name: Generic ABS @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.926
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: evcE65Ffs0m/k8nRA7aPKQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Za6QNpqsL/3ylltiHiQXAQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: ruJMhb2/FyX1ynCaUpmAkA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: 8iUUSuEyo4Rph0jj4GcFBQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: UuxU76LG5TQqEjsjvmPeCw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: aOsQwMrdLFfipRl47TN4Zg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: FU4oWCSRNY92PvUtBrl9vg
+name: Generic ASA @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.926
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: jgw5m+kH/1MqAXLTAXrusw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: 3fTbjv178eFs9e7oSw8oUw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: +xgG2GKXcKnsC8NbvpDKiQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: MN2Rd96br7ERLQB50J2YDA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: R5E+FoCHJXa0mqwgMz2yuw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: pMAJBaviR7DiaTWBWJ2SUg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 3XI5yXycPleTcxMF8l+ZPA
+name: Generic PA @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: OSay9jHXk9HHh7Txv8gucQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: FO9+RL4iywg/elgP3EhQGg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: 3YNnpOUQ24VEgyHnTYaSzg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: eVTb6Rhu74prdREILKH4vA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: Sf0EI5gdZPSMtHhEcSuUUw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: JZaqRPeviirla4t5z8sYDA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: pSbP7Aa2hBl/13cxkrXq0Q
+name: Generic PA-CF @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 8
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 5Wz9OKq4L9tBlilyzpf5SA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: aQoNkmwOBEMsk6/E9VyH4g
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: IPcfVi0ri3pTWUbZoC500g
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: sO4fYwS7JtLMLm1tV+GzHA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: J1uNDV3Bz/aTD+KKoSt52g
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: IaQjrESpYzHRP+vwUuI2qw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: EyTuIbg6T91HrgBTBXmwFQ
+name: Generic PC @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 16
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: SrAVFacyBx0hmZ8gjbgXmw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: HrCthoCR3nQmQUyS4OOVdw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: n4bpiXF0PvqRUbF4fc8I4A
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: OONSIp42v7g4Qs6Ngv2QZw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: W+V4DQlHNgMqp2qlH4PBRQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: uutw0nkTm3GtUX7bKvt+dw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: IXDI13MsLfr1oCmU5vF5YQ
+name: Generic PETG @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 20
+  max_fan_speed: 100
+  min_fan_speed: 20
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ivrJlxTJM7EJd6wM/popZA
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: 2el/CF9oflcPAeB3c3ILAw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: qaEhrSiCPtlqRGIQRDQhTg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: mOx5Wt0GjHe4sOfkJmsOEA
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: fEu88Nm4ojOomm+JsrdgMw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: fm+VHfffVomCqyohunBeEA
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: 0Srqbb0FIEEEV30ugDP2Lg
+name: Generic PLA @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: vVvO+EQmNjZneNz0aT75SQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: ZyChKDyFMkgiF/dd1xESoA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 1+BcEW8+kbKz1OLn6AoYWQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: PaQu22VxEj1yYYCYUXal0Q
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: HdOMtDWg9YuPnlW2YCzWjQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: soOdKhuvDgAVlB+/YeXgAw
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: qdnYxAkhfGFdolDfb8hUZg
+name: Generic PLA-CF @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: GnGKAPAMRGRz4gkqE2eTgg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: X5g0pQdmBXxGgB31569O3A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: Fm6MevMOp7FpnRPJms/yOg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: xWOeVtCWPG7lj3RazZv1Eg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: 2DVFN+0R9VJjsXsdP82+YQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: aKXqsw7GO3tCZL3MlWuDnA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: JkyK7tOkTgkGtCOhQOt+ww
+name: Generic PVA @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 4
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 6
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: true
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PVA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: atCVPBiC1XKTNcopNizlyA
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: s6ILkLhjIbQ2Qr0Npfo69A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: Fju4/8ni8SAWD+gZKXkNKA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: 10m2+SMUfsGD/L2k8Gv/lQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: DwDCTExAn3M+iiK2XO7IaA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: D1MIY6Cun9z8d5FMIco44A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: V5EmRx/WBXxmgQsvz5U+1A
+name: Generic TPU @System
+condition: (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Belt Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.2) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.6) or (printer.model == "Generic Klipper Printer" and tool.nozzle_diameter == 0.8) or (printer.model == "Generic Marlin Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic RRF Printer" and tool.nozzle_diameter == 0.4) or (printer.model == "Generic Repetier Printer" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 3.2
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70, "idle_temperature": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Y/OIqO9cfOQM+XlY0o6kyQ
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: gusPfNKG0B8HalUNMys+6Q
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: M6BlCk4gjSqrqQTRVE8m8Q
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: PcbcgkYwru0aLC5IDpTV6g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: wTjjSC3frnZsW8SFvxx/vg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: EQVG9NO0GvHJahsGFTZhmQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0

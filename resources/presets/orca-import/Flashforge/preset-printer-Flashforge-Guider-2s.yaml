@@ -1,0 +1,129 @@
+kind: printer
+id: uX7Lyeg3pJ7HpDWIWNGKtQ
+variants:
+- condition: printer.model == "Flashforge Guider 2s"
+  name: Flashforge Guider 2s
+  id: ORxU0fzgBzaIXd6du1n3UQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: sF0K6W13zhE8AvvaRjimcg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Flashforge Guider 2s 0.4 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 23
+      extruder_clearance_radius: 40
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        M104 S0 T0; cool down extruder
+        M140 S0 T0; cool down bed
+        G162 Z F1800
+        G28 X Y; home axes
+        M132 X Y A B; recall home offsets from EPROM
+        M652; turn off rear fan
+        G91; set to relative positioning
+        M18; disable stepper motors
+      machine_max_acceleration_e:
+      - 200.0
+      - 200.0
+      machine_max_acceleration_extruding:
+      - 200.0
+      - 200.0
+      machine_max_acceleration_retracting:
+      - 200.0
+      - 200.0
+      machine_max_acceleration_travel:
+      - 200.0
+      - 200.0
+      machine_max_acceleration_x:
+      - 200.0
+      - 200.0
+      machine_max_acceleration_y:
+      - 200.0
+      - 200.0
+      machine_max_acceleration_z:
+      - 200.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 100.0
+      - 100.0
+      machine_max_feedrate_x:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 200.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: |-
+        M118 X10 Y10 Z10
+        M140 S[first_layer_bed_temperature[initial_extruder]]; set initial bed temp
+        M104 S[first_layer_temperature] T0; set initial extruder temp
+        M107; disable cooling fan
+        G90; set to absolute positioning
+        G28; home axes
+        M132 X Y A B; recall home offsets from EPROM
+        G1 Z50.0 F420; adjust Z
+        G161 X Y F3300
+        M7; wait for bed to stabilize
+        M6 T0; wait for extruder to stabilize
+        M651 S255; start case fan
+        G1 Z0.3 F3600; move down to purge
+        G92 E0; zero extruders
+        G1 X120 Y-125 E20 F2000; extrude a line of filament across the front edge of the bed
+        G1 X130 Y-125 F180; wait for ooze
+        G1 X140 Y-125 F5000; fast wipe
+        G1 Z1 F100; lift
+        G92 E0; zero extruders again
+        G1 E-1.0000 F1800
+      parking_pos_retraction: 92
+      bed_shape:
+      - -140x-125
+      - 140x-125
+      - 140x125
+      - -140x125
+      max_print_height: 300
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

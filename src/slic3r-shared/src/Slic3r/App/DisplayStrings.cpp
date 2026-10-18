@@ -193,6 +193,15 @@ std::string to_display_string(Biz::Slicing::ErrorCode code)
         return _u8L("Material count is less than tool count");
     case ErrorCode::FailedToParseCustomParameters:
         return _u8L("Unable to parse custom parameters.");
+    case ErrorCode::InvalidSmallAreaFlowCompensationModel:
+        return _u8L("Invalid small area flow compensation model: one point per line, extrusion length and flow factor; "
+                    "lengths start at 0 and increase, factors increase to 1.");
+    case ErrorCode::PerObjectSkirtsOverlapInSequentialPrint:
+        return _u8L("Per-object skirts cannot fit between the objects in By object print sequence.\n\nMove the objects "
+                    "farther apart, reduce brim/skirt size, switch Skirt type to Combined, or switch Print sequence to By layer.");
+    case ErrorCode::InvalidAdaptivePressureAdvanceModel:
+        return _u8L("Invalid adaptive pressure advance model: one line per measurement, "
+                    "PA, flow rate, acceleration (PA < 2, flow > PA, acceleration > flow).");
     case ErrorCode::UnsupportedOutputFormat:
         return _u8L("Unsupported output format.");
     }
@@ -306,6 +315,10 @@ std::string to_display_string(Biz::Slicing::Warning warning, const Domain::Proje
             "Your print is very close to the priming regions. "
             "Make sure there is no collision."
         );
+        break;
+
+    case WarningCode::PreciseZHeightWithWipeTower:
+        message = _u8L("Enabling both precise Z height and the prime tower may cause slicing errors.");
         break;
 
     case WarningCode::SupportsTurnedOff:

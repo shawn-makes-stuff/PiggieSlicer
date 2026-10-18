@@ -10,6 +10,15 @@ struct CoolingBufferConfig
     explicit CoolingBufferConfig(const PrintConfigView& print_config);
 
     std::vector<int> bridge_fan_speed{};
+    // Orca (parity batch 7)
+    std::vector<int> initial_layer_fan_speed{};
+    std::vector<int> support_material_interface_fan_speed{};
+    std::vector<int> ironing_fan_speed{};
+    std::vector<int> internal_bridge_fan_speed{};
+    std::vector<int> additional_cooling_fan_speed{};
+    std::vector<bool> dont_slow_down_outer_wall{};
+    bool auxiliary_fan{};
+    int part_cooling_fan_min_pwm{};
     std::vector<bool> cooling{};
     std::vector<double> cooling_perimeter_transition_distance{};
     std::vector<Domain::CoolingSlowdownLogicType> cooling_slowdown_logic{};

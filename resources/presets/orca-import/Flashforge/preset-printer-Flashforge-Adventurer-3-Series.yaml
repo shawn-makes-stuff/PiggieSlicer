@@ -1,0 +1,231 @@
+kind: printer
+id: X8T7lRlmLoodpjaFl2RMjw
+variants:
+- condition: printer.model == "Flashforge Adventurer 3 Series"
+  name: Flashforge Adventurer 3 Series
+  id: jNdLlxsA6gckbN9J9yIXoQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.4 and printer.tool_count == 2
+    id: 5G8tO9lJiXrKLXTLwfZo+A
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: M600
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard @Flashforge AD3 0.4 Nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: 0
+      extruder_clearance_height: 24.93
+      extruder_clearance_radius: 42.3
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G1 E-3 F3600
+        G0 X50 Y50 F9000
+        M104 S0 T0
+        M140 S0 T0
+        G162 Z F1800
+        G28 X Y
+        M132 X Y A B
+        M652
+        G91
+        M18
+      machine_max_acceleration_e:
+      - 500.0
+      machine_max_acceleration_extruding:
+      - 500.0
+      machine_max_acceleration_retracting:
+      - 500.0
+      machine_max_acceleration_travel:
+      - 500.0
+      machine_max_acceleration_x:
+      - 500.0
+      machine_max_acceleration_y:
+      - 500.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 2.5
+      machine_max_jerk_x:
+      - 8.0
+      machine_max_jerk_y:
+      - 8.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      machine_max_feedrate_x:
+      - 150.0
+      machine_max_feedrate_y:
+      - 150.0
+      machine_max_feedrate_z:
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: |
+        M140 S[first_layer_bed_temperature] T0
+        M104 S[first_layer_temperature] T0
+        M104 S0 T1
+        M107
+        M900 K[pressure_advance_value] T0
+        G90
+        G28
+        M132 X Y Z A B
+        G1 Z50.000 F420
+        G161 X Y F3300
+        M7 T0
+        M6 T0
+        M651 S255
+        ;pre-extrude
+        M108 T0
+        G1 X-37.50 Y-75.00 F6000
+        M106
+        G1 Z0.200 F420
+        G1 X-37.50 Y-74.00 F6000
+        G1 X37.50 Y-74.00 E9.5 F1200
+      parking_pos_retraction: 0
+      bed_shape:
+      - -75x-75
+      - 75x-75
+      - 75x75
+      - -75x75
+      max_print_height: 150
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 80x60/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6 and printer.tool_count == 2
+    id: D4RhCPWLTUxml9fPthOa3A
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: M600
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard @Flashforge AD3 0.6 Nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: 0
+      extruder_clearance_height: 24.93
+      extruder_clearance_radius: 42.3
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        G1 E-3 F3600
+        G0 X50 Y50 F9000
+        M104 S0 T0
+        M140 S0 T0
+        G162 Z F1800
+        G28 X Y
+        M132 X Y A B
+        M652
+        G91
+        M18
+      machine_max_acceleration_e:
+      - 500.0
+      machine_max_acceleration_extruding:
+      - 500.0
+      machine_max_acceleration_retracting:
+      - 500.0
+      machine_max_acceleration_travel:
+      - 500.0
+      machine_max_acceleration_x:
+      - 500.0
+      machine_max_acceleration_y:
+      - 500.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 2.5
+      machine_max_jerk_x:
+      - 8.0
+      machine_max_jerk_y:
+      - 8.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      machine_max_feedrate_x:
+      - 150.0
+      machine_max_feedrate_y:
+      - 150.0
+      machine_max_feedrate_z:
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M25
+      start_gcode: |
+        M140 S[first_layer_bed_temperature] T0
+        M104 S[first_layer_temperature] T0
+        M104 S0 T1
+        M107
+        M900 K[pressure_advance_value] T0
+        G90
+        G28
+        M132 X Y Z A B
+        G1 Z50.000 F420
+        G161 X Y F3300
+        M7 T0
+        M6 T0
+        M651 S255
+        ;pre-extrude
+        M108 T0
+        G1 X-37.50 Y-75.00 F6000
+        M106
+        G1 Z0.200 F420
+        G1 X-37.50 Y-74.00 F6000
+        G1 X37.50 Y-74.00 E9.5 F1200
+      parking_pos_retraction: 0
+      bed_shape:
+      - -75x-75
+      - 75x-75
+      - 75x75
+      - -75x75
+      max_print_height: 150
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 80x60/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

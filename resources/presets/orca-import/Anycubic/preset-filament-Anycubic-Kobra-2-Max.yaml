@@ -1,0 +1,998 @@
+kind: filament
+id: eWSM7kX47AX41f8rshLFTw
+name: Anycubic PLA @Anycubic Kobra 2 Max 0.4 nozzle
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 80
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: "; filament end gcode \n"
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: ; filament start gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Anycubic
+  full_fan_speed_layer: 3
+  temperature: 200
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 9
+  min_print_speed: 20
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: rrowwwoUKGutwV+m+i1lrw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: nb/LVdfKH1hFkKKwvPKSfw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 9gDm5TED29/hK6XImANn9Q
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: eoUdSpKs0vLwYm8JRi3VZQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: B2u+iPEEYTRJ5e9JocGgNA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: +LZZw/7OsmK97BNpsAzupA
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: 0j/sTQx9nsGmAVk2lMjevg
+name: Generic ABS @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model
+  == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.926
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 8PCj8Hy3jCcYqtNvPR/bcw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: smDwhMA2RrIbMnC4tRlB3w
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: HnHxboXwHx4cSrVxzEZ86w
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: K1tNb8tPJNsrxx46qUWYBw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: gYUC7tTZ7LlU6tq54Oi+BA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: HAzBVcCYBuDck0GRR13VnA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: HltSxsXu/MUyDu/Cenws7Q
+name: Generic ASA @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model
+  == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 35
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.926
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ASA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: ZcShujxJfazWXl5ILMzKlA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Nw/YDzxwiuJT9beeMToNSg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: ZuLva03tfhF1hHdd1xk6Xw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: hAwdJiHm+pN8Pjyfz5ZVKA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: IjuvWTIsVoZcq27Cx0p6/w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: xceK5lvPzrDELQtgJR+OWg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: XGveLYPlTG9f2cwiS57COA
+name: Generic PA @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 12
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: RBS3Kh5dvdAXySJTtvNIZw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: REFimQrCoYeYK9o+nRU5xQ
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: 6GK2XrI4p5SfFR4CZCHPkA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: mgwJRvvxFxEgJD34DxjEjw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: JVvsYKyG+Y0ihGUUH+yNHQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: WRZXV9eVDHt4MNwgK4blOw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: H2Fmr9dgicnZx3evtaYDKA
+name: Generic PA-CF @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 4
+  max_fan_speed: 60
+  min_fan_speed: 0
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 8
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 8
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 280
+  pressure_advance_value: 0.02
+  fan_always_on: false
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: kwEq16LMMtYl2XWPuPANEg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: dJVuWv3F4PuxU9AfWVWWjw
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "High Temp Plate"
+  id: fHei+/Q8JWAj8QLsi4/sqg
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured PEI Plate"
+  id: xd1w5KfZ8tA7GOuBhtEAtA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 100
+- condition: sheet.type == "Textured Cool Plate"
+  id: bWIMM/BlEf1l+dAY8G0xag
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: 2tFeF+pyghNyZ491rwwx0A
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: kYMnwzZpKZuNndrsDtusvg
+name: Generic PC @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 16
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: oOumfXTFlxe7eb1CS+jrWA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: Pr9221nE1Tf5m9/XkgI/Iw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: ookASYWiAD94hzp913rV0Q
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: X5keh/UeZnh76d98/lGHUw
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: 50Pa5PvqANyM1Qw5x8P3nw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: wqqEAlgwhpRId5MOaudNnw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: 8eKEgbFDjqqQ4xG88pP7Jw
+name: Generic PETG @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model
+  == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 20
+  max_fan_speed: 100
+  min_fan_speed: 20
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 0}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: EiQhcGwzP/qXzURuSsHF2Q
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: yHoEe24N9Q0E0vVeWXrMMw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: dQ0GKUhH0k0A0DI9KmNOHQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: D2BmTs/KUWaOG2FSYDPzMg
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: WPnzu9/vIOmu6lwI12wpZg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Fx7RJ6C/KGkMRmNW116Bxg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: +x0ZXjqa5xsT/Wb+QOLNFg
+name: Generic PLA @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25)
+  or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Aqhc/MFB8VSM8to3dUgz4A
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: sWvUvCswhvOwcwD4i25p0Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 1hBwhQQ0WD7OnLRtfSQNGw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: RPi+OQECxDFIK6m9SY2ZGA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: +biSY7gIbh23Fg3qRzI6Jg
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: uy+KnYzfMkFMZWkbJlwYmQ
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: awzKX0WGds6jqJ7VerJb4g
+name: Generic PLA-CF @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA-CF
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: 6RfNXIU/zkghwysYIpmh5g
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: klUG5xJIvlhLXzUyYuJRJg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: mvoG8LUwavQ+kUfsEkLg5A
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: lvPMQFNn2vm9XVeMoNkedA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: AJ96gZFWeRFnSp34E6OOjQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: jFONUDqAVxHemFbaNh054A
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: cywKK8KqIfFjlQZ8+pcG7Q
+name: Generic PVA @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model
+  == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 4
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 6
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: true
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PVA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: NyblZD+csp7xNmURym2mmg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+- condition: sheet.type == "Engineering Plate"
+  id: yDkJZa7bXWztTpa40kYkkA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: ag8+1SsP3jcYUxwOHG4lPQ
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: mh2/UeK5X4NIQTvnR5MYjA
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: ubPkCnf358HhjsflJ11W+w
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: jC1a8KauyiaTllaxgwrQFg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+---
+kind: filament
+id: KJEYRHT46IqCHbfFtnZ6pQ
+name: Generic TPU @System
+condition: (printer.model == "Anycubic Kobra 2 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 2 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.2) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra 3 V2" and tool.nozzle_diameter == 0.8) or (printer.model
+  == "Anycubic Kobra Neo" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.25) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.6) or (printer.model == "Anycubic Kobra S1 Max" and tool.nozzle_diameter == 0.8) or (printer.model == "Anycubic Kobra X" and tool.nozzle_diameter == 0.4) or (printer.model == "Anycubic Predator" and tool.nozzle_diameter == 0.4)
+values:
+  activate_air_filtration: false
+  activate_air_filtration_during_print: true
+  activate_air_filtration_on_completion: true
+  chamber_minimal_temperature: 0
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  complete_print_exhaust_fan_speed: 70
+  filament_colour: ''
+  during_print_exhaust_fan_speed: 70
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_change_extrusion_role_gcode: ''
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 3.2
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"additional_cooling_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: PoaZqfr6TmyzFLAVqOsSVg
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: MdUZtpMVIfHi5JNoGarSHA
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: rv0BScuowvcaJuKSVJS1lQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: Uune/mQ+DxKlXH9xRr2SkQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: S+RBPcx/mXai6XKpwHO7nA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: Hhzl60grhumhZvkk8lrPvQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0

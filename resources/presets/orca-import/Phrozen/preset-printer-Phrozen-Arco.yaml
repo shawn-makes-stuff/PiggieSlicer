@@ -1,0 +1,99 @@
+kind: printer
+id: B0T1F6qruz3jPQhDDja+ew
+variants:
+- condition: printer.model == "Phrozen Arco"
+  name: Phrozen Arco
+  id: bGIE3dwNq8CzB0vOcbwzew
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: rMrBsw+1Z647PEpyNiKpBQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ; BEFORE_LAYER_CHANGE [layer_num] @ [layer_z]mm
+      toolchange_gcode: G1 E-1 F3600
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard @Phrozen Arco 0.4 nozzle
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: 0
+      extruder_clearance_height: 48
+      extruder_clearance_radius: 60
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ; AFTER_LAYER_CHANGE [layer_num] @ [layer_z]mm
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_y:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 80.0
+      - 80.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 15.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: "M107\nG90\nM140 S65 ; set bed temperature\nM104 S140 ; set temperature\nM190 S65 ; set bed temperature\nM109 S140 ; set temperature\nPG28\nM106 S255 \nG30\n;AUTO_LEVELING_2\nM106 S0\nG21\nM83\nM140 S[first_layer_bed_temperature[initial_extruder]]\nM104 S[first_layer_temperature]\nM109 S[first_layer_temperature]\nM190 S[first_layer_bed_temperature[initial_extruder]]\nP0 M1\nP28\nP2 A1"
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 300x0
+      - 300x300
+      - '0x300'
+      max_print_height: 300
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 240x224/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

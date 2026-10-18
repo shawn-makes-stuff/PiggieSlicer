@@ -26,7 +26,9 @@ SearchBar::SearchBar(Biz::ProjectInteractor& project_interactor, Navigator& navi
         m_navigator,
         m_search_observable_list.get()
     );
-    m_search_popup->attach_to_item(this, Position::Bottom, 15);
+    // results right below the search box, as wide as it (sidebar)
+    // beside the sidebar, so the settings it navigates to stay in view
+    m_search_popup->attach_to_item(this, Position::Right, 8, AlignU::Start);
 
     set_gap(5);
     set_align_items(YGAlignCenter);
@@ -37,15 +39,35 @@ SearchBar::SearchBar(Biz::ProjectInteractor& project_interactor, Navigator& navi
 
     m_input_text = emplace_back<InputText>();
     m_input_text->set_hint(_u8L("Search..."));
-    m_input_text->set_width(150);
+    // fills its row (the sidebar's search box)
+    m_input_text->set_min_width(150);
+    m_input_text->set_flex_grow(1);
     m_input_text->set_flags(ImGuiInputTextFlags_EscapeClearsAll);
 
-    m_input_text->callbacks().text_entered = [this] { m_search_popup->open_selected(); };
+    // the box keeps the focus: Enter again goes to the next result
+    m_input_text->callbacks().text_entered = [this]
+    {
+        if (m_context_search) {
+            if (m_context_search->entered)
+                m_context_search->entered(m_input_text->text());
+            m_input_text->request_focus();
+            return;
+        }
+        m_search_popup->open_selected();
+        m_search_popup->navigate_down();
+        m_input_text->request_focus();
+    };
     m_input_text->callbacks().text_changed = [this]
     {
         const std::string& text = m_input_text->text();
+        if (m_context_search) {
+            if (m_context_search->text_changed)
+                m_context_search->text_changed(text);
+            return;
+        }
         m_search_observable_list->set_search_text(text);
         if (!text.empty()) {
+            m_search_popup->content_item()->set_width(width());
             m_search_popup->select_top();
             m_search_popup->open();
             m_search_popup->content_item()->bring_to_front();
@@ -56,8 +78,11 @@ SearchBar::SearchBar(Biz::ProjectInteractor& project_interactor, Navigator& navi
     m_input_text->callbacks().focus_lost   = [this] { update_open_popup(); };
     m_input_text->callbacks().focus_gained = [this]
     {
+        if (m_context_search)
+            return;
         const std::string& text = m_input_text->text();
         if (!text.empty()) {
+            m_search_popup->content_item()->set_width(width());
             m_search_popup->select_top();
             m_search_popup->open();
             m_search_popup->content_item()->bring_to_front();
@@ -71,7 +96,7 @@ void SearchBar::render(const Yoga::Vec2f& pos, const Yoga::Vec2f& size)
 {
     Item::render(pos, size);
 
-    if (m_input_text->active()) {
+    if (m_input_text->active() && !m_context_search) {
         if (ImGui::IsKeyPressed(ImGuiKey_UpArrow)) {
             m_search_popup->navigate_up();
         } else if (ImGui::IsKeyPressed(ImGuiKey_DownArrow)) {
@@ -85,6 +110,13 @@ void SearchBar::render(const Yoga::Vec2f& pos, const Yoga::Vec2f& size)
 void SearchBar::focus_search()
 {
     m_input_text->request_focus();
+}
+
+void SearchBar::set_context_search(ContextSearch context_search)
+{
+    if (!context_search.hint.empty())
+        m_input_text->set_hint(context_search.hint);
+    m_context_search = std::move(context_search);
 }
 
 void SearchBar::update_open_popup()

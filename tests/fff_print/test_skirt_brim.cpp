@@ -43,6 +43,8 @@ TEST_CASE("Skirt height is honored", "[Skirt]") {
     config.print.items.opt("skirt_height").set(5);
     config.print.items.opt("perimeters").set(0);
     config.print.items.opt("support_material_speed").set(99.0);
+    // 0: the skirt at the default speed (support material), which the test looks for (Orca default 50)
+    config.print.items.opt("skirt_speed").set(0.);
     // avoid altering speeds unexpectedly
     config.filament[0].items.opt("cooling").set(false);
     // avoid altering speeds unexpectedly
@@ -74,6 +76,7 @@ TEST_CASE("Original Slic3r Skirt/Brim tests", "[SkirtBrim]") {
         config.print.items.opt("first_layer_height").set(FloatOrPercentage{0.3});
         config.print.items.opt("gcode_comments").set(true);
         config.print.items.opt("support_material_speed").set(99.0);
+        config.print.items.opt("skirt_speed").set(0.);
         config.print.items.opt("first_layer_speed").set(FloatOrPercentage{Percentage{100}});
         // remove noise from top/solid layers
         config.print.items.opt("top_solid_layers").set(0);

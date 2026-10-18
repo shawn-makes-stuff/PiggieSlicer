@@ -111,6 +111,44 @@ struct HwFeederConfig
     }
 };
 
+/**
+ * @brief Generic external multi-material unit (Anycubic ACE, Bambu AMS, Happy Hare, ...).
+ *
+ * The unit is a feeder of type MMU attached to a tool (feeder address {tool index}), on any
+ * printer and any tool that has no vendor feeder (e.g. Prusa MMU3) attached; the user sets
+ * its slot count per printer instance. Its feeder definition is added to every vendor by
+ * add_external_mmu_feeder_def(), so it is offered for every printer.
+ */
+inline constexpr const char* EXTERNAL_MMU_FEEDER_ID   = "external_mmu";
+inline constexpr const char* EXTERNAL_MMU_BASE_MODEL  = "EXTERNAL_UNIT"; // no "MMU": Prusa presets match feeder.base_model=~/.*MMU.*/
+inline constexpr uint32_t EXTERNAL_MMU_MIN_SLOTS      = 2;
+inline constexpr uint32_t EXTERNAL_MMU_MAX_SLOTS      = 64;
+inline constexpr uint32_t EXTERNAL_MMU_DEFAULT_SLOTS  = 4;
+
+struct HwFeederConfigDef;
+struct HwPrinterConfig;
+struct VendorData;
+
+bool is_external_mmu(const HwFeederConfig& feeder);
+
+/// The external unit attached to given tool, if any.
+const HwFeederConfig* find_external_mmu(const HwPrinterConfig& printer, size_t tool_index);
+
+/// Whether any tool has the external unit attached.
+bool has_external_mmu(const HwPrinterConfig& printer);
+
+/// The feeder attached to given tool (vendor or external), if any.
+const HwFeederConfig* find_tool_feeder(const HwPrinterConfig& printer, size_t tool_index);
+
+/// Feeder config of the external unit with given slot count (clamped to the allowed range).
+HwFeederConfig make_external_mmu_feeder(uint32_t slot_count, const VendorData& vendor_data);
+
+/// Built-in feeder definition of the external unit.
+HwFeederConfigDef external_mmu_feeder_def();
+
+/// Adds the external unit's feeder definition to the vendor, unless the vendor defines it itself.
+void add_external_mmu_feeder_def(VendorData& vendor_data);
+
 struct MaterialConfig
 {
     std::string id;
@@ -192,6 +230,10 @@ struct HwPrinterConfig
     HwSheetConfig sheet;
 
     size_t material_slot_count() const;
+    // The material slots of each tool (its own and its feeders'): the slots are numbered tool by tool.
+    std::vector<size_t> tool_slot_counts() const;
+    // The tool a material slot belongs to (Orca: filament_map).
+    size_t tool_of_material_slot(size_t slot) const;
 
     std::string relative_path_to_assets() const;
 
@@ -229,7 +271,8 @@ struct HwPrinterConfigDef
     FeatureDefs features;
     uint8_t tool_count;
     VisualRepresentation visual;
-
+    /// filament presets installed (favourited) with the printer (Orca's machine_model default_materials)
+    std::vector<std::string> default_materials;
 };
 
 struct HwToolConfigDef

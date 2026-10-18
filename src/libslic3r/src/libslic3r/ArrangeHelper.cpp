@@ -120,6 +120,11 @@ static Sequential::PrinterGeometry get_printer_geometry(const PrintConfigView& c
 			slices.push_back(ExtruderSlice{ 0, CONVEX, { { {  -5000000,   -5000000 }, {   5000000,   -5000000 }, {   5000000,   5000000 }, {  -5000000,   5000000 } } } });
 			slices.push_back(ExtruderSlice{ 1000000, BOX, { { {  -r, -r }, { r, -r }, {   r,   r }, {  -r,  r } } } });
 			slices.push_back(ExtruderSlice{ h, BOX, { { { -scaled(bed_x),  -r }, { scaled(bed_x),  -r }, { scaled(bed_x), r }, { -scaled(bed_x), r}}} });
+			// Orca extruder_clearance_height_to_lid: above it the head reaches the whole bed
+			if (const double lid = config.get<double>("extruder_clearance_height_to_lid"); lid > 0.) {
+				const coord_t x = scaled(bed_x), y = scaled(bed_y);
+				slices.push_back(ExtruderSlice{ scaled(lid), BOX, { { { -x, -y }, { x, -y }, { x, y }, { -x, y } } } });
+			}
 		}
 	}
 

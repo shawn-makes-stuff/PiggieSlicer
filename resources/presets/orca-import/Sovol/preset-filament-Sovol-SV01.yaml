@@ -1,0 +1,586 @@
+kind: filament
+id: SkviyPaGq4xwsadvM21yDA
+name: Generic ABS @System
+condition: (printer.model == "Sovol SV01" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV01 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV02" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "Sovol SV05" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 High-Speed nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07 Plus" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 80
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.926
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 10
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: ABS
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 260
+  first_layer_temperature: 260
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 3
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: xytyg//zWF+qjV1NZ/krgQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: vAjE2haYxxGleadswEzh8A
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "High Temp Plate"
+  id: b4Qul5G+7k8ppmzw5VfLtA
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured PEI Plate"
+  id: iyiMWuOU/y1ea9tK/cei/A
+  values:
+    bed_temperature: 100
+    first_layer_bed_temperature: 105
+- condition: sheet.type == "Textured Cool Plate"
+  id: f6uqMHRkQuww/ZgvFxcD9Q
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: +hRD1Jw2vM407oLnk67HEw
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: Fa6dPwDBqV7BH5blzKGpug
+name: Generic PC @System
+condition: (printer.model == "Sovol SV01" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV01 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV02" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "Sovol SV05" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 High-Speed nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.2) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.6) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.8) or (printer.model == "Sovol SV06 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 Plus ACE" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol
+  SV07 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.2) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.6) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 60
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.04
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.94
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 16
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PC
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 280
+  first_layer_temperature: 270
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 2
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: SxDImXo8fZXn9yPz99sr0Q
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: EumlJFtTFI+ZJK3P6vTiWQ
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "High Temp Plate"
+  id: bqEbGOr/d+WGakBzJ+Si5A
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured PEI Plate"
+  id: hAXXegWHzFf3jf8mGo09+A
+  values:
+    bed_temperature: 110
+    first_layer_bed_temperature: 110
+- condition: sheet.type == "Textured Cool Plate"
+  id: qAhJfmzFYRrXRCj9DYPw+A
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: S85Z2xWxMIEhqv1e1sZhIA
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: tLCaanshVzDtFCdfWLlVYA
+name: Generic PETG @System
+condition: (printer.model == "Sovol SV01" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV01 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV02" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "Sovol SV05" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 High-Speed nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07 Plus" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 20
+  max_fan_speed: 100
+  min_fan_speed: 20
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 30
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 10
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 255
+  first_layer_temperature: 255
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: QcIEkv9me7+R63vLlbpOjQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Engineering Plate"
+  id: rjxz9YHtrODpEE2rufmXRg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: /NNpYbrjV7j6pP+R7MackQ
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured PEI Plate"
+  id: zt88N+NBMEK18xiGqdo7gw
+  values:
+    bed_temperature: 80
+    first_layer_bed_temperature: 80
+- condition: sheet.type == "Textured Cool Plate"
+  id: bVOTyDa5Sn7AzxDiyi8bSQ
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: fykO+jG6IYDsA+PJfPbPDw
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70
+---
+kind: filament
+id: CjP9mZxupDzKarqampjD4Q
+name: Generic PLA @System
+condition: (printer.model == "Sovol SV01" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV01 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV02" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "Sovol SV05" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 High-Speed nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07 Plus" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 12
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 20
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 4
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: +TkwmKoxVSgi+8ghbndKzw
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: cRI69OLqzIc6OpDqWkqdLg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: 8eehMGtJg65TBr9Op+D1sg
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: pKtqX8gDZw2jL87uH3rtZw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: aZ+NmYK5qksE8KpKLy1AVw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: RdOKZuBqTIPeGQHvgfEeUg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: McM0hLriZZhJ+tScxuFUPw
+name: Generic PLA Silk @System
+condition: (printer.model == "Sovol SV01" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV01 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV02" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "Sovol SV05" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 High-Speed nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.2) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.6) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.8) or (printer.model == "Sovol SV06 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 Plus ACE" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol
+  SV07 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.2) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.6) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.8)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.98
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 7.5
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 10
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.5
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PLA
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 220
+  first_layer_temperature: 220
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: XPaaVU+/RvGglZNtU/30Qg
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Engineering Plate"
+  id: bpNIkLVKBPZqzECDoYawMg
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "High Temp Plate"
+  id: AmcEjaUnmhY/fQtXKoDD1g
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured PEI Plate"
+  id: KGxCDfBpgSKP3LFTXHn+Yw
+  values:
+    bed_temperature: 55
+    first_layer_bed_temperature: 55
+- condition: sheet.type == "Textured Cool Plate"
+  id: QPflpMDFNzPhjKlsbLdeNA
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: YtpwpGR8k4i7fwsIL8TQMg
+  values:
+    bed_temperature: 45
+    first_layer_bed_temperature: 45
+---
+kind: filament
+id: OgjhcUaKTQ7BagFbgzkdqA
+name: Generic TPU @System
+condition: (printer.model == "Sovol SV01" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV01 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV02" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "Sovol SV05" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 High-Speed nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07 Plus" and tool.nozzle_diameter == 0.4)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 1
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 100
+  max_fan_speed: 100
+  min_fan_speed: 100
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 20
+  filament_density: 1.24
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 1
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 3.2
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: false
+  filament_multitool_ramming_flow: 3.2
+  filament_multitool_ramming_volume: 0.1
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  retract_length: 0.4
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: TPU
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: Generic
+  full_fan_speed_layer: 0
+  temperature: 240
+  first_layer_temperature: 240
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 8
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: Dt4KS3A/rRb5fwWI9fwz1A
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "Engineering Plate"
+  id: EUdSKXe72NX+hbfM0z2Isw
+  values:
+    bed_temperature: 30
+    first_layer_bed_temperature: 30
+- condition: sheet.type == "High Temp Plate"
+  id: WHBemgJkuj+3zW0DqNXjTQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured PEI Plate"
+  id: LdjXIJNSRuJDZe5a2BpDHQ
+  values:
+    bed_temperature: 35
+    first_layer_bed_temperature: 35
+- condition: sheet.type == "Textured Cool Plate"
+  id: Ic32UOSmd49EeS5guDDguw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: RFSOOZ1BEjgJ0Sxm1mL+nQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+---
+kind: filament
+id: SOnJ9bFFoMac16WfMHs3hA
+name: SUNLU PETG @System
+condition: (printer.model == "Sovol SV01" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV01 Pro" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV02" and tool.nozzle_diameter == 0.4 and printer.tool_count == 2) or (printer.model == "Sovol SV05" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 High-Speed nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 0.4 nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.2) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.6) or (printer.model == "Sovol SV06 ACE" and tool.nozzle_diameter == 0.8) or (printer.model == "Sovol SV06 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV06 Plus ACE" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV07" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol
+  SV07 Plus" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.2) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.6) or (printer.model == "Sovol SV08" and tool.nozzle_diameter == 0.8) or (printer.model == "Sovol Zero 0.2 Hardened Steel nozzle" and tool.nozzle_diameter == 0.2) or (printer.model == "Sovol Zero 0.2 nozzle" and tool.nozzle_diameter == 0.2) or (printer.model == "Sovol Zero 0.4 Hardened Steel nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol Zero 0.4 nozzle" and tool.nozzle_diameter == 0.4) or (printer.model == "Sovol Zero 0.6 Hardened Steel nozzle" and tool.nozzle_diameter == 0.6) or (printer.model == "Sovol Zero 0.6 nozzle" and tool.nozzle_diameter == 0.6) or (printer.model == "Sovol Zero 0.8 Hardened Steel nozzle" and tool.nozzle_diameter == 0.8) or (printer.model == "Sovol Zero 0.8 nozzle" and tool.nozzle_diameter == 0.8) or (printer.model
+  == "Sovol Zero 1.0 Hardened Steel nozzle" and tool.nozzle_diameter == 1) or (printer.model == "Sovol Zero 1.0 nozzle" and tool.nozzle_diameter == 1)
+values:
+  chamber_temperature: 0
+  disable_fan_first_layers: 3
+  filament_colour: ''
+  pressure_advance: disabled
+  fan_below_layer_time: 30
+  max_fan_speed: 30
+  min_fan_speed: 10
+  filament_cooling_final_speed: 3.4
+  filament_cooling_initial_speed: 2.2
+  filament_cooling_moves: 4
+  filament_cost: 22.99
+  filament_density: 1.27
+  filament_diameter: 1.75
+  end_filament_gcode: |
+    ; filament end gcode
+  extrusion_multiplier: 0.95
+  filament_loading_speed: 28
+  filament_loading_speed_start: 3
+  filament_max_volumetric_speed: 14
+  filament_minimal_purge_on_wipe_tower: 15
+  filament_multitool_ramming: true
+  filament_multitool_ramming_flow: 15
+  filament_multitool_ramming_volume: 5
+  filament_notes: ''
+  filament_ramming_parameters: 120 100 6.6 6.8 7.2 7.6 7.9 8.2 8.7 9.4 9.9 10.0| 0.05 6.6 0.45 6.8 0.95 7.8 1.45 8.3 1.95 9.7 2.45 10 2.95 7.6 3.45 7.6 3.95 7.6 4.45 7.6 4.95 7.6
+  filament_soluble: false
+  filament_stamping_distance: 0
+  filament_stamping_loading_speed: 0
+  start_filament_gcode: |
+    ; Filament gcode
+  filament_toolchange_delay: 0
+  filament_type: PETG
+  filament_unloading_speed: 90
+  filament_unloading_speed_start: 100
+  filament_vendor: SUNLU
+  full_fan_speed_layer: 0
+  temperature: 245
+  first_layer_temperature: 250
+  pressure_advance_value: 0.02
+  fan_always_on: true
+  cooling: true
+  slowdown_below_layer_time: 12
+  min_print_speed: 10
+  filament_shrinkage_compensation_xy: 0%
+  filament_shrinkage_compensation_z: 0%
+  custom_parameters_filament: '{"activate_air_filtration": false, "during_print_exhaust_fan_speed": 70}'
+variants:
+- condition: sheet.type == "Cool Plate"
+  id: /GoNnZRlRg9aOo9d4Lh5HQ
+  values:
+    bed_temperature: 0
+    first_layer_bed_temperature: 0
+- condition: sheet.type == "Engineering Plate"
+  id: R7J4lgJ3NkMvC4n+E5DocQ
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "High Temp Plate"
+  id: xHSaw/XBRVbcYFo1GGwyIg
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured PEI Plate"
+  id: Chawzugfnc3Ma52kBGJO5A
+  values:
+    bed_temperature: 60
+    first_layer_bed_temperature: 60
+- condition: sheet.type == "Textured Cool Plate"
+  id: hCPlbDPlUVzwfgGrhsMqzw
+  values:
+    bed_temperature: 40
+    first_layer_bed_temperature: 40
+- condition: sheet.type == "Supertack Plate"
+  id: kzqObXyxqsF3F420mA7NXg
+  values:
+    bed_temperature: 70
+    first_layer_bed_temperature: 70

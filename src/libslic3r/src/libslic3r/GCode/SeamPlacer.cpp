@@ -15,6 +15,7 @@
 #include "libslic3r/GCode/SeamGeometry.hpp"
 #include "libslic3r/Layer.hpp"
 #include "Slic3r/Biz/Algorithms/BoundingBox.hpp"
+#include "libslic3r/HwConfigUtils.hpp"
 
 #include "Slic3r/Log.hpp"
 
@@ -270,7 +271,17 @@ unsigned get_seam_choice_value(const SeamChoice &seam_choice, const Perimeters::
     return std::max(previous_value, next_value);
 }
 
+// the length of a closed perimeter
+static double perimeter_length(const std::vector<Vec2d> &positions)
+{
+    double length = 0.;
+    for (size_t i = 0; i < positions.size(); ++i)
+        length += (positions[(i + 1) % positions.size()] - positions[i]).norm();
+    return length;
+}
+
 boost::variant<Point, Scarf::Scarf> finalize_seam_position(
+    const Layer *layer,
     const ExtrusionLoop &loop,
     const PrintRegion *region,
     SeamChoice seam_choice,
@@ -340,17 +351,29 @@ boost::variant<Point, Scarf::Scarf> finalize_seam_position(
         region->config().get<Domain::ScarfSeamPlacement>("scarf_seam_placement") == Domain::ScarfSeamPlacement::everywhere
         || (region->config().get<Domain::ScarfSeamPlacement>("scarf_seam_placement") == Domain::ScarfSeamPlacement::countours && !perimeter.is_hole)
     };
-    const bool is_smooth{
-        seam_choice.previous_index != seam_choice.next_index ||
-        perimeter.angle_types[seam_choice.previous_index] == Perimeters::AngleType::smooth
-    };
 
     if (perimeter.layer_index == 0) {
         place_scarf_seam = false;
     }
 
-    if (region->config().get<bool>("scarf_seam_only_on_smooth") && !is_smooth) {
-        place_scarf_seam = false;
+    // Orca's conditional scarf joint (seam_slope_conditional): no corner of the loop sharper than
+    // scarf_angle_threshold (vertex angles over an arm of the nozzle diameter), and the seam overhangs the
+    // layer below by less than scarf_overhang_threshold of the line width
+    if (place_scarf_seam && region->config().get<bool>("scarf_seam_only_on_smooth")) {
+        const int    extruder        = std::max(1, int(region->extruder(loop.role() == ExtrusionRole::Perimeter ? frPerimeter : frExternalPerimeter)));
+        const double nozzle_diameter = Biz::Slicing::get_nozzle_diameter(region->config().hw_config(), size_t(extruder - 1));
+        const double max_turn        = M_PI - region->config().get<int>("scarf_angle_threshold") * M_PI / 180.;
+        for (const double angle : Geometry::get_vertex_angles(perimeter.positions, nozzle_diameter))
+            if (std::abs(angle) > max_turn) {
+                place_scarf_seam = false;
+                break;
+            }
+        const double overhang_threshold = region->config().get<Domain::Percentage>("scarf_overhang_threshold").value;
+        if (place_scarf_seam && overhang_threshold > 0. && layer->lower_layer != nullptr) {
+            const AABBTreeLines::LinesDistancer<Linef> lower{to_unscaled_linesf({layer->lower_layer->lslices})};
+            if (lower.distance_from_lines<true>(loop_point) >= overhang_threshold * 0.01 * loop_width)
+                place_scarf_seam = false;
+        }
     }
 
     if (region->config().get<double>("scarf_seam_length") <= std::numeric_limits<double>::epsilon()) {
@@ -369,7 +392,10 @@ boost::variant<Point, Scarf::Scarf> finalize_seam_position(
     if (place_scarf_seam) {
         Scarf::Scarf scarf{};
         scarf.entire_loop = region->config().get<bool>("scarf_seam_entire_loop");
-        scarf.max_segment_length = region->config().get<double>("scarf_seam_max_segment_length");
+        // Orca seam_slope_steps: at least that many segments
+        const double scarf_length = scarf.entire_loop ? perimeter_length(perimeter.positions) : region->config().get<double>("scarf_seam_length");
+        scarf.max_segment_length = std::min(region->config().get<double>("scarf_seam_max_segment_length"),
+                                            scarf_length / std::max(1, region->config().get<int>("seam_slope_steps")));
         scarf.start_height = std::min(region->config().get<Domain::Percentage>("scarf_seam_start_height").get_abs_value(1.0), 1.0);
 
         const double offset{scarf.entire_loop ? 0.0 : region->config().get<double>("scarf_seam_length")};
@@ -402,7 +428,8 @@ boost::variant<Point, Scarf::Scarf> finalize_seam_position(
                 *outter_scarf_start_point
             };
 
-            if (region->extruder_config_value<bool>("external_perimeters_first", frPerimeter)) {
+            // the external wall printed before the inner wall next to it (Outer/Inner, Inner/Outer/Inner)
+            if (region->extruder_config_value<Domain::WallSequence>("wall_sequence", frPerimeter) != Domain::WallSequence::InnerOuter) {
                 const auto external_first_offset_direction{
                     offset_direction == Geometry::Direction1D::forward ?
                     Geometry::Direction1D::backward :
@@ -555,7 +582,7 @@ boost::variant<Point, Scarf::Scarf> Placer::place_seam(
         const auto [seam_choice, perimeter_index] =
             place_seam_near(perimeters, loop, last_pos, this->params.max_nearest_detour);
         return finalize_seam_position(
-            loop, region, seam_choice, perimeters[perimeter_index].perimeter,
+            layer, loop, region, seam_choice, perimeters[perimeter_index].perimeter,
             this->params.staggered_inner_seams, flipped, thick_bridges
         );
     } else {
@@ -573,7 +600,7 @@ boost::variant<Point, Scarf::Scarf> Placer::place_seam(
                     seams_on_perimeters[0].perimeter.is_hole ? seams_on_perimeters[1] :
                                                                seams_on_perimeters[0]};
                 return finalize_seam_position(
-                    loop, region, seam_perimeter_choice.choice, seam_perimeter_choice.perimeter,
+                    layer, loop, region, seam_perimeter_choice.choice, seam_perimeter_choice.perimeter,
                     this->params.staggered_inner_seams, flipped, thick_bridges
                 );
             }
@@ -582,7 +609,7 @@ boost::variant<Point, Scarf::Scarf> Placer::place_seam(
         const SeamPerimeterChoice &seam_perimeter_choice{
             choose_closest_seam(seams_on_perimeters, Geometry::to_polygon(loop))};
         return finalize_seam_position(
-            loop, region, seam_perimeter_choice.choice, seam_perimeter_choice.perimeter,
+            layer, loop, region, seam_perimeter_choice.choice, seam_perimeter_choice.perimeter,
             this->params.staggered_inner_seams, flipped, thick_bridges
         );
     }

@@ -47,8 +47,8 @@ ExPolygons raster_to_polygons(const RasterGrayscaleAA &rst, std::array<int, 2> w
     if (rows < 2 || cols < 2) return {};
     
     Polygons polys;
-    long w_rows = std::max(2l, long(windowsize[1]));
-    long w_cols = std::max(2l, long(windowsize[0]));
+    long w_rows = std::max(1l, long(windowsize[1]));
+    long w_cols = std::max(1l, long(windowsize[0]));
     
     std::vector<marchsq::Ring> rings =
         marchsq::execute(rst, 128, {w_rows, w_cols});
@@ -56,8 +56,6 @@ ExPolygons raster_to_polygons(const RasterGrayscaleAA &rst, std::array<int, 2> w
     polys.reserve(rings.size());
     
     auto pxd = rst.pixel_dimensions();
-    pxd.w_mm = (rst.resolution().width_px * pxd.w_mm) / (rst.resolution().width_px - 1);
-    pxd.h_mm = (rst.resolution().height_px * pxd.h_mm) / (rst.resolution().height_px - 1);
     
     for (const marchsq::Ring &ring : rings) {
         Polygon poly; Points &pts = poly.points;

@@ -1,0 +1,875 @@
+kind: printer
+id: IkZEhp06P3zaAywwdNMqUQ
+variants:
+- condition: printer.model == "SeeMeCNC Artemis 300"
+  name: SeeMeCNC Artemis 300
+  id: W3VYzgDpmo85Z4R8sEMNwg
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: kGJVB0IaxFYdnluGyNXxpA
+    values:
+      bed_custom_model: SeeMeCNC_Buildplate_Model.STL
+      bed_custom_texture: SeeMeCNC_Buildplate_texture.png
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        {if layer_num == 1}M104 S[temperature] ; Step down from first layer temp to print temp{endif}
+        G92 E0
+      toolchange_gcode: |-
+        {if layer_num >= 0}
+        G92 E0
+        G1 E-5 F3000
+        G1 E-155 F5000
+        T[next_extruder]
+        {if layer_num == 0}
+        M109 S[first_layer_temperature]
+        {else}
+        M109 S[temperature]
+        {endif}
+        G1 E160 F5000
+        G92 E0
+        {endif}
+      cooling_tube_length: 5
+      cooling_tube_retraction: 160
+      default_print: 0.20mm Standard @SeeMeCNC Artemis 0.4
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: 0
+      extruder_clearance_height: 70
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        ;======= SEEMECNC ARTEMIS END G-CODE =======
+        M104 S0          ; Turn off hotend
+        M140 S0          ; Turn off heated bed
+        M107 T0          ; Turn off part cooling fan
+        G91              ; Relative positioning
+        G1 Z2 E-160 F6000  ; Lift 2mm and retract 160mm
+        G92 E0
+        G90              ; Absolute positioning
+        M203 Z18000      ; Allow fast Z for homing
+        G28              ; Home all axes - clears part immediately on a delta
+        ;======= END G-CODE =======
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_z:
+      - 5000.0
+      - 5000.0
+      machine_max_jerk_e:
+      - 15.0
+      - 15.0
+      machine_max_jerk_x:
+      - 15.0
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      - 15.0
+      machine_max_jerk_z:
+      - 15.0
+      - 15.0
+      machine_max_junction_deviation:
+      - 0.01
+      - 0.01
+      machine_max_feedrate_e:
+      - 150.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 200.0
+      - 200.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        ;======= SEEMECNC ARTEMIS START G-CODE =======
+        G21              ; Set units to mm
+        G90              ; Absolute positioning
+        M82              ; Extruder to absolute mode
+        G28              ; Home all axes
+        G1 Z50 F9000     ; Lift nozzle for safe heating
+        ; --- SELECT STARTING TOOL ---
+        T[initial_tool]  ; Activate the first assigned filament in OrcaSlicer
+        ; --- PREHEAT ---
+        M140 S[first_layer_bed_temperature]  ; Start bed heating
+        M104 S[first_layer_temperature]      ; Start nozzle heating
+        M190 S[first_layer_bed_temperature]  ; Wait for bed to reach temp
+        M109 S[first_layer_temperature]      ; Wait for nozzle to reach temp
+        ; --- RE-PRIME BOWDEN TUBE ---
+        G92 E0
+        G1 E160.5 F3000  ; Retract 160mm
+        G92 E0
+        ; --- PURGE LINE (curved arc near front edge, 290mm bed) ---
+        G92 E0
+        G1 X-50 Y-129.9 Z0.4 F5000   ; Move to arc start (inside 145mm radius)
+        G1 Z0.3 F1000                    ; Drop to prime height
+        G3 X50 Y-129.9 R139.2 E40 F600  ; Arc purge, 100mm sweep, heavy extrusion
+        G1 E38 F4500                     ; Retract 2mm before wipe (Bowden)
+        G1 X65 Y-119.9 Z0.2 F6000     ; Wipe move at Z0.2
+        G92 E0                           ; Zero extruder before print
+        ;======= END START G-CODE =======
+      parking_pos_retraction: 160
+      bed_shape:
+      - 145x0
+      - 144.4482x12.6376
+      - 142.7971x25.179
+      - 140.0592x37.5288
+      - 136.2554x49.5929
+      - 131.4146x61.2796
+      - 125.5737x72.5
+      - 118.777x83.1686
+      - 111.0764x93.2042
+      - 102.5305x102.5305
+      - 93.2042x111.0764
+      - 83.1686x118.777
+      - 72.5x125.5737
+      - 61.2796x131.4146
+      - 49.5929x136.2554
+      - 37.5288x140.0592
+      - 25.179x142.7971
+      - 12.6376x144.4482
+      - '0x145'
+      - -12.6376x144.4482
+      - -25.179x142.7971
+      - -37.5288x140.0592
+      - -49.5929x136.2554
+      - -61.2796x131.4146
+      - -72.5x125.5737
+      - -83.1686x118.777
+      - -93.2042x111.0764
+      - -102.5305x102.5305
+      - -111.0764x93.2042
+      - -118.777x83.1686
+      - -125.5737x72.5
+      - -131.4146x61.2796
+      - -136.2554x49.5929
+      - -140.0592x37.5288
+      - -142.7971x25.179
+      - -144.4482x12.6376
+      - -145x0
+      - -144.4482x-12.6376
+      - -142.7971x-25.179
+      - -140.0592x-37.5288
+      - -136.2554x-49.5929
+      - -131.4146x-61.2796
+      - -125.5737x-72.5
+      - -118.777x-83.1686
+      - -111.0764x-93.2042
+      - -102.5305x-102.5305
+      - -93.2042x-111.0764
+      - -83.1686x-118.777
+      - -72.5x-125.5737
+      - -61.2796x-131.4146
+      - -49.5929x-136.2554
+      - -37.5288x-140.0592
+      - -25.179x-142.7971
+      - -12.6376x-144.4482
+      - 0x-145
+      - 12.6376x-144.4482
+      - 25.179x-142.7971
+      - 37.5288x-140.0592
+      - 49.5929x-136.2554
+      - 61.2796x-131.4146
+      - 72.5x-125.5737
+      - 83.1686x-118.777
+      - 93.2042x-111.0764
+      - 102.5305x-102.5305
+      - 111.0764x-93.2042
+      - 118.777x-83.1686
+      - 125.5737x-72.5
+      - 131.4146x-61.2796
+      - 136.2554x-49.5929
+      - 140.0592x-37.5288
+      - 142.7971x-25.179
+      - 144.4482x-12.6376
+      max_print_height: 500
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.5
+    id: MyzFAF60FXuTEwXhr86GEw
+    values:
+      bed_custom_model: SeeMeCNC_Buildplate_Model.STL
+      bed_custom_texture: SeeMeCNC_Buildplate_texture.png
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        {if layer_num == 1}M104 S[temperature] ; Step down from first layer temp to print temp{endif}
+        G92 E0
+      toolchange_gcode: |-
+        {if layer_num >= 0}
+        G92 E0
+        G1 E-5 F3000
+        G1 E-155 F5000
+        T[next_extruder]
+        {if layer_num == 0}
+        M109 S[first_layer_temperature]
+        {else}
+        M109 S[temperature]
+        {endif}
+        G1 E160 F5000
+        G92 E0
+        {endif}
+      cooling_tube_length: 5
+      cooling_tube_retraction: 160
+      default_print: 0.25mm Standard @SeeMeCNC Artemis 0.5
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: 0
+      extruder_clearance_height: 70
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        ;======= SEEMECNC ARTEMIS END G-CODE =======
+        M104 S0          ; Turn off hotend
+        M140 S0          ; Turn off heated bed
+        M107 T0          ; Turn off part cooling fan
+        G91              ; Relative positioning
+        G1 Z2 E-160 F6000  ; Lift 2mm and retract 160mm
+        G92 E0
+        G90              ; Absolute positioning
+        M203 Z18000      ; Allow fast Z for homing
+        G28              ; Home all axes - clears part immediately on a delta
+        ;======= END G-CODE =======
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_z:
+      - 5000.0
+      - 5000.0
+      machine_max_jerk_e:
+      - 15.0
+      - 15.0
+      machine_max_jerk_x:
+      - 15.0
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      - 15.0
+      machine_max_jerk_z:
+      - 15.0
+      - 15.0
+      machine_max_junction_deviation:
+      - 0.01
+      - 0.01
+      machine_max_feedrate_e:
+      - 150.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 200.0
+      - 200.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        ;======= SEEMECNC ARTEMIS START G-CODE =======
+        G21              ; Set units to mm
+        G90              ; Absolute positioning
+        M82              ; Extruder to absolute mode
+        G28              ; Home all axes
+        G1 Z50 F9000     ; Lift nozzle for safe heating
+        ; --- SELECT STARTING TOOL ---
+        T[initial_tool]  ; Activate the first assigned filament in OrcaSlicer
+        ; --- PREHEAT ---
+        M140 S[first_layer_bed_temperature]  ; Start bed heating
+        M104 S[first_layer_temperature]      ; Start nozzle heating
+        M190 S[first_layer_bed_temperature]  ; Wait for bed to reach temp
+        M109 S[first_layer_temperature]      ; Wait for nozzle to reach temp
+        ; --- RE-PRIME BOWDEN TUBE ---
+        G92 E0
+        G1 E160.5 F3000  ; Retract 160mm
+        G92 E0
+        ; --- PURGE LINE (curved arc near front edge, 290mm bed) ---
+        G92 E0
+        G1 X-50 Y-129.9 Z0.4 F5000   ; Move to arc start (inside 145mm radius)
+        G1 Z0.3 F1000                    ; Drop to prime height
+        G3 X50 Y-129.9 R139.2 E40 F600  ; Arc purge, 100mm sweep, heavy extrusion
+        G1 E38 F4500                     ; Retract 2mm before wipe (Bowden)
+        G1 X65 Y-119.9 Z0.2 F6000     ; Wipe move at Z0.2
+        G92 E0                           ; Zero extruder before print
+        ;======= END START G-CODE =======
+      parking_pos_retraction: 160
+      bed_shape:
+      - 145x0
+      - 144.4482x12.6376
+      - 142.7971x25.179
+      - 140.0592x37.5288
+      - 136.2554x49.5929
+      - 131.4146x61.2796
+      - 125.5737x72.5
+      - 118.777x83.1686
+      - 111.0764x93.2042
+      - 102.5305x102.5305
+      - 93.2042x111.0764
+      - 83.1686x118.777
+      - 72.5x125.5737
+      - 61.2796x131.4146
+      - 49.5929x136.2554
+      - 37.5288x140.0592
+      - 25.179x142.7971
+      - 12.6376x144.4482
+      - '0x145'
+      - -12.6376x144.4482
+      - -25.179x142.7971
+      - -37.5288x140.0592
+      - -49.5929x136.2554
+      - -61.2796x131.4146
+      - -72.5x125.5737
+      - -83.1686x118.777
+      - -93.2042x111.0764
+      - -102.5305x102.5305
+      - -111.0764x93.2042
+      - -118.777x83.1686
+      - -125.5737x72.5
+      - -131.4146x61.2796
+      - -136.2554x49.5929
+      - -140.0592x37.5288
+      - -142.7971x25.179
+      - -144.4482x12.6376
+      - -145x0
+      - -144.4482x-12.6376
+      - -142.7971x-25.179
+      - -140.0592x-37.5288
+      - -136.2554x-49.5929
+      - -131.4146x-61.2796
+      - -125.5737x-72.5
+      - -118.777x-83.1686
+      - -111.0764x-93.2042
+      - -102.5305x-102.5305
+      - -93.2042x-111.0764
+      - -83.1686x-118.777
+      - -72.5x-125.5737
+      - -61.2796x-131.4146
+      - -49.5929x-136.2554
+      - -37.5288x-140.0592
+      - -25.179x-142.7971
+      - -12.6376x-144.4482
+      - 0x-145
+      - 12.6376x-144.4482
+      - 25.179x-142.7971
+      - 37.5288x-140.0592
+      - 49.5929x-136.2554
+      - 61.2796x-131.4146
+      - 72.5x-125.5737
+      - 83.1686x-118.777
+      - 93.2042x-111.0764
+      - 102.5305x-102.5305
+      - 111.0764x-93.2042
+      - 118.777x-83.1686
+      - 125.5737x-72.5
+      - 131.4146x-61.2796
+      - 136.2554x-49.5929
+      - 140.0592x-37.5288
+      - 142.7971x-25.179
+      - 144.4482x-12.6376
+      max_print_height: 500
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.7
+    id: KYZFY2nOSLR5OPTXaH4d5A
+    values:
+      bed_custom_model: SeeMeCNC_Buildplate_Model.STL
+      bed_custom_texture: SeeMeCNC_Buildplate_texture.png
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        {if layer_num == 1}M104 S[temperature] ; Step down from first layer temp to print temp{endif}
+        G92 E0
+      toolchange_gcode: |-
+        {if layer_num >= 0}
+        G92 E0
+        G1 E-5 F3000
+        G1 E-155 F5000
+        T[next_extruder]
+        {if layer_num == 0}
+        M109 S[first_layer_temperature]
+        {else}
+        M109 S[temperature]
+        {endif}
+        G1 E160 F5000
+        G92 E0
+        {endif}
+      cooling_tube_length: 5
+      cooling_tube_retraction: 160
+      default_print: 0.35mm Standard @SeeMeCNC Artemis 0.7
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: 0
+      extruder_clearance_height: 70
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        ;======= SEEMECNC ARTEMIS END G-CODE =======
+        M104 S0          ; Turn off hotend
+        M140 S0          ; Turn off heated bed
+        M107 T0          ; Turn off part cooling fan
+        G91              ; Relative positioning
+        G1 Z2 E-160 F6000  ; Lift 2mm and retract 160mm
+        G92 E0
+        G90              ; Absolute positioning
+        M203 Z18000      ; Allow fast Z for homing
+        G28              ; Home all axes - clears part immediately on a delta
+        ;======= END G-CODE =======
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_z:
+      - 5000.0
+      - 5000.0
+      machine_max_jerk_e:
+      - 15.0
+      - 15.0
+      machine_max_jerk_x:
+      - 15.0
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      - 15.0
+      machine_max_jerk_z:
+      - 15.0
+      - 15.0
+      machine_max_junction_deviation:
+      - 0.01
+      - 0.01
+      machine_max_feedrate_e:
+      - 150.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 200.0
+      - 200.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        ;======= SEEMECNC ARTEMIS START G-CODE =======
+        G21              ; Set units to mm
+        G90              ; Absolute positioning
+        M82              ; Extruder to absolute mode
+        G28              ; Home all axes
+        G1 Z50 F9000     ; Lift nozzle for safe heating
+        ; --- SELECT STARTING TOOL ---
+        T[initial_tool]  ; Activate the first assigned filament in OrcaSlicer
+        ; --- PREHEAT ---
+        M140 S[first_layer_bed_temperature]  ; Start bed heating
+        M104 S[first_layer_temperature]      ; Start nozzle heating
+        M190 S[first_layer_bed_temperature]  ; Wait for bed to reach temp
+        M109 S[first_layer_temperature]      ; Wait for nozzle to reach temp
+        ; --- RE-PRIME BOWDEN TUBE ---
+        G92 E0
+        G1 E160.5 F3000  ; Retract 160mm
+        G92 E0
+        ; --- PURGE LINE (curved arc near front edge, 290mm bed) ---
+        G92 E0
+        G1 X-50 Y-129.9 Z0.4 F5000   ; Move to arc start (inside 145mm radius)
+        G1 Z0.3 F1000                    ; Drop to prime height
+        G3 X50 Y-129.9 R139.2 E40 F600  ; Arc purge, 100mm sweep, heavy extrusion
+        G1 E38 F4500                     ; Retract 2mm before wipe (Bowden)
+        G1 X65 Y-119.9 Z0.2 F6000     ; Wipe move at Z0.2
+        G92 E0                           ; Zero extruder before print
+        ;======= END START G-CODE =======
+      parking_pos_retraction: 160
+      bed_shape:
+      - 145x0
+      - 144.4482x12.6376
+      - 142.7971x25.179
+      - 140.0592x37.5288
+      - 136.2554x49.5929
+      - 131.4146x61.2796
+      - 125.5737x72.5
+      - 118.777x83.1686
+      - 111.0764x93.2042
+      - 102.5305x102.5305
+      - 93.2042x111.0764
+      - 83.1686x118.777
+      - 72.5x125.5737
+      - 61.2796x131.4146
+      - 49.5929x136.2554
+      - 37.5288x140.0592
+      - 25.179x142.7971
+      - 12.6376x144.4482
+      - '0x145'
+      - -12.6376x144.4482
+      - -25.179x142.7971
+      - -37.5288x140.0592
+      - -49.5929x136.2554
+      - -61.2796x131.4146
+      - -72.5x125.5737
+      - -83.1686x118.777
+      - -93.2042x111.0764
+      - -102.5305x102.5305
+      - -111.0764x93.2042
+      - -118.777x83.1686
+      - -125.5737x72.5
+      - -131.4146x61.2796
+      - -136.2554x49.5929
+      - -140.0592x37.5288
+      - -142.7971x25.179
+      - -144.4482x12.6376
+      - -145x0
+      - -144.4482x-12.6376
+      - -142.7971x-25.179
+      - -140.0592x-37.5288
+      - -136.2554x-49.5929
+      - -131.4146x-61.2796
+      - -125.5737x-72.5
+      - -118.777x-83.1686
+      - -111.0764x-93.2042
+      - -102.5305x-102.5305
+      - -93.2042x-111.0764
+      - -83.1686x-118.777
+      - -72.5x-125.5737
+      - -61.2796x-131.4146
+      - -49.5929x-136.2554
+      - -37.5288x-140.0592
+      - -25.179x-142.7971
+      - -12.6376x-144.4482
+      - 0x-145
+      - 12.6376x-144.4482
+      - 25.179x-142.7971
+      - 37.5288x-140.0592
+      - 49.5929x-136.2554
+      - 61.2796x-131.4146
+      - 72.5x-125.5737
+      - 83.1686x-118.777
+      - 93.2042x-111.0764
+      - 102.5305x-102.5305
+      - 111.0764x-93.2042
+      - 118.777x-83.1686
+      - 125.5737x-72.5
+      - 131.4146x-61.2796
+      - 136.2554x-49.5929
+      - 140.0592x-37.5288
+      - 142.7971x-25.179
+      - 144.4482x-12.6376
+      max_print_height: 500
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 1
+    id: FuqYKgkuf0TpAuUaGPBiTw
+    values:
+      bed_custom_model: SeeMeCNC_Buildplate_Model.STL
+      bed_custom_texture: SeeMeCNC_Buildplate_texture.png
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        {if layer_num == 1}M104 S[temperature] ; Step down from first layer temp to print temp{endif}
+        G92 E0
+      toolchange_gcode: |-
+        {if layer_num >= 0}
+        G92 E0
+        G1 E-5 F3000
+        G1 E-155 F5000
+        T[next_extruder]
+        {if layer_num == 0}
+        M109 S[first_layer_temperature]
+        {else}
+        M109 S[temperature]
+        {endif}
+        G1 E160 F5000
+        G92 E0
+        {endif}
+      cooling_tube_length: 5
+      cooling_tube_retraction: 160
+      default_print: 0.50mm Standard @SeeMeCNC Artemis 1.0
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: 0
+      extruder_clearance_height: 70
+      extruder_clearance_radius: 75
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: reprapfirmware
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |-
+        ;======= SEEMECNC ARTEMIS END G-CODE =======
+        M104 S0          ; Turn off hotend
+        M140 S0          ; Turn off heated bed
+        M107 T0          ; Turn off part cooling fan
+        G91              ; Relative positioning
+        G1 Z2 E-160 F6000  ; Lift 2mm and retract 160mm
+        G92 E0
+        G90              ; Absolute positioning
+        M203 Z18000      ; Allow fast Z for homing
+        G28              ; Home all axes - clears part immediately on a delta
+        ;======= END G-CODE =======
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_x:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_y:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_z:
+      - 5000.0
+      - 5000.0
+      machine_max_jerk_e:
+      - 15.0
+      - 15.0
+      machine_max_jerk_x:
+      - 15.0
+      - 15.0
+      machine_max_jerk_y:
+      - 15.0
+      - 15.0
+      machine_max_jerk_z:
+      - 15.0
+      - 15.0
+      machine_max_junction_deviation:
+      - 0.01
+      - 0.01
+      machine_max_feedrate_e:
+      - 150.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 300.0
+      machine_max_feedrate_z:
+      - 200.0
+      - 200.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        ;======= SEEMECNC ARTEMIS START G-CODE =======
+        G21              ; Set units to mm
+        G90              ; Absolute positioning
+        M82              ; Extruder to absolute mode
+        G28              ; Home all axes
+        G1 Z50 F9000     ; Lift nozzle for safe heating
+        ; --- SELECT STARTING TOOL ---
+        T[initial_tool]  ; Activate the first assigned filament in OrcaSlicer
+        ; --- PREHEAT ---
+        M140 S[first_layer_bed_temperature]  ; Start bed heating
+        M104 S[first_layer_temperature]      ; Start nozzle heating
+        M190 S[first_layer_bed_temperature]  ; Wait for bed to reach temp
+        M109 S[first_layer_temperature]      ; Wait for nozzle to reach temp
+        ; --- RE-PRIME BOWDEN TUBE ---
+        G92 E0
+        G1 E160.5 F3000  ; Retract 160mm
+        G92 E0
+        ; --- PURGE LINE (curved arc near front edge, 290mm bed) ---
+        G92 E0
+        G1 X-50 Y-129.9 Z0.4 F5000   ; Move to arc start (inside 145mm radius)
+        G1 Z0.3 F1000                    ; Drop to prime height
+        G3 X50 Y-129.9 R139.2 E40 F600  ; Arc purge, 100mm sweep, heavy extrusion
+        G1 E38 F4500                     ; Retract 2mm before wipe (Bowden)
+        G1 X65 Y-119.9 Z0.2 F6000     ; Wipe move at Z0.2
+        G92 E0                           ; Zero extruder before print
+        ;======= END START G-CODE =======
+      parking_pos_retraction: 160
+      bed_shape:
+      - 145x0
+      - 144.4482x12.6376
+      - 142.7971x25.179
+      - 140.0592x37.5288
+      - 136.2554x49.5929
+      - 131.4146x61.2796
+      - 125.5737x72.5
+      - 118.777x83.1686
+      - 111.0764x93.2042
+      - 102.5305x102.5305
+      - 93.2042x111.0764
+      - 83.1686x118.777
+      - 72.5x125.5737
+      - 61.2796x131.4146
+      - 49.5929x136.2554
+      - 37.5288x140.0592
+      - 25.179x142.7971
+      - 12.6376x144.4482
+      - '0x145'
+      - -12.6376x144.4482
+      - -25.179x142.7971
+      - -37.5288x140.0592
+      - -49.5929x136.2554
+      - -61.2796x131.4146
+      - -72.5x125.5737
+      - -83.1686x118.777
+      - -93.2042x111.0764
+      - -102.5305x102.5305
+      - -111.0764x93.2042
+      - -118.777x83.1686
+      - -125.5737x72.5
+      - -131.4146x61.2796
+      - -136.2554x49.5929
+      - -140.0592x37.5288
+      - -142.7971x25.179
+      - -144.4482x12.6376
+      - -145x0
+      - -144.4482x-12.6376
+      - -142.7971x-25.179
+      - -140.0592x-37.5288
+      - -136.2554x-49.5929
+      - -131.4146x-61.2796
+      - -125.5737x-72.5
+      - -118.777x-83.1686
+      - -111.0764x-93.2042
+      - -102.5305x-102.5305
+      - -93.2042x-111.0764
+      - -83.1686x-118.777
+      - -72.5x-125.5737
+      - -61.2796x-131.4146
+      - -49.5929x-136.2554
+      - -37.5288x-140.0592
+      - -25.179x-142.7971
+      - -12.6376x-144.4482
+      - 0x-145
+      - 12.6376x-144.4482
+      - 25.179x-142.7971
+      - 37.5288x-140.0592
+      - 49.5929x-136.2554
+      - 61.2796x-131.4146
+      - 72.5x-125.5737
+      - 83.1686x-118.777
+      - 93.2042x-111.0764
+      - 102.5305x-102.5305
+      - 111.0764x-93.2042
+      - 118.777x-83.1686
+      - 125.5737x-72.5
+      - 131.4146x-61.2796
+      - 136.2554x-49.5929
+      - 140.0592x-37.5288
+      - 142.7971x-25.179
+      - 144.4482x-12.6376
+      max_print_height: 500
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

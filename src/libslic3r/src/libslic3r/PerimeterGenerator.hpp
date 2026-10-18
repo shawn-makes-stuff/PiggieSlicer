@@ -45,6 +45,7 @@ namespace Slic3r::PerimeterGenerator {
 struct Parameters {    
     Parameters(
         double                      layer_height,
+        double                      slice_z,
         int                         layer_id,
         Flow                        perimeter_flow,
         Flow                        ext_perimeter_flow,
@@ -54,6 +55,7 @@ struct Parameters {
         const PerimeterRegions     &perimeter_regions,
         const bool                  spiral_vase) :   
             layer_height(layer_height),
+            slice_z(slice_z),
             layer_id(layer_id),
             perimeter_flow(perimeter_flow), 
             ext_perimeter_flow(ext_perimeter_flow),
@@ -71,6 +73,8 @@ struct Parameters {
 
     // Input parameters
     double                       layer_height;
+    // the layer's slicing Z: the third coordinate of the fuzzy skin noise
+    double                       slice_z;
     int                          layer_id;
     Flow                         perimeter_flow;
     Flow                         ext_perimeter_flow;
@@ -85,6 +89,15 @@ struct Parameters {
     double                       ext_mm3_per_mm;
     double                       mm3_per_mm;
     double                       mm3_per_mm_overhang;
+    // Orca: fuzzy skin only within reach of the layer below (none: everywhere)
+    std::optional<ExPolygons>    fuzzy_supported_area;
+    // Orca: whether the contours / holes get fuzzy skin on this layer (overhang_reverse reverses them always)
+    bool                         has_fuzzy_skin{false};
+    bool                         has_fuzzy_hole{false};
+    // the layer below (Orca overhang_reverse_threshold)
+    const ExPolygons            *lower_slices{nullptr};
+    // Orca: the rotation of the model on the plate (align_infill_direction_to_model)
+    double                       model_rotation{0.};
 
 private:
     Parameters() = delete;
@@ -121,6 +134,10 @@ void process_arachne(
     ExtrusionEntityCollection  &out_gap_fill,
     // Infills without the gap fills
     ExPolygons                 &out_fill_expolygons);
+
+// Orca counterbore_hole_bridging: takes the unsupported parts over the holes out of the slices, to be bridged. Returns
+// the infill made of them per slice; a slice may be left empty, and may be split, the parts appended.
+std::vector<ExPolygons> process_no_bridge(const Parameters &params, Surfaces &all_surfaces, const ExPolygons *lower_slices);
 
 ExtrusionMultiPath thick_polyline_to_multi_path(const ThickPolyline &thick_polyline, ExtrusionRole role, const Flow &flow, float tolerance, float merge_tolerance, const std::optional<uint32_t> &perimeter_index = std::nullopt);
 

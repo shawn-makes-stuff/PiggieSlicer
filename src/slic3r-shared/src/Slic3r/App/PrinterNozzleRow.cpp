@@ -23,6 +23,7 @@ PrinterNozzleRow::PrinterNozzleRow(
     id_background->set_align_items(YGAlignCenter);
     id_background->set_justify_content(YGJustifyCenter);
     id_background->set_width(25);
+    m_id_background = id_background;
 
     m_text_index = id_background->emplace_back<Text>("");
 
@@ -62,6 +63,8 @@ void PrinterNozzleRow::on_data_update()
 void PrinterNozzleRow::on_index_update()
 {
     m_text_index->set_text(std::to_string(m_index + 1));
+    // the nozzle number only tells nozzles apart
+    m_id_background->set_visible(m_preset_interactor.tool_items().size() > 1);
 }
 
 void PrinterNozzleRow::on_view_will_be_reset()

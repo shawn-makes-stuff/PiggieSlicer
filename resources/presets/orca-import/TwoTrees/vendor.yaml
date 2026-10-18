@@ -1,0 +1,136 @@
+kind: vendor
+id: TwoTrees
+name: TwoTrees
+version: 2.4.0+orca.02.04.00.05
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: TwoTrees SK1
+  base_model: TwoTrees SK1
+  printer_configs_order:
+  - TwoTrees-SK1-0-4-nozzle
+- label: TwoTrees SP-5 Klipper
+  base_model: TwoTrees SP-5 Klipper
+  printer_configs_order:
+  - TwoTrees-SP-5-Klipper-0-4-nozzle
+---
+kind: printer
+technology: FFF
+name: TwoTrees SK1
+id: TwoTrees SK1
+model:
+  base_model: TwoTrees SK1
+  model: TwoTrees SK1
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  multi_bed_types:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: TwoTrees SK1_buildplate_model.stl
+  bed_texture: TwoTrees SK1_buildplate_texture.svg
+  thumbnail: TwoTrees SK1_cover.png
+---
+kind: printer
+technology: FFF
+name: TwoTrees SP-5 Klipper
+id: TwoTrees SP-5 Klipper
+model:
+  base_model: TwoTrees SP-5 Klipper
+  model: TwoTrees SP-5 Klipper
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SP-5_bed.stl
+  bed_texture: SP-5_texture.svg
+  thumbnail: TwoTrees SP-5 Klipper_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: TwoTrees-SK1-0-4-nozzle
+name: TwoTrees SK1 0.4 nozzle
+printer: TwoTrees SK1
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: TwoTrees-SP-5-Klipper-0-4-nozzle
+name: TwoTrees SP-5 Klipper 0.4 nozzle
+printer: TwoTrees SP-5 Klipper
+tools:
+- tool: '0.4'
+sheet: high_temp_plate

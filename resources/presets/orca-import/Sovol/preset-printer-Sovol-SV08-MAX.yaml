@@ -1,0 +1,430 @@
+kind: printer
+id: vC3O7jMYKVwl414Ittn02w
+variants:
+- condition: printer.model == "Sovol SV08 MAX"
+  name: Sovol SV08 MAX
+  id: fxcq6CS8sRHSCk7VuMhECw
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: NQ1xx5Xx+ABWqQyl2B5sbw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        TIMELAPSE_TAKE_FRAME
+        G92 E0
+        SET_PRINT_STATS_INFO CURRENT_LAYER=[layer_num]
+      toolchange_gcode: |
+        M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Sovol SV08 MAX 0.4 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |
+        END_PRINT
+      machine_max_acceleration_e:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_extruding:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_x:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_y:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 2.5
+      - 2.5
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      - 50.0
+      machine_max_feedrate_x:
+      - 800.0
+      - 800.0
+      machine_max_feedrate_y:
+      - 800.0
+      - 800.0
+      machine_max_feedrate_z:
+      - 10.0
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: |+
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}G28
+        M140 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp
+        M190 S[first_layer_bed_temperature[initial_extruder]] ;wait for bed temp
+        START_PRINT
+        G90
+        G1 X0 Y0 F12000
+        G1 Z0.300 F600
+        M104 S[first_layer_temperature] ;set extruder temp
+        M109 S[first_layer_temperature];wait for extruder temp
+        {if first_layer_print_min[0] - 3 > print_bed_min[0]}
+        G90
+        M83
+        G1 E-0.100 F600
+        G1 X{first_layer_print_min[0] - 3} Y{first_layer_print_min[1]} F12000
+        G1 Z0.3 F600 ;Move to start position
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 F600
+        G1 Z1 F600
+        G1 X{first_layer_print_min[0] - 2} Y{first_layer_print_min[1]} F12000
+        G1 Z0.3 F600 ;Move to start position
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 F600
+        {else}
+        G90
+        M83
+        G1 E-0.100 Z3 F600
+        G1 X-1.5 Y{first_layer_print_min[1]} F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Z0.3 F600
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 X-0.5 Y{first_layer_print_min[1]} F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Z0.3 F600
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 Z3 F600
+        M400
+        {endif}
+        SET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]
+
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 500x0
+      - 500x500
+      - '0x500'
+      max_print_height: 500
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 32x32/PNG, 64x64/PNG, 160x160/PNG, 256x256/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: TZD6n2LC3Swr7yZyZORIbg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        TIMELAPSE_TAKE_FRAME
+        G92 E0
+        SET_PRINT_STATS_INFO CURRENT_LAYER=[layer_num]
+      toolchange_gcode: |
+        M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard @Sovol SV08 MAX 0.6 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |
+        END_PRINT
+      machine_max_acceleration_e:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_extruding:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_x:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_y:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 2.5
+      - 2.5
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      - 50.0
+      machine_max_feedrate_x:
+      - 800.0
+      - 800.0
+      machine_max_feedrate_y:
+      - 800.0
+      - 800.0
+      machine_max_feedrate_z:
+      - 10.0
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: |+
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}G28
+        M140 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp
+        M190 S[first_layer_bed_temperature[initial_extruder]] ;wait for bed temp
+        START_PRINT
+        G90
+        G1 X0 Y0 F12000
+        G1 Z0.300 F600
+        M104 S[first_layer_temperature] ;set extruder temp
+        M109 S[first_layer_temperature];wait for extruder temp
+        {if first_layer_print_min[0] - 3 > print_bed_min[0]}
+        G90
+        M83
+        G1 E-0.100 F600
+        G1 X{first_layer_print_min[0] - 3} Y{first_layer_print_min[1]} F12000
+        G1 Z0.3 F600 ;Move to start position
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 F600
+        G1 Z1 F600
+        G1 X{first_layer_print_min[0] - 2} Y{first_layer_print_min[1]} F12000
+        G1 Z0.3 F600 ;Move to start position
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 F600
+        {else}
+        G90
+        M83
+        G1 E-0.100 Z3 F600
+        G1 X-1.5 Y{first_layer_print_min[1]} F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Z0.3 F600
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 X-0.5 Y{first_layer_print_min[1]} F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Z0.3 F600
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 Z3 F600
+        M400
+        {endif}
+        SET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]
+
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 500x0
+      - 500x500
+      - '0x500'
+      max_print_height: 500
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 32x32/PNG, 64x64/PNG, 160x160/PNG, 256x256/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: rvzkBSJSZrSuyvUi/3N2XA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        TIMELAPSE_TAKE_FRAME
+        G92 E0
+        SET_PRINT_STATS_INFO CURRENT_LAYER=[layer_num]
+      toolchange_gcode: |
+        M600
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.40mm Standard @Sovol SV08 MAX 0.8 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |
+        END_PRINT
+      machine_max_acceleration_e:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_extruding:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_x:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_y:
+      - 40000.0
+      - 40000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 5.0
+      - 5.0
+      machine_max_jerk_x:
+      - 20.0
+      - 20.0
+      machine_max_jerk_y:
+      - 20.0
+      - 20.0
+      machine_max_jerk_z:
+      - 2.5
+      - 2.5
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 50.0
+      - 50.0
+      machine_max_feedrate_x:
+      - 800.0
+      - 800.0
+      machine_max_feedrate_y:
+      - 800.0
+      - 800.0
+      machine_max_feedrate_z:
+      - 10.0
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: |+
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}G28
+        M140 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp
+        M190 S[first_layer_bed_temperature[initial_extruder]] ;wait for bed temp
+        START_PRINT
+        G90
+        G1 X0 Y0 F12000
+        G1 Z0.300 F600
+        M104 S[first_layer_temperature] ;set extruder temp
+        M109 S[first_layer_temperature];wait for extruder temp
+        {if first_layer_print_min[0] - 3 > print_bed_min[0]}
+        G90
+        M83
+        G1 E-0.100 F600
+        G1 X{first_layer_print_min[0] - 3} Y{first_layer_print_min[1]} F12000
+        G1 Z0.3 F600 ;Move to start position
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 F600
+        G1 Z1 F600
+        G1 X{first_layer_print_min[0] - 2} Y{first_layer_print_min[1]} F12000
+        G1 Z0.3 F600 ;Move to start position
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 F600
+        {else}
+        G90
+        M83
+        G1 E-0.100 Z3 F600
+        G1 X-1.5 Y{first_layer_print_min[1]} F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Z0.3 F600
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 X-0.5 Y{first_layer_print_min[1]} F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Z0.3 F600
+        G1 E0.100 F600
+        G1 Y{first_layer_print_min[1] + 5 * 6} E{5 * 0.24 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 Y{first_layer_print_min[1] + 5 * 6 * 2} E{5 * 0.16 * 6}  F{outer_wall_volumetric_speed * 5 * 30}
+        G1 E-0.100 Z3 F600
+        M400
+        {endif}
+        SET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]
+
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 500x0
+      - 500x500
+      - '0x500'
+      max_print_height: 500
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 32x32/PNG, 64x64/PNG, 160x160/PNG, 256x256/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

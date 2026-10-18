@@ -90,6 +90,7 @@
 #include "Slic3r/App/LogicalPrinterSettingsDialog.hpp"
 #include "Slic3r/App/PhysicalPrinterSettingsDialog.hpp"
 #include "Slic3r/App/PhysicalPrinterAdvancedSettingsDialog.hpp"
+#include "Slic3r/App/FlushingVolumesDialog.hpp"
 #include "Slic3r/App/PrinterAdvancedSettingsDialog.hpp"
 #include "Slic3r/App/MaterialSelectionDialog.hpp"
 #include "Slic3r/App/MaterialSettingsDialog.hpp"
@@ -219,8 +220,8 @@ void PlaterRenderModule::navigate_to_item(const Domain::ConfigItem* config_item)
         .printer_advanced_settings_dialog()
         .clear_navigation();
     m_sidebar_print->print_settings_dialog().clear_navigation();
+    m_sidebar_print->clear_navigation();
     m_sidebar_bed->material_selection_dialog().material_settings_dialog().clear_navigation();
-    m_sidebar_print->print_settings_dialog().clear_navigation();
     m_preferences_dialog.get()->clear_navigation();
 
     std::visit(
@@ -237,14 +238,17 @@ void PlaterRenderModule::navigate_to_item(const Domain::ConfigItem* config_item)
                                           .printer_advanced_settings_dialog();
                     break;
                 case Domain::FDMConfigLocation::Print:
+                case Domain::FDMConfigLocation::Tool:
+                    // print settings are shown inline in the sidebar's Process tabs
+                    if (m_sidebar_print->show_item(config_item)) {
+                        m_render_module_navigator->set_opened_dialog(nullptr);
+                        return;
+                    }
                     dialog_to_open = &m_sidebar_print->print_settings_dialog();
                     break;
                 case Domain::FDMConfigLocation::Filament: {
                     dialog_to_open =
                         &m_sidebar_bed->material_selection_dialog().material_settings_dialog();
-                } break;
-                case Domain::FDMConfigLocation::Tool: {
-                    dialog_to_open = &m_sidebar_print->print_settings_dialog();
                 } break;
                 default:
                     break;
@@ -256,6 +260,10 @@ void PlaterRenderModule::navigate_to_item(const Domain::ConfigItem* config_item)
                                           .printer_advanced_settings_dialog();
                     break;
                 case Domain::SLAConfigLocation::Print:
+                    if (m_sidebar_print->show_item(config_item)) {
+                        m_render_module_navigator->set_opened_dialog(nullptr);
+                        return;
+                    }
                     dialog_to_open = &m_sidebar_print->print_settings_dialog();
                     break;
                 case Domain::SLAConfigLocation::Material: {
@@ -603,6 +611,19 @@ void PlaterRenderModule::init_scene_layout()
             [this]() { command(Slic3r::App::Platform::CommandName::ImportGeometry).execute(); }
         )};
     m_sidebar_action_buttons->on_init(&m_project_interactor);
+    m_sidebar_bed->set_connection_action(
+        [this, editor = &m_sidebar_action_buttons->physical_printer_advanced_settings_dialog()](Yoga::Item* anchor)
+        {
+            if (editor->opened()) {
+                m_render_module_navigator->set_opened_dialog(nullptr);
+                return;
+            }
+            // edit this printer's network printer, or add one (opens toward the top, by the Printer section)
+            m_project_interactor.physical_printer_interactor().edit_network_printer_for_current();
+            editor->attach_to_item(anchor, Yoga::Position::Right, 40_fpx, Yoga::AlignU::Start);
+            m_render_module_navigator->set_opened_dialog(editor);
+        }
+    );
 
     m_layout.reset(new PlaterRenderLayout(
         *m_render_module_navigator,
@@ -648,6 +669,19 @@ void PlaterRenderModule::init_scene_layout()
         m_top_bar->emplace_back<Yoga::Menu>("svg_or_text_context_menu", Yoga::Position::Bottom);
 
     m_toolbar_add = m_layout->add_toolbar_item(ToolbarID::ToolLeft, Render::Icon::AddObject, _u8L("Add..."));
+
+    // Orca's "Add plate" between Add and Arrange: a bed of the selected printer (as the object
+    // list's add-bed button)
+    m_toolbar_add_bed =
+        m_layout->add_toolbar_item(ToolbarID::ToolLeft, Render::Icon::AddBedIcon, _u8L("Add bed"));
+    m_toolbar_add_bed->callbacks().action = [this]()
+    {
+        const Domain::SelectionId cc_id = m_project_interactor.selected_config_container_id();
+        if (cc_id == Domain::INVALID_ID)
+            return;
+        m_project_interactor.scene_interactor().add_bed_instance(cc_id);
+        m_project_interactor.undo_provider().take_snapshot(Biz::UndoSnapshotType::AddBed);
+    };
 
     m_toolbar_delete = m_layout->add_toolbar_item(
         ToolbarID::ToolRight,
@@ -773,6 +807,11 @@ void PlaterRenderModule::init_scene_layout()
         _u8L("Preview Mode"),
         ToolBarSwitchButton::SwitchPosition::Right
     );
+    // Prepare / Preview are tabs of the left bar now (Orca's top tabs); the switch stays bound to
+    // its commands (shortcuts) but is not shown
+    plater_button->set_visible(false);
+    m_toolbar_preview_switch->set_visible(false);
+    m_layout->mode_toolbar()->set_visible(false);
 
     this->update_toolbar_visibility();
 }
@@ -785,19 +824,18 @@ void PlaterRenderModule::init_dialog_navigation()
         &m_sidebar_bed->printer_add_dialog(),
         &m_sidebar_bed->logical_printer_settings_dialog()
     );
+    // printer settings open on their own (sidebar printer cog, like Orca's printer edit button)
     m_dialog_navigation.insert_dialog(
-        &m_sidebar_bed->logical_printer_settings_dialog().printer_advanced_settings_dialog(),
-        &m_sidebar_bed->logical_printer_settings_dialog()
+        &m_sidebar_bed->logical_printer_settings_dialog().printer_advanced_settings_dialog()
     );
     m_dialog_navigation.insert_dialog(
-        &m_sidebar_bed->logical_printer_settings_dialog().color_mix_dialog(),
-        &m_sidebar_bed->logical_printer_settings_dialog()
-    );
+        &m_sidebar_bed->logical_printer_settings_dialog().color_mix_dialog()
+    ); // its own root: opened from the filament section (SidebarBed)
 
     m_dialog_navigation.insert_dialog(&m_sidebar_bed->material_selection_dialog());
+    // its own root: the filament cog opens it without the material list (SidebarBed)
     m_dialog_navigation.insert_dialog(
-        &m_sidebar_bed->material_selection_dialog().material_settings_dialog(),
-        &m_sidebar_bed->material_selection_dialog()
+        &m_sidebar_bed->material_selection_dialog().material_settings_dialog()
     );
 
     m_dialog_navigation.insert_dialog(&m_sidebar_print->print_settings_dialog());
@@ -806,10 +844,10 @@ void PlaterRenderModule::init_dialog_navigation()
     m_dialog_navigation.insert_dialog(m_invalid_data_dialog.get());
 
     m_dialog_navigation.insert_dialog(&m_sidebar_action_buttons->physical_printer_settings_dialog());
-    m_dialog_navigation.insert_dialog(
-        &m_sidebar_action_buttons->physical_printer_advanced_settings_dialog(),
-        &m_sidebar_action_buttons->physical_printer_settings_dialog()
-    );
+    // the network printer editor opens on its own (Printer section's network printer button, as
+    // Orca's printer connection dialog); from the destination list it returns there when closed
+    m_dialog_navigation.insert_dialog(&m_sidebar_action_buttons->physical_printer_advanced_settings_dialog());
+    m_dialog_navigation.insert_dialog(&m_sidebar_bed->flushing_volumes_dialog());
 
     // Init gizmos dialogs
     auto init_gizmo_dialog = [this](Scene::ToolType tool_type, GizmoWindowPtr dialog)
@@ -882,16 +920,20 @@ void PlaterRenderModule::update_current_right_sidebar()
     const Scene::ToolType tool_type  = m_gizmo_manager->current_tool_type();
     SidebarStackLayout* stack_layout = m_layout->sidebar_stack_layout();
 
+    // Orca: the Process section's Global | Objects switch is the user's; the selected object's
+    // settings show in Objects mode
+    m_layout->sidebar_print()->set_object_selected(!empty_selection);
+
     bool switch_to_gizmo{false};
     if (tool_type != Scene::ToolType::None && stack_layout->contains_gizmo(tool_type)) {
         stack_layout->switch_to_gizmo(tool_type);
-        switch_to_gizmo =true;
-    } else if (!empty_selection) {
-        stack_layout->switch_to_item(SidebarStackLayout::ItemType::Object);
-        // upon object selection we are selecting sidebar and closing opened dialogs
-        m_render_module_navigator->set_opened_dialog(nullptr);
+        switch_to_gizmo = true;
     } else {
         stack_layout->switch_to_item(SidebarStackLayout::ItemType::Bed);
+        if (!empty_selection) {
+            // upon object selection we are closing opened dialogs
+            m_render_module_navigator->set_opened_dialog(nullptr);
+        }
     }
     m_sidebar_action_buttons->set_visible(!switch_to_gizmo);
 }

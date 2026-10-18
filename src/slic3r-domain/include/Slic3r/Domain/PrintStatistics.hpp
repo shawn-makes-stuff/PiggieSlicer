@@ -34,6 +34,8 @@ struct BasicPrintStatistics
 struct ExtraPrintStatistics
 {
     int total_toolchanges{};
+    // Orca time_cost: the printer's cost per hour
+    double time_cost{};
     double total_wipe_tower_cost{};
     double total_wipe_tower_filament{};
     double total_wipe_tower_filament_volume{};

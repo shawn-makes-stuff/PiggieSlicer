@@ -1,0 +1,403 @@
+kind: printer
+id: vi50aY+Mf7naJlITt5naEw
+variants:
+- condition: printer.model == "WonderMaker ZR Ultra S"
+  name: WonderMaker ZR Ultra S
+  id: SMoBkgKFV0vDWnEL6rJZ1w
+  variants:
+  - condition: tool.nozzle_diameter == 0.2 and printer.tool_count == 4
+    id: 7wnAuWaK2E2rUKxi6KlaLg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Standard @WonderMaker ZR Ultra 0.2 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 134
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      - '0x0'
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: ;PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        {local adaptive_bed_mesh_min = (max(10, first_layer_print_min[0] - 0), max(10, first_layer_print_min[1] - 0))}{local adaptive_bed_mesh_max = (min(290, first_layer_print_max[0] + 0), min(260, first_layer_print_max[1] + 0))}{local bed_mesh_probe_count = (max(3, int(ceil((adaptive_bed_mesh_max[0] - adaptive_bed_mesh_min[0]) / 50)) + 1), max(3, int(ceil((adaptive_bed_mesh_max[1] - adaptive_bed_mesh_min[1]) / 50)) + 1))}{local bed_mesh_algo = "bicubic"}{if bed_mesh_probe_count[0] * bed_mesh_probe_count[1] <= 6}{bed_mesh_algo = "lagrange"}{else}{bed_mesh_probe_count = (max(bed_mesh_probe_count[0], 4), max(bed_mesh_probe_count[1], 4))}{endif}START_PRINT EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]] CHAMBER=[chamber_temperature] INITIAL_TOOL=[initial_tool]  MESH_MIN_X={adaptive_bed_mesh_min[0]}  MESH_MIN_Y={adaptive_bed_mesh_min[1]} MESH_MAX_X={adaptive_bed_mesh_max[0]} MESH_MAX_Y={adaptive_bed_mesh_max[1]} PROBE_COUNT_X={bed_mesh_probe_count[0]} PROBE_COUNT_Y={bed_mesh_probe_count[1]}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 300x0
+      - 300x270
+      - '0x270'
+      max_print_height: 290
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4 and printer.tool_count == 4
+    id: 4HwR17TVJY4XgH5W+KYbGg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @WonderMaker ZR Ultra
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 134
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      - '0x0'
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: ;PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        {local adaptive_bed_mesh_min = (max(10, first_layer_print_min[0] - 0), max(10, first_layer_print_min[1] - 0))}{local adaptive_bed_mesh_max = (min(290, first_layer_print_max[0] + 0), min(260, first_layer_print_max[1] + 0))}{local bed_mesh_probe_count = (max(3, int(ceil((adaptive_bed_mesh_max[0] - adaptive_bed_mesh_min[0]) / 50)) + 1), max(3, int(ceil((adaptive_bed_mesh_max[1] - adaptive_bed_mesh_min[1]) / 50)) + 1))}{local bed_mesh_algo = "bicubic"}{if bed_mesh_probe_count[0] * bed_mesh_probe_count[1] <= 6}{bed_mesh_algo = "lagrange"}{else}{bed_mesh_probe_count = (max(bed_mesh_probe_count[0], 4), max(bed_mesh_probe_count[1], 4))}{endif}START_PRINT EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]] CHAMBER=[chamber_temperature] INITIAL_TOOL=[initial_tool]  MESH_MIN_X={adaptive_bed_mesh_min[0]}  MESH_MIN_Y={adaptive_bed_mesh_min[1]} MESH_MAX_X={adaptive_bed_mesh_max[0]} MESH_MAX_Y={adaptive_bed_mesh_max[1]} PROBE_COUNT_X={bed_mesh_probe_count[0]} PROBE_COUNT_Y={bed_mesh_probe_count[1]}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 300x0
+      - 300x270
+      - '0x270'
+      max_print_height: 290
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6 and printer.tool_count == 4
+    id: O7VE+BmZUulPHbMfj/ORfQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard @WonderMaker ZR Ultra 0.6 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 134
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      - '0x0'
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: ;PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        {local adaptive_bed_mesh_min = (max(10, first_layer_print_min[0] - 0), max(10, first_layer_print_min[1] - 0))}{local adaptive_bed_mesh_max = (min(290, first_layer_print_max[0] + 0), min(260, first_layer_print_max[1] + 0))}{local bed_mesh_probe_count = (max(3, int(ceil((adaptive_bed_mesh_max[0] - adaptive_bed_mesh_min[0]) / 50)) + 1), max(3, int(ceil((adaptive_bed_mesh_max[1] - adaptive_bed_mesh_min[1]) / 50)) + 1))}{local bed_mesh_algo = "bicubic"}{if bed_mesh_probe_count[0] * bed_mesh_probe_count[1] <= 6}{bed_mesh_algo = "lagrange"}{else}{bed_mesh_probe_count = (max(bed_mesh_probe_count[0], 4), max(bed_mesh_probe_count[1], 4))}{endif}START_PRINT EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]] CHAMBER=[chamber_temperature] INITIAL_TOOL=[initial_tool]  MESH_MIN_X={adaptive_bed_mesh_min[0]}  MESH_MIN_Y={adaptive_bed_mesh_min[1]} MESH_MAX_X={adaptive_bed_mesh_max[0]} MESH_MAX_Y={adaptive_bed_mesh_max[1]} PROBE_COUNT_X={bed_mesh_probe_count[0]} PROBE_COUNT_Y={bed_mesh_probe_count[1]}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 300x0
+      - 300x270
+      - '0x270'
+      max_print_height: 290
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8 and printer.tool_count == 4
+    id: VCcMzwuCpoi/KCEyhNY9VQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.40mm Standard @WonderMaker ZR Ultra 0.8 nozzle
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 134
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      - '0x0'
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: ;PRINT_END
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: PAUSE
+      start_gcode: |
+        {local adaptive_bed_mesh_min = (max(10, first_layer_print_min[0] - 0), max(10, first_layer_print_min[1] - 0))}{local adaptive_bed_mesh_max = (min(290, first_layer_print_max[0] + 0), min(260, first_layer_print_max[1] + 0))}{local bed_mesh_probe_count = (max(3, int(ceil((adaptive_bed_mesh_max[0] - adaptive_bed_mesh_min[0]) / 50)) + 1), max(3, int(ceil((adaptive_bed_mesh_max[1] - adaptive_bed_mesh_min[1]) / 50)) + 1))}{local bed_mesh_algo = "bicubic"}{if bed_mesh_probe_count[0] * bed_mesh_probe_count[1] <= 6}{bed_mesh_algo = "lagrange"}{else}{bed_mesh_probe_count = (max(bed_mesh_probe_count[0], 4), max(bed_mesh_probe_count[1], 4))}{endif}START_PRINT EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature[initial_extruder]] CHAMBER=[chamber_temperature] INITIAL_TOOL=[initial_tool]  MESH_MIN_X={adaptive_bed_mesh_min[0]}  MESH_MIN_Y={adaptive_bed_mesh_min[1]} MESH_MAX_X={adaptive_bed_mesh_max[0]} MESH_MAX_Y={adaptive_bed_mesh_max[1]} PROBE_COUNT_X={bed_mesh_probe_count[0]} PROBE_COUNT_Y={bed_mesh_probe_count[1]}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 300x0
+      - 300x270
+      - '0x270'
+      max_print_height: 290
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

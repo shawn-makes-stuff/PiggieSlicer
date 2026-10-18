@@ -1,0 +1,762 @@
+kind: printer
+id: NoT0z/jQXsRgpnbpR6CK0Q
+variants:
+- condition: printer.model == "FELIX Food Switch"
+  name: FELIX Food Switch
+  id: yHwtKKmf9A++aqBpBvJy8A
+  variants:
+  - condition: tool.nozzle_diameter == 0.5 and printer.tool_count == 2
+    id: R2ESB2kgvMEPiEuD8ql03g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        ; FELIX Food Switch - Tool change G-code - V1.00
+        {if previous_extruder>=0}; Tool [previous_extruder] deactivation
+        G92 E0
+        G1 E-{retract_length_toolchange[previous_extruder]} F{retract_speed[previous_extruder]*60}
+        G92 E0
+        {endif}T[next_extruder]
+        ; Tool [next_extruder] activation
+        G92 E0
+        G1 E{retract_length_toolchange[next_extruder]+retract_restart_extra_toolchange[next_extruder]} F{retract_speed[next_extruder]*60}
+        G92 E0
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: FELIX Food Normal @ 0.50mm
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: repetier
+      high_current_on_filament_swap: false
+      layer_gcode: G92 E0
+      end_gcode: |
+        ; FELIX Food Switch - OrcaSlicer End G-code - V1.00
+        G92 E0
+        G1 E-{retract_length[0]} F{retract_speed[0]*60} S0
+        G92 E0
+        G91
+        G1 Z10 F1200
+        G90
+        G28 X
+        G28 Y
+        M107
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        M400 U1
+      start_gcode: |
+        ; FELIX Food Switch - OrcaSlicer Start G-code - V1.00
+        {if first_layer_bed_temperature[initial_extruder]>0}M190 S[first_layer_bed_temperature[initial_extruder]]
+        {endif}T0
+        {if temperature[1]>0}M104 T1 S{temperature[1]}
+        {endif}{if temperature[0]>0}M104 T0 S{temperature[0]}
+        {endif}G28
+        G90
+        M82
+        M107
+        ; ============== Prime second nozzle =============
+        {if is_extruder_used[1]}T1{else}T0{endif}
+        G1 X70 Y10 Z10 F{travel_speed*60} S1
+        M400
+        G92 E0
+        G1 E{2*retract_length[1]+retract_restart_extra[1]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[1]*2} Y10 Z{nozzle_diameter[1]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[1]*2} Y10 E{nozzle_diameter[1]*first_layer_height*20/((filament_diameter[1]/2)*(filament_diameter[1]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[1]} F{retract_speed[1]*60}
+        G92 E0
+        ; ============== Prime first nozzle ==============
+        T0
+        G1 X70 Y20 Z10 F{travel_speed*60}
+        M400
+        G92 E0
+        G1 E{2*retract_length[0]+retract_restart_extra[0]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[0]*2} Y10 Z{nozzle_diameter[0]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[0]*2} Y10 E{nozzle_diameter[0]*first_layer_height*20/((filament_diameter[0]/2)*(filament_diameter[0]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[0]} F{retract_speed[0]*60}
+        G92 E0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x195
+      - '0x195'
+      max_print_height: 150
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 1 and printer.tool_count == 2
+    id: PjvK+9EeoCTzC2k9FevCxA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        ; FELIX Food Switch - Tool change G-code - V1.00
+        {if previous_extruder>=0}; Tool [previous_extruder] deactivation
+        G92 E0
+        G1 E-{retract_length_toolchange[previous_extruder]} F{retract_speed[previous_extruder]*60}
+        G92 E0
+        {endif}T[next_extruder]
+        ; Tool [next_extruder] activation
+        G92 E0
+        G1 E{retract_length_toolchange[next_extruder]+retract_restart_extra_toolchange[next_extruder]} F{retract_speed[next_extruder]*60}
+        G92 E0
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: FELIX Food Normal @ 1.00mm
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: repetier
+      high_current_on_filament_swap: false
+      layer_gcode: G92 E0
+      end_gcode: |
+        ; FELIX Food Switch - OrcaSlicer End G-code - V1.00
+        G92 E0
+        G1 E-{retract_length[0]} F{retract_speed[0]*60} S0
+        G92 E0
+        G91
+        G1 Z10 F1200
+        G90
+        G28 X
+        G28 Y
+        M107
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        M400 U1
+      start_gcode: |
+        ; FELIX Food Switch - OrcaSlicer Start G-code - V1.00
+        {if first_layer_bed_temperature[initial_extruder]>0}M190 S[first_layer_bed_temperature[initial_extruder]]
+        {endif}T0
+        {if temperature[1]>0}M104 T1 S{temperature[1]}
+        {endif}{if temperature[0]>0}M104 T0 S{temperature[0]}
+        {endif}G28
+        G90
+        M82
+        M107
+        ; ============== Prime second nozzle =============
+        {if is_extruder_used[1]}T1{else}T0{endif}
+        G1 X70 Y10 Z10 F{travel_speed*60} S1
+        M400
+        G92 E0
+        G1 E{2*retract_length[1]+retract_restart_extra[1]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[1]*2} Y10 Z{nozzle_diameter[1]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[1]*2} Y10 E{nozzle_diameter[1]*first_layer_height*20/((filament_diameter[1]/2)*(filament_diameter[1]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[1]} F{retract_speed[1]*60}
+        G92 E0
+        ; ============== Prime first nozzle ==============
+        T0
+        G1 X70 Y20 Z10 F{travel_speed*60}
+        M400
+        G92 E0
+        G1 E{2*retract_length[0]+retract_restart_extra[0]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[0]*2} Y10 Z{nozzle_diameter[0]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[0]*2} Y10 E{nozzle_diameter[0]*first_layer_height*20/((filament_diameter[0]/2)*(filament_diameter[0]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[0]} F{retract_speed[0]*60}
+        G92 E0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x195
+      - '0x195'
+      max_print_height: 150
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 2 and printer.tool_count == 2
+    id: gxP5eFy/VDl1ERiuVvCXTA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        ; FELIX Food Switch - Tool change G-code - V1.00
+        {if previous_extruder>=0}; Tool [previous_extruder] deactivation
+        G92 E0
+        G1 E-{retract_length_toolchange[previous_extruder]} F{retract_speed[previous_extruder]*60}
+        G92 E0
+        {endif}T[next_extruder]
+        ; Tool [next_extruder] activation
+        G92 E0
+        G1 E{retract_length_toolchange[next_extruder]+retract_restart_extra_toolchange[next_extruder]} F{retract_speed[next_extruder]*60}
+        G92 E0
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: FELIX Food Normal @ 2.00mm
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: repetier
+      high_current_on_filament_swap: false
+      layer_gcode: G92 E0
+      end_gcode: |
+        ; FELIX Food Switch - OrcaSlicer End G-code - V1.00
+        G92 E0
+        G1 E-{retract_length[0]} F{retract_speed[0]*60} S0
+        G92 E0
+        G91
+        G1 Z10 F1200
+        G90
+        G28 X
+        G28 Y
+        M107
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        M400 U1
+      start_gcode: |
+        ; FELIX Food Switch - OrcaSlicer Start G-code - V1.00
+        {if first_layer_bed_temperature[initial_extruder]>0}M190 S[first_layer_bed_temperature[initial_extruder]]
+        {endif}T0
+        {if temperature[1]>0}M104 T1 S{temperature[1]}
+        {endif}{if temperature[0]>0}M104 T0 S{temperature[0]}
+        {endif}G28
+        G90
+        M82
+        M107
+        ; ============== Prime second nozzle =============
+        {if is_extruder_used[1]}T1{else}T0{endif}
+        G1 X70 Y10 Z10 F{travel_speed*60} S1
+        M400
+        G92 E0
+        G1 E{2*retract_length[1]+retract_restart_extra[1]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[1]*2} Y10 Z{nozzle_diameter[1]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[1]*2} Y10 E{nozzle_diameter[1]*first_layer_height*20/((filament_diameter[1]/2)*(filament_diameter[1]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[1]} F{retract_speed[1]*60}
+        G92 E0
+        ; ============== Prime first nozzle ==============
+        T0
+        G1 X70 Y20 Z10 F{travel_speed*60}
+        M400
+        G92 E0
+        G1 E{2*retract_length[0]+retract_restart_extra[0]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[0]*2} Y10 Z{nozzle_diameter[0]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[0]*2} Y10 E{nozzle_diameter[0]*first_layer_height*20/((filament_diameter[0]/2)*(filament_diameter[0]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[0]} F{retract_speed[0]*60}
+        G92 E0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x195
+      - '0x195'
+      max_print_height: 150
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 3 and printer.tool_count == 2
+    id: XGdBLhBD0xHwABf2g3mzqA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        ; FELIX Food Switch - Tool change G-code - V1.00
+        {if previous_extruder>=0}; Tool [previous_extruder] deactivation
+        G92 E0
+        G1 E-{retract_length_toolchange[previous_extruder]} F{retract_speed[previous_extruder]*60}
+        G92 E0
+        {endif}T[next_extruder]
+        ; Tool [next_extruder] activation
+        G92 E0
+        G1 E{retract_length_toolchange[next_extruder]+retract_restart_extra_toolchange[next_extruder]} F{retract_speed[next_extruder]*60}
+        G92 E0
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: FELIX Food Normal @ 3.00mm
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: repetier
+      high_current_on_filament_swap: false
+      layer_gcode: G92 E0
+      end_gcode: |
+        ; FELIX Food Switch - OrcaSlicer End G-code - V1.00
+        G92 E0
+        G1 E-{retract_length[0]} F{retract_speed[0]*60} S0
+        G92 E0
+        G91
+        G1 Z10 F1200
+        G90
+        G28 X
+        G28 Y
+        M107
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        M400 U1
+      start_gcode: |
+        ; FELIX Food Switch - OrcaSlicer Start G-code - V1.00
+        {if first_layer_bed_temperature[initial_extruder]>0}M190 S[first_layer_bed_temperature[initial_extruder]]
+        {endif}T0
+        {if temperature[1]>0}M104 T1 S{temperature[1]}
+        {endif}{if temperature[0]>0}M104 T0 S{temperature[0]}
+        {endif}G28
+        G90
+        M82
+        M107
+        ; ============== Prime second nozzle =============
+        {if is_extruder_used[1]}T1{else}T0{endif}
+        G1 X70 Y10 Z10 F{travel_speed*60} S1
+        M400
+        G92 E0
+        G1 E{2*retract_length[1]+retract_restart_extra[1]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[1]*2} Y10 Z{nozzle_diameter[1]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[1]*2} Y10 E{nozzle_diameter[1]*first_layer_height*20/((filament_diameter[1]/2)*(filament_diameter[1]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[1]} F{retract_speed[1]*60}
+        G92 E0
+        ; ============== Prime first nozzle ==============
+        T0
+        G1 X70 Y20 Z10 F{travel_speed*60}
+        M400
+        G92 E0
+        G1 E{2*retract_length[0]+retract_restart_extra[0]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[0]*2} Y10 Z{nozzle_diameter[0]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[0]*2} Y10 E{nozzle_diameter[0]*first_layer_height*20/((filament_diameter[0]/2)*(filament_diameter[0]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[0]} F{retract_speed[0]*60}
+        G92 E0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x195
+      - '0x195'
+      max_print_height: 150
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 4 and printer.tool_count == 2
+    id: TX+RKFeGygfFe0jbn0K2KQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+        G92 E0
+      toolchange_gcode: |
+        ; FELIX Food Switch - Tool change G-code - V1.00
+        {if previous_extruder>=0}; Tool [previous_extruder] deactivation
+        G92 E0
+        G1 E-{retract_length_toolchange[previous_extruder]} F{retract_speed[previous_extruder]*60}
+        G92 E0
+        {endif}T[next_extruder]
+        ; Tool [next_extruder] activation
+        G92 E0
+        G1 E{retract_length_toolchange[next_extruder]+retract_restart_extra_toolchange[next_extruder]} F{retract_speed[next_extruder]*60}
+        G92 E0
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: FELIX Food Normal @ 4.00mm
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: repetier
+      high_current_on_filament_swap: false
+      layer_gcode: G92 E0
+      end_gcode: |
+        ; FELIX Food Switch - OrcaSlicer End G-code - V1.00
+        G92 E0
+        G1 E-{retract_length[0]} F{retract_speed[0]*60} S0
+        G92 E0
+        G91
+        G1 Z10 F1200
+        G90
+        G28 X
+        G28 Y
+        M107
+        M84
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 3000.0
+      machine_max_acceleration_x:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_y:
+      - 2000.0
+      - 2000.0
+      machine_max_acceleration_z:
+      - 300.0
+      - 200.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 300.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        M400 U1
+      start_gcode: |
+        ; FELIX Food Switch - OrcaSlicer Start G-code - V1.00
+        {if first_layer_bed_temperature[initial_extruder]>0}M190 S[first_layer_bed_temperature[initial_extruder]]
+        {endif}T0
+        {if temperature[1]>0}M104 T1 S{temperature[1]}
+        {endif}{if temperature[0]>0}M104 T0 S{temperature[0]}
+        {endif}G28
+        G90
+        M82
+        M107
+        ; ============== Prime second nozzle =============
+        {if is_extruder_used[1]}T1{else}T0{endif}
+        G1 X70 Y10 Z10 F{travel_speed*60} S1
+        M400
+        G92 E0
+        G1 E{2*retract_length[1]+retract_restart_extra[1]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[1]*2} Y10 Z{nozzle_diameter[1]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[1]*2} Y10 E{nozzle_diameter[1]*first_layer_height*20/((filament_diameter[1]/2)*(filament_diameter[1]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[1]} F{retract_speed[1]*60}
+        G92 E0
+        ; ============== Prime first nozzle ==============
+        T0
+        G1 X70 Y20 Z10 F{travel_speed*60}
+        M400
+        G92 E0
+        G1 E{2*retract_length[0]+retract_restart_extra[0]+0.5} F15
+        G92 E0
+        G1 X{80+nozzle_diameter[0]*2} Y10 Z{nozzle_diameter[0]*0.5} F{travel_speed*60}
+        G1 X{100+nozzle_diameter[0]*2} Y10 E{nozzle_diameter[0]*first_layer_height*20/((filament_diameter[0]/2)*(filament_diameter[0]/2)*3.14159)} F{custom_parameter_print_initial_layer_speed*60}
+        G92 E0
+        G1 E-{retract_length_toolchange[0]} F{retract_speed[0]*60}
+        G92 E0
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x195
+      - '0x195'
+      max_print_height: 150
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

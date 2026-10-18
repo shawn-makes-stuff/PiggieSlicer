@@ -82,6 +82,8 @@ public:
     Domain::coord_t scaled_elephant_foot_spacing() const { return Domain::coord_t(0.5f * float(this->scaled_width() + 0.6f * this->scaled_spacing())); }
 
     bool operator==(const Flow &rhs) const { return m_width == rhs.m_width && m_height == rhs.m_height && m_nozzle_diameter == rhs.m_nozzle_diameter && m_bridge == rhs.m_bridge; }
+    // Orca: the Locked Zag flows ordered by the volume
+    bool operator <(const Flow &rhs) const { return this->mm3_per_mm() < rhs.mm3_per_mm(); }
 
     Flow        with_width (float width)  const { 
         assert(! m_bridge); 

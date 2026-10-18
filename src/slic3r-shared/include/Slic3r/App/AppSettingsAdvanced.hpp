@@ -2,8 +2,10 @@
 
 #include <nlohmann/json_fwd.hpp>
 
+#include <optional>
 #include <set>
 #include <string>
+#include <vector>
 
 namespace Slic3r::App {
 
@@ -24,6 +26,9 @@ struct AppSettingsAdvanced
     bool contains_material_favorite_preset(const std::string& id) const;
 
     PrinterFavoritePresets printer_favorite_presets;
+    /// The printers the user added (PresetInteractor::added_printer_key: vendor / template); only
+    /// these are built at start-up. Not set in settings from before the list existed (migration).
+    std::optional<std::set<std::string>> added_printers;
     MaterialFavoritePresets material_favorite_presets;
     RecentProjects recent_projects;
 };

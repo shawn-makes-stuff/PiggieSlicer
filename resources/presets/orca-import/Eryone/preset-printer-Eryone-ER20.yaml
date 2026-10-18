@@ -1,0 +1,552 @@
+kind: printer
+id: 1YrzWNA7u6BaNYsdGj0OCQ
+variants:
+- condition: printer.model == "Eryone ER20"
+  name: Eryone ER20
+  id: EQjo9hWB9E4R/n9xeTyGNg
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: BpTKROT/08skbfpDHz3Nyw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Standard @Eryone ER20 0.2 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G91 ;Relative positioning
+        G1 Z5 F720 ;Raise Z
+        G1 E-5 F300 ;Retract a bit to protect nozzle
+        M104 S0 ;Turn off extruder
+        M140 S0 ;Turn off bed
+        M107 ;Turn off all fans
+        G90 ;Absolute positioning
+        G1 X200 Y200 F4800 ;Parking the hotend
+        M84 X Y E ;All steppers off but left Z
+      machine_max_acceleration_e:
+      - 1000.0
+      machine_max_acceleration_extruding:
+      - 500.0
+      machine_max_acceleration_retracting:
+      - 500.0
+      machine_max_acceleration_travel:
+      - 1800.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 150.0
+      machine_max_feedrate_y:
+      - 150.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |
+        G21 ;Metric values
+        G90 ;Absolute positioning
+        M82 ;Set extruder to absolute mode
+        M107 ;Start with the fan off
+        M140 S[first_layer_bed_temperature] ; set bed temperature
+        M190 S[first_layer_bed_temperature] ; wait for bed to reach target temperature
+        G28 ;Homing the hotend
+        G29 ;Auto bed leveling detecting
+        M104 S[first_layer_temperature] ; set nozzle temperature
+        M109 S[first_layer_temperature] ; wait for nozzle to reach target temperature
+        G92 E0 ;Reset the extruded length
+        G1 F200 E3 ;Extrude 3mm of filament
+        G92 E0 ;Reset the extruded length again
+        G1 Y2.0 F1200 ;Move y axis to prime
+        G1 X150 F6000 ;Move x axis to prime
+        G1 Z0.2 F720 ;Move z axis to prime
+        G1 X80.0 E8.0 F900 ;Prime line
+        G1 X20.0 E10.0 F700 ;Prime line
+        G92 E0 ;Reset the extruded length
+        G5 ;Enable resume from power failure
+        M117 Printing...
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 200
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: gFwYGTAn16K6PGXeYhPpAg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Eryone ER20
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G91 ;Relative positioning
+        G1 Z5 F720 ;Raise Z
+        G1 E-5 F300 ;Retract a bit to protect nozzle
+        M104 S0 ;Turn off extruder
+        M140 S0 ;Turn off bed
+        M107 ;Turn off all fans
+        G90 ;Absolute positioning
+        G1 X200 Y200 F4800 ;Parking the hotend
+        M84 X Y E ;All steppers off but left Z
+      machine_max_acceleration_e:
+      - 1000.0
+      machine_max_acceleration_extruding:
+      - 500.0
+      machine_max_acceleration_retracting:
+      - 500.0
+      machine_max_acceleration_travel:
+      - 1800.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 150.0
+      machine_max_feedrate_y:
+      - 150.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |
+        G21 ;Metric values
+        G90 ;Absolute positioning
+        M82 ;Set extruder to absolute mode
+        M107 ;Start with the fan off
+        M140 S[first_layer_bed_temperature] ; set bed temperature
+        M190 S[first_layer_bed_temperature] ; wait for bed to reach target temperature
+        G28 ;Homing the hotend
+        G29 ;Auto bed leveling detecting
+        M104 S[first_layer_temperature] ; set nozzle temperature
+        M109 S[first_layer_temperature] ; wait for nozzle to reach target temperature
+        G92 E0 ;Reset the extruded length
+        G1 F200 E3 ;Extrude 3mm of filament
+        G92 E0 ;Reset the extruded length again
+        G1 Y2.0 F1200 ;Move y axis to prime
+        G1 X150 F6000 ;Move x axis to prime
+        G1 Z0.2 F720 ;Move z axis to prime
+        G1 X80.0 E8.0 F900 ;Prime line
+        G1 X20.0 E10.0 F700 ;Prime line
+        G92 E0 ;Reset the extruded length
+        G5 ;Enable resume from power failure
+        M117 Printing...
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 200
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.5
+    id: AApWKBkyuhvP1pWLOiUm9A
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.25mm Standard @Eryone ER20 0.5 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G91 ;Relative positioning
+        G1 Z5 F720 ;Raise Z
+        G1 E-5 F300 ;Retract a bit to protect nozzle
+        M104 S0 ;Turn off extruder
+        M140 S0 ;Turn off bed
+        M107 ;Turn off all fans
+        G90 ;Absolute positioning
+        G1 X200 Y200 F4800 ;Parking the hotend
+        M84 X Y E ;All steppers off but left Z
+      machine_max_acceleration_e:
+      - 1000.0
+      machine_max_acceleration_extruding:
+      - 500.0
+      machine_max_acceleration_retracting:
+      - 500.0
+      machine_max_acceleration_travel:
+      - 1800.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 150.0
+      machine_max_feedrate_y:
+      - 150.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |
+        G21 ;Metric values
+        G90 ;Absolute positioning
+        M82 ;Set extruder to absolute mode
+        M107 ;Start with the fan off
+        M140 S[first_layer_bed_temperature] ; set bed temperature
+        M190 S[first_layer_bed_temperature] ; wait for bed to reach target temperature
+        G28 ;Homing the hotend
+        G29 ;Auto bed leveling detecting
+        M104 S[first_layer_temperature] ; set nozzle temperature
+        M109 S[first_layer_temperature] ; wait for nozzle to reach target temperature
+        G92 E0 ;Reset the extruded length
+        G1 F200 E3 ;Extrude 3mm of filament
+        G92 E0 ;Reset the extruded length again
+        G1 Y2.0 F1200 ;Move y axis to prime
+        G1 X150 F6000 ;Move x axis to prime
+        G1 Z0.2 F720 ;Move z axis to prime
+        G1 X80.0 E8.0 F900 ;Prime line
+        G1 X20.0 E10.0 F700 ;Prime line
+        G92 E0 ;Reset the extruded length
+        G5 ;Enable resume from power failure
+        M117 Printing...
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 200
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: 1+FI7MhiAxZJgIoYUWQ5Qg
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard @Eryone ER20 0.6 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G91 ;Relative positioning
+        G1 Z5 F720 ;Raise Z
+        G1 E-5 F300 ;Retract a bit to protect nozzle
+        M104 S0 ;Turn off extruder
+        M140 S0 ;Turn off bed
+        M107 ;Turn off all fans
+        G90 ;Absolute positioning
+        G1 X200 Y200 F4800 ;Parking the hotend
+        M84 X Y E ;All steppers off but left Z
+      machine_max_acceleration_e:
+      - 1000.0
+      machine_max_acceleration_extruding:
+      - 500.0
+      machine_max_acceleration_retracting:
+      - 500.0
+      machine_max_acceleration_travel:
+      - 1800.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 150.0
+      machine_max_feedrate_y:
+      - 150.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |
+        G21 ;Metric values
+        G90 ;Absolute positioning
+        M82 ;Set extruder to absolute mode
+        M107 ;Start with the fan off
+        M140 S[first_layer_bed_temperature] ; set bed temperature
+        M190 S[first_layer_bed_temperature] ; wait for bed to reach target temperature
+        G28 ;Homing the hotend
+        G29 ;Auto bed leveling detecting
+        M104 S[first_layer_temperature] ; set nozzle temperature
+        M109 S[first_layer_temperature] ; wait for nozzle to reach target temperature
+        G92 E0 ;Reset the extruded length
+        G1 F200 E3 ;Extrude 3mm of filament
+        G92 E0 ;Reset the extruded length again
+        G1 Y2.0 F1200 ;Move y axis to prime
+        G1 X150 F6000 ;Move x axis to prime
+        G1 Z0.2 F720 ;Move z axis to prime
+        G1 X80.0 E8.0 F900 ;Prime line
+        G1 X20.0 E10.0 F700 ;Prime line
+        G92 E0 ;Reset the extruded length
+        G5 ;Enable resume from power failure
+        M117 Printing...
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 200
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: NGQ/GewYufikszTndMfmeA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |
+        ;BEFORE_LAYER_CHANGE
+        ;[layer_z]
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.40mm Standard @Eryone ER20 0.8 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ;AFTER_LAYER_CHANGE
+        ;[layer_z]
+      end_gcode: |
+        G91 ;Relative positioning
+        G1 Z5 F720 ;Raise Z
+        G1 E-5 F300 ;Retract a bit to protect nozzle
+        M104 S0 ;Turn off extruder
+        M140 S0 ;Turn off bed
+        M107 ;Turn off all fans
+        G90 ;Absolute positioning
+        G1 X200 Y200 F4800 ;Parking the hotend
+        M84 X Y E ;All steppers off but left Z
+      machine_max_acceleration_e:
+      - 1000.0
+      machine_max_acceleration_extruding:
+      - 500.0
+      machine_max_acceleration_retracting:
+      - 500.0
+      machine_max_acceleration_travel:
+      - 1800.0
+      machine_max_acceleration_x:
+      - 1500.0
+      machine_max_acceleration_y:
+      - 1500.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 5.0
+      machine_max_jerk_x:
+      - 12.0
+      machine_max_jerk_y:
+      - 12.0
+      machine_max_jerk_z:
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      machine_max_feedrate_x:
+      - 150.0
+      machine_max_feedrate_y:
+      - 150.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M25 ;pause print
+      start_gcode: |
+        G21 ;Metric values
+        G90 ;Absolute positioning
+        M82 ;Set extruder to absolute mode
+        M107 ;Start with the fan off
+        M140 S[first_layer_bed_temperature] ; set bed temperature
+        M190 S[first_layer_bed_temperature] ; wait for bed to reach target temperature
+        G28 ;Homing the hotend
+        G29 ;Auto bed leveling detecting
+        M104 S[first_layer_temperature] ; set nozzle temperature
+        M109 S[first_layer_temperature] ; wait for nozzle to reach target temperature
+        G92 E0 ;Reset the extruded length
+        G1 F200 E3 ;Extrude 3mm of filament
+        G92 E0 ;Reset the extruded length again
+        G1 Y2.0 F1200 ;Move y axis to prime
+        G1 X150 F6000 ;Move x axis to prime
+        G1 Z0.2 F720 ;Move z axis to prime
+        G1 X80.0 E8.0 F900 ;Prime line
+        G1 X20.0 E10.0 F700 ;Prime line
+        G92 E0 ;Reset the extruded length
+        G5 ;Enable resume from power failure
+        M117 Printing...
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 243x0
+      - 243x220
+      - '0x220'
+      max_print_height: 200
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": false}'

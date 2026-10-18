@@ -1,5 +1,8 @@
 #include "Slic3r/App/Preview/Legend.hpp"
 
+#include <algorithm>
+#include <cctype>
+
 #include "Slic3r/App/Preview/FdmViewerWrapper.hpp"
 #include "Slic3r/App/Render/ImguiRender.hpp"
 #include <Slic3r/App/libvgcode/FdmViewer.hpp>
@@ -243,6 +246,20 @@ static CoarseItems collect_color_print_coarse_items(FdmViewer& viewer, FdmViewer
     return ret;
 }
 
+// the preview search's text (Legend::set_filter), set by Legend::render for the drawing below
+static std::string s_filter;
+
+static bool matches_filter(const std::string& text)
+{
+    if (s_filter.empty())
+        return true;
+    auto lower = [](std::string s) {
+        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return char(std::tolower(c)); });
+        return s;
+    };
+    return lower(text).find(lower(s_filter)) != std::string::npos;
+}
+
 static CoarseItems collect_coarse_items(FdmViewer& viewer, FdmViewerWrapper& wrapper)
 {
     ViewType type = viewer.view_type();
@@ -285,6 +302,11 @@ draw_item_coarse(CoarseItem& item, const ImVec2& icon_size, float cell_height, f
 static void draw_items_coarse(FdmViewer& viewer, FdmViewerWrapper& wrapper)
 {
     CoarseItems items = collect_coarse_items(viewer, wrapper);
+    // a search that matches no legend item is for the G-code: the legend stays whole
+    CoarseItems filtered = items;
+    std::erase_if(filtered, [](const CoarseItem& item) { return !matches_filter(item.text); });
+    if (!filtered.empty())
+        items = std::move(filtered);
     float line_height = ImGui::GetTextLineHeight();
     ImVec2 icon_size(line_height, line_height);
     float cell_height = 2.0f * line_height;
@@ -413,10 +435,15 @@ static void draw_feature_type_items_detail(
 
         ImGui::PushStyleVarY(ImGuiStyleVar_CellPadding, 0.25f * (cell_height - line_height));
 
+        // a search that matches no role is for the G-code: all roles stay listed
+        const bool filter_roles = std::any_of(roles.begin(), roles.end(),
+            [](GCodeExtrusionRole role) { return matches_filter(to_string(role)); });
         for (size_t i = 0; i < roles.size(); ++i) {
             const GCodeExtrusionRole& role = roles[i];
             ColorRGB color = viewer.extrusion_role_color(role);
             std::string role_name = to_string(role);
+            if (filter_roles && !matches_filter(role_name))
+                continue;
             bool visible = viewer.is_extrusion_role_visible(role);
             uint8_t alpha = visible ? 255 : 127;
             ImVec4 perc_color = { PERCENTAGE_COLOR.r(), PERCENTAGE_COLOR.g(), PERCENTAGE_COLOR.b(), alpha / 255.0f };
@@ -1063,6 +1090,7 @@ void Legend::render(const Yoga::Vec2f& pos, const Yoga::Vec2f& size)
     }
     else {
         ImGui::SetCursorScreenPos(to_im(pos));
+        s_filter = m_filter;
         if (m_detail_view)
             legend_detail(*m_imgui_render, *m_viewer, *m_wrapper, m_callback, m_show_time_estimate);
         else
@@ -1086,6 +1114,8 @@ void Legend::render(const Yoga::Vec2f& pos, const Yoga::Vec2f& size)
 Vec2f Legend::get_item_size() { return m_size; }
 
 void Legend::set_detail_view(bool detail) { m_detail_view = detail; }
+
+void Legend::set_filter(const std::string& filter) { m_filter = filter; }
 
 void Legend::set_show_time_estimate(bool show) { m_show_time_estimate = show; }
 

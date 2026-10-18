@@ -47,11 +47,13 @@ std::string to_string(GCodeExtrusionRole role)
     case GCodeExtrusionRole::Ironing:                  { return _u8L("Ironing"); }
     case GCodeExtrusionRole::BridgeInfill:             { return _u8L("Bridge infill"); }
     case GCodeExtrusionRole::GapFill:                  { return _u8L("Gap fill"); }
-    case GCodeExtrusionRole::Skirt:                    { return _u8L("Skirt/Brim"); }
+    case GCodeExtrusionRole::Skirt:                    { return _u8L("Skirt"); }
     case GCodeExtrusionRole::SupportMaterial:          { return _u8L("Support material"); }
     case GCodeExtrusionRole::SupportMaterialInterface: { return _u8L("Support material interface"); }
     case GCodeExtrusionRole::WipeTower:                { return _u8L("Wipe tower"); }
     case GCodeExtrusionRole::Custom:                   { return _u8L("Custom"); }
+    case GCodeExtrusionRole::InternalBridgeInfill:     { return _u8L("Internal bridge"); }
+    case GCodeExtrusionRole::Brim:                     { return _u8L("Brim"); }
     }
 }
 

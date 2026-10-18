@@ -299,6 +299,14 @@ enum class Tags : uint8_t
     First_Line_M73_Placeholder,
     Last_Line_M73_Placeholder,
     Print_Statistics_Placeholder,
+    Manual_Tool_Change,
+    Print_Time_Total_Sec_Placeholder,
+    Print_Time_Day_Placeholder,
+    Print_Time_Hour_Placeholder,
+    Print_Time_Minute_Placeholder,
+    Print_Time_Sec_Placeholder,
+    Used_Filament_Length_Placeholder,
+    PA_Change,
     COUNT
 };
 
@@ -316,7 +324,15 @@ static const std::vector<std::string_view> RESERVED_TAGS = {
     "CUSTOM_GCODE"sv,
     "_GP_FIRST_LINE_M73_PLACEHOLDER"sv,
     "_GP_LAST_LINE_M73_PLACEHOLDER"sv,
-    "_GP_PRINT_STATISTICS_PLACEHOLDER"sv
+    "_GP_PRINT_STATISTICS_PLACEHOLDER"sv,
+    "MANUAL_TOOL_CHANGE "sv,
+    "@PRINT_TIME_TOTAL_SEC@"sv,
+    "@PRINT_TIME_DAY@"sv,
+    "@PRINT_TIME_HOUR@"sv,
+    "@PRINT_TIME_MINUTE@"sv,
+    "@PRINT_TIME_SEC@"sv,
+    "@USED_FILAMENT_LENGTH@"sv,
+    "PA_CHANGE:"sv
 };
 
 enum class CustomTags : uint8_t

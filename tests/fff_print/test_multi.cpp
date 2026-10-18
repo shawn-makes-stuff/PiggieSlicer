@@ -1,4 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
 
 #include <numeric>
 #include <sstream>
@@ -10,6 +11,8 @@
 #include "libslic3r/Geometry.hpp"
 #include "libslic3r/Geometry/ConvexHull.hpp"
 #include "libslic3r/Print.hpp"
+#include "libslic3r/GCode/WipeTower.hpp"
+#include "libslic3r/GCode/FlushVolCalc.hpp"
 #include "libslic3r/libslic3r.h"
 #include "Slic3r/Biz/GCodeReader/GCodeReader.hpp"
 #include "Slic3r/Domain/Preset/HwConfig.hpp"
@@ -21,6 +24,7 @@
 
 using namespace Slic3r;
 using namespace std::literals;
+using Catch::Approx;
 using Biz::GCodeReader::GCodeReader;
 using Test::TestConfig;
 using Domain::VolumeSettings;
@@ -75,6 +79,8 @@ TEST_CASE("Ooze prevention", "[Multi]")
     config.print.items.opt("infill_extruder").set(2);
     config.print.items.opt("solid_infill_extruder").set(3);
     config.print.items.opt("ooze_prevention").set(true);
+    // the standby temperatures alone: Orca's preheating drops a standby when the tool is heated again soon
+    config.print.items.opt("preheat_time").set(0.);
 
     config.printer.items.opt("extruder_offset")
         .set(std::vector{Vec2d{0, 0}, Vec2d{20, 0}, Vec2d{0, 20}, Vec2d{20, 20}});
@@ -414,4 +420,206 @@ TEST_CASE(
             tool_change.position_at_tool_change.y() == tool_change.previous_layer_last_extrusion.y()
         );
     }
+}
+
+namespace {
+
+// One tool fed by a 4-slot multi-material unit (single extruder multi material), as the
+// Prusa MMU and the generic external unit both are.
+TestConfig semm_config(const unsigned slot_count)
+{
+    TestConfig config{1};
+    config.filament.resize(slot_count);
+    config.hw_config.feeders[Domain::Preset::Address{0}] = Domain::Preset::HwFeederConfig{
+        .id         = "test_feeder",
+        .type       = Domain::Preset::FeederType::MMU,
+        .model      = {.model = "TEST", .base_model = "TEST"},
+        .slot_count = slot_count
+    };
+    config.printer.items.opt("single_extruder_multi_material").set(true);
+    config.print.items.opt("wipe_tower").set(true);
+    config.print.items.opt("skirts").set(0);
+    // required by the wipe tower
+    config.printer.items.opt("use_relative_e_distances").set(true);
+    config.print.items.opt("support_material_extruder").set(0);
+    config.print.items.opt("support_material_interface_extruder").set(0);
+    return config;
+}
+
+std::string slice_semm_stacked_cubes(const TestConfig& config)
+{
+    Domain::Model model;
+    Domain::ModelObject* object = model.add_object();
+    object->name = "object.stl";
+    for (int i = 0; i < 2; ++i) {
+        Domain::ModelVolume* volume = add_volume(object, Test::mesh(Test::TestMesh::cube_20x20x20));
+        translate(*volume, 0., 0., i * 20.);
+        VolumeSettings volume_settings;
+        volume_settings.overrides.set("extruder", i + 1);
+        volume->volume_settings = volume_settings;
+    }
+    object->add_instance();
+    ensure_on_bed(*object);
+
+    Domain::Bed model_bed;
+    Domain::BedInstance bed_instance{model_bed};
+    for (Domain::ModelInstance* instance : object->instances)
+        bed_instance.model_instances.push_back(instance);
+    Print print;
+    auto preset_metadata = Test::create_dummy_selected_preset_metadata(config.hw_config);
+    auto metadata = Biz::Slicing::build_gcode_metadata({}, preset_metadata, config);
+    auto status{print.update(
+        model,
+        config,
+        bed_instance,
+        preset_metadata,
+        Biz::Slicing::build_metadata_serializer(metadata, preset_metadata, config)
+    )};
+    if (const auto* invalid = std::get_if<Biz::Slicing::ApplyStatus::InvalidData>(&status)) {
+        for (const auto& error : invalid->errors) {
+            UNSCOPED_INFO("error " << int(error.code));
+            for (const auto& key : error.item_keys)
+                UNSCOPED_INFO("  key " << key);
+        }
+    }
+    REQUIRE(std::holds_alternative<Biz::Slicing::ApplyStatus::Changed>(status));
+    print.validate();
+    return Test::gcode(print);
+}
+
+// Writes the G-code to $PIGGIE_GCODE_DUMP_DIR/<name>.gcode when that variable is set, so the
+// output can be compared byte for byte before and after a change.
+void dump_gcode(const std::string& name, const std::string& gcode)
+{
+    if (const char* dir = std::getenv("PIGGIE_GCODE_DUMP_DIR")) {
+        std::ofstream out{std::string{dir} + "/" + name + ".gcode", std::ios::binary};
+        out << gcode;
+    }
+}
+
+} // namespace
+
+TEST_CASE("Single extruder multi material wipe tower G-code", "[Multi][SEMM]")
+{
+    const std::string gcode{slice_semm_stacked_cubes(semm_config(4))};
+    dump_gcode("semm_wipe_tower", gcode);
+    REQUIRE(gcode.find("\nT1\n") != std::string::npos);
+    REQUIRE(gcode.find("; CP TOOLCHANGE UNLOAD") != std::string::npos);
+}
+
+TEST_CASE("Single material G-code", "[Multi][SEMM]")
+{
+    const std::string gcode{Slic3r::Test::slice({Slic3r::Test::TestMesh::cube_20x20x20}, TestConfig{1})};
+    dump_gcode("single_material", gcode);
+    REQUIRE(!gcode.empty());
+}
+
+namespace {
+
+// True when the wipe tower's unload sections (from "; CP TOOLCHANGE UNLOAD" to the tool change)
+// move the extruder, i.e. ram, retract into the cooling tube, cool or park the filament.
+bool unload_moves_extruder(const std::string& gcode)
+{
+    std::istringstream in{gcode};
+    std::string line;
+    bool in_unload = false;
+    while (std::getline(in, line)) {
+        if (line.starts_with("; CP TOOLCHANGE UNLOAD"))
+            in_unload = true;
+        else if (line.starts_with("T") || line.starts_with("; CP TOOLCHANGE END"))
+            in_unload = false;
+        // Ramming and cooling are X moves with E, the cooling tube retraction and parking are
+        // E moves written by the wipe tower (4 decimals); the plain tool change retraction
+        // written by the G-code generator after the unload ("G1 E-10") is not counted.
+        else if (in_unload && line.starts_with("G1") && line.find(" E") != std::string::npos
+                 && (line.starts_with("G1 X") || line.find('.') != std::string::npos))
+            return true;
+    }
+    return false;
+}
+
+} // namespace
+
+TEST_CASE("External multi-material unit: no ramming, cooling or parking", "[Multi][SEMM][ExternalMMU]")
+{
+    TestConfig config{semm_config(4)};
+    REQUIRE(unload_moves_extruder(slice_semm_stacked_cubes(config)));
+
+    // as the built-in external unit settings set them
+    config.printer.items.opt("enable_filament_ramming").set(false);
+    config.printer.items.opt("cooling_tube_length").set(0.);
+    config.printer.items.opt("cooling_tube_retraction").set(0.);
+    config.printer.items.opt("parking_pos_retraction").set(0.);
+    config.printer.items.opt("extra_loading_move").set(0.);
+    const std::string gcode{slice_semm_stacked_cubes(config)};
+    dump_gcode("semm_no_ramming", gcode);
+    REQUIRE(gcode.find("\nT1\n") != std::string::npos);
+    REQUIRE(gcode.find("; CP TOOLCHANGE WIPE") != std::string::npos);
+    REQUIRE(gcode.find("; CP TOOLCHANGE LOAD") == std::string::npos);
+    REQUIRE(!unload_moves_extruder(gcode));
+}
+
+TEST_CASE("Purge volumes from filament colours (Orca)", "[Multi][SEMM][ExternalMMU]")
+{
+    using Slic3r::FlushVolCalc::calc_flush_volume;
+    const Domain::ColorRGBA black{0.f, 0.f, 0.f, 1.f};
+    const Domain::ColorRGBA white{1.f, 1.f, 1.f, 1.f};
+    // Orca's formula: luminance step 0 -> 1 gives 1^0.7 * 560, 1 -> 0 gives 1 * 80
+    REQUIRE(calc_flush_volume(black, white) == 560);
+    REQUIRE(calc_flush_volume(white, black) == 80);
+    // Orca's measured data (flush_data_standard.txt): #000000 -> #545454 = 236, #C12E1F -> #000000 = 26
+    REQUIRE(calc_flush_volume(black, Domain::ColorRGBA{(unsigned char)0x54, (unsigned char)0x54, (unsigned char)0x54, (unsigned char)255}) == 236);
+    REQUIRE(calc_flush_volume(Domain::ColorRGBA{(unsigned char)0xC1, (unsigned char)0x2E, (unsigned char)0x1F, (unsigned char)255}, black) == 26);
+    REQUIRE(calc_flush_volume(black, white, 100) == 660);
+
+    TestConfig config{semm_config(2)};
+    config.project.items.opt("extruder_colour").set(std::vector<std::string>{"#000000", "#FFFFFF"});
+    config.filament[1].items.opt("filament_purge_multiplier").set(Percentage{50.});
+    {
+        const auto volumes = WipeTower::extract_wipe_volumes(config.get_view());
+        // 'Purging volume' (default 140) when not by colour
+        REQUIRE(volumes[0][1] == Approx(70.f));
+        REQUIRE(volumes[1][0] == Approx(140.f));
+    }
+    config.printer.items.opt("wiping_volumes_by_colour").set(true);
+    {
+        const auto volumes = WipeTower::extract_wipe_volumes(config.get_view());
+        REQUIRE(volumes[0][1] == Approx(280.f)); // 560 * 50 %
+        REQUIRE(volumes[1][0] == Approx(80.f));
+    }
+    // a slot count other than the 5x5 project matrix (e.g. a 16-slot unit) is handled
+    TestConfig config16{semm_config(16)};
+    const auto volumes16 = WipeTower::extract_wipe_volumes(config16.get_view());
+    REQUIRE(volumes16.size() == 16);
+    REQUIRE(volumes16[15][0] == Approx(140.f));
+
+    // Orca's purge_in_prime_tower off (e.g. Kobra 3 + ACE: the unit purges into its chute):
+    // the tower only primes prime_volume (Orca Print.cpp _make_wipe_tower)
+    config.printer.items.opt("purge_in_prime_tower").set(false);
+    config.print.items.opt("prime_volume").set(45.);
+    {
+        const auto volumes = WipeTower::extract_wipe_volumes(config.get_view());
+        REQUIRE(volumes[0][1] == Approx(45.f));
+        REQUIRE(volumes[1][0] == Approx(45.f));
+        REQUIRE(volumes[0][0] == Approx(0.f).margin(15.f)); // only the minimal purge on the diagonal
+    }
+}
+
+TEST_CASE("Per-tool values follow the tool feeding each slot", "[Multi][ExternalMMU]")
+{
+    // two tools, a 3-slot unit on the second one: slots 0 | 1 2 3 (Orca: filament_map)
+    TestConfig config{2};
+    config.filament.resize(4);
+    config.hw_config.feeders[Domain::Preset::Address{1}] = Domain::Preset::HwFeederConfig{
+        .id         = "test_feeder",
+        .type       = Domain::Preset::FeederType::MMU,
+        .model      = {.model = "TEST", .base_model = "TEST"},
+        .slot_count = 3
+    };
+    config.printer.items.opt("extruder_offset").set(std::vector<Vec2d>{Vec2d{0., 0.}, Vec2d{10., 0.}});
+    const auto offsets = config.get_view().get<std::vector<Vec2d>>("extruder_offset");
+    REQUIRE(offsets.size() == 4);
+    REQUIRE(offsets[0] == Vec2d{0., 0.});
+    REQUIRE(offsets[1] == Vec2d{10., 0.});
+    REQUIRE(offsets[3] == Vec2d{10., 0.});
 }

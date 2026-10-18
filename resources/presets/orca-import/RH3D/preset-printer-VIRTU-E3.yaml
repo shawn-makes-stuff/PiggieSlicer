@@ -1,0 +1,502 @@
+kind: printer
+id: WsV6judPtb8C5QKs2vpzkg
+variants:
+- condition: printer.model == "VIRTU E3"
+  name: VIRTU E3
+  id: 3RIjIAEB4qz44qnHYh6mkw
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: FeSAw9oIND+pIEFHd5WucA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        G92 E0
+      toolchange_gcode: G1 E1.0 F300 ; prime after color change
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Standard @VIRTU E3
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ;AFTER_LAYER_CHANGE
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 7500.0
+      - 7500.0
+      machine_max_acceleration_extruding:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_retracting:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_x:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_y:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_z:
+      - 2000.0
+      - 2000.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_y:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_z:
+      - 400.0
+      - 400.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: |-
+        M104 S0 ; Stops OrcaSlicer from sending temp waits separately
+        M140 S0
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature] CHAMBER=[chamber_temperature] PROFILE=[notes]
+        ; Start of actual GCode for the print
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 230x0
+      - 230x232
+      - '0x232'
+      max_print_height: 232
+      printer_notes: Design by RH3D
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 16x16/QOI, 313x173/QOI, 440x240/QOI, 480x240/QOI, 32x32/PNG, 320x240/PNG, 640x480/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.3
+    id: u7l9Swy70IDu0GHz3W07gQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        G92 E0
+      toolchange_gcode: G1 E1.0 F300 ; prime after color change
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.15mm Standard @VIRTU E3
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ;AFTER_LAYER_CHANGE
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 7500.0
+      - 7500.0
+      machine_max_acceleration_extruding:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_retracting:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_x:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_y:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_z:
+      - 2000.0
+      - 2000.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_y:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_z:
+      - 400.0
+      - 400.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: |-
+        M104 S0 ; Stops OrcaSlicer from sending temp waits separately
+        M140 S0
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature] CHAMBER=[chamber_temperature] PROFILE=[notes]
+        ; Start of actual GCode for the print
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 230x0
+      - 230x232
+      - '0x232'
+      max_print_height: 232
+      printer_notes: Design by RH3D
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 16x16/QOI, 313x173/QOI, 440x240/QOI, 480x240/QOI, 32x32/PNG, 320x240/PNG, 640x480/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: lIIWgF2OLnQOPwa5DHdwqQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        G92 E0
+      toolchange_gcode: G1 E1.0 F300 ; prime after color change
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @VIRTU E3
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ;AFTER_LAYER_CHANGE
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 7500.0
+      - 7500.0
+      machine_max_acceleration_extruding:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_retracting:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_x:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_y:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_z:
+      - 2000.0
+      - 2000.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_y:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_z:
+      - 400.0
+      - 400.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: |-
+        M104 S0 ; Stops OrcaSlicer from sending temp waits separately
+        M140 S0
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature] CHAMBER=[chamber_temperature] PROFILE=[notes]
+        ; Start of actual GCode for the print
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 230x0
+      - 230x232
+      - '0x232'
+      max_print_height: 232
+      printer_notes: Design by RH3D
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 16x16/QOI, 313x173/QOI, 440x240/QOI, 480x240/QOI, 32x32/PNG, 320x240/PNG, 640x480/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.5
+    id: 8jQFSs3wA+rys6rTcnFjEQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        G92 E0
+      toolchange_gcode: G1 E1.0 F300 ; prime after color change
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @VIRTU E3
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ;AFTER_LAYER_CHANGE
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 7500.0
+      - 7500.0
+      machine_max_acceleration_extruding:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_retracting:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_x:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_y:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_z:
+      - 2000.0
+      - 2000.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_y:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_z:
+      - 400.0
+      - 400.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: |-
+        M104 S0 ; Stops OrcaSlicer from sending temp waits separately
+        M140 S0
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature] CHAMBER=[chamber_temperature] PROFILE=[notes]
+        ; Start of actual GCode for the print
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 230x0
+      - 230x232
+      - '0x232'
+      max_print_height: 232
+      printer_notes: Design by RH3D
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 16x16/QOI, 313x173/QOI, 440x240/QOI, 480x240/QOI, 32x32/PNG, 320x240/PNG, 640x480/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: WLNdK1UMvZ1W8iYTxRNwAQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ;BEFORE_LAYER_CHANGE
+        G92 E0
+      toolchange_gcode: G1 E1.0 F300 ; prime after color change
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.25mm Standard @VIRTU E3
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ;AFTER_LAYER_CHANGE
+      end_gcode: PRINT_END
+      machine_max_acceleration_e:
+      - 7500.0
+      - 7500.0
+      machine_max_acceleration_extruding:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_retracting:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_x:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_y:
+      - 35000.0
+      - 35000.0
+      machine_max_acceleration_z:
+      - 2000.0
+      - 2000.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 25.0
+      - 25.0
+      machine_max_feedrate_x:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_y:
+      - 900.0
+      - 900.0
+      machine_max_feedrate_z:
+      - 400.0
+      - 400.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: |
+        PAUSE
+      start_gcode: |-
+        M104 S0 ; Stops OrcaSlicer from sending temp waits separately
+        M140 S0
+        PRINT_START EXTRUDER=[first_layer_temperature] BED=[first_layer_bed_temperature] CHAMBER=[chamber_temperature] PROFILE=[notes]
+        ; Start of actual GCode for the print
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 230x0
+      - 230x232
+      - '0x232'
+      max_print_height: 232
+      printer_notes: Design by RH3D
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: true
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 16x16/QOI, 313x173/QOI, 440x240/QOI, 480x240/QOI, 32x32/PNG, 320x240/PNG, 640x480/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

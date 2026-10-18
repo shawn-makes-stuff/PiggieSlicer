@@ -149,7 +149,8 @@ BOOL AppInstanceMessageSenderWin32::enum_windows_process_broadcast(_In_ HWND hwn
     std::wstring classNameString(className);
     std::wstring wndTextString(wndText);
 
-    if (wndTextString.find(boost::nowide::widen(Slic3r::BUILD_ID).c_str()) != std::wstring::npos && classNameString == L"wxWindowNR")
+    // the window title is the app name (MainFrame); the same build is found by the instance hash
+    if (wndTextString.find(boost::nowide::widen(Slic3r::APP_NAME).c_str()) != std::wstring::npos && classNameString == L"wxWindowNR")
     {
         // Get the instance hash properties.
         uint64_t other_instance_hash_major = PtrToUint(GetPropW(hwnd, Instance_Hash_Major));

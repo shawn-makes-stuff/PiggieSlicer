@@ -62,6 +62,9 @@ static constexpr double LOOP_CLIPPING_LENGTH_OVER_NOZZLE_DIAMETER = 0.15;
 // Maximum perimeter length for the loop to apply the small perimeter speed. 
 #define                 SMALL_PERIMETER_LENGTH  ((6.5 / SCALING_FACTOR) * 2 * PI)
 static constexpr double INSET_OVERLAP_TOLERANCE = 0.4;
+// Orca: the resolution of the sparse infill extracted by marching squares (TPMS, optimized Gyroid)
+static constexpr double SPARSE_INFILL_RESOLUTION = 0.04;
+#define                 SCALED_SPARSE_INFILL_RESOLUTION (SPARSE_INFILL_RESOLUTION / SCALING_FACTOR)
 // 3mm ring around the top / bottom / bridging areas.
 //FIXME This is quite a lot.
 static constexpr double EXTERNAL_INFILL_MARGIN = 3.;

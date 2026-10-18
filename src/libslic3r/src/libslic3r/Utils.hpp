@@ -125,6 +125,9 @@ std::string short_time(const std::string& time, bool force_localization = false)
 // localized short_time used on UI
 inline std::string short_time_ui(const std::string& time) { return short_time(time, true); }
 
+// Orca: whether the 0-based layer matches a 1-based layer pattern: N (every Nth layer), N#K (K layers every N), or a list
+bool check_layer_id_pattern(const std::string& pattern, int layer_id);
+
 } // namespace Slic3r
 
 #if WIN32

@@ -1,0 +1,118 @@
+kind: printer
+id: 6+tKMypk7hYDKFLBJvkCTQ
+variants:
+- condition: printer.model == "Artillery Sidewinder X3 Pro"
+  name: Artillery Sidewinder X3 Pro
+  id: h+ijvrrAlFtGAx/TlgfrpA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: pEt0RT7dZYs9mx0sTnHK5g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: ''
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @Artillery Genius
+      remaining_times: true
+      machine_limits_usage: time_estimate_only
+      extra_loading_move: -2
+      extruder_clearance_height: 36
+      extruder_clearance_radius: 65
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        G91 ;Relative positioning
+        G1 E-2 F2700 ;Retract a bit
+        G1 E-2 Z0.2 F2400 ;Retract and raise Z
+        G1 X5 Y5 F3000 ;Wipe out
+        G1 Z10 ;Raise Z more
+        G90 ;Absolute positionning
+        M106 S0 ;Turn-off fan
+        M104 S0 ;Turn-off hotend
+        M140 S0 ;Turn-off bed
+        M211 S1
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 3000.0
+      - 1250.0
+      machine_max_acceleration_retracting:
+      - 3000.0
+      - 1250.0
+      machine_max_acceleration_travel:
+      - 3000.0
+      - 1250.0
+      machine_max_acceleration_x:
+      - 3000.0
+      - 1000.0
+      machine_max_acceleration_y:
+      - 3000.0
+      - 1000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 200.0
+      machine_max_jerk_e:
+      - 3.0
+      - 2.5
+      machine_max_jerk_x:
+      - 7.0
+      - 10.0
+      machine_max_jerk_y:
+      - 7.0
+      - 10.0
+      machine_max_jerk_z:
+      - 0.2
+      - 0.4
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 120.0
+      - 120.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 200.0
+      machine_max_feedrate_z:
+      - 12.0
+      - 12.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M600
+      start_gcode: |-
+        M140 S60
+        M104 S140
+        M190 S[first_layer_bed_temperature]
+        M109 S{custom_parameter_filament_temperature_vitrification[0]}
+        G28;
+        NOZZLE_WIPE
+        M140 S[first_layer_bed_temperature];
+        M109 S[first_layer_temperature];
+        DRAW_LINE_ONLY
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 240x0
+      - 240x245
+      - '0x245'
+      max_print_height: 260
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: false
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

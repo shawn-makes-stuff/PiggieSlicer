@@ -490,8 +490,6 @@ static std::optional<ColorRGBA> select_color(
 {
     static const ColorRGBA OUTSIDE_COLOR          = ColorRGBA(0.0f, 0.38f, 0.8f, 1.0f);
     static const ColorRGBA OUTSIDE_SELECTED_COLOR = ColorRGBA(0.19f, 0.58f, 1.0f, 1.0f);
-    static const ColorRGBA SELECTED_COLOR         = ColorRGBA::GREEN();// ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-    static const ColorRGBA HOVER_SELECT_COLOR     = ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f);
     static const ColorRGBA HOVER_UNSELECT_COLOR   = ColorRGBA(1.0f, 0.75f, 0.75f, 1.0f);
     static const ColorRGBA DISABLED_COLOR         = ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f);
 
@@ -504,12 +502,10 @@ static std::optional<ColorRGBA> select_color(
         ret = OUTSIDE_SELECTED_COLOR;
     else if (is_outside && hover_type == HoverType::Select)
         ret = OUTSIDE_SELECTED_COLOR;
-    else if (!is_selected && hover_type == HoverType::Select)
-        ret = HOVER_SELECT_COLOR;
     else if (is_outside)
         ret = OUTSIDE_COLOR;
-    else if (is_selected)
-        ret = SELECTED_COLOR;
+    // no tint for selected or hovered objects: the selection box marks the selection, and the
+    // object keeps its own (and its painted) colours
 
     if (ret.has_value() && !is_model_part)
         ret->a(0.65f);

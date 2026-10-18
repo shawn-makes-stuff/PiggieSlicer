@@ -41,6 +41,8 @@ public:
 
     void set_gcode(std::shared_ptr<const Biz::libpgcode::LineView>& gcode) { m_gcode = gcode; }
     bool has_data() const { return (m_gcode && !m_gcode->empty()); }
+    uint32_t lines_count() const { return m_gcode ? uint32_t(m_gcode->size()) : 0; }
+    std::string_view raw_line(uint32_t id) const { return (*m_gcode)[id]; }
 
     void reset() { m_gcode = nullptr; }
 

@@ -1,0 +1,3348 @@
+kind: printer
+id: 8a9wNMQPz+nqLeLT2KudGg
+variants:
+- condition: printer.model == "Bambu Lab X1"
+  name: Bambu Lab X1
+  id: T3i3C0B7Ta1foL9zasiZbg
+  variants:
+  - condition: tool.nozzle_diameter == 0.2
+    id: ubOsi6tzWjFKzJMH+srHfQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: |
+        {local long_retractions_when_cut = (custom_parameter_printer_long_retractions_when_cut__0, custom_parameter_printer_long_retractions_when_cut__1)}{local retraction_distances_when_cut = (custom_parameter_printer_retraction_distances_when_cut__0, custom_parameter_printer_retraction_distances_when_cut__1)}{local _pm = (0, -1)}{local _ft0 = custom_parameter_filament_filament_flush_temp[0]}{if _ft0 == 0}{_ft0 = custom_parameter_filament_nozzle_temperature_range_high[0]}{endif}{local flush_temperatures = (_ft0, 0)}{local _fv0 = custom_parameter_filament_filament_flush_volumetric_speed[0]}{if _fv0 == 0}{_fv0 = filament_max_volumetric_speed[0]}{endif}{local flush_volumetric_speeds = (_fv0, 0)};=X1 20251031=
+        M620 S[next_extruder]A
+        M204 S9000
+        G1 Z{max_layer_z + 3.0} F1200
+
+        G1 X70 F21000
+        G1 Y245
+        G1 Y265 F3000
+        M400
+        M106 P1 S0
+        M106 P2 S0
+        {if old_filament_temp > 142 && next_extruder < 255}
+        M104 S[old_filament_temp]
+        {endif}
+        {if long_retractions_when_cut[previous_extruder]}
+        M620.11 S1 I[previous_extruder] E-{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        {else}
+        M620.11 S0
+        {endif}
+        M400
+        G1 X90 F3000
+        G1 Y255 F4000
+        G1 X100 F5000
+        G1 X120 F15000
+        G1 X20 Y50 F21000
+        G1 Y-3
+        {if toolchange_count == 2}
+        ; get travel path for change filament
+        M620.1 X[travel_point_1_x] Y[travel_point_1_y] F21000 P0
+        M620.1 X[travel_point_2_x] Y[travel_point_2_y] F21000 P1
+        M620.1 X[travel_point_3_x] Y[travel_point_3_y] F21000 P2
+        {endif}
+        M620.1 E F{flush_volumetric_speeds[previous_extruder]/2.4053*60} T{flush_temperatures[previous_extruder]}
+        T[next_extruder]
+        M620.1 E F{flush_volumetric_speeds[next_extruder]/2.4053*60} T{flush_temperatures[next_extruder]}
+
+        {if next_extruder < 255}
+        {if long_retractions_when_cut[previous_extruder]}
+        M620.11 S1 I[previous_extruder] E{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        M628 S1
+        G92 E0
+        G1 E{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        M400
+        M629 S1
+        {else}
+        M620.11 S0
+        {endif}
+        G92 E0
+        {if flush_length_1 > 1}
+        M83
+        ; FLUSH_START
+        ; always use highest temperature to flush
+        M400
+        {if filament_type[next_extruder] == "PETG"}
+        M109 S260
+        {elsif filament_type[next_extruder] == "PVA"}
+        M109 S210
+        {else}
+        M109 S{flush_temperatures[next_extruder]}
+        {endif}
+        {if flush_length_1 > 23.7}
+        G1 E23.7 F{flush_volumetric_speeds[previous_extruder]/2.4053*60} ; do not need pulsatile flushing for start part
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        {else}
+        G1 E{flush_length_1} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        {endif}
+        ; FLUSH_END
+        G1 E-[old_retract_length_toolchange] F1800
+        G1 E[old_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_2 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        ; FLUSH_END
+        G1 E-[new_retract_length_toolchange] F1800
+        G1 E[new_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_3 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        ; FLUSH_END
+        G1 E-[new_retract_length_toolchange] F1800
+        G1 E[new_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_4 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        ; FLUSH_END
+        {endif}
+        ; FLUSH_START
+        M400
+        M109 S[new_filament_temp]
+        G1 E2 F{flush_volumetric_speeds[next_extruder]/2.4053*60} ;Compensate for filament spillage during waiting temperature
+        ; FLUSH_END
+        M400
+        G92 E0
+        G1 E-[new_retract_length_toolchange] F1800
+        M106 P1 S255
+        M400 S3
+
+        G1 X70 F5000
+        G1 X90 F3000
+        G1 Y255 F4000
+        G1 X105 F5000
+        G1 Y265 F5000
+        G1 X70 F10000
+        G1 X100 F5000
+        G1 X70 F10000
+        G1 X100 F5000
+
+        G1 X70 F10000
+        G1 X80 F15000
+        G1 X60
+        G1 X80
+        G1 X60
+        G1 X80 ; shake to put down garbage
+        G1 X100 F5000
+        G1 X165 F15000; wipe and shake
+        G1 Y256 ; move Y to aside, prevent collision
+        M400
+        G1 Z{max_layer_z + 3.0} F3000
+        {if layer_z <= (first_layer_height + 0.001)}
+        M204 S[first_layer_acceleration]
+        {else}
+        M204 S[default_acceleration]
+        {endif}
+        {else}
+        G1 X[x_after_toolchange] Y[y_after_toolchange] Z[z_after_toolchange] F12000
+        {endif}
+        M621 S[next_extruder]A
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.10mm Standard @BBL X1C 0.2 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x2'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ; layer num/total_layer_count: {layer_num+1}/[total_layer_count]
+        ; update layer progress
+        M73 L{layer_num+1}
+        M991 S0 P{layer_num} ;notify layer change
+        G92 E0
+      end_gcode: |
+        ;===== date: 20240528 =====================
+        M400 ; wait for buffer to clear
+        G92 E0 ; zero the extruder
+        G1 E-0.8 F1800 ; retract
+        G1 Z{max_layer_z + 0.5} F900 ; lower z a little
+        G1 X65 Y245 F12000 ; move to safe pos
+        G1 Y265 F3000
+
+        G1 X65 Y245 F12000
+        G1 Y265 F3000
+        M140 S0 ; turn off bed
+        M106 S0 ; turn off fan
+        M106 P2 S0 ; turn off remote part cooling fan
+        M106 P3 S0 ; turn off chamber cooling fan
+
+        G1 X100 F12000 ; wipe
+        ; pull back filament to AMS
+        M620 S255
+        G1 X20 Y50 F12000
+        G1 Y-3
+        T255
+        G1 X65 F12000
+        G1 Y265
+        G1 X100 F12000 ; wipe
+        M621 S255
+        M104 S0 ; turn off hotend
+
+        M622.1 S1 ; for prev firmware, default turned on
+        M1002 judge_flag timelapse_record_flag
+        M622 J1
+            M400 ; wait all motion done
+            M991 S0 P-1 ;end smooth timelapse at safe pos
+            M400 S3 ;wait for last picture to be taken
+        M623; end of "timelapse_record_flag"
+
+        M400 ; wait all motion done
+        M17 S
+        M17 Z0.4 ; lower z motor current to reduce impact if there is something in the bottom
+        {if (max_layer_z + 100.0) < 250}
+            G1 Z{max_layer_z + 100.0} F600
+            G1 Z{max_layer_z +98.0}
+        {else}
+            G1 Z250 F600
+            G1 Z248
+        {endif}
+        M400 P100
+        M17 R ; restore z current
+
+        M220 S100  ; Reset feedrate magnitude
+        M201.2 K1.0 ; Reset acc magnitude
+        M73.2   R1.0 ;Reset left time magnitude
+        M1002 set_gcode_claim_speed_level : 0
+        ;=====printer finish  sound=========
+        M17
+        M400 S1
+        M1006 S1
+        M1006 A0 B20 L100 C37 D20 M40 E42 F20 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C46 D10 M80 E46 F10 N80
+        M1006 A44 B20 L100 C39 D20 M60 E48 F20 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C39 D10 M60 E39 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C39 D10 M60 E39 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C48 D10 M60 E44 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10  N100
+        M1006 A49 B20 L100 C44 D20 M100 E41 F20 N100
+        M1006 A0 B20 L100 C0 D20 M60 E0 F20 N100
+        M1006 A0 B20 L100 C37 D20 M30 E37 F20 N60
+        M1006 W
+
+        M17 X0.8 Y0.8 Z0.5 ; lower motor current to 45% power
+        M960 S5 P0 ; turn off logo lamp
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M400 U1
+      start_gcode: "{local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}{local _pm = (0, -1)}{local _ft0 = custom_parameter_filament_filament_flush_temp[0]}{if _ft0 == 0}{_ft0 = custom_parameter_filament_nozzle_temperature_range_high[0]}{endif}{local flush_temperatures = (_ft0, 0)}{local _fv0 = custom_parameter_filament_filament_flush_volumetric_speed[0]}{if _fv0 == 0}{_fv0 = filament_max_volumetric_speed[0]}{endif}{local\
+        \ flush_volumetric_speeds = (_fv0, 0)};===== machine: X1-0.2 ====================\n;===== date: 20251031 ==================\n;===== start printer sound ================\nM17\nM400 S1\nM1006 S1\nM1006 A0 B10 L100 C37 D10 M60 E37 F10 N60\nM1006 A0 B10 L100 C41 D10 M60 E41 F10 N60\nM1006 A0 B10 L100 C44 D10 M60 E44 F10 N60\nM1006 A0 B10 L100 C0 D10 M60 E0 F10 N60\nM1006 A46 B10 L100 C43 D10 M70 E39 F10 N100\nM1006 A0 B10 L100 C0 D10 M60 E0 F10 N100\nM1006 A43 B10 L100 C0 D10 M60 E39 F10 N100\nM1006 A0 B10 L100 C0 D10 M60 E0 F10 N100\nM1006 A41 B10 L100 C0 D10 M100 E41 F10 N100\nM1006 A44 B10 L100 C0 D10 M100 E44 F10 N100\nM1006 A49 B10 L100 C0 D10 M100 E49 F10 N100\nM1006 A0 B10 L100 C0 D10 M100 E0 F10 N100\nM1006 A48 B10 L100 C44 D10 M60 E39 F10 N100\nM1006 A0 B10 L100 C0 D10 M60 E0 F10 N100\nM1006 A44 B10 L100 C0 D10 M90 E39 F10 N100\nM1006 A0 B10 L100 C0 D10 M60 E0 F10 N100\nM1006 A46 B10 L100 C43 D10 M60 E39 F10 N100\nM1006 W\n;===== turn on the HB fan =================\nM104 S75\
+        \ ;set extruder temp to turn on the HB fan and prevent filament oozing from nozzle\n;===== reset machine status =================\nM290 X40 Y40 Z2.6666666\nG91\nM17 Z0.4 ; lower the z-motor current\nG380 S2 Z30 F300 ; G380 is same as G38; lower the hotbed , to prevent the nozzle is below the hotbed\nG380 S2 Z-25 F300 ;\nG1 Z5 F300;\nG90\nM17 X1.2 Y1.2 Z0.75 ; reset motor current to default\nM960 S5 P1 ; turn on logo lamp\nG90\nM220 S100 ;Reset Feedrate\nM221 S100 ;Reset Flowrate\nM73.2   R1.0 ;Reset left time magnitude\nM1002 set_gcode_claim_speed_level : 5\nM221 X0 Y0 Z0 ; turn off soft endstop to prevent protential logic problem\nG29.1 Z{+0.0} ; clear z-trim value first\nM204 S10000 ; init ACC set to 10m/s^2\n\n;===== heatbed preheat ====================\nM1002 gcode_claim_action:54\nM140 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp\nM190 S[first_layer_bed_temperature[initial_extruder]] ;wait for bed temp\n\n{if custom_parameter_printer_scan_first_layer}\n;=========register\
+        \ first layer scan=====\nM977 S1 P60\n{endif}\n\n;=============turn on fans to prevent PLA jamming=================\n{if filament_type[initial_extruder]==\"PLA\"}\n    {if (bed_temperature[initial_extruder] >45)||(first_layer_bed_temperature[initial_extruder] >45)}\n    M106 P3 S180\n    {endif};Prevent PLA from jamming\n    M142 P1 R35 S40\n{endif}\nM106 P2 S100 ; turn on big fan ,to cool down toolhead\n\n;===== prepare print temperature and material ==========\nM104 S[first_layer_temperature] ;set extruder temp\nG91\nG0 Z10 F1200\nG90\nG28 X\nM975 S1 ; turn on\nG1 X60 F12000\nG1 Y245\nG1 Y265 F3000\nM620 M\nM620 S[initial_extruder]A   ; switch material if AMS exist\n    M109 S[first_layer_temperature]\n    G1 X120 F12000\n\n    G1 X20 Y50 F12000\n    G1 Y-3\n    T[initial_extruder]\n    G1 X54 F12000\n    G1 Y265\n    M400\nM621 S[initial_extruder]A\nM620.1 E F{flush_volumetric_speeds[initial_extruder]/2.4053*60} T{flush_temperatures[initial_extruder]}\n\n\nM412 S1 ; ===turn on\
+        \ filament runout detection===\n\nM109 S250 ;set nozzle to common flush temp\nM106 P1 S0\nG92 E0\nG1 E50 F200\nM400\nM104 S[first_layer_temperature]\nG92 E0\nG1 E50 F200\nM400\nM106 P1 S255\nG92 E0\nG1 E5 F300\nM109 S{first_layer_temperature[initial_extruder]-20} ; drop nozzle temp, make filament shink a bit\nG92 E0\nG1 E-0.5 F300\n\nG1 X70 F9000\nG1 X76 F15000\nG1 X65 F15000\nG1 X76 F15000\nG1 X65 F15000; shake to put down garbage\nG1 X80 F6000\nG1 X95 F15000\nG1 X80 F15000\nG1 X165 F15000; wipe and shake\nM400\nM106 P1 S0\n;===== prepare print temperature and material end =====\n\n\n;===== wipe nozzle ===============================\nM1002 gcode_claim_action : 14\nM975 S1\nM106 S255\nG1 X65 Y230 F18000\nG1 Y264 F6000\nM109 S{first_layer_temperature[initial_extruder]-20}\nG1 X100 F18000 ; first wipe mouth\n\nG0 X135 Y253 F20000  ; move to exposed steel surface edge\nG28 Z P0 T300; home z with low precision,permit 300deg temperature\nG29.2 S0 ; turn off ABL\nG0 Z5 F20000\n\nG1 X60\
+        \ Y265\nG92 E0\nG1 E-0.5 F300 ; retrack more\nG1 X100 F5000; second wipe mouth\nG1 X70 F15000\nG1 X100 F5000\nG1 X70 F15000\nG1 X100 F5000\nG1 X70 F15000\nG1 X100 F5000\nG1 X70 F15000\nG1 X90 F5000\nG0 X128 Y261 Z-1.5 F20000  ; move to exposed steel surface and stop the nozzle\nM104 S140 ; set temp down to heatbed acceptable\nM106 S255 ; turn on fan (G28 has turn off fan)\n\nM221 S; push soft endstop status\nM221 Z0 ;turn off Z axis endstop\nG0 Z0.5 F20000\nG0 X125 Y259.5 Z-1.01\nG0 X131 F211\nG0 X124\nG0 Z0.5 F20000\nG0 X125 Y262.5\nG0 Z-1.01\nG0 X131 F211\nG0 X124\nG0 Z0.5 F20000\nG0 X125 Y260.0\nG0 Z-1.01\nG0 X131 F211\nG0 X124\nG0 Z0.5 F20000\nG0 X125 Y262.0\nG0 Z-1.01\nG0 X131 F211\nG0 X124\nG0 Z0.5 F20000\nG0 X125 Y260.5\nG0 Z-1.01\nG0 X131 F211\nG0 X124\nG0 Z0.5 F20000\nG0 X125 Y261.5\nG0 Z-1.01\nG0 X131 F211\nG0 X124\nG0 Z0.5 F20000\nG0 X125 Y261.0\nG0 Z-1.01\nG0 X131 F211\nG0 X124\nG0 X128\nG2 I0.5 J0 F300\nG2 I0.5 J0 F300\nG2 I0.5 J0 F300\nG2 I0.5 J0 F300\n\nM109 S140 ;\
+        \ wait nozzle temp down to heatbed acceptable\nG2 I0.5 J0 F3000\nG2 I0.5 J0 F3000\nG2 I0.5 J0 F3000\nG2 I0.5 J0 F3000\n\nM221 R; pop softend status\nG1 Z10 F1200\nM400\nG1 Z10\nG1 F30000\nG1 X128 Y128\nG29.2 S1 ; turn on ABL\n;G28 ; home again after hard wipe mouth\nM106 S0 ; turn off fan , too noisy\n;===== wipe nozzle end ================================\n\n;===== check scanner clarity ===========================\nG1 X128 Y128 F24000\nG28 Z P0\nM972 S5 P0\nG1 X230 Y15 F24000\n;===== check scanner clarity end =======================\n\n;===== bed leveling ==================================\nM1002 judge_flag g29_before_print_flag\nM622 J1\n\n    M1002 gcode_claim_action : 1\n    G29 A X{first_layer_print_min[0]} Y{first_layer_print_min[1]} I{first_layer_print_size[0]} J{first_layer_print_size[1]}\n    M400\n    M500 ; save cali data\n\nM623\n;===== bed leveling end ================================\n\n;===== home after wipe mouth============================\nM1002 judge_flag g29_before_print_flag\n\
+        M622 J0\n\n    M1002 gcode_claim_action : 13\n    G28\n\nM623\n;===== home after wipe mouth end =======================\n\nM975 S1 ; turn on vibration supression\n\n;=============turn on fans to prevent PLA jamming=================\n{if filament_type[initial_extruder]==\"PLA\"}\n    {if (bed_temperature[initial_extruder] >45)||(first_layer_bed_temperature[initial_extruder] >45)}\n    M106 P3 S180\n    {endif};Prevent PLA from jamming\n    M142 P1 R35 S40\n{endif}\nM106 P2 S100 ; turn on big fan ,to cool down toolhead\n\nM104 S{first_layer_temperature[initial_extruder]} ; set extrude temp earlier, to reduce wait time\n\n;===== mech mode fast check============================\nG1 X128 Y128 Z10 F20000\nM400 P200\nM970.3 Q1 A7 B30 C80  H15 K0\nM974 Q1 S2 P0\n\nG1 X128 Y128 Z10 F20000\nM400 P200\nM970.3 Q0 A7 B30 C90 Q0 H15 K0\nM974 Q0 S2 P0\n\nM975 S1\nG1 F30000\nG1 X230 Y15\nG28 X ; re-home XY\n;===== mech mode fast check============================\n\n{if custom_parameter_printer_scan_first_layer}\n\
+        ;start heatbed  scan====================================\nM976 S2 P1\nG90\nG1 X128 Y128 F20000\nM976 S3 P2  ;register void printing detection\n{endif}\n\n;===== nozzle load line ===============================\nM975 S1\nG90\nM83\nT1000\nG1 X18.0 Y1.0 Z0.8 F18000;Move to start position\nM109 S{temperature[initial_extruder]}\nG1 Z0.2\nG0 E2 F300\nG0 X240 E15 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}\nG0 Y11 E0.700 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\nG0 X239.5\nG0 E0.2\nG0 Y1.5 E0.700\nG0 X231 E0.700 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}\nM400\n\n;===== for Textured PEI Plate , lower the nozzle as the nozzle was touching topmost of the texture when homing ==\n;curr_bed_type={sheet_type}\n{if sheet_type==\"Textured PEI Plate\"}\nG29.1 Z{-0.04} ; for Textured PEI Plate\n{endif}\n\n;===== draw extrinsic para cali paint =================\nM1002 judge_flag extrude_cali_flag\nM622 J1\n\n    M1002 gcode_claim_action : 8\n\n    T1000\n\n    G0 F1200.0 X231\
+        \ Y12   Z0.2 E0.577\n    G0 F1200.0 X226 Y12   Z0.2 E0.275\n    G0 F1200.0 X226 Y1.5  Z0.2 E0.577\n    G0 F1200.0 X220 Y1.5  Z0.2 E0.330\n    G0 F1200.0 X220 Y8    Z0.2 E0.358\n    G0 F1200.0 X210 Y8    Z0.2 E0.549\n    G0 F1200.0 X210 Y1.5  Z0.2 E0.357\n\n    G0 X48.0 E11.9 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}\n    G0 X48.0 Y12 E0.772 F1200.0\n    G0 X45.0 E0.22 F1200.0\n    G0 X35.0 Y6.0 E0.86 F1200.0\n\n    ;=========== extruder cali extrusion ==================\n    T1000\n    M83\n\t{if default_acceleration[current_extruder] > 0}\n        {if external_perimeter_acceleration[current_extruder] > 0}\n            M204 S[external_perimeter_acceleration]\n        {else}\n            M204 S[default_acceleration]\n        {endif}\n    {endif}\n    G0 X35.000 Y6.000 Z0.300 F30000 E0\n    G1 F1500.000 E0.800\n    M106 S0 ; turn off fan\n    G0 X185.000 E9.35441 F4800\n    G0 X187 Z0\n    G1 F1500.000 E-0.800\n    G0 Z1\n    G0 X180 Z0.3 F18000\n\n    M900 L1000.0 M1.0\n \
+        \   M900 K0.160\n    G0 X45.000 F30000\n    G0 Y8.000 F30000\n    G1 F1500.000 E0.800\n    G1 X65.000 E1.24726 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X70.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X75.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X80.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X85.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X90.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X95.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X100.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X105.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X110.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X115.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X120.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X125.000\
+        \ E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X130.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X135.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X140.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X145.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X150.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X155.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X160.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X165.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X170.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X175.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X180.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 F1500.000 E-0.800\n    G1 X183 Z0.15 F30000\n    G1 X185\n    G1 Z1.0\n    G0 Y6.000 F30000 ; move y\
+        \ to clear pos\n    G1 Z0.3\n    M400\n\n    G0 X45.000 F30000\n    M900 K0.080\n    G0 X45.000 F30000\n    G0 Y10.000 F30000\n    G1 F1500.000 E0.800\n    G1 X65.000 E1.24726 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X70.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X75.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X80.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X85.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X90.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X95.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X100.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X105.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X110.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X115.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X120.000 E0.31181\
+        \ F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X125.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X130.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X135.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X140.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X145.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X150.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X155.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X160.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X165.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X170.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X175.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X180.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 F1500.000 E-0.800\n    G1 X183 Z0.15\
+        \ F30000\n    G1 X185\n    G1 Z1.0\n    G0 Y6.000 F30000 ; move y to clear pos\n    G1 Z0.3\n    M400\n\n    G0 X45.000 F30000\n    M900 K0.000\n    G0 X45.000 F30000\n    G0 Y12.000 F30000\n    G1 F1500.000 E0.800\n    G1 X65.000 E1.24726 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X70.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X75.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X80.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X85.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X90.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X95.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X100.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X105.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X110.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X115.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)\
+        \    * 60}\n    G1 X120.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X125.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X130.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X135.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X140.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X145.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X150.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X155.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X160.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X165.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X170.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X175.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X180.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1\
+        \ F1500.000 E-0.800\n    G1 X183 Z0.15 F30000\n    G1 X185\n    G1 Z1.0\n    G0 Y6.000 F30000 ; move y to clear pos\n    G1 Z0.3\n\n    G0 X45.000 F30000 ; move to start point\n\nM623 ; end of \"draw extrinsic para cali paint\"\n\nM1002 judge_flag extrude_cali_flag\nM622 J0\n    G0 X231 Y1.5 F30000\n    G0 X18 E14.3 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}\nM623\n\nM104 S140\n\n\n;=========== laser and rgb calibration ===========\nM400\nM18 E\nM500 R\n\nM973 S3 P14\n\nG1 X120 Y1.0 Z0.3 F18000.0;Move to first extrude line pos\nT1100\nG1 X235.0 Y1.0 Z0.3 F18000.0;Move to first extrude line pos\nM400 P100\nM960 S1 P1\nM400 P100\nM973 S6 P0; use auto exposure for horizontal laser by xcam\nM960 S0 P0\n\nG1 X240.0 Y6.0 Z0.3 F18000.0;Move to vertical extrude line pos\nM960 S2 P1\nM400 P100\nM973 S6 P1; use auto exposure for vertical laser by xcam\nM960 S0 P0\n\n;=========== handeye calibration ======================\nM1002 judge_flag extrude_cali_flag\nM622 J1\n\n    M973 S3 P1\
+        \ ; camera start stream\n    M400 P500\n    M973 S1\n    G0 F6000 X228.500 Y4.750 Z0.000\n    M960 S0 P1\n    M973 S1\n    M400 P800\n    M971 S6 P0\n    M973 S2 P0\n    M400 P500\n    G0 Z0.000 F12000\n    M960 S0 P0\n    M960 S1 P1\n    G0 X215.00 Y4.750\n    M400 P200\n    M971 S5 P1\n    M973 S2 P1\n    M400 P500\n    M960 S0 P0\n    M960 S2 P1\n    G0 X228.5 Y6.75\n    M400 P200\n    M971 S5 P3\n    G0 Z0.500 F12000\n    M960 S0 P0\n    M960 S2 P1\n    G0 X228.5 Y6.75\n    M400 P200\n    M971 S5 P4\n    M973 S2 P0\n    M400 P500\n    M960 S0 P0\n    M960 S1 P1\n    G0 X215.00 Y4.750\n    M400 P500\n    M971 S5 P2\n    M963 S1\n    M400 P1500\n    M964\n    T1100\n    G1 Z3 F3000\n\n    M400\n    M500 ; save cali data\n\n    M104 S{temperature[initial_extruder]} ; rise nozzle temp now ,to reduce temp waiting time.\n\n    T1100\n    M400 P400\n    M960 S0 P0\n    G0 F30000.000 Y10.000 X65.000 Z0.000\n    M400 P400\n    M960 S1 P1\n    M400 P50\n\n    M969 S1 N3 A2000\n    G0 F360.000\
+        \ X181.000 Z0.000\n    M980.3 A70.000 B{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*60/4} C5.000 D{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*60} E5.000 F175.000 H1.000 I0.000 J0.080 K0.160\n    M400 P100\n    G0 F20000\n    G0 Z1 ; rise nozzle up\n    T1000 ; change to nozzle space\n    G0 X45.000 Y4.000 F30000 ; move to test line pos\n    M969 S0 ; turn off scanning\n    M960 S0 P0\n\n\n    G1 Z2 F20000\n    T1000\n    G0 X45.000 Y4.000 F30000 E0\n    M109 S{temperature[initial_extruder]}\n    G0 Z0.3\n    G1 F1500.000 E3.600\n    G1 X65.000 E1.24726 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X70.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X75.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X80.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X85.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X90.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X95.000\
+        \ E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X100.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X105.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X110.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X115.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X120.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X125.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X130.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X135.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n\n    ; see if extrude cali success, if not ,use default value\n    M1002 judge_last_extrude_cali_success\n    M622 J0\n        M400\n        M900 K0.08 M{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*0.08}\n    M623\n\n    G1 X140.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X145.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)\
+        \    * 60}\n    G1 X150.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X155.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X160.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X165.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X170.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X175.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X180.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X185.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X190.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X195.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X200.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X205.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X210.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1\
+        \ X215.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    G1 X220.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}\n    G1 X225.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\n    M973 S4\n\nM623\n\n;========turn off light and wait extrude temperature =============\nM1002 gcode_claim_action : 0\nM973 S4 ; turn off scanner\nM400 ; wait all motion done before implement the emprical L parameters\n;M900 L500.0 ; Empirical parameters\nM109 S[first_layer_temperature]\nM960 S1 P0 ; turn off laser\nM960 S2 P0 ; turn off laser\nM106 S0 ; turn off fan\nM106 P2 S0 ; turn off big fan\nM106 P3 S0 ; turn off chamber fan\n\nM975 S1 ; turn on mech mode supression\nG90\nM83\nT1000\n;===== purge line to wipe the nozzle ============================\nG1 E{-retract_length[initial_extruder]} F1800\nG1 X18.0 Y2.5 Z0.8 F18000.0;Move to start position\nG1 E{retract_length[initial_extruder]} F1800\nM109 S{first_layer_temperature[initial_extruder]}\nG1 Z0.2\nG0 X239\
+        \ E15 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}\nG0 Y12 E0.7 F{outer_wall_volumetric_speed/(0.3*0.5)/4* 60}\n"
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 256x0
+      - 256x256
+      - '0x256'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"cooling_filter_enabled": false, "hotend_cooling_rate__0": 2.0, "hotend_cooling_rate__1": 2.0, "hotend_heating_rate__0": 2.0, "hotend_heating_rate__1": 2.0, "long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "scan_first_layer": true, "support_air_filtration": false, "z_hop_types__0": 0, "z_hop_types__1": 0}'
+  - condition: tool.nozzle_diameter == 0.4
+    id: t9UtaFK7/7LpzrLgh6Lo9Q
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: |
+        {local long_retractions_when_cut = (custom_parameter_printer_long_retractions_when_cut__0, custom_parameter_printer_long_retractions_when_cut__1)}{local retraction_distances_when_cut = (custom_parameter_printer_retraction_distances_when_cut__0, custom_parameter_printer_retraction_distances_when_cut__1)}{local _pm = (0, -1)}{local _ft0 = custom_parameter_filament_filament_flush_temp[0]}{if _ft0 == 0}{_ft0 = custom_parameter_filament_nozzle_temperature_range_high[0]}{endif}{local flush_temperatures = (_ft0, 0)}{local _fv0 = custom_parameter_filament_filament_flush_volumetric_speed[0]}{if _fv0 == 0}{_fv0 = filament_max_volumetric_speed[0]}{endif}{local flush_volumetric_speeds = (_fv0, 0)};=X1 20251031=
+        M620 S[next_extruder]A
+        M204 S9000
+        G1 Z{max_layer_z + 3.0} F1200
+
+        G1 X70 F21000
+        G1 Y245
+        G1 Y265 F3000
+        M400
+        M106 P1 S0
+        M106 P2 S0
+        {if old_filament_temp > 142 && next_extruder < 255}
+        M104 S[old_filament_temp]
+        {endif}
+        {if long_retractions_when_cut[previous_extruder]}
+        M620.11 S1 I[previous_extruder] E-{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        {else}
+        M620.11 S0
+        {endif}
+        M400
+        G1 X90 F3000
+        G1 Y255 F4000
+        G1 X100 F5000
+        G1 X120 F15000
+        G1 X20 Y50 F21000
+        G1 Y-3
+        {if toolchange_count == 2}
+        ; get travel path for change filament
+        M620.1 X[travel_point_1_x] Y[travel_point_1_y] F21000 P0
+        M620.1 X[travel_point_2_x] Y[travel_point_2_y] F21000 P1
+        M620.1 X[travel_point_3_x] Y[travel_point_3_y] F21000 P2
+        {endif}
+        M620.1 E F{flush_volumetric_speeds[previous_extruder]/2.4053*60} T{flush_temperatures[previous_extruder]}
+        T[next_extruder]
+        M620.1 E F{flush_volumetric_speeds[next_extruder]/2.4053*60} T{flush_temperatures[next_extruder]}
+
+        {if next_extruder < 255}
+        {if long_retractions_when_cut[previous_extruder]}
+        M620.11 S1 I[previous_extruder] E{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        M628 S1
+        G92 E0
+        G1 E{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        M400
+        M629 S1
+        {else}
+        M620.11 S0
+        {endif}
+        G92 E0
+        {if flush_length_1 > 1}
+        M83
+        ; FLUSH_START
+        ; always use highest temperature to flush
+        M400
+        {if filament_type[next_extruder] == "PETG"}
+        M109 S260
+        {elsif filament_type[next_extruder] == "PVA"}
+        M109 S210
+        {else}
+        M109 S{flush_temperatures[next_extruder]}
+        {endif}
+        {if flush_length_1 > 23.7}
+        G1 E23.7 F{flush_volumetric_speeds[previous_extruder]/2.4053*60} ; do not need pulsatile flushing for start part
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        {else}
+        G1 E{flush_length_1} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        {endif}
+        ; FLUSH_END
+        G1 E-[old_retract_length_toolchange] F1800
+        G1 E[old_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_2 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        ; FLUSH_END
+        G1 E-[new_retract_length_toolchange] F1800
+        G1 E[new_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_3 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        ; FLUSH_END
+        G1 E-[new_retract_length_toolchange] F1800
+        G1 E[new_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_4 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        ; FLUSH_END
+        {endif}
+        ; FLUSH_START
+        M400
+        M109 S[new_filament_temp]
+        G1 E2 F{flush_volumetric_speeds[next_extruder]/2.4053*60} ;Compensate for filament spillage during waiting temperature
+        ; FLUSH_END
+        M400
+        G92 E0
+        G1 E-[new_retract_length_toolchange] F1800
+        M106 P1 S255
+        M400 S3
+
+        G1 X70 F5000
+        G1 X90 F3000
+        G1 Y255 F4000
+        G1 X105 F5000
+        G1 Y265 F5000
+        G1 X70 F10000
+        G1 X100 F5000
+        G1 X70 F10000
+        G1 X100 F5000
+
+        G1 X70 F10000
+        G1 X80 F15000
+        G1 X60
+        G1 X80
+        G1 X60
+        G1 X80 ; shake to put down garbage
+        G1 X100 F5000
+        G1 X165 F15000; wipe and shake
+        G1 Y256 ; move Y to aside, prevent collision
+        M400
+        G1 Z{max_layer_z + 3.0} F3000
+        {if layer_z <= (first_layer_height + 0.001)}
+        M204 S[first_layer_acceleration]
+        {else}
+        M204 S[default_acceleration]
+        {endif}
+        {else}
+        G1 X[x_after_toolchange] Y[y_after_toolchange] Z[z_after_toolchange] F12000
+        {endif}
+        M621 S[next_extruder]A
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.20mm Standard @BBL X1C
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x2'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ; layer num/total_layer_count: {layer_num+1}/[total_layer_count]
+        ; update layer progress
+        M73 L{layer_num+1}
+        M991 S0 P{layer_num} ;notify layer change
+        G92 E0
+      end_gcode: |
+        ;===== date: 20240528 =====================
+        M400 ; wait for buffer to clear
+        G92 E0 ; zero the extruder
+        G1 E-0.8 F1800 ; retract
+        G1 Z{max_layer_z + 0.5} F900 ; lower z a little
+        G1 X65 Y245 F12000 ; move to safe pos
+        G1 Y265 F3000
+
+        G1 X65 Y245 F12000
+        G1 Y265 F3000
+        M140 S0 ; turn off bed
+        M106 S0 ; turn off fan
+        M106 P2 S0 ; turn off remote part cooling fan
+        M106 P3 S0 ; turn off chamber cooling fan
+
+        G1 X100 F12000 ; wipe
+        ; pull back filament to AMS
+        M620 S255
+        G1 X20 Y50 F12000
+        G1 Y-3
+        T255
+        G1 X65 F12000
+        G1 Y265
+        G1 X100 F12000 ; wipe
+        M621 S255
+        M104 S0 ; turn off hotend
+
+        M622.1 S1 ; for prev firmware, default turned on
+        M1002 judge_flag timelapse_record_flag
+        M622 J1
+            M400 ; wait all motion done
+            M991 S0 P-1 ;end smooth timelapse at safe pos
+            M400 S3 ;wait for last picture to be taken
+        M623; end of "timelapse_record_flag"
+
+        M400 ; wait all motion done
+        M17 S
+        M17 Z0.4 ; lower z motor current to reduce impact if there is something in the bottom
+        {if (max_layer_z + 100.0) < 250}
+            G1 Z{max_layer_z + 100.0} F600
+            G1 Z{max_layer_z +98.0}
+        {else}
+            G1 Z250 F600
+            G1 Z248
+        {endif}
+        M400 P100
+        M17 R ; restore z current
+
+        M220 S100  ; Reset feedrate magnitude
+        M201.2 K1.0 ; Reset acc magnitude
+        M73.2   R1.0 ;Reset left time magnitude
+        M1002 set_gcode_claim_speed_level : 0
+        ;=====printer finish  sound=========
+        M17
+        M400 S1
+        M1006 S1
+        M1006 A0 B20 L100 C37 D20 M40 E42 F20 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C46 D10 M80 E46 F10 N80
+        M1006 A44 B20 L100 C39 D20 M60 E48 F20 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C39 D10 M60 E39 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C39 D10 M60 E39 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C48 D10 M60 E44 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10  N100
+        M1006 A49 B20 L100 C44 D20 M100 E41 F20 N100
+        M1006 A0 B20 L100 C0 D20 M60 E0 F20 N100
+        M1006 A0 B20 L100 C37 D20 M30 E37 F20 N60
+        M1006 W
+
+        M17 X0.8 Y0.8 Z0.5 ; lower motor current to 45% power
+        M960 S5 P0 ; turn off logo lamp
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M400 U1
+      start_gcode: |
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}{local _pm = (0, -1)}{local _ft0 = custom_parameter_filament_filament_flush_temp[0]}{if _ft0 == 0}{_ft0 = custom_parameter_filament_nozzle_temperature_range_high[0]}{endif}{local flush_temperatures = (_ft0, 0)}{local _fv0 = custom_parameter_filament_filament_flush_volumetric_speed[0]}{if _fv0 == 0}{_fv0 = filament_max_volumetric_speed[0]}{endif}{local flush_volumetric_speeds = (_fv0, 0)};===== machine: X1-0.4 ====================
+        ;===== date: 20251031 ==================
+        ;===== start printer sound ================
+        M17
+        M400 S1
+        M1006 S1
+        M1006 A0 B10 L100 C37 D10 M60 E37 F10 N60
+        M1006 A0 B10 L100 C41 D10 M60 E41 F10 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A46 B10 L100 C43 D10 M70 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A43 B10 L100 C0 D10 M60 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A41 B10 L100 C0 D10 M100 E41 F10 N100
+        M1006 A44 B10 L100 C0 D10 M100 E44 F10 N100
+        M1006 A49 B10 L100 C0 D10 M100 E49 F10 N100
+        M1006 A0 B10 L100 C0 D10 M100 E0 F10 N100
+        M1006 A48 B10 L100 C44 D10 M60 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A44 B10 L100 C0 D10 M90 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A46 B10 L100 C43 D10 M60 E39 F10 N100
+        M1006 W
+        ;===== turn on the HB fan =================
+        M104 S75 ;set extruder temp to turn on the HB fan and prevent filament oozing from nozzle
+        ;===== reset machine status =================
+        M290 X40 Y40 Z2.6666666
+        G91
+        M17 Z0.4 ; lower the z-motor current
+        G380 S2 Z30 F300 ; G380 is same as G38; lower the hotbed , to prevent the nozzle is below the hotbed
+        G380 S2 Z-25 F300 ;
+        G1 Z5 F300;
+        G90
+        M17 X1.2 Y1.2 Z0.75 ; reset motor current to default
+        M960 S5 P1 ; turn on logo lamp
+        G90
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+        M73.2   R1.0 ;Reset left time magnitude
+        M1002 set_gcode_claim_speed_level : 5
+        M221 X0 Y0 Z0 ; turn off soft endstop to prevent protential logic problem
+        G29.1 Z{+0.0} ; clear z-trim value first
+        M204 S10000 ; init ACC set to 10m/s^2
+
+        ;===== heatbed preheat ====================
+        M1002 gcode_claim_action:54
+        M140 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp
+        M190 S[first_layer_bed_temperature[initial_extruder]] ;wait for bed temp
+
+        {if custom_parameter_printer_scan_first_layer}
+        ;=========register first layer scan=====
+        M977 S1 P60
+        {endif}
+
+        ;=============turn on fans to prevent PLA jamming=================
+        {if filament_type[initial_extruder]=="PLA"}
+            {if (bed_temperature[initial_extruder] >45)||(first_layer_bed_temperature[initial_extruder] >45)}
+            M106 P3 S180
+            {endif};Prevent PLA from jamming
+            M142 P1 R35 S40
+        {endif}
+        M106 P2 S100 ; turn on big fan ,to cool down toolhead
+
+        ;===== prepare print temperature and material ==========
+        M104 S[first_layer_temperature] ;set extruder temp
+        G91
+        G0 Z10 F1200
+        G90
+        G28 X
+        M975 S1 ; turn on
+        G1 X60 F12000
+        G1 Y245
+        G1 Y265 F3000
+        M620 M
+        M620 S[initial_extruder]A   ; switch material if AMS exist
+            M109 S[first_layer_temperature]
+            G1 X120 F12000
+
+            G1 X20 Y50 F12000
+            G1 Y-3
+            T[initial_extruder]
+            G1 X54 F12000
+            G1 Y265
+            M400
+        M621 S[initial_extruder]A
+        M620.1 E F{flush_volumetric_speeds[initial_extruder]/2.4053*60} T{flush_temperatures[initial_extruder]}
+
+        M412 S1 ; ===turn on filament runout detection===
+
+        M109 S250 ;set nozzle to common flush temp
+        M106 P1 S0
+        G92 E0
+        G1 E50 F200
+        M400
+        M104 S[first_layer_temperature]
+        G92 E0
+        G1 E50 F200
+        M400
+        M106 P1 S255
+        G92 E0
+        G1 E5 F300
+        M109 S{first_layer_temperature[initial_extruder]-20} ; drop nozzle temp, make filament shink a bit
+        G92 E0
+        G1 E-0.5 F300
+
+        G1 X70 F9000
+        G1 X76 F15000
+        G1 X65 F15000
+        G1 X76 F15000
+        G1 X65 F15000; shake to put down garbage
+        G1 X80 F6000
+        G1 X95 F15000
+        G1 X80 F15000
+        G1 X165 F15000; wipe and shake
+        M400
+        M106 P1 S0
+        ;===== prepare print temperature and material end =====
+
+
+        ;===== wipe nozzle ===============================
+        M1002 gcode_claim_action : 14
+        M975 S1
+        M106 S255
+        G1 X65 Y230 F18000
+        G1 Y264 F6000
+        M109 S{first_layer_temperature[initial_extruder]-20}
+        G1 X100 F18000 ; first wipe mouth
+
+        G0 X135 Y253 F20000  ; move to exposed steel surface edge
+        G28 Z P0 T300; home z with low precision,permit 300deg temperature
+        G29.2 S0 ; turn off ABL
+        G0 Z5 F20000
+
+        G1 X60 Y265
+        G92 E0
+        G1 E-0.5 F300 ; retrack more
+        G1 X100 F5000; second wipe mouth
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X90 F5000
+        G0 X128 Y261 Z-1.5 F20000  ; move to exposed steel surface and stop the nozzle
+        M104 S140 ; set temp down to heatbed acceptable
+        M106 S255 ; turn on fan (G28 has turn off fan)
+
+        M221 S; push soft endstop status
+        M221 Z0 ;turn off Z axis endstop
+        G0 Z0.5 F20000
+        G0 X125 Y259.5 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y262.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y260.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y262.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y260.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y261.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y261.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 X128
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+
+        M109 S140 ; wait nozzle temp down to heatbed acceptable
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+
+        M221 R; pop softend status
+        G1 Z10 F1200
+        M400
+        G1 Z10
+        G1 F30000
+        G1 X128 Y128
+        G29.2 S1 ; turn on ABL
+        ;G28 ; home again after hard wipe mouth
+        M106 S0 ; turn off fan , too noisy
+        ;===== wipe nozzle end ================================
+
+        ;===== check scanner clarity ===========================
+        G1 X128 Y128 F24000
+        G28 Z P0
+        M972 S5 P0
+        G1 X230 Y15 F24000
+        ;===== check scanner clarity end =======================
+
+        ;===== bed leveling ==================================
+        M1002 judge_flag g29_before_print_flag
+        M622 J1
+
+            M1002 gcode_claim_action : 1
+            G29 A X{first_layer_print_min[0]} Y{first_layer_print_min[1]} I{first_layer_print_size[0]} J{first_layer_print_size[1]}
+            M400
+            M500 ; save cali data
+
+        M623
+        ;===== bed leveling end ================================
+
+        ;===== home after wipe mouth============================
+        M1002 judge_flag g29_before_print_flag
+        M622 J0
+
+            M1002 gcode_claim_action : 13
+            G28
+
+        M623
+        ;===== home after wipe mouth end =======================
+
+        M975 S1 ; turn on vibration supression
+
+        ;=============turn on fans to prevent PLA jamming=================
+        {if filament_type[initial_extruder]=="PLA"}
+            {if (bed_temperature[initial_extruder] >45)||(first_layer_bed_temperature[initial_extruder] >45)}
+            M106 P3 S180
+            {endif};Prevent PLA from jamming
+            M142 P1 R35 S40
+        {endif}
+        M106 P2 S100 ; turn on big fan ,to cool down toolhead
+
+        M104 S{first_layer_temperature[initial_extruder]} ; set extrude temp earlier, to reduce wait time
+
+        ;===== mech mode fast check============================
+        G1 X128 Y128 Z10 F20000
+        M400 P200
+        M970.3 Q1 A7 B30 C80  H15 K0
+        M974 Q1 S2 P0
+
+        G1 X128 Y128 Z10 F20000
+        M400 P200
+        M970.3 Q0 A7 B30 C90 Q0 H15 K0
+        M974 Q0 S2 P0
+
+        M975 S1
+        G1 F30000
+        G1 X230 Y15
+        G28 X ; re-home XY
+        ;===== mech mode fast check============================
+
+        {if custom_parameter_printer_scan_first_layer}
+        ;start heatbed  scan====================================
+        M976 S2 P1
+        G90
+        G1 X128 Y128 F20000
+        M976 S3 P2  ;register void printing detection
+        {endif}
+
+        ;===== nozzle load line ===============================
+        M975 S1
+        G90
+        M83
+        T1000
+        G1 X18.0 Y1.0 Z0.8 F18000;Move to start position
+        M109 S{temperature[initial_extruder]}
+        G1 Z0.2
+        G0 E2 F300
+        G0 X240 E15 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 Y11 E0.700 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+        G0 X239.5
+        G0 E0.2
+        G0 Y1.5 E0.700
+        G0 X231 E0.700 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        M400
+
+        ;===== for Textured PEI Plate , lower the nozzle as the nozzle was touching topmost of the texture when homing ==
+        ;curr_bed_type={sheet_type}
+        {if sheet_type=="Textured PEI Plate"}
+        G29.1 Z{-0.04} ; for Textured PEI Plate
+        {endif}
+
+        ;===== draw extrinsic para cali paint =================
+        M1002 judge_flag extrude_cali_flag
+        M622 J1
+
+            M1002 gcode_claim_action : 8
+
+            T1000
+
+            G0 F1200.0 X231 Y12   Z0.2 E0.577
+            G0 F1200.0 X226 Y12   Z0.2 E0.275
+            G0 F1200.0 X226 Y1.5  Z0.2 E0.577
+            G0 F1200.0 X220 Y1.5  Z0.2 E0.330
+            G0 F1200.0 X220 Y8    Z0.2 E0.358
+            G0 F1200.0 X210 Y8    Z0.2 E0.549
+            G0 F1200.0 X210 Y1.5  Z0.2 E0.357
+
+            G0 X48.0 E11.9 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+            G0 X48.0 Y12 E0.772 F1200.0
+            G0 X45.0 E0.22 F1200.0
+            G0 X35.0 Y6.0 E0.86 F1200.0
+
+            ;=========== extruder cali extrusion ==================
+            T1000
+            M83
+            {if default_acceleration[current_extruder] > 0}
+                {if external_perimeter_acceleration[current_extruder] > 0}
+                    M204 S[external_perimeter_acceleration]
+                {else}
+                    M204 S[default_acceleration]
+                {endif}
+            {endif}
+            G0 X35.000 Y6.000 Z0.300 F30000 E0
+            G1 F1500.000 E0.800
+            M106 S0 ; turn off fan
+            G0 X185.000 E9.35441 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G0 X187 Z0
+            G1 F1500.000 E-0.800
+            G0 Z1
+            G0 X180 Z0.3 F18000
+
+            M900 L1000.0 M1.0
+            M900 K0.040
+            G0 X45.000 F30000
+            G0 Y8.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000 E1.24726 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X70.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X75.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X80.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X85.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X90.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X95.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X100.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X105.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X110.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X115.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X120.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X125.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X130.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X135.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X140.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X145.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X150.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X155.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X160.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X165.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X170.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X175.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X180.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+            M400
+
+            G0 X45.000 F30000
+            M900 K0.020
+            G0 X45.000 F30000
+            G0 Y10.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000 E1.24726 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X70.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X75.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X80.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X85.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X90.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X95.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X100.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X105.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X110.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X115.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X120.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X125.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X130.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X135.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X140.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X145.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X150.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X155.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X160.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X165.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X170.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X175.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X180.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+            M400
+
+            G0 X45.000 F30000
+            M900 K0.000
+            G0 X45.000 F30000
+            G0 Y12.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000 E1.24726 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X70.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X75.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X80.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X85.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X90.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X95.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X100.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X105.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X110.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X115.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X120.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X125.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X130.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X135.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X140.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X145.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X150.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X155.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X160.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X165.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X170.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X175.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X180.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+
+            G0 X45.000 F30000 ; move to start point
+
+        M623 ; end of "draw extrinsic para cali paint"
+
+
+        M1002 judge_flag extrude_cali_flag
+        M622 J0
+            G0 X231 Y1.5 F30000
+            G0 X18 E14.3 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        M623
+
+        M104 S140
+
+
+        ;=========== laser and rgb calibration ===========
+        M400
+        M18 E
+        M500 R
+
+        M973 S3 P14
+
+        G1 X120 Y1.0 Z0.3 F18000.0;Move to first extrude line pos
+        T1100
+        G1 X235.0 Y1.0 Z0.3 F18000.0;Move to first extrude line pos
+        M400 P100
+        M960 S1 P1
+        M400 P100
+        M973 S6 P0; use auto exposure for horizontal laser by xcam
+        M960 S0 P0
+
+        G1 X240.0 Y6.0 Z0.3 F18000.0;Move to vertical extrude line pos
+        M960 S2 P1
+        M400 P100
+        M973 S6 P1; use auto exposure for vertical laser by xcam
+        M960 S0 P0
+
+        ;=========== handeye calibration ======================
+        M1002 judge_flag extrude_cali_flag
+        M622 J1
+
+            M973 S3 P1 ; camera start stream
+            M400 P500
+            M973 S1
+            G0 F6000 X228.500 Y4.750 Z0.000
+            M960 S0 P1
+            M973 S1
+            M400 P800
+            M971 S6 P0
+            M973 S2 P0
+            M400 P500
+            G0 Z0.000 F12000
+            M960 S0 P0
+            M960 S1 P1
+            G0 X215.00 Y4.750
+            M400 P200
+            M971 S5 P1
+            M973 S2 P1
+            M400 P500
+            M960 S0 P0
+            M960 S2 P1
+            G0 X228.5 Y6.75
+            M400 P200
+            M971 S5 P3
+            G0 Z0.500 F12000
+            M960 S0 P0
+            M960 S2 P1
+            G0 X228.5 Y6.75
+            M400 P200
+            M971 S5 P4
+            M973 S2 P0
+            M400 P500
+            M960 S0 P0
+            M960 S1 P1
+            G0 X215.00 Y4.750
+            M400 P500
+            M971 S5 P2
+            M963 S1
+            M400 P1500
+            M964
+            T1100
+            G1 Z3 F3000
+
+            M400
+            M500 ; save cali data
+
+            M104 S{temperature[initial_extruder]} ; rise nozzle temp now ,to reduce temp waiting time.
+
+            T1100
+            M400 P400
+            M960 S0 P0
+            G0 F30000.000 Y10.000 X65.000 Z0.000
+            M400 P400
+            M960 S1 P1
+            M400 P50
+
+            M969 S1 N3 A2000
+            G0 F360.000 X181.000 Z0.000
+            M980.3 A70.000 B{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*60/4} C5.000 D{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*60} E5.000 F175.000 H1.000 I0.000 J0.020 K0.040
+            M400 P100
+            G0 F20000
+            G0 Z1 ; rise nozzle up
+            T1000 ; change to nozzle space
+            G0 X45.000 Y4.000 F30000 ; move to test line pos
+            M969 S0 ; turn off scanning
+            M960 S0 P0
+
+
+            G1 Z2 F20000
+            T1000
+            G0 X45.000 Y4.000 F30000 E0
+            M109 S{temperature[initial_extruder]}
+            G0 Z0.3
+            G1 F1500.000 E3.600
+            G1 X65.000 E1.24726 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X70.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X75.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X80.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X85.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X90.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X95.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X100.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X105.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X110.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X115.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X120.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X125.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X130.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X135.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+
+            ; see if extrude cali success, if not ,use default value
+            M1002 judge_last_extrude_cali_success
+            M622 J0
+                M400
+                M900 K0.02 M{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*0.02}
+            M623
+
+            G1 X140.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X145.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X150.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X155.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X160.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X165.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X170.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X175.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X180.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X185.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X190.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X195.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X200.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X205.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X210.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X215.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X220.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X225.000 E0.31181 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            M973 S4
+
+        M623
+
+        ;========turn off light and wait extrude temperature =============
+        M1002 gcode_claim_action : 0
+        M973 S4 ; turn off scanner
+        M400 ; wait all motion done before implement the emprical L parameters
+        ;M900 L500.0 ; Empirical parameters
+        M109 S[first_layer_temperature]
+        M960 S1 P0 ; turn off laser
+        M960 S2 P0 ; turn off laser
+        M106 S0 ; turn off fan
+        M106 P2 S0 ; turn off big fan
+        M106 P3 S0 ; turn off chamber fan
+
+        M975 S1 ; turn on mech mode supression
+        G90
+        M83
+        T1000
+        ;===== purge line to wipe the nozzle ============================
+        G1 E{-retract_length[initial_extruder]} F1800
+        G1 X18.0 Y2.5 Z0.8 F18000.0;Move to start position
+        G1 E{retract_length[initial_extruder]} F1800
+        M109 S{first_layer_temperature[initial_extruder]}
+        G1 Z0.2
+        G0 X239 E15 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+        G0 Y12 E0.7 F{outer_wall_volumetric_speed/(0.3*0.5)/4* 60}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 256x0
+      - 256x256
+      - '0x256'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"cooling_filter_enabled": false, "hotend_cooling_rate__0": 2.0, "hotend_cooling_rate__1": 2.0, "hotend_heating_rate__0": 2.0, "hotend_heating_rate__1": 2.0, "long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "scan_first_layer": true, "support_air_filtration": false, "z_hop_types__0": 0, "z_hop_types__1": 0}'
+  - condition: tool.nozzle_diameter == 0.6
+    id: AxrUrQG52YIqjrjxEx7ZwQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: |
+        {local long_retractions_when_cut = (custom_parameter_printer_long_retractions_when_cut__0, custom_parameter_printer_long_retractions_when_cut__1)}{local retraction_distances_when_cut = (custom_parameter_printer_retraction_distances_when_cut__0, custom_parameter_printer_retraction_distances_when_cut__1)}{local _pm = (0, -1)}{local _ft0 = custom_parameter_filament_filament_flush_temp[0]}{if _ft0 == 0}{_ft0 = custom_parameter_filament_nozzle_temperature_range_high[0]}{endif}{local flush_temperatures = (_ft0, 0)}{local _fv0 = custom_parameter_filament_filament_flush_volumetric_speed[0]}{if _fv0 == 0}{_fv0 = filament_max_volumetric_speed[0]}{endif}{local flush_volumetric_speeds = (_fv0, 0)};=X1 20251031=
+        M620 S[next_extruder]A
+        M204 S9000
+        G1 Z{max_layer_z + 3.0} F1200
+
+        G1 X70 F21000
+        G1 Y245
+        G1 Y265 F3000
+        M400
+        M106 P1 S0
+        M106 P2 S0
+        {if old_filament_temp > 142 && next_extruder < 255}
+        M104 S[old_filament_temp]
+        {endif}
+        {if long_retractions_when_cut[previous_extruder]}
+        M620.11 S1 I[previous_extruder] E-{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        {else}
+        M620.11 S0
+        {endif}
+        M400
+        G1 X90 F3000
+        G1 Y255 F4000
+        G1 X100 F5000
+        G1 X120 F15000
+        G1 X20 Y50 F21000
+        G1 Y-3
+        {if toolchange_count == 2}
+        ; get travel path for change filament
+        M620.1 X[travel_point_1_x] Y[travel_point_1_y] F21000 P0
+        M620.1 X[travel_point_2_x] Y[travel_point_2_y] F21000 P1
+        M620.1 X[travel_point_3_x] Y[travel_point_3_y] F21000 P2
+        {endif}
+        M620.1 E F{flush_volumetric_speeds[previous_extruder]/2.4053*60} T{flush_temperatures[previous_extruder]}
+        T[next_extruder]
+        M620.1 E F{flush_volumetric_speeds[next_extruder]/2.4053*60} T{flush_temperatures[next_extruder]}
+
+        {if next_extruder < 255}
+        {if long_retractions_when_cut[previous_extruder]}
+        M620.11 S1 I[previous_extruder] E{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        M628 S1
+        G92 E0
+        G1 E{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        M400
+        M629 S1
+        {else}
+        M620.11 S0
+        {endif}
+        G92 E0
+        {if flush_length_1 > 1}
+        M83
+        ; FLUSH_START
+        ; always use highest temperature to flush
+        M400
+        {if filament_type[next_extruder] == "PETG"}
+        M109 S260
+        {elsif filament_type[next_extruder] == "PVA"}
+        M109 S210
+        {else}
+        M109 S{flush_temperatures[next_extruder]}
+        {endif}
+        {if flush_length_1 > 23.7}
+        G1 E23.7 F{flush_volumetric_speeds[previous_extruder]/2.4053*60} ; do not need pulsatile flushing for start part
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        {else}
+        G1 E{flush_length_1} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        {endif}
+        ; FLUSH_END
+        G1 E-[old_retract_length_toolchange] F1800
+        G1 E[old_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_2 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        ; FLUSH_END
+        G1 E-[new_retract_length_toolchange] F1800
+        G1 E[new_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_3 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        ; FLUSH_END
+        G1 E-[new_retract_length_toolchange] F1800
+        G1 E[new_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_4 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        ; FLUSH_END
+        {endif}
+        ; FLUSH_START
+        M400
+        M109 S[new_filament_temp]
+        G1 E2 F{flush_volumetric_speeds[next_extruder]/2.4053*60} ;Compensate for filament spillage during waiting temperature
+        ; FLUSH_END
+        M400
+        G92 E0
+        G1 E-[new_retract_length_toolchange] F1800
+        M106 P1 S255
+        M400 S3
+
+        G1 X70 F5000
+        G1 X90 F3000
+        G1 Y255 F4000
+        G1 X105 F5000
+        G1 Y265 F5000
+        G1 X70 F10000
+        G1 X100 F5000
+        G1 X70 F10000
+        G1 X100 F5000
+
+        G1 X70 F10000
+        G1 X80 F15000
+        G1 X60
+        G1 X80
+        G1 X60
+        G1 X80 ; shake to put down garbage
+        G1 X100 F5000
+        G1 X165 F15000; wipe and shake
+        G1 Y256 ; move Y to aside, prevent collision
+        M400
+        G1 Z{max_layer_z + 3.0} F3000
+        {if layer_z <= (first_layer_height + 0.001)}
+        M204 S[first_layer_acceleration]
+        {else}
+        M204 S[default_acceleration]
+        {endif}
+        {else}
+        G1 X[x_after_toolchange] Y[y_after_toolchange] Z[z_after_toolchange] F12000
+        {endif}
+        M621 S[next_extruder]A
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.30mm Standard @BBL X1 0.6 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x2'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ; layer num/total_layer_count: {layer_num+1}/[total_layer_count]
+        ; update layer progress
+        M73 L{layer_num+1}
+        M991 S0 P{layer_num} ;notify layer change
+        G92 E0
+      end_gcode: |
+        ;===== date: 20240528 =====================
+        M400 ; wait for buffer to clear
+        G92 E0 ; zero the extruder
+        G1 E-0.8 F1800 ; retract
+        G1 Z{max_layer_z + 0.5} F900 ; lower z a little
+        G1 X65 Y245 F12000 ; move to safe pos
+        G1 Y265 F3000
+
+        G1 X65 Y245 F12000
+        G1 Y265 F3000
+        M140 S0 ; turn off bed
+        M106 S0 ; turn off fan
+        M106 P2 S0 ; turn off remote part cooling fan
+        M106 P3 S0 ; turn off chamber cooling fan
+
+        G1 X100 F12000 ; wipe
+        ; pull back filament to AMS
+        M620 S255
+        G1 X20 Y50 F12000
+        G1 Y-3
+        T255
+        G1 X65 F12000
+        G1 Y265
+        G1 X100 F12000 ; wipe
+        M621 S255
+        M104 S0 ; turn off hotend
+
+        M622.1 S1 ; for prev firmware, default turned on
+        M1002 judge_flag timelapse_record_flag
+        M622 J1
+            M400 ; wait all motion done
+            M991 S0 P-1 ;end smooth timelapse at safe pos
+            M400 S3 ;wait for last picture to be taken
+        M623; end of "timelapse_record_flag"
+
+        M400 ; wait all motion done
+        M17 S
+        M17 Z0.4 ; lower z motor current to reduce impact if there is something in the bottom
+        {if (max_layer_z + 100.0) < 250}
+            G1 Z{max_layer_z + 100.0} F600
+            G1 Z{max_layer_z +98.0}
+        {else}
+            G1 Z250 F600
+            G1 Z248
+        {endif}
+        M400 P100
+        M17 R ; restore z current
+
+        M220 S100  ; Reset feedrate magnitude
+        M201.2 K1.0 ; Reset acc magnitude
+        M73.2   R1.0 ;Reset left time magnitude
+        M1002 set_gcode_claim_speed_level : 0
+        ;=====printer finish  sound=========
+        M17
+        M400 S1
+        M1006 S1
+        M1006 A0 B20 L100 C37 D20 M40 E42 F20 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C46 D10 M80 E46 F10 N80
+        M1006 A44 B20 L100 C39 D20 M60 E48 F20 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C39 D10 M60 E39 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C39 D10 M60 E39 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C48 D10 M60 E44 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10  N100
+        M1006 A49 B20 L100 C44 D20 M100 E41 F20 N100
+        M1006 A0 B20 L100 C0 D20 M60 E0 F20 N100
+        M1006 A0 B20 L100 C37 D20 M30 E37 F20 N60
+        M1006 W
+
+        M17 X0.8 Y0.8 Z0.5 ; lower motor current to 45% power
+        M960 S5 P0 ; turn off logo lamp
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M400 U1
+      start_gcode: |
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}{local _pm = (0, -1)}{local _ft0 = custom_parameter_filament_filament_flush_temp[0]}{if _ft0 == 0}{_ft0 = custom_parameter_filament_nozzle_temperature_range_high[0]}{endif}{local flush_temperatures = (_ft0, 0)}{local _fv0 = custom_parameter_filament_filament_flush_volumetric_speed[0]}{if _fv0 == 0}{_fv0 = filament_max_volumetric_speed[0]}{endif}{local flush_volumetric_speeds = (_fv0, 0)};===== machine: X1-0.6 ====================
+        ;===== date: 20251031 ==================
+        ;===== start printer sound ================
+        M17
+        M400 S1
+        M1006 S1
+        M1006 A0 B10 L100 C37 D10 M60 E37 F10 N60
+        M1006 A0 B10 L100 C41 D10 M60 E41 F10 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A46 B10 L100 C43 D10 M70 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A43 B10 L100 C0 D10 M60 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A41 B10 L100 C0 D10 M100 E41 F10 N100
+        M1006 A44 B10 L100 C0 D10 M100 E44 F10 N100
+        M1006 A49 B10 L100 C0 D10 M100 E49 F10 N100
+        M1006 A0 B10 L100 C0 D10 M100 E0 F10 N100
+        M1006 A48 B10 L100 C44 D10 M60 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A44 B10 L100 C0 D10 M90 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A46 B10 L100 C43 D10 M60 E39 F10 N100
+        M1006 W
+        ;===== turn on the HB fan =================
+        M104 S75 ;set extruder temp to turn on the HB fan and prevent filament oozing from nozzle
+        ;===== reset machine status =================
+        M290 X40 Y40 Z2.6666666
+        G91
+        M17 Z0.4 ; lower the z-motor current
+        G380 S2 Z30 F300 ; G380 is same as G38; lower the hotbed , to prevent the nozzle is below the hotbed
+        G380 S2 Z-25 F300 ;
+        G1 Z5 F300;
+        G90
+        M17 X1.2 Y1.2 Z0.75 ; reset motor current to default
+        M960 S5 P1 ; turn on logo lamp
+        G90
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+        M73.2   R1.0 ;Reset left time magnitude
+        M1002 set_gcode_claim_speed_level : 5
+        M221 X0 Y0 Z0 ; turn off soft endstop to prevent protential logic problem
+        G29.1 Z{+0.0} ; clear z-trim value first
+        M204 S10000 ; init ACC set to 10m/s^2
+
+        ;===== heatbed preheat ====================
+        M1002 gcode_claim_action:54
+        M140 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp
+        M190 S[first_layer_bed_temperature[initial_extruder]] ;wait for bed temp
+
+        {if custom_parameter_printer_scan_first_layer}
+        ;=========register first layer scan=====
+        M977 S1 P60
+        {endif}
+
+        ;=============turn on fans to prevent PLA jamming=================
+        {if filament_type[initial_extruder]=="PLA"}
+            {if (bed_temperature[initial_extruder] >45)||(first_layer_bed_temperature[initial_extruder] >45)}
+            M106 P3 S180
+            {endif};Prevent PLA from jamming
+            M142 P1 R35 S40
+        {endif}
+        M106 P2 S100 ; turn on big fan ,to cool down toolhead
+
+        ;===== prepare print temperature and material ==========
+        M104 S[first_layer_temperature] ;set extruder temp
+        G91
+        G0 Z10 F1200
+        G90
+        G28 X
+        M975 S1 ; turn on
+        G1 X60 F12000
+        G1 Y245
+        G1 Y265 F3000
+        M620 M
+        M620 S[initial_extruder]A   ; switch material if AMS exist
+            M109 S[first_layer_temperature]
+            G1 X120 F12000
+
+            G1 X20 Y50 F12000
+            G1 Y-3
+            T[initial_extruder]
+            G1 X54 F12000
+            G1 Y265
+            M400
+        M621 S[initial_extruder]A
+        M620.1 E F{flush_volumetric_speeds[initial_extruder]/2.4053*60} T{flush_temperatures[initial_extruder]}
+
+
+        M412 S1 ; ===turn on filament runout detection===
+
+        M109 S250 ;set nozzle to common flush temp
+        M106 P1 S0
+        G92 E0
+        G1 E50 F200
+        M400
+        M104 S[first_layer_temperature]
+        G92 E0
+        G1 E50 F200
+        M400
+        M106 P1 S255
+        G92 E0
+        G1 E5 F300
+        M109 S{first_layer_temperature[initial_extruder]-20} ; drop nozzle temp, make filament shink a bit
+        G92 E0
+        G1 E-0.5 F300
+
+        G1 X70 F9000
+        G1 X76 F15000
+        G1 X65 F15000
+        G1 X76 F15000
+        G1 X65 F15000; shake to put down garbage
+        G1 X80 F6000
+        G1 X95 F15000
+        G1 X80 F15000
+        G1 X165 F15000; wipe and shake
+        M400
+        M106 P1 S0
+        ;===== prepare print temperature and material end =====
+
+
+        ;===== wipe nozzle ===============================
+        M1002 gcode_claim_action : 14
+        M975 S1
+        M106 S255
+        G1 X65 Y230 F18000
+        G1 Y264 F6000
+        M109 S{first_layer_temperature[initial_extruder]-20}
+        G1 X100 F18000 ; first wipe mouth
+
+        G0 X135 Y253 F20000  ; move to exposed steel surface edge
+        G28 Z P0 T300; home z with low precision,permit 300deg temperature
+        G29.2 S0 ; turn off ABL
+        G0 Z5 F20000
+
+        G1 X60 Y265
+        G92 E0
+        G1 E-0.5 F300 ; retrack more
+        G1 X100 F5000; second wipe mouth
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X90 F5000
+        G0 X128 Y261 Z-1.5 F20000  ; move to exposed steel surface and stop the nozzle
+        M104 S140 ; set temp down to heatbed acceptable
+        M106 S255 ; turn on fan (G28 has turn off fan)
+
+        M221 S; push soft endstop status
+        M221 Z0 ;turn off Z axis endstop
+        G0 Z0.5 F20000
+        G0 X125 Y259.5 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y262.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y260.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y262.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y260.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y261.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y261.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 X128
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+
+        M109 S140 ; wait nozzle temp down to heatbed acceptable
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+
+        M221 R; pop softend status
+        G1 Z10 F1200
+        M400
+        G1 Z10
+        G1 F30000
+        G1 X128 Y128
+        G29.2 S1 ; turn on ABL
+        ;G28 ; home again after hard wipe mouth
+        M106 S0 ; turn off fan , too noisy
+        ;===== wipe nozzle end ================================
+
+        ;===== check scanner clarity ===========================
+        G1 X128 Y128 F24000
+        G28 Z P0
+        M972 S5 P0
+        G1 X230 Y15 F24000
+        ;===== check scanner clarity end =======================
+
+        ;===== bed leveling ==================================
+        M1002 judge_flag g29_before_print_flag
+        M622 J1
+
+            M1002 gcode_claim_action : 1
+            G29 A X{first_layer_print_min[0]} Y{first_layer_print_min[1]} I{first_layer_print_size[0]} J{first_layer_print_size[1]}
+            M400
+            M500 ; save cali data
+
+        M623
+        ;===== bed leveling end ================================
+
+        ;===== home after wipe mouth============================
+        M1002 judge_flag g29_before_print_flag
+        M622 J0
+
+            M1002 gcode_claim_action : 13
+            G28
+
+        M623
+        ;===== home after wipe mouth end =======================
+
+        M975 S1 ; turn on vibration supression
+
+        ;=============turn on fans to prevent PLA jamming=================
+        {if filament_type[initial_extruder]=="PLA"}
+            {if (bed_temperature[initial_extruder] >45)||(first_layer_bed_temperature[initial_extruder] >45)}
+            M106 P3 S180
+            {endif};Prevent PLA from jamming
+            M142 P1 R35 S40
+        {endif}
+        M106 P2 S100 ; turn on big fan ,to cool down toolhead
+
+        M104 S{first_layer_temperature[initial_extruder]} ; set extrude temp earlier, to reduce wait time
+
+        ;===== mech mode fast check============================
+        G1 X128 Y128 Z10 F20000
+        M400 P200
+        M970.3 Q1 A7 B30 C80  H15 K0
+        M974 Q1 S2 P0
+
+        G1 X128 Y128 Z10 F20000
+        M400 P200
+        M970.3 Q0 A7 B30 C90 Q0 H15 K0
+        M974 Q0 S2 P0
+
+        M975 S1
+        G1 F30000
+        G1 X230 Y15
+        G28 X ; re-home XY
+        ;===== mech mode fast check============================
+
+        {if custom_parameter_printer_scan_first_layer}
+        ;start heatbed  scan====================================
+        M976 S2 P1
+        G90
+        G1 X128 Y128 F20000
+        M976 S3 P2  ;register void printing detection
+        {endif}
+
+        ;===== nozzle load line ===============================
+        M975 S1
+        G90
+        M83
+        T1000
+        G1 X18.0 Y1.0 Z0.8 F18000;Move to start position
+        M109 S{temperature[initial_extruder]}
+        G1 Z0.2
+        G0 E2 F300
+        G0 X240 E25 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        G0 Y15 E1.166 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+        G0 X239.5
+        G0 E0.2
+        G0 Y1.5 E1.166
+        G0 X231 E1.166 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        M400
+
+        ;===== for Textured PEI Plate , lower the nozzle as the nozzle was touching topmost of the texture when homing ==
+        ;curr_bed_type={sheet_type}
+        {if sheet_type=="Textured PEI Plate"}
+        G29.1 Z{-0.04} ; for Textured PEI Plate
+        {endif}
+
+        ;===== draw extrinsic para cali paint =================
+        M1002 judge_flag extrude_cali_flag
+        M622 J1
+
+            M1002 gcode_claim_action : 8
+
+            G0 F1200.0 X231 Y12 Z0.2 E1.039
+            G0 F1200.0 X226 Y12 Z0.2 E0.495
+            G0 F1200.0 X226 Y1.5 Z0.2 E1.039
+            G0 F1200.0 X220 Y1.5 Z0.2 E0.594
+            G0 F1200.0 X220 Y8 Z0.2 E0.644
+            G0 F1200.0 X210 Y8 Z0.2 E0.988
+            G0 F1200.0 X210 Y1.5 Z0.2 E0.642
+
+            G0 X48.0 E19.826 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+            G0 X48.0 Y12 E1.312 F1200.0
+            G0 X45.0 E0.374 F1200.0
+            G0 X35.0 Y6.0 E1.460 F1200.0
+
+            ;=========== extruder cali extrusion ==================
+            T1000
+            M83
+            {if default_acceleration[current_extruder] > 0}
+                {if external_perimeter_acceleration[current_extruder] > 0}
+                    M204 S[external_perimeter_acceleration]
+                {else}
+                    M204 S[default_acceleration]
+                {endif}
+            {endif}
+            G0 X35.000 Y6.000 Z0.300 F30000 E0
+            G1 F1500.000 E0.800
+            M106 S0 ; turn off fan
+            G0 X185.000 E16.9 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G0 X187 Z0
+            G1 F1500.000 E-0.800
+            G0 Z1
+            G0 X180 Z0.3 F18000
+
+            M900 L1000.0 M1.0
+            M900 K0.030
+            G0 X45.000 F30000
+            G0 Y8.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000  E2.25000 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X70.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X75.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X80.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X85.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X90.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X95.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X100.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X105.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X110.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X115.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X120.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X125.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X130.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X135.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X140.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X145.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X150.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X155.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X160.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X165.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X170.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X175.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X180.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+            M400
+
+            G0 X45.000 F30000
+            M900 K0.015
+            G0 X45.000 F30000
+            G0 Y10.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000  E2.25000 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X70.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X75.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X80.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X85.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X90.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X95.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X100.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X105.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X110.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X115.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X120.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X125.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X130.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X135.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X140.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X145.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X150.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X155.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X160.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X165.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X170.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X175.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X180.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+            M400
+
+            G0 X45.000 F30000
+            M900 K0.000
+            G0 X45.000 F30000
+            G0 Y12.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000  E2.25000 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X70.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X75.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X80.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X85.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X90.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X95.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X100.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X105.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X110.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X115.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X120.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X125.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X130.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X135.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X140.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X145.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X150.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X155.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X160.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X165.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X170.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)/ 4 * 60}
+            G1 X175.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 X180.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.9)    * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+
+            G0 X45.000 F30000 ; move to start point
+
+        M623 ; end of "draw extrinsic para cali paint"
+
+        M1002 judge_flag extrude_cali_flag
+        M622 J0
+            G0 X231 Y1.5 F30000
+            G0 X18 E23.9 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        M623
+
+        M104 S140
+
+        ;=========== laser and rgb calibration ===========
+        M400
+        M18 E
+        M500 R
+
+        M973 S3 P14
+
+        G1 X120 Y1.0 Z0.3 F18000.0;Move to first extrude line pos
+        T1100
+        G1 X235.0 Y1.0 Z0.3 F18000.0;Move to first extrude line pos
+        M400 P100
+        M960 S1 P1
+        M400 P100
+        M973 S6 P0; use auto exposure for horizontal laser by xcam
+        M960 S0 P0
+
+        G1 X240.0 Y6.0 Z0.3 F18000.0;Move to vertical extrude line pos
+        M960 S2 P1
+        M400 P100
+        M973 S6 P1; use auto exposure for vertical laser by xcam
+        M960 S0 P0
+
+        ;=========== handeye calibration ======================
+        M1002 judge_flag extrude_cali_flag
+        M622 J1
+
+            M973 S3 P1 ; camera start stream
+            M400 P500
+            M973 S1
+            G0 F6000 X228.500 Y4.750 Z0.000
+            M960 S0 P1
+            M973 S1
+            M400 P800
+            M971 S6 P0
+            M973 S2 P0
+            M400 P500
+            G0 Z0.000 F12000
+            M960 S0 P0
+            M960 S1 P1
+            G0 X215.00 Y4.750
+            M400 P200
+            M971 S5 P1
+            M973 S2 P1
+            M400 P500
+            M960 S0 P0
+            M960 S2 P1
+            G0 X228.5 Y6.75
+            M400 P200
+            M971 S5 P3
+            G0 Z0.500 F12000
+            M960 S0 P0
+            M960 S2 P1
+            G0 X228.5 Y6.75
+            M400 P200
+            M971 S5 P4
+            M973 S2 P0
+            M400 P500
+            M960 S0 P0
+            M960 S1 P1
+            G0 X215.00 Y4.750
+            M400 P500
+            M971 S5 P2
+            M963 S1
+            M400 P1500
+            M964
+            T1100
+            G1 Z3 F3000
+
+            M400
+            M500 ; save cali data
+
+            M104 S{temperature[initial_extruder]} ; rise nozzle temp now ,to reduce temp waiting time.
+
+            T1100
+            M400 P400
+            M960 S0 P0
+            G0 F30000.000 Y10.000 X65.000 Z0.000
+            M400 P400
+            M960 S1 P1
+            M400 P50
+
+            M969 S1 N3 A2000
+            G0 F360.000 X181.000 Z0.000
+            M980.3 A70.000 B{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*60/4} C5.000 D{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*60} E5.000 F175.000 H1.000 I0.000 J0.015 K0.030
+            M400 P100
+            G0 F20000
+            G0 Z1 ; rise nozzle up
+            T1000 ; change to nozzle space
+            G0 X45.000 Y4.000 F30000 ; move to test line pos
+            M969 S0 ; turn off scanning
+            M960 S0 P0
+
+
+            G1 Z2 F20000
+            T1000
+            G0 X45.000 Y4.000 F30000 E0
+            M109 S{temperature[initial_extruder]}
+            G0 Z0.3
+            G1 F1500.000 E3.600
+            G1 X65.000  E2.25000 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X70.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X75.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X80.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X85.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X90.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X95.000  E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X100.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X105.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X110.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X115.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X120.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X125.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X130.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X135.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+
+            ; see if extrude cali success, if not ,use default value
+            M1002 judge_last_extrude_cali_success
+            M622 J0
+                M400
+                M900 K0.015 M{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*0.015}
+            M623
+
+            G1 X140.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X145.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X150.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X155.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X160.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X165.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X170.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X175.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X180.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X185.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X190.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X195.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X200.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X205.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X210.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X215.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            G1 X220.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)/ 4 * 60}
+            G1 X225.000 E0.56250 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+            M973 S4
+
+        M623
+
+        ;========turn off light and wait extrude temperature =============
+        M1002 gcode_claim_action : 0
+        M973 S4 ; turn off scanner
+        M400 ; wait all motion done before implement the emprical L parameters
+        ;M900 L500.0 ; Empirical parameters
+        M109 S[first_layer_temperature]
+        M960 S1 P0 ; turn off laser
+        M960 S2 P0 ; turn off laser
+        M106 S0 ; turn off fan
+        M106 P2 S0 ; turn off big fan
+        M106 P3 S0 ; turn off chamber fan
+
+        M975 S1 ; turn on mech mode supression
+        G90
+        M83
+        T1000
+        ;===== purge line to wipe the nozzle ============================
+        G1 E{-retract_length[initial_extruder]} F1800
+        G1 X18.0 Y2.5 Z0.8 F18000.0;Move to start position
+        G1 E{retract_length[initial_extruder]} F1800
+        M109 S{first_layer_temperature[initial_extruder]}
+        G1 Z0.2
+        G0 X239 E15 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+        G0 Y12 E0.7 F{outer_wall_volumetric_speed/(0.3*0.5)/4* 60}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 256x0
+      - 256x256
+      - '0x256'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"cooling_filter_enabled": false, "hotend_cooling_rate__0": 2.0, "hotend_cooling_rate__1": 2.0, "hotend_heating_rate__0": 2.0, "hotend_heating_rate__1": 2.0, "long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "scan_first_layer": true, "support_air_filtration": false, "z_hop_types__0": 0, "z_hop_types__1": 0}'
+  - condition: tool.nozzle_diameter == 0.8
+    id: FB1WQQ6BJXAhO8orjEPAAw
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ''
+      toolchange_gcode: |
+        {local long_retractions_when_cut = (custom_parameter_printer_long_retractions_when_cut__0, custom_parameter_printer_long_retractions_when_cut__1)}{local retraction_distances_when_cut = (custom_parameter_printer_retraction_distances_when_cut__0, custom_parameter_printer_retraction_distances_when_cut__1)}{local _pm = (0, -1)}{local _ft0 = custom_parameter_filament_filament_flush_temp[0]}{if _ft0 == 0}{_ft0 = custom_parameter_filament_nozzle_temperature_range_high[0]}{endif}{local flush_temperatures = (_ft0, 0)}{local _fv0 = custom_parameter_filament_filament_flush_volumetric_speed[0]}{if _fv0 == 0}{_fv0 = filament_max_volumetric_speed[0]}{endif}{local flush_volumetric_speeds = (_fv0, 0)};=X1 20251031=
+        M620 S[next_extruder]A
+        M204 S9000
+        G1 Z{max_layer_z + 3.0} F1200
+
+        G1 X70 F21000
+        G1 Y245
+        G1 Y265 F3000
+        M400
+        M106 P1 S0
+        M106 P2 S0
+        {if old_filament_temp > 142 && next_extruder < 255}
+        M104 S[old_filament_temp]
+        {endif}
+        {if long_retractions_when_cut[previous_extruder]}
+        M620.11 S1 I[previous_extruder] E-{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        {else}
+        M620.11 S0
+        {endif}
+        M400
+        G1 X90 F3000
+        G1 Y255 F4000
+        G1 X100 F5000
+        G1 X120 F15000
+        G1 X20 Y50 F21000
+        G1 Y-3
+        {if toolchange_count == 2}
+        ; get travel path for change filament
+        M620.1 X[travel_point_1_x] Y[travel_point_1_y] F21000 P0
+        M620.1 X[travel_point_2_x] Y[travel_point_2_y] F21000 P1
+        M620.1 X[travel_point_3_x] Y[travel_point_3_y] F21000 P2
+        {endif}
+        M620.1 E F{flush_volumetric_speeds[previous_extruder]/2.4053*60} T{flush_temperatures[previous_extruder]}
+        T[next_extruder]
+        M620.1 E F{flush_volumetric_speeds[next_extruder]/2.4053*60} T{flush_temperatures[next_extruder]}
+
+        {if next_extruder < 255}
+        {if long_retractions_when_cut[previous_extruder]}
+        M620.11 S1 I[previous_extruder] E{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        M628 S1
+        G92 E0
+        G1 E{retraction_distances_when_cut[previous_extruder]} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        M400
+        M629 S1
+        {else}
+        M620.11 S0
+        {endif}
+        G92 E0
+        {if flush_length_1 > 1}
+        M83
+        ; FLUSH_START
+        ; always use highest temperature to flush
+        M400
+        {if filament_type[next_extruder] == "PETG"}
+        M109 S260
+        {elsif filament_type[next_extruder] == "PVA"}
+        M109 S210
+        {else}
+        M109 S{flush_temperatures[next_extruder]}
+        {endif}
+        {if flush_length_1 > 23.7}
+        G1 E23.7 F{flush_volumetric_speeds[previous_extruder]/2.4053*60} ; do not need pulsatile flushing for start part
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{(flush_length_1 - 23.7) * 0.02} F50
+        G1 E{(flush_length_1 - 23.7) * 0.23} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        {else}
+        G1 E{flush_length_1} F{flush_volumetric_speeds[previous_extruder]/2.4053*60}
+        {endif}
+        ; FLUSH_END
+        G1 E-[old_retract_length_toolchange] F1800
+        G1 E[old_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_2 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        G1 E{flush_length_2 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_2 * 0.02} F50
+        ; FLUSH_END
+        G1 E-[new_retract_length_toolchange] F1800
+        G1 E[new_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_3 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        G1 E{flush_length_3 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_3 * 0.02} F50
+        ; FLUSH_END
+        G1 E-[new_retract_length_toolchange] F1800
+        G1 E[new_retract_length_toolchange] F300
+        {endif}
+
+        {if flush_length_4 > 1}
+
+        G91
+        G1 X3 F12000; move aside to extrude
+        G90
+        M83
+
+        ; FLUSH_START
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        G1 E{flush_length_4 * 0.18} F{flush_volumetric_speeds[next_extruder]/2.4053*60}
+        G1 E{flush_length_4 * 0.02} F50
+        ; FLUSH_END
+        {endif}
+        ; FLUSH_START
+        M400
+        M109 S[new_filament_temp]
+        G1 E2 F{flush_volumetric_speeds[next_extruder]/2.4053*60} ;Compensate for filament spillage during waiting temperature
+        ; FLUSH_END
+        M400
+        G92 E0
+        G1 E-[new_retract_length_toolchange] F1800
+        M106 P1 S255
+        M400 S3
+
+        G1 X70 F5000
+        G1 X90 F3000
+        G1 Y255 F4000
+        G1 X105 F5000
+        G1 Y265 F5000
+        G1 X70 F10000
+        G1 X100 F5000
+        G1 X70 F10000
+        G1 X100 F5000
+
+        G1 X70 F10000
+        G1 X80 F15000
+        G1 X60
+        G1 X80
+        G1 X60
+        G1 X80 ; shake to put down garbage
+        G1 X100 F5000
+        G1 X165 F15000; wipe and shake
+        G1 Y256 ; move Y to aside, prevent collision
+        M400
+        G1 Z{max_layer_z + 3.0} F3000
+        {if layer_z <= (first_layer_height + 0.001)}
+        M204 S[first_layer_acceleration]
+        {else}
+        M204 S[default_acceleration]
+        {endif}
+        {else}
+        G1 X[x_after_toolchange] Y[y_after_toolchange] Z[z_after_toolchange] F12000
+        {endif}
+        M621 S[next_extruder]A
+      cooling_tube_length: 5
+      cooling_tube_retraction: 91.5
+      default_print: 0.40mm Standard @BBL X1 0.8 nozzle
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 34
+      extruder_clearance_radius: 68
+      extruder_offset:
+      - '0x2'
+      gcode_flavor: marlin
+      high_current_on_filament_swap: false
+      layer_gcode: |-
+        ; layer num/total_layer_count: {layer_num+1}/[total_layer_count]
+        ; update layer progress
+        M73 L{layer_num+1}
+        M991 S0 P{layer_num} ;notify layer change
+        G92 E0
+      end_gcode: |
+        ;===== date: 20240528 =====================
+        M400 ; wait for buffer to clear
+        G92 E0 ; zero the extruder
+        G1 E-0.8 F1800 ; retract
+        G1 Z{max_layer_z + 0.5} F900 ; lower z a little
+        G1 X65 Y245 F12000 ; move to safe pos
+        G1 Y265 F3000
+
+        G1 X65 Y245 F12000
+        G1 Y265 F3000
+        M140 S0 ; turn off bed
+        M106 S0 ; turn off fan
+        M106 P2 S0 ; turn off remote part cooling fan
+        M106 P3 S0 ; turn off chamber cooling fan
+
+        G1 X100 F12000 ; wipe
+        ; pull back filament to AMS
+        M620 S255
+        G1 X20 Y50 F12000
+        G1 Y-3
+        T255
+        G1 X65 F12000
+        G1 Y265
+        G1 X100 F12000 ; wipe
+        M621 S255
+        M104 S0 ; turn off hotend
+
+        M622.1 S1 ; for prev firmware, default turned on
+        M1002 judge_flag timelapse_record_flag
+        M622 J1
+            M400 ; wait all motion done
+            M991 S0 P-1 ;end smooth timelapse at safe pos
+            M400 S3 ;wait for last picture to be taken
+        M623; end of "timelapse_record_flag"
+
+        M400 ; wait all motion done
+        M17 S
+        M17 Z0.4 ; lower z motor current to reduce impact if there is something in the bottom
+        {if (max_layer_z + 100.0) < 250}
+            G1 Z{max_layer_z + 100.0} F600
+            G1 Z{max_layer_z +98.0}
+        {else}
+            G1 Z250 F600
+            G1 Z248
+        {endif}
+        M400 P100
+        M17 R ; restore z current
+
+        M220 S100  ; Reset feedrate magnitude
+        M201.2 K1.0 ; Reset acc magnitude
+        M73.2   R1.0 ;Reset left time magnitude
+        M1002 set_gcode_claim_speed_level : 0
+        ;=====printer finish  sound=========
+        M17
+        M400 S1
+        M1006 S1
+        M1006 A0 B20 L100 C37 D20 M40 E42 F20 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C46 D10 M80 E46 F10 N80
+        M1006 A44 B20 L100 C39 D20 M60 E48 F20 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C39 D10 M60 E39 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C39 D10 M60 E39 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A0 B10 L100 C48 D10 M60 E44 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10  N100
+        M1006 A49 B20 L100 C44 D20 M100 E41 F20 N100
+        M1006 A0 B20 L100 C0 D20 M60 E0 F20 N100
+        M1006 A0 B20 L100 C37 D20 M30 E37 F20 N60
+        M1006 W
+
+        M17 X0.8 Y0.8 Z0.5 ; lower motor current to 45% power
+        M960 S5 P0 ; turn off logo lamp
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 9000.0
+      - 9000.0
+      machine_max_acceleration_x:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_y:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 30.0
+      - 30.0
+      machine_max_feedrate_x:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_y:
+      - 500.0
+      - 500.0
+      machine_max_feedrate_z:
+      - 20.0
+      - 20.0
+      machine_min_extruding_rate:
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      pause_print_gcode: M400 U1
+      start_gcode: |
+        {local _ow_w = custom_parameter_print_orca_outer_wall_line_width}{if custom_parameter_print_orca_outer_wall_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = custom_parameter_print_orca_line_width}{if custom_parameter_print_orca_line_width_percent}{_ow_w = _ow_w / 100 * filament_diameter[initial_extruder]}{endif}{if _ow_w == 0}{_ow_w = filament_diameter[initial_extruder]}{endif}{endif}{local outer_wall_volumetric_speed = min(filament_max_volumetric_speed[initial_extruder], external_perimeter_speed[initial_extruder] * layer_height * (_ow_w - layer_height * (1 - 0.7853981633974483)))}{local _pm = (0, -1)}{local _ft0 = custom_parameter_filament_filament_flush_temp[0]}{if _ft0 == 0}{_ft0 = custom_parameter_filament_nozzle_temperature_range_high[0]}{endif}{local flush_temperatures = (_ft0, 0)}{local _fv0 = custom_parameter_filament_filament_flush_volumetric_speed[0]}{if _fv0 == 0}{_fv0 = filament_max_volumetric_speed[0]}{endif}{local flush_volumetric_speeds = (_fv0, 0)};===== machine: X1-0.8 ====================
+        ;===== date: 20251031 ==================
+        ;===== start printer sound ================
+        M17
+        M400 S1
+        M1006 S1
+        M1006 A0 B10 L100 C37 D10 M60 E37 F10 N60
+        M1006 A0 B10 L100 C41 D10 M60 E41 F10 N60
+        M1006 A0 B10 L100 C44 D10 M60 E44 F10 N60
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N60
+        M1006 A46 B10 L100 C43 D10 M70 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A43 B10 L100 C0 D10 M60 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A41 B10 L100 C0 D10 M100 E41 F10 N100
+        M1006 A44 B10 L100 C0 D10 M100 E44 F10 N100
+        M1006 A49 B10 L100 C0 D10 M100 E49 F10 N100
+        M1006 A0 B10 L100 C0 D10 M100 E0 F10 N100
+        M1006 A48 B10 L100 C44 D10 M60 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A44 B10 L100 C0 D10 M90 E39 F10 N100
+        M1006 A0 B10 L100 C0 D10 M60 E0 F10 N100
+        M1006 A46 B10 L100 C43 D10 M60 E39 F10 N100
+        M1006 W
+        ;===== turn on the HB fan =================
+        M104 S75 ;set extruder temp to turn on the HB fan and prevent filament oozing from nozzle
+        ;===== reset machine status =================
+        M290 X40 Y40 Z2.6666666
+        G91
+        M17 Z0.4 ; lower the z-motor current
+        G380 S2 Z30 F300 ; G380 is same as G38; lower the hotbed , to prevent the nozzle is below the hotbed
+        G380 S2 Z-25 F300 ;
+        G1 Z5 F300;
+        G90
+        M17 X1.2 Y1.2 Z0.75 ; reset motor current to default
+        M960 S5 P1 ; turn on logo lamp
+        G90
+        M220 S100 ;Reset Feedrate
+        M221 S100 ;Reset Flowrate
+        M73.2   R1.0 ;Reset left time magnitude
+        M1002 set_gcode_claim_speed_level : 5
+        M221 X0 Y0 Z0 ; turn off soft endstop to prevent protential logic problem
+        G29.1 Z{0.0} ; clear z-trim value first
+        M204 S10000 ; init ACC set to 10m/s^2
+
+        ;===== heatbed preheat ====================
+        M1002 gcode_claim_action:54
+        M140 S[first_layer_bed_temperature[initial_extruder]] ;set bed temp
+        M190 S[first_layer_bed_temperature[initial_extruder]] ;wait for bed temp
+
+        {if custom_parameter_printer_scan_first_layer}
+        ;=========register first layer scan=====
+        M977 S1 P60
+        {endif}
+
+        ;=============turn on fans to prevent PLA jamming=================
+        {if filament_type[initial_extruder]=="PLA"}
+            {if (bed_temperature[initial_extruder] >45)||(first_layer_bed_temperature[initial_extruder] >45)}
+            M106 P3 S180
+            {endif};Prevent PLA from jamming
+            M142 P1 R35 S40
+        {endif}
+        M106 P2 S100 ; turn on big fan ,to cool down toolhead
+
+        ;===== prepare print temperature and material ==========
+        M104 S[first_layer_temperature] ;set extruder temp
+        G91
+        G0 Z10 F1200
+        G90
+        G28 X
+        M975 S1 ; turn on
+        G1 X60 F12000
+        G1 Y245
+        G1 Y265 F3000
+        M620 M
+        M620 S[initial_extruder]A   ; switch material if AMS exist
+            M109 S[first_layer_temperature]
+            G1 X120 F12000
+
+            G1 X20 Y50 F12000
+            G1 Y-3
+            T[initial_extruder]
+            G1 X54 F12000
+            G1 Y265
+            M400
+        M621 S[initial_extruder]A
+        M620.1 E F{flush_volumetric_speeds[initial_extruder]/2.4053*60} T{flush_temperatures[initial_extruder]}
+
+
+        M412 S1 ; ===turn on filament runout detection===
+
+        M109 S250 ;set nozzle to common flush temp
+        M106 P1 S0
+        G92 E0
+        G1 E50 F200
+        M400
+        M104 S[first_layer_temperature]
+        G92 E0
+        G1 E50 F200
+        M400
+        M106 P1 S255
+        G92 E0
+        G1 E5 F300
+        M109 S{first_layer_temperature[initial_extruder]-20} ; drop nozzle temp, make filament shink a bit
+        G92 E0
+        G1 E-0.5 F300
+
+        G1 X70 F9000
+        G1 X76 F15000
+        G1 X65 F15000
+        G1 X76 F15000
+        G1 X65 F15000; shake to put down garbage
+        G1 X80 F6000
+        G1 X95 F15000
+        G1 X80 F15000
+        G1 X165 F15000; wipe and shake
+        M400
+        M106 P1 S0
+        ;===== prepare print temperature and material end =====
+
+
+        ;===== wipe nozzle ===============================
+        M1002 gcode_claim_action : 14
+        M975 S1
+        M106 S255
+        G1 X65 Y230 F18000
+        G1 Y264 F6000
+        M109 S{first_layer_temperature[initial_extruder]-20}
+        G1 X100 F18000 ; first wipe mouth
+
+        G0 X135 Y253 F20000  ; move to exposed steel surface edge
+        G28 Z P0 T300; home z with low precision,permit 300deg temperature
+        G29.2 S0 ; turn off ABL
+        G0 Z5 F20000
+
+        G1 X60 Y265
+        G92 E0
+        G1 E-0.5 F300 ; retrack more
+        G1 X100 F5000; second wipe mouth
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X100 F5000
+        G1 X70 F15000
+        G1 X90 F5000
+        G0 X128 Y261 Z-1.5 F20000  ; move to exposed steel surface and stop the nozzle
+        M104 S140 ; set temp down to heatbed acceptable
+        M106 S255 ; turn on fan (G28 has turn off fan)
+
+        M221 S; push soft endstop status
+        M221 Z0 ;turn off Z axis endstop
+        G0 Z0.5 F20000
+        G0 X125 Y259.5 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y262.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y260.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y262.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y260.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y261.5
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 Z0.5 F20000
+        G0 X125 Y261.0
+        G0 Z-1.01
+        G0 X131 F211
+        G0 X124
+        G0 X128
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+        G2 I0.5 J0 F300
+
+        M109 S140 ; wait nozzle temp down to heatbed acceptable
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+        G2 I0.5 J0 F3000
+
+        M221 R; pop softend status
+        G1 Z10 F1200
+        M400
+        G1 Z10
+        G1 F30000
+        G1 X128 Y128
+        G29.2 S1 ; turn on ABL
+        ;G28 ; home again after hard wipe mouth
+        M106 S0 ; turn off fan , too noisy
+        ;===== wipe nozzle end ================================
+
+        ;===== check scanner clarity ===========================
+        G1 X128 Y128 F24000
+        G28 Z P0
+        M972 S5 P0
+        G1 X230 Y15 F24000
+        ;===== check scanner clarity end =======================
+
+        ;===== bed leveling ==================================
+        M1002 judge_flag g29_before_print_flag
+        M622 J1
+
+            M1002 gcode_claim_action : 1
+            G29 A X{first_layer_print_min[0]} Y{first_layer_print_min[1]} I{first_layer_print_size[0]} J{first_layer_print_size[1]}
+            M400
+            M500 ; save cali data
+
+        M623
+        ;===== bed leveling end ================================
+
+        ;===== home after wipe mouth============================
+        M1002 judge_flag g29_before_print_flag
+        M622 J0
+
+            M1002 gcode_claim_action : 13
+            G28
+
+        M623
+        ;===== home after wipe mouth end =======================
+
+        M975 S1 ; turn on vibration supression
+
+        ;=============turn on fans to prevent PLA jamming=================
+        {if filament_type[initial_extruder]=="PLA"}
+            {if (bed_temperature[initial_extruder] >45)||(first_layer_bed_temperature[initial_extruder] >45)}
+            M106 P3 S180
+            {endif};Prevent PLA from jamming
+            M142 P1 R35 S40
+        {endif}
+        M106 P2 S100 ; turn on big fan ,to cool down toolhead
+
+        M104 S{first_layer_temperature[initial_extruder]} ; set extrude temp earlier, to reduce wait time
+
+        ;===== mech mode fast check============================
+        G1 X128 Y128 Z10 F20000
+        M400 P200
+        M970.3 Q1 A7 B30 C80  H15 K0
+        M974 Q1 S2 P0
+
+        G1 X128 Y128 Z10 F20000
+        M400 P200
+        M970.3 Q0 A7 B30 C90 Q0 H15 K0
+        M974 Q0 S2 P0
+
+        M975 S1
+        G1 F30000
+        G1 X230 Y15
+        G28 X ; re-home XY
+        ;===== mech mode fast check============================
+
+        {if custom_parameter_printer_scan_first_layer}
+        ;start heatbed  scan====================================
+        M976 S2 P1
+        G90
+        G1 X128 Y128 F20000
+        M976 S3 P2  ;register void printing detection
+        {endif}
+
+        ;===== nozzle load line ===============================
+        M975 S1
+        G90
+        M83
+        T1000
+        G1 X18.0 Y0.5 Z0.8 F18000;Move to start position
+        M109 S{temperature[initial_extruder]}
+        G1 Z0.2
+        G0 E2 F300
+        G0 X129 E15 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+        G0 X240 E15
+        G0 Y11 E1.364 F{outer_wall_volumetric_speed/(0.3*1.0)/ 4 * 60}
+        G0 X239.5
+        G0 E0.3
+        G0 Y1.5 E1.300
+        G0 X231 E1.160 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        M400
+
+        ;===== for Textured PEI Plate , lower the nozzle as the nozzle was touching topmost of the texture when homing ==
+        ;curr_bed_type={sheet_type}
+        {if sheet_type=="Textured PEI Plate"}
+        G29.1 Z{-0.04} ; for Textured PEI Plate
+        {endif}
+
+        ;===== draw extrinsic para cali paint =================
+        M1002 judge_flag extrude_cali_flag
+        M622 J1
+
+            M1002 gcode_claim_action : 8
+
+            G0 F1200.0 X231 Y12 Z0.2 E1.154
+            G0 F1200.0 X226 Y12 Z0.2 E0.550
+            G0 F1200.0 X226 Y1.5 Z0.2 E1.154
+            G0 F1200.0 X220 Y1.5 Z0.2 E0.660
+            G0 F1200.0 X220 Y8 Z0.2 E0.716
+            G0 F1200.0 X210 Y8 Z0.2 E1.098
+            G0 F1200.0 X210 Y1.5 Z0.2 E0.714
+
+            G0 X48.0 E24.107 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+            G0 X48.0 Y12 E1.420 F1200.0
+            G0 X45.0 E0.404 F1200.0
+            G0 X35.0 Y6.0 E1.580 F1200.0
+
+            ;=========== extruder cali extrusion ==================
+            T1000
+            M83
+            {if default_acceleration[current_extruder] > 0}
+                {if external_perimeter_acceleration[current_extruder] > 0}
+                    M204 S[external_perimeter_acceleration]
+                {else}
+                    M204 S[default_acceleration]
+                {endif}
+            {endif}
+            G0 X35.000 Y6.000 Z0.300 F30000 E0
+            G1 F1500.000 E0.800
+            M106 S0 ; turn off fan
+            G0 X110.000 E9.35441 F4800
+            G0 X185.000 E9.35441 F4800
+            G0 X187 Z0
+            G1 F1500.000 E-0.800
+            G0 Z1
+            G0 X180 Z0.3 F18000
+
+            M900 L1000.0 M1.0
+            M900 K0.020
+            G0 X45.000 F30000
+            G0 Y8.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000  E2.4945 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X70.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X75.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X80.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X85.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X90.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X95.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X100.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X105.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X110.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X115.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X120.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X125.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X130.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X135.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X140.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X145.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X150.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X155.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X160.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X165.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X170.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X175.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X180.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+            M400
+
+            G0 X45.000 F30000
+            M900 K0.010
+            G0 X45.000 F30000
+            G0 Y10.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000  E2.4945 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X70.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X75.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X80.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X85.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X90.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X95.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X100.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X105.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X110.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X115.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X120.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X125.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X130.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X135.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X140.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X145.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X150.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X155.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X160.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X165.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X170.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X175.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X180.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+            M400
+
+            G0 X45.000 F30000
+            M900 K0.000
+            G0 X45.000 F30000
+            G0 Y12.000 F30000
+            G1 F1500.000 E0.800
+            G1 X65.000  E2.4945 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X70.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X75.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X80.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X85.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X90.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X95.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X100.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X105.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X110.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X115.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X120.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X125.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X130.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X135.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X140.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X145.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X150.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X155.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X160.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X165.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X170.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X175.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X180.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 F1500.000 E-0.800
+            G1 X183 Z0.15 F30000
+            G1 X185
+            G1 Z1.0
+            G0 Y6.000 F30000 ; move y to clear pos
+            G1 Z0.3
+
+            G0 X45.000 F30000 ; move to start point
+
+        M623 ; end of "draw extrinsic para cali paint"
+
+        M1002 judge_flag extrude_cali_flag
+        M622 J0
+            G0 X231 Y1.5 F30000
+            G0 X129 E14 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G0 X18 E15 F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+        M623
+
+        M104 S140
+
+
+        ;=========== laser and rgb calibration ===========
+        M400
+        M18 E
+        M500 R
+
+        M973 S3 P14
+
+        G1 X120 Y1.0 Z0.3 F18000.0;Move to first extrude line pos
+        T1100
+        G1 X235.0 Y1.0 Z0.3 F18000.0;Move to first extrude line pos
+        M400 P100
+        M960 S1 P1
+        M400 P100
+        M973 S6 P0; use auto exposure for horizontal laser by xcam
+        M960 S0 P0
+
+        G1 X240.0 Y6.0 Z0.3 F18000.0;Move to vertical extrude line pos
+        M960 S2 P1
+        M400 P100
+        M973 S6 P1; use auto exposure for vertical laser by xcam
+        M960 S0 P0
+
+        ;=========== handeye calibration ======================
+        M1002 judge_flag extrude_cali_flag
+        M622 J1
+
+            M973 S3 P1 ; camera start stream
+            M400 P500
+            M973 S1
+            G0 F6000 X228.500 Y4.750 Z0.000
+            M960 S0 P1
+            M973 S1
+            M400 P800
+            M971 S6 P0
+            M973 S2 P0
+            M400 P500
+            G0 Z0.000 F12000
+            M960 S0 P0
+            M960 S1 P1
+            G0 X215.00 Y4.750
+            M400 P200
+            M971 S5 P1
+            M973 S2 P1
+            M400 P500
+            M960 S0 P0
+            M960 S2 P1
+            G0 X228.5 Y6.75
+            M400 P200
+            M971 S5 P3
+            G0 Z0.500 F12000
+            M960 S0 P0
+            M960 S2 P1
+            G0 X228.5 Y6.75
+            M400 P200
+            M971 S5 P4
+            M973 S2 P0
+            M400 P500
+            M960 S0 P0
+            M960 S1 P1
+            G0 X215.00 Y4.750
+            M400 P500
+            M971 S5 P2
+            M963 S1
+            M400 P1500
+            M964
+            T1100
+            G1 Z3 F3000
+
+            M400
+            M500 ; save cali data
+
+            M104 S{first_layer_temperature[initial_extruder]} ; rise nozzle temp now ,to reduce temp waiting time.
+
+            T1100
+            M400 P400
+            M960 S0 P0
+            G0 F30000.000 Y10.000 X65.000 Z0.000
+            M400 P400
+            M960 S1 P1
+            M400 P50
+
+            M969 S1 N3 A2000
+            G0 F360.000 X181.000 Z0.000
+            M980.3 A70.000 B{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*60/4} C5.000 D{outer_wall_volumetric_speed/(1.75*1.75/4*3.14)*60} E5.000 F175.000 H1.000 I0.000 J0.010 K0.020
+            M400 P100
+            G0 F20000
+            G0 Z1 ; rise nozzle up
+            T1000 ; change to nozzle space
+            G0 X45.000 Y4.000 F30000 ; move to test line pos
+            M969 S0 ; turn off scanning
+            M960 S0 P0
+
+
+            G1 Z2 F20000
+            T1000
+            G0 X45.000 Y4.000 F30000 E0
+            M109 S{first_layer_temperature[initial_extruder]}
+            G0 Z0.3
+            G1 F1500.000 E3.600
+            G1 X65.000  E2.4945 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X70.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X75.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X80.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X85.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X90.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X95.000  E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X100.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X105.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X110.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X115.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X120.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X125.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X130.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X135.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+
+            ; see if extrude cali success, if not ,use default value
+            M1002 judge_last_extrude_cali_success
+            M622 J0
+                M400
+                M900 K0.01 M{outer_wall_volumetric_speed/(1.75*1.75/4*3.14) *0.01}
+            M623
+
+            G1 X140.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X145.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X150.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X155.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X160.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X165.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X170.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X175.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X180.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X185.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X190.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X195.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X200.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X205.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X210.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X215.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            G1 X220.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0) / 4 * 60}
+            G1 X225.000 E0.6236 F{outer_wall_volumetric_speed/(0.3*1.0)     * 60}
+            M973 S4
+
+        M623
+
+        ;========turn off light and wait extrude temperature =============
+        M1002 gcode_claim_action : 0
+        M973 S4 ; turn off scanner
+        M400 ; wait all motion done before implement the emprical L parameters
+        ;M900 L500.0 ; Empirical parameters
+        M109 S[first_layer_temperature]
+        M960 S1 P0 ; turn off laser
+        M960 S2 P0 ; turn off laser
+        M106 S0 ; turn off fan
+        M106 P2 S0 ; turn off big fan
+        M106 P3 S0 ; turn off chamber fan
+
+        M975 S1 ; turn on mech mode supression
+        G90
+        M83
+        T1000
+        ;===== purge line to wipe the nozzle ============================
+        G1 E{-retract_length[initial_extruder]} F1800
+        G1 X18.0 Y2.5 Z0.8 F18000.0;Move to start position
+        G1 E{retract_length[initial_extruder]} F1800
+        M109 S{first_layer_temperature[initial_extruder]}
+        G1 Z0.2
+        G0 X239 E15 F{outer_wall_volumetric_speed/(0.3*0.5)    * 60}
+        G0 Y12 E0.7 F{outer_wall_volumetric_speed/(0.3*0.5)/4* 60}
+      parking_pos_retraction: 92
+      bed_shape:
+      - '0x0'
+      - 256x0
+      - 256x256
+      - '0x256'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      single_extruder_multi_material: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 48x48/PNG, 300x300/PNG
+      custom_parameters_printer: '{"cooling_filter_enabled": false, "hotend_cooling_rate__0": 2.0, "hotend_cooling_rate__1": 2.0, "hotend_heating_rate__0": 2.0, "hotend_heating_rate__1": 2.0, "long_retractions_when_cut__0": false, "long_retractions_when_cut__1": false, "retraction_distances_when_cut__0": 18.0, "retraction_distances_when_cut__1": 18.0, "scan_first_layer": true, "support_air_filtration": false, "z_hop_types__0": 0, "z_hop_types__1": 0}'

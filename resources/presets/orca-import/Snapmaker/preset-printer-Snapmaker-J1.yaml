@@ -1,0 +1,1299 @@
+kind: printer
+id: Hlq6XYNvM4hgBpH2QBBycw
+variants:
+- condition: printer.model == "Snapmaker J1"
+  name: Snapmaker J1
+  id: 2AbzWWk+4LEiLitcPSpMmQ
+  variants:
+  - condition: tool.nozzle_diameter == 0.2 and printer.tool_count == 2
+    id: 0CRiePaG7KNgfSxczSqreA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ; layer_num: [layer_num]
+        G92 E0
+      toolchange_gcode: |-
+        ;***** Update: 20240823
+        {if current_extruder != next_extruder}
+        ; Change T[current_extruder] -> T[next_extruder] (layer [layer_num] [toolchange_count]/[total_toolchanges])
+        ; layer [layer_num] at [layer_z]mm
+        T[next_extruder]
+
+         M107 P[current_extruder] ;fan off T[current_extruder]
+
+        {if layer_num == 1 &&
+         ((filament_type[current_extruder] == "PLA" || filament_type[current_extruder] == "TPU")
+          || (filament_type[next_extruder] == "PLA" || filament_type[next_extruder] == "TPU"))
+        }
+        ; set bed temp: {filament_type[current_extruder]}({bed_temperature[current_extruder]}) -> {filament_type[next_extruder]}({bed_temperature[next_extruder]})
+        M140 S{min(bed_temperature[current_extruder], bed_temperature[next_extruder])}
+        {endif}
+
+        M2000 S200 V[travel_speed] A[travel_acceleration] ;quick switch extruders, S:200 mode/V:speed/A:acceleration
+        M109 T[next_extruder] S{if layer_num < 1}[first_layer_temperature]{else}[temperature]{endif} C3 W1 ;wait T[next_extruder]
+        {if layer_z > first_layer_height && layer_num >= disable_fan_first_layers[next_extruder]}
+          M106 P[next_extruder] S{min_fan_speed[next_extruder] * 255.0 / 100.0} ;restore fan speed for T[next_extruder]
+        {endif}
+        {endif}
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.14 Standard @Snapmaker J1 (0.2 nozzle)
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 35
+      extruder_clearance_radius: 35
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        G92 E0
+
+        G0 Z{max_layer_z + 2.0} F600
+        ; retract the filament to make it easier to replace
+        G0 E-10 F200
+        G28
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S0
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S0
+          {endif}
+        M140 S0
+        M107
+        M220 S100
+        M84
+
+        ;
+        ; DON'T REMOVE these lines if you're using the smfix (https://github.com/macdylan/SMFix)
+        ; min_x = {first_layer_print_min[0]}
+        ; min_y = {first_layer_print_min[1]}
+        ; max_x = {first_layer_print_max[0]}
+        ; max_y = {first_layer_print_max[1]}
+        ; max_z = [max_layer_z]
+        ; total_layer_number = [layer_num]
+        ;
+      machine_max_acceleration_e:
+      - 6000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      machine_max_acceleration_retracting:
+      - 6000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      machine_max_acceleration_y:
+      - 8000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      machine_max_jerk_z:
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 40.0
+      machine_max_feedrate_x:
+      - 350.0
+      machine_max_feedrate_y:
+      - 300.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: ''
+      start_gcode: |-
+        ; Model: Snapmaker J1 ({nozzle_diameter[0]}/{nozzle_diameter[1]})
+        ; Update: 20240922
+        ; Maintained by https://github.com/macdylan/3dp-configs
+        ; Printer : [printer_settings_id]
+        ; Profile : [print_settings_id]
+        ; Plate   : [bed_name]
+        ; --- initial_extruder: [initial_extruder]
+        ; --- has_wipe_tower: [has_wipe_tower]
+        ; --- total_toolchanges: [total_toolchanges]
+        ; --- T0: {is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - 1, 0))]}
+        ; --- T1: {is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - 0, 0))]}
+
+        T[initial_extruder]
+
+        M205 V[machine_max_jerk_x] ;Junction Deviation (mm)
+
+        {if bed_name =~/.*IDEXDupl.*/ || bed_name =~/.*IDEXCopy.*/ }
+          M605 S2 X162 R0 ;IDEX Duplication
+        {elsif bed_name =~/.*IDEXMirr.*/}
+          M605 S3 ;IDEX Mirror
+        {elsif bed_name =~/.*IDEXBack.*/}
+          M605 S4 ;IDEX Backup
+        {endif}
+
+        M140 S{first_layer_bed_temperature[initial_extruder]}
+
+        ; you can clean the nozzle
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S165
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S165
+          {endif}
+        M204 S100
+        G28
+
+        G0 Z100.0
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))}
+          G0 X{if 0 == 0}80{else}240{endif} Y0 F6840.0
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))}
+          G0 X{if 1 == 0}80{else}240{endif} Y0 F6840.0
+          {endif}
+
+        M190 R{first_layer_bed_temperature[initial_extruder]}
+
+        {if 1==1}; LED
+          M355 S1 P64
+          G4 P100
+          M355 S1 P128
+          G4 P100
+          M355 S1 P64
+          G4 P200
+          M355 S1 P255
+          G4 P100
+        {endif}
+        G28 X Y
+
+        M83
+        {if 1==1 && max(custom_parameter_filament_hot_plate_temp_initial_layer[initial_extruder], custom_parameter_filament_hot_plate_temp[initial_extruder]) >= 90}
+        G0 Z0.06
+        G92 Z0 ;reset z
+        {endif}
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+        ; preheat 0
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))}
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+        ; preheat 1
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))}
+          {endif}
+
+          {if 1==1}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] and (initial_extruder % 2) != 0}
+        ; flush nozzle 0
+        T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))}
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( 0 % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( 0 % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( 0 % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length_toolchange[0]} F200
+        G92 E0
+        G0 Y20 F6840.0
+        G28 X F6840.0
+
+        M104 S{custom_parameter_filament_temperature_vitrification[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          {endif}
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] and (initial_extruder % 2) != 1}
+        ; flush nozzle 1
+        T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))}
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( 1 % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( 1 % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( 1 % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length_toolchange[1]} F200
+        G92 E0
+        G0 Y20 F6840.0
+        G28 X F6840.0
+
+        M104 S{custom_parameter_filament_temperature_vitrification[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          {endif}
+
+          {endif}
+        ; flush initial nozzle
+        T[initial_extruder]
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( initial_extruder % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( initial_extruder % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( initial_extruder % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length[initial_extruder]} F200
+        G92 E0
+        G0 Y20 F6840.0
+
+        ; ready [bed_name]
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 324x0
+      - 324x200
+      - '0x200'
+      max_print_height: 200
+      printer_notes: |
+        PRINTER_MODEL_SNAPMAKER_J1
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.4 and printer.tool_count == 2
+    id: sl8CRVvAfgYYeWgF2nm60g
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ; layer_num: [layer_num]
+        G92 E0
+      toolchange_gcode: |-
+        ;***** Update: 20240823
+        {if current_extruder != next_extruder}
+        ; Change T[current_extruder] -> T[next_extruder] (layer [layer_num] [toolchange_count]/[total_toolchanges])
+        ; layer [layer_num] at [layer_z]mm
+        T[next_extruder]
+
+         M107 P[current_extruder] ;fan off T[current_extruder]
+
+        {if layer_num == 1 &&
+         ((filament_type[current_extruder] == "PLA" || filament_type[current_extruder] == "TPU")
+          || (filament_type[next_extruder] == "PLA" || filament_type[next_extruder] == "TPU"))
+        }
+        ; set bed temp: {filament_type[current_extruder]}({bed_temperature[current_extruder]}) -> {filament_type[next_extruder]}({bed_temperature[next_extruder]})
+        M140 S{min(bed_temperature[current_extruder], bed_temperature[next_extruder])}
+        {endif}
+
+        M2000 S200 V[travel_speed] A[travel_acceleration] ;quick switch extruders, S:200 mode/V:speed/A:acceleration
+        M109 T[next_extruder] S{if layer_num < 1}[first_layer_temperature]{else}[temperature]{endif} C3 W1 ;wait T[next_extruder]
+        {if layer_z > first_layer_height && layer_num >= disable_fan_first_layers[next_extruder]}
+          M106 P[next_extruder] S{min_fan_speed[next_extruder] * 255.0 / 100.0} ;restore fan speed for T[next_extruder]
+        {endif}
+        {endif}
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.16 Optimal @Snapmaker J1 (0.4 nozzle)
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 35
+      extruder_clearance_radius: 35
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        G92 E0
+
+        G0 Z{max_layer_z + 2.0} F600
+        ; retract the filament to make it easier to replace
+        G0 E-10 F200
+        G28
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S0
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S0
+          {endif}
+        M140 S0
+        M107
+        M220 S100
+        M84
+
+        ;
+        ; DON'T REMOVE these lines if you're using the smfix (https://github.com/macdylan/SMFix)
+        ; min_x = {first_layer_print_min[0]}
+        ; min_y = {first_layer_print_min[1]}
+        ; max_x = {first_layer_print_max[0]}
+        ; max_y = {first_layer_print_max[1]}
+        ; max_z = [max_layer_z]
+        ; total_layer_number = [layer_num]
+        ;
+      machine_max_acceleration_e:
+      - 6000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      machine_max_acceleration_retracting:
+      - 6000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      machine_max_acceleration_y:
+      - 8000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      machine_max_jerk_z:
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 40.0
+      machine_max_feedrate_x:
+      - 350.0
+      machine_max_feedrate_y:
+      - 300.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: ''
+      start_gcode: |-
+        ; Model: Snapmaker J1 ({nozzle_diameter[0]}/{nozzle_diameter[1]})
+        ; Update: 20240922
+        ; Maintained by https://github.com/macdylan/3dp-configs
+        ; Printer : [printer_settings_id]
+        ; Profile : [print_settings_id]
+        ; Plate   : [bed_name]
+        ; --- initial_extruder: [initial_extruder]
+        ; --- has_wipe_tower: [has_wipe_tower]
+        ; --- total_toolchanges: [total_toolchanges]
+        ; --- T0: {is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - 1, 0))]}
+        ; --- T1: {is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - 0, 0))]}
+
+        T[initial_extruder]
+
+        M205 V[machine_max_jerk_x] ;Junction Deviation (mm)
+
+        {if bed_name =~/.*IDEXDupl.*/ || bed_name =~/.*IDEXCopy.*/ }
+          M605 S2 X162 R0 ;IDEX Duplication
+        {elsif bed_name =~/.*IDEXMirr.*/}
+          M605 S3 ;IDEX Mirror
+        {elsif bed_name =~/.*IDEXBack.*/}
+          M605 S4 ;IDEX Backup
+        {endif}
+
+        M140 S{first_layer_bed_temperature[initial_extruder]}
+
+        ; you can clean the nozzle
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S165
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S165
+          {endif}
+        M204 S100
+        G28
+
+        G0 Z100.0
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))}
+          G0 X{if 0 == 0}80{else}240{endif} Y0 F6840.0
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))}
+          G0 X{if 1 == 0}80{else}240{endif} Y0 F6840.0
+          {endif}
+
+        M190 R{first_layer_bed_temperature[initial_extruder]}
+
+        {if 1==1}; LED
+          M355 S1 P64
+          G4 P100
+          M355 S1 P128
+          G4 P100
+          M355 S1 P64
+          G4 P200
+          M355 S1 P255
+          G4 P100
+        {endif}
+        G28 X Y
+
+        M83
+        {if 1==1 && max(custom_parameter_filament_hot_plate_temp_initial_layer[initial_extruder], custom_parameter_filament_hot_plate_temp[initial_extruder]) >= 90}
+        G0 Z0.06
+        G92 Z0 ;reset z
+        {endif}
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+        ; preheat 0
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))}
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+        ; preheat 1
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))}
+          {endif}
+
+          {if 1==1}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] and (initial_extruder % 2) != 0}
+        ; flush nozzle 0
+        T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))}
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( 0 % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( 0 % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( 0 % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length_toolchange[0]} F200
+        G92 E0
+        G0 Y20 F6840.0
+        G28 X F6840.0
+
+        M104 S{custom_parameter_filament_temperature_vitrification[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          {endif}
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] and (initial_extruder % 2) != 1}
+        ; flush nozzle 1
+        T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))}
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( 1 % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( 1 % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( 1 % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length_toolchange[1]} F200
+        G92 E0
+        G0 Y20 F6840.0
+        G28 X F6840.0
+
+        M104 S{custom_parameter_filament_temperature_vitrification[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          {endif}
+
+          {endif}
+        ; flush initial nozzle
+        T[initial_extruder]
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( initial_extruder % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( initial_extruder % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( initial_extruder % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length[initial_extruder]} F200
+        G92 E0
+        G0 Y20 F6840.0
+
+        ; ready [bed_name]
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 324x0
+      - 324x200
+      - '0x200'
+      max_print_height: 200
+      printer_notes: |
+        PRINTER_MODEL_SNAPMAKER_J1
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.6 and printer.tool_count == 2
+    id: W/ILy7LispKLQrOUsyM30Q
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ; layer_num: [layer_num]
+        G92 E0
+      toolchange_gcode: |-
+        ;***** Update: 20240823
+        {if current_extruder != next_extruder}
+        ; Change T[current_extruder] -> T[next_extruder] (layer [layer_num] [toolchange_count]/[total_toolchanges])
+        ; layer [layer_num] at [layer_z]mm
+        T[next_extruder]
+
+         M107 P[current_extruder] ;fan off T[current_extruder]
+
+        {if layer_num == 1 &&
+         ((filament_type[current_extruder] == "PLA" || filament_type[current_extruder] == "TPU")
+          || (filament_type[next_extruder] == "PLA" || filament_type[next_extruder] == "TPU"))
+        }
+        ; set bed temp: {filament_type[current_extruder]}({bed_temperature[current_extruder]}) -> {filament_type[next_extruder]}({bed_temperature[next_extruder]})
+        M140 S{min(bed_temperature[current_extruder], bed_temperature[next_extruder])}
+        {endif}
+
+        M2000 S200 V[travel_speed] A[travel_acceleration] ;quick switch extruders, S:200 mode/V:speed/A:acceleration
+        M109 T[next_extruder] S{if layer_num < 1}[first_layer_temperature]{else}[temperature]{endif} C3 W1 ;wait T[next_extruder]
+        {if layer_z > first_layer_height && layer_num >= disable_fan_first_layers[next_extruder]}
+          M106 P[next_extruder] S{min_fan_speed[next_extruder] * 255.0 / 100.0} ;restore fan speed for T[next_extruder]
+        {endif}
+        {endif}
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.18 Standard @Snapmaker J1 (0.6 nozzle)
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 35
+      extruder_clearance_radius: 35
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        G92 E0
+
+        G0 Z{max_layer_z + 2.0} F600
+        ; retract the filament to make it easier to replace
+        G0 E-10 F200
+        G28
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S0
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S0
+          {endif}
+        M140 S0
+        M107
+        M220 S100
+        M84
+
+        ;
+        ; DON'T REMOVE these lines if you're using the smfix (https://github.com/macdylan/SMFix)
+        ; min_x = {first_layer_print_min[0]}
+        ; min_y = {first_layer_print_min[1]}
+        ; max_x = {first_layer_print_max[0]}
+        ; max_y = {first_layer_print_max[1]}
+        ; max_z = [max_layer_z]
+        ; total_layer_number = [layer_num]
+        ;
+      machine_max_acceleration_e:
+      - 6000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      machine_max_acceleration_retracting:
+      - 6000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      machine_max_acceleration_y:
+      - 8000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      machine_max_jerk_z:
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 40.0
+      machine_max_feedrate_x:
+      - 350.0
+      machine_max_feedrate_y:
+      - 300.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: ''
+      start_gcode: |-
+        ; Model: Snapmaker J1 ({nozzle_diameter[0]}/{nozzle_diameter[1]})
+        ; Update: 20240922
+        ; Maintained by https://github.com/macdylan/3dp-configs
+        ; Printer : [printer_settings_id]
+        ; Profile : [print_settings_id]
+        ; Plate   : [bed_name]
+        ; --- initial_extruder: [initial_extruder]
+        ; --- has_wipe_tower: [has_wipe_tower]
+        ; --- total_toolchanges: [total_toolchanges]
+        ; --- T0: {is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - 1, 0))]}
+        ; --- T1: {is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - 0, 0))]}
+
+        T[initial_extruder]
+
+        M205 V[machine_max_jerk_x] ;Junction Deviation (mm)
+
+        {if bed_name =~/.*IDEXDupl.*/ || bed_name =~/.*IDEXCopy.*/ }
+          M605 S2 X162 R0 ;IDEX Duplication
+        {elsif bed_name =~/.*IDEXMirr.*/}
+          M605 S3 ;IDEX Mirror
+        {elsif bed_name =~/.*IDEXBack.*/}
+          M605 S4 ;IDEX Backup
+        {endif}
+
+        M140 S{first_layer_bed_temperature[initial_extruder]}
+
+        ; you can clean the nozzle
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S165
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S165
+          {endif}
+        M204 S100
+        G28
+
+        G0 Z100.0
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))}
+          G0 X{if 0 == 0}80{else}240{endif} Y0 F6840.0
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))}
+          G0 X{if 1 == 0}80{else}240{endif} Y0 F6840.0
+          {endif}
+
+        M190 R{first_layer_bed_temperature[initial_extruder]}
+
+        {if 1==1}; LED
+          M355 S1 P64
+          G4 P100
+          M355 S1 P128
+          G4 P100
+          M355 S1 P64
+          G4 P200
+          M355 S1 P255
+          G4 P100
+        {endif}
+        G28 X Y
+
+        M83
+        {if 1==1 && max(custom_parameter_filament_hot_plate_temp_initial_layer[initial_extruder], custom_parameter_filament_hot_plate_temp[initial_extruder]) >= 90}
+        G0 Z0.06
+        G92 Z0 ;reset z
+        {endif}
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+        ; preheat 0
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))}
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+        ; preheat 1
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))}
+          {endif}
+
+          {if 1==1}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] and (initial_extruder % 2) != 0}
+        ; flush nozzle 0
+        T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))}
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( 0 % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( 0 % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( 0 % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length_toolchange[0]} F200
+        G92 E0
+        G0 Y20 F6840.0
+        G28 X F6840.0
+
+        M104 S{custom_parameter_filament_temperature_vitrification[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          {endif}
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] and (initial_extruder % 2) != 1}
+        ; flush nozzle 1
+        T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))}
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( 1 % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( 1 % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( 1 % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length_toolchange[1]} F200
+        G92 E0
+        G0 Y20 F6840.0
+        G28 X F6840.0
+
+        M104 S{custom_parameter_filament_temperature_vitrification[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          {endif}
+
+          {endif}
+        ; flush initial nozzle
+        T[initial_extruder]
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( initial_extruder % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( initial_extruder % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( initial_extruder % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length[initial_extruder]} F200
+        G92 E0
+        G0 Y20 F6840.0
+
+        ; ready [bed_name]
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 324x0
+      - 324x200
+      - '0x200'
+      max_print_height: 200
+      printer_notes: |
+        PRINTER_MODEL_SNAPMAKER_J1
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'
+  - condition: tool.nozzle_diameter == 0.8 and printer.tool_count == 2
+    id: /R/B9X+BWd/P81pQL8iLDA
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: |-
+        ; layer_num: [layer_num]
+        G92 E0
+      toolchange_gcode: |-
+        ;***** Update: 20240823
+        {if current_extruder != next_extruder}
+        ; Change T[current_extruder] -> T[next_extruder] (layer [layer_num] [toolchange_count]/[total_toolchanges])
+        ; layer [layer_num] at [layer_z]mm
+        T[next_extruder]
+
+         M107 P[current_extruder] ;fan off T[current_extruder]
+
+        {if layer_num == 1 &&
+         ((filament_type[current_extruder] == "PLA" || filament_type[current_extruder] == "TPU")
+          || (filament_type[next_extruder] == "PLA" || filament_type[next_extruder] == "TPU"))
+        }
+        ; set bed temp: {filament_type[current_extruder]}({bed_temperature[current_extruder]}) -> {filament_type[next_extruder]}({bed_temperature[next_extruder]})
+        M140 S{min(bed_temperature[current_extruder], bed_temperature[next_extruder])}
+        {endif}
+
+        M2000 S200 V[travel_speed] A[travel_acceleration] ;quick switch extruders, S:200 mode/V:speed/A:acceleration
+        M109 T[next_extruder] S{if layer_num < 1}[first_layer_temperature]{else}[temperature]{endif} C3 W1 ;wait T[next_extruder]
+        {if layer_z > first_layer_height && layer_num >= disable_fan_first_layers[next_extruder]}
+          M106 P[next_extruder] S{min_fan_speed[next_extruder] * 255.0 / 100.0} ;restore fan speed for T[next_extruder]
+        {endif}
+        {endif}
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.24 Standard @Snapmaker J1 (0.8 nozzle)
+      remaining_times: true
+      machine_limits_usage: emit_to_gcode
+      extra_loading_move: -2
+      extruder_clearance_height: 35
+      extruder_clearance_radius: 35
+      extruder_offset:
+      - '0x0'
+      - '0x0'
+      gcode_flavor: marlin2
+      high_current_on_filament_swap: false
+      layer_gcode: ''
+      end_gcode: |-
+        G92 E0
+
+        G0 Z{max_layer_z + 2.0} F600
+        ; retract the filament to make it easier to replace
+        G0 E-10 F200
+        G28
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S0
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S0
+          {endif}
+        M140 S0
+        M107
+        M220 S100
+        M84
+
+        ;
+        ; DON'T REMOVE these lines if you're using the smfix (https://github.com/macdylan/SMFix)
+        ; min_x = {first_layer_print_min[0]}
+        ; min_y = {first_layer_print_min[1]}
+        ; max_x = {first_layer_print_max[0]}
+        ; max_y = {first_layer_print_max[1]}
+        ; max_z = [max_layer_z]
+        ; total_layer_number = [layer_num]
+        ;
+      machine_max_acceleration_e:
+      - 6000.0
+      machine_max_acceleration_extruding:
+      - 10000.0
+      machine_max_acceleration_retracting:
+      - 6000.0
+      machine_max_acceleration_travel:
+      - 10000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      machine_max_acceleration_y:
+      - 8000.0
+      machine_max_acceleration_z:
+      - 100.0
+      machine_max_jerk_e:
+      - 2.5
+      machine_max_jerk_x:
+      - 10.0
+      machine_max_jerk_y:
+      - 10.0
+      machine_max_jerk_z:
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 40.0
+      machine_max_feedrate_x:
+      - 350.0
+      machine_max_feedrate_y:
+      - 300.0
+      machine_max_feedrate_z:
+      - 10.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: ''
+      start_gcode: |-
+        ; Model: Snapmaker J1 ({nozzle_diameter[0]}/{nozzle_diameter[1]})
+        ; Update: 20240922
+        ; Maintained by https://github.com/macdylan/3dp-configs
+        ; Printer : [printer_settings_id]
+        ; Profile : [print_settings_id]
+        ; Plate   : [bed_name]
+        ; --- initial_extruder: [initial_extruder]
+        ; --- has_wipe_tower: [has_wipe_tower]
+        ; --- total_toolchanges: [total_toolchanges]
+        ; --- T0: {is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - 1, 0))]}
+        ; --- T1: {is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - 0, 0))]}
+
+        T[initial_extruder]
+
+        M205 V[machine_max_jerk_x] ;Junction Deviation (mm)
+
+        {if bed_name =~/.*IDEXDupl.*/ || bed_name =~/.*IDEXCopy.*/ }
+          M605 S2 X162 R0 ;IDEX Duplication
+        {elsif bed_name =~/.*IDEXMirr.*/}
+          M605 S3 ;IDEX Mirror
+        {elsif bed_name =~/.*IDEXBack.*/}
+          M605 S4 ;IDEX Backup
+        {endif}
+
+        M140 S{first_layer_bed_temperature[initial_extruder]}
+
+        ; you can clean the nozzle
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S165
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S165
+          {endif}
+        M204 S100
+        G28
+
+        G0 Z100.0
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))}
+          G0 X{if 0 == 0}80{else}240{endif} Y0 F6840.0
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))}
+          G0 X{if 1 == 0}80{else}240{endif} Y0 F6840.0
+          {endif}
+
+        M190 R{first_layer_bed_temperature[initial_extruder]}
+
+        {if 1==1}; LED
+          M355 S1 P64
+          G4 P100
+          M355 S1 P128
+          G4 P100
+          M355 S1 P64
+          G4 P200
+          M355 S1 P255
+          G4 P100
+        {endif}
+        G28 X Y
+
+        M83
+        {if 1==1 && max(custom_parameter_filament_hot_plate_temp_initial_layer[initial_extruder], custom_parameter_filament_hot_plate_temp[initial_extruder]) >= 90}
+        G0 Z0.06
+        G92 Z0 ;reset z
+        {endif}
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+        ; preheat 0
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))} S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))}
+          {endif}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+        ; preheat 1
+        M104 T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))} S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))}
+          {endif}
+
+          {if 1==1}
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] and (initial_extruder % 2) != 0}
+        ; flush nozzle 0
+        T{(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))}
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( 0 % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( 0 % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( 0 % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length_toolchange[0]} F200
+        G92 E0
+        G0 Y20 F6840.0
+        G28 X F6840.0
+
+        M104 S{custom_parameter_filament_temperature_vitrification[(initial_extruder % 2 == 0 ? min(initial_extruder + 0, 63) : max(initial_extruder - (1-0), 0))]}
+          {endif}
+
+        {if is_extruder_used[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] and (initial_extruder % 2) != 1}
+        ; flush nozzle 1
+        T{(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))}
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( 1 % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( 1 % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( 1 % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length_toolchange[1]} F200
+        G92 E0
+        G0 Y20 F6840.0
+        G28 X F6840.0
+
+        M104 S{custom_parameter_filament_temperature_vitrification[(initial_extruder % 2 == 0 ? min(initial_extruder + 1, 63) : max(initial_extruder - (1-1), 0))]}
+          {endif}
+
+          {endif}
+        ; flush initial nozzle
+        T[initial_extruder]
+        M104 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 15))}; common flush temp
+        G0 Z1.6 F240.0
+        G0 X{( initial_extruder % 2 == 0 ? 147.0 : 177.0 )} F6840.0
+        G0 Y0 F6840.0
+
+        M109 S{max(250, min(290, first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 15))} C2 W1
+        G1 E20 F80.0
+        G92 E0
+
+        M106 S{min(255, (max_fan_speed[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 10) * 2.55)}
+
+        M104 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))] + 5}
+
+        G1 E12.0 F200
+        G92 E0
+        G1 E8.0 Z4.6 F200
+        G92 E0
+
+        G0 Z5.6 F200
+        M107
+
+        G0 X{( initial_extruder % 2 == 0 ? 137.0 : 187.0 )} F6840.0
+        G0 Z0.3 F240.0
+        M109 S{first_layer_temperature[(initial_extruder % 2 == 0 ? min(initial_extruder + initial_extruder, 63) : max(initial_extruder - (1-initial_extruder), 0))]} C3 W1
+        G1 E3 F200
+        G92 E0
+        G1 X{( initial_extruder % 2 == 0 ? 0 : 324 )} E8.5437 F6840.0
+        G92 E0
+
+        G1 E-{retract_length[initial_extruder]} F200
+        G92 E0
+        G0 Y20 F6840.0
+
+        ; ready [bed_name]
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 324x0
+      - 324x200
+      - '0x200'
+      max_print_height: 200
+      printer_notes: |
+        PRINTER_MODEL_SNAPMAKER_J1
+      between_objects_gcode: ''
+      single_extruder_multi_material: false
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 300x300/PNG
+      custom_parameters_printer: '{"support_air_filtration": true}'

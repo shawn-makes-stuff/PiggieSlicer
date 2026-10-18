@@ -18,8 +18,13 @@
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/Fill/FillBase.hpp"
 #include "libslic3r/Fill/FillConcentric.hpp"
+#include "libslic3r/Fill/FillConcentricInternal.hpp"
 #include "libslic3r/Fill/FillHoneycomb.hpp"
 #include "libslic3r/Fill/Fill3DHoneycomb.hpp"
+#include "libslic3r/Fill/FillCrossHatch.hpp"
+#include "libslic3r/Fill/FillSpiralInset.hpp"
+#include "libslic3r/Fill/FillTpmsD.hpp"
+#include "libslic3r/Fill/FillTpmsFK.hpp"
 #include "libslic3r/Fill/FillGyroid.hpp"
 #include "libslic3r/Fill/FillPlanePath.hpp"
 #include "libslic3r/Fill/FillLine.hpp"
@@ -46,6 +51,16 @@ Fill* Fill::new_from_type(const Domain::InfillPattern type)
     case Domain::InfillPattern::ipConcentric:          return new FillConcentric();
     case Domain::InfillPattern::ipHoneycomb:           return new FillHoneycomb();
     case Domain::InfillPattern::ip3DHoneycomb:         return new Fill3DHoneycomb();
+    case Domain::InfillPattern::ip3DHoneycombClassic:  return new Fill3DHoneycombClassic();
+    case Domain::InfillPattern::ipQuarterCubic:        return new FillQuarterCubic();
+    case Domain::InfillPattern::ipLateralLattice:      return new FillLateralLattice();
+    case Domain::InfillPattern::ipLateralHoneycomb:    return new FillLateralHoneycomb();
+    case Domain::InfillPattern::ipCrossHatch:          return new FillCrossHatch();
+    case Domain::InfillPattern::ipSpiralInset:         return new FillSpiralInset();
+    case Domain::InfillPattern::ipTpmsD:               return new FillTpmsD();
+    case Domain::InfillPattern::ipTpmsFK:              return new FillTpmsFK();
+    case Domain::InfillPattern::ipCrossZag:            return new FillCrossZag();
+    case Domain::InfillPattern::ipLockedZag:           return new FillLockedZag();
     case Domain::InfillPattern::ipGyroid:              return new FillGyroid();
     case Domain::InfillPattern::ipRectilinear:         return new FillRectilinear();
     case Domain::InfillPattern::ipAlignedRectilinear:  return new FillAlignedRectilinear();
@@ -65,6 +80,7 @@ Fill* Fill::new_from_type(const Domain::InfillPattern type)
     case Domain::InfillPattern::ipLightning:           return new FillLightning::Filler();
     case Domain::InfillPattern::ipEnsuring:            return new FillEnsuring();
     case Domain::InfillPattern::ipZigZag:              return new FillZigZag();
+    case Domain::InfillPattern::ipConcentricInternal:  return new FillConcentricInternal();
     default: throw Slic3r::InvalidArgument("unknown type");
     }
 }
@@ -90,10 +106,16 @@ Polylines Fill::fill_surface(const Surface *surface, const FillParams &params)
 {
     // Perform offset.
     Slic3r::ExPolygons expp = offset_ex(surface->expolygon, float(scale_(this->overlap - 0.5 * this->spacing)));
+    // Orca: Separated infills move the box center onto each body; origin-aligned patterns follow it.
+    const Point shift = this->aligned_to_origin() && this->bounding_box.defined ? BB::center(this->bounding_box) : Point::Zero();
+    for (ExPolygon &expoly : expp)
+        expoly.translate(-shift);
     // Create the infills for each of the regions.
     Polylines polylines_out;
     for (ExPolygon &expoly : expp)
         _fill_surface_single(params, surface->thickness_layers, _infill_direction(surface), std::move(expoly), polylines_out);
+    for (Polyline &pl : polylines_out)
+        pl.translate(shift);
     return polylines_out;
 }
 
@@ -133,6 +155,61 @@ coord_t Fill::_adjust_solid_spacing(const coord_t width, const coord_t distance)
 
 // Returns orientation of the infill and the reference point of the infill pattern.
 // For a normal print, the reference point is the center of a bounding box of the STL.
+void Fill::multiline_fill(Polylines &polylines, const FillParams &params, float spacing)
+{
+    if (params.multiline <= 1)
+        return;
+
+    const int n_lines = params.multiline;
+    // Remove invalid polylines
+    polylines.erase(std::remove_if(polylines.begin(), polylines.end(), [](const Polyline &p) { return p.size() < 2; }), polylines.end());
+    if (polylines.empty())
+        return;
+    Polylines all_polylines;
+    all_polylines.reserve(n_lines * polylines.size());
+
+    // the offsets, in units of the spacing: odd with the center line at 0, even from half a spacing
+    const int           rings = n_lines / 2;
+    std::vector<double> offsets;
+    offsets.reserve(n_lines);
+    if (n_lines % 2 != 0) {
+        offsets.push_back(0.0);
+        for (int i = 1; i <= rings; ++i)
+            offsets.push_back(i * spacing);
+    } else {
+        const double start = 0.5 * spacing;
+        for (int i = 0; i < rings; ++i)
+            offsets.push_back(start + i * spacing);
+    }
+
+    for (double t : offsets) {
+        if (t == 0.0) {
+            // the center line (odd n_lines only)
+            all_polylines.insert(all_polylines.end(), polylines.begin(), polylines.end());
+            continue;
+        }
+        const float delta = float(scale_(t));
+        // Arc tolerance of 1/500 of the offset, Clipper2's default.
+        for (const Polygon &ring : offset(polylines, delta, ClipperLib::jtRound, 0.002 * delta, ClipperLib::etOpenRound))
+            if (ring.size() >= 3)
+                all_polylines.emplace_back(Algorithms::Polygon::split_at_first_point(ring));
+    }
+    polylines = std::move(all_polylines);
+}
+
+BoundingBox Fill::extended_object_bounding_box() const
+{
+    // about the center of the box
+    const Point c   = BB::center(this->bounding_box);
+    BoundingBox out = BB::translated(this->bounding_box, Point{ -c.x(), -c.y() });
+    out = BB::merge(out, Point(out.min.y(), out.min.x()));
+    out = BB::merge(out, Point(out.max.y(), out.max.x()));
+    // scaled by sqrt(2) to cover any rotation
+    out.min = (out.min.cast<double>() * std::sqrt(2.)).cast<coord_t>();
+    out.max = (out.max.cast<double>() * std::sqrt(2.)).cast<coord_t>();
+    return BB::translated(out, c);
+}
+
 std::pair<float, Point> Fill::_infill_direction(const Surface *surface) const
 {
     // set infill angle
@@ -166,7 +243,7 @@ std::pair<float, Point> Fill::_infill_direction(const Surface *surface) const
         printf("Filling bridge with angle %f\n", surface->bridge_angle);
 #endif /* SLIC3R_DEBUG */
         out_angle = float(surface->bridge_angle);
-    } else if (this->layer_id != size_t(-1)) {
+    } else if (this->layer_id != size_t(-1) && !this->fixed_angle) {
         // alternate fill direction
         out_angle += this->_layer_angle(this->layer_id / surface->thickness_layers);
     } else {

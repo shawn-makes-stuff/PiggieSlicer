@@ -1,0 +1,551 @@
+kind: vendor
+id: SeeMeCNC
+name: SeeMeCNC
+version: 2.4.0+orca.2.4.0.06
+features:
+  printer:
+    supports_04_nozzle:
+      default: false
+      user_editable: false
+    supports_05_nozzle:
+      default: false
+      user_editable: false
+    supports_07_nozzle:
+      default: false
+      user_editable: false
+    supports_1_nozzle:
+      default: false
+      user_editable: false
+    multi_bed_types:
+      default: false
+      user_editable: false
+    multi_extruder:
+      default: false
+      user_editable: false
+    default_bed:
+      default: high_temp_plate
+      user_editable: false
+  tool:
+    nozzle_high_flow:
+      default: false
+      user_editable: false
+    nozzle_diameter:
+      default: 0.4
+      user_editable: false
+    extruder_index:
+      default: 0
+      user_editable: false
+printer_families:
+- label: SeeMeCNC Artemis 300
+  base_model: SeeMeCNC Artemis 300
+  printer_configs_order:
+  - SeeMeCNC-Artemis-0-4-nozzle
+  - SeeMeCNC-Artemis-0-5-nozzle
+  - SeeMeCNC-Artemis-0-7-nozzle
+  - SeeMeCNC-Artemis-1-0-nozzle
+- label: SeeMeCNC BOSSdelta 300
+  base_model: SeeMeCNC BOSSdelta 300
+  printer_configs_order:
+  - SeeMeCNC-BOSSdelta-300-0-4-nozzle
+  - SeeMeCNC-BOSSdelta-300-0-5-nozzle
+  - SeeMeCNC-BOSSdelta-300-0-7-nozzle
+  - SeeMeCNC-BOSSdelta-300-1-0-nozzle
+- label: SeeMeCNC BOSSdelta 500 0505
+  base_model: SeeMeCNC BOSSdelta 500 0505
+  printer_configs_order:
+  - SeeMeCNC-BOSSdelta-500-0505-0-4-nozzle
+  - SeeMeCNC-BOSSdelta-500-0505-0-5-nozzle
+  - SeeMeCNC-BOSSdelta-500-0505-0-7-nozzle
+  - SeeMeCNC-BOSSdelta-500-0505-1-0-nozzle
+- label: SeeMeCNC BOSSdelta 500 0510
+  base_model: SeeMeCNC BOSSdelta 500 0510
+  printer_configs_order:
+  - SeeMeCNC-BOSSdelta-500-0510-0-4-nozzle
+  - SeeMeCNC-BOSSdelta-500-0510-0-5-nozzle
+  - SeeMeCNC-BOSSdelta-500-0510-0-7-nozzle
+  - SeeMeCNC-BOSSdelta-500-0510-1-0-nozzle
+- label: SeeMeCNC BOSSdelta 500 0521
+  base_model: SeeMeCNC BOSSdelta 500 0521
+  printer_configs_order:
+  - SeeMeCNC-BOSSdelta-500-0521-0-4-nozzle
+  - SeeMeCNC-BOSSdelta-500-0521-0-5-nozzle
+  - SeeMeCNC-BOSSdelta-500-0521-0-7-nozzle
+  - SeeMeCNC-BOSSdelta-500-0521-1-0-nozzle
+- label: SeeMeCNC RostockMAX v3.2
+  base_model: SeeMeCNC RostockMAX v3.2
+  printer_configs_order:
+  - SeeMeCNC-RostockMAX-v3-2-0-4-nozzle
+  - SeeMeCNC-RostockMAX-v3-2-0-5-nozzle
+  - SeeMeCNC-RostockMAX-v3-2-0-7-nozzle
+  - SeeMeCNC-RostockMAX-v3-2-1-0-nozzle
+- label: SeeMeCNC RostockMAX v4
+  base_model: SeeMeCNC RostockMAX v4
+  printer_configs_order:
+  - SeeMeCNC-RostockMAX-v4-0-4-nozzle
+  - SeeMeCNC-RostockMAX-v4-0-5-nozzle
+  - SeeMeCNC-RostockMAX-v4-0-7-nozzle
+  - SeeMeCNC-RostockMAX-v4-1-0-nozzle
+---
+kind: printer
+technology: FFF
+name: SeeMeCNC Artemis 300
+id: SeeMeCNC Artemis 300
+model:
+  base_model: SeeMeCNC Artemis 300
+  model: SeeMeCNC Artemis 300
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SeeMeCNC_Buildplate_Model.STL
+  bed_texture: SeeMeCNC_Buildplate_texture.png
+  thumbnail: SeeMeCNC Artemis 300_cover.png
+---
+kind: printer
+technology: FFF
+name: SeeMeCNC BOSSdelta 300
+id: SeeMeCNC BOSSdelta 300
+model:
+  base_model: SeeMeCNC BOSSdelta 300
+  model: SeeMeCNC BOSSdelta 300
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SeeMeCNC_Buildplate_Model.STL
+  bed_texture: SeeMeCNC_Buildplate_texture.png
+  thumbnail: SeeMeCNC BOSSdelta 300_cover.png
+---
+kind: printer
+technology: FFF
+name: SeeMeCNC BOSSdelta 500 0505
+id: SeeMeCNC BOSSdelta 500 0505
+model:
+  base_model: SeeMeCNC BOSSdelta 500 0505
+  model: SeeMeCNC BOSSdelta 500 0505
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SeeMeCNC_Buildplate_Model_500.STL
+  bed_texture: SeeMeCNC_Buildplate_texture.png
+  thumbnail: SeeMeCNC BOSSdelta 500 0505_cover.png
+---
+kind: printer
+technology: FFF
+name: SeeMeCNC BOSSdelta 500 0510
+id: SeeMeCNC BOSSdelta 500 0510
+model:
+  base_model: SeeMeCNC BOSSdelta 500 0510
+  model: SeeMeCNC BOSSdelta 500 0510
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SeeMeCNC_Buildplate_Model_500.STL
+  bed_texture: SeeMeCNC_Buildplate_texture.png
+  thumbnail: SeeMeCNC BOSSdelta 500 0510_cover.png
+---
+kind: printer
+technology: FFF
+name: SeeMeCNC BOSSdelta 500 0521
+id: SeeMeCNC BOSSdelta 500 0521
+model:
+  base_model: SeeMeCNC BOSSdelta 500 0521
+  model: SeeMeCNC BOSSdelta 500 0521
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SeeMeCNC_Buildplate_Model_500.STL
+  bed_texture: SeeMeCNC_Buildplate_texture.png
+  thumbnail: SeeMeCNC BOSSdelta 500 0521_cover.png
+---
+kind: printer
+technology: FFF
+name: SeeMeCNC RostockMAX v3.2
+id: SeeMeCNC RostockMAX v3.2
+model:
+  base_model: SeeMeCNC RostockMAX v3.2
+  model: SeeMeCNC RostockMAX v3.2
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SeeMeCNC_Buildplate_Model.STL
+  bed_texture: SeeMeCNC_Buildplate_texture.png
+  thumbnail: SeeMeCNC RostockMAX v3.2_cover.png
+---
+kind: printer
+technology: FFF
+name: SeeMeCNC RostockMAX v4
+id: SeeMeCNC RostockMAX v4
+model:
+  base_model: SeeMeCNC RostockMAX v4
+  model: SeeMeCNC RostockMAX v4
+tool_count: 1
+features:
+  supports_04_nozzle:
+    default: true
+  supports_05_nozzle:
+    default: true
+  supports_07_nozzle:
+    default: true
+  supports_1_nozzle:
+    default: true
+  default_bed:
+    default: high_temp_plate
+visual:
+  bed_model: SeeMeCNC_Buildplate_Model.STL
+  bed_texture: SeeMeCNC_Buildplate_texture.png
+  thumbnail: SeeMeCNC RostockMAX v4_cover.png
+---
+kind: tool
+technology: FFF
+id: '0.4'
+name: 0.4 nozzle
+condition: printer.supports_04_nozzle
+features:
+  nozzle_diameter:
+    default: 0.4
+---
+kind: tool
+technology: FFF
+id: '0.5'
+name: 0.5 nozzle
+condition: printer.supports_05_nozzle
+features:
+  nozzle_diameter:
+    default: 0.5
+---
+kind: tool
+technology: FFF
+id: '0.7'
+name: 0.7 nozzle
+condition: printer.supports_07_nozzle
+features:
+  nozzle_diameter:
+    default: 0.7
+---
+kind: tool
+technology: FFF
+id: '1.0'
+name: 1.0 nozzle
+condition: printer.supports_1_nozzle
+features:
+  nozzle_diameter:
+    default: 1.0
+---
+kind: sheet
+id: cool_plate
+name: Smooth Cool Plate
+type: Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "cool_plate"
+---
+kind: sheet
+id: engineering_plate
+name: Engineering Plate
+type: Engineering Plate
+condition: printer.multi_bed_types or printer.default_bed == "engineering_plate"
+---
+kind: sheet
+id: high_temp_plate
+name: Smooth High Temp Plate
+type: High Temp Plate
+condition: printer.multi_bed_types or printer.default_bed == "high_temp_plate"
+---
+kind: sheet
+id: textured_pei_plate
+name: Textured PEI Plate
+type: Textured PEI Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_pei_plate"
+---
+kind: sheet
+id: textured_cool_plate
+name: Textured Cool Plate
+type: Textured Cool Plate
+condition: printer.multi_bed_types or printer.default_bed == "textured_cool_plate"
+---
+kind: sheet
+id: supertack_plate
+name: Cool Plate (SuperTack)
+type: Supertack Plate
+condition: printer.multi_bed_types or printer.default_bed == "supertack_plate"
+---
+kind: printer_config
+id: SeeMeCNC-Artemis-0-4-nozzle
+name: SeeMeCNC Artemis 0.4 nozzle
+printer: SeeMeCNC Artemis 300
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-Artemis-0-5-nozzle
+name: SeeMeCNC Artemis 0.5 nozzle
+printer: SeeMeCNC Artemis 300
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-Artemis-0-7-nozzle
+name: SeeMeCNC Artemis 0.7 nozzle
+printer: SeeMeCNC Artemis 300
+tools:
+- tool: '0.7'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-Artemis-1-0-nozzle
+name: SeeMeCNC Artemis 1.0 nozzle
+printer: SeeMeCNC Artemis 300
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-300-0-4-nozzle
+name: SeeMeCNC BOSSdelta 300 0.4 nozzle
+printer: SeeMeCNC BOSSdelta 300
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-300-0-5-nozzle
+name: SeeMeCNC BOSSdelta 300 0.5 nozzle
+printer: SeeMeCNC BOSSdelta 300
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-300-0-7-nozzle
+name: SeeMeCNC BOSSdelta 300 0.7 nozzle
+printer: SeeMeCNC BOSSdelta 300
+tools:
+- tool: '0.7'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-300-1-0-nozzle
+name: SeeMeCNC BOSSdelta 300 1.0 nozzle
+printer: SeeMeCNC BOSSdelta 300
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0505-0-4-nozzle
+name: SeeMeCNC BOSSdelta 500 0505 0.4 nozzle
+printer: SeeMeCNC BOSSdelta 500 0505
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0505-0-5-nozzle
+name: SeeMeCNC BOSSdelta 500 0505 0.5 nozzle
+printer: SeeMeCNC BOSSdelta 500 0505
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0505-0-7-nozzle
+name: SeeMeCNC BOSSdelta 500 0505 0.7 nozzle
+printer: SeeMeCNC BOSSdelta 500 0505
+tools:
+- tool: '0.7'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0505-1-0-nozzle
+name: SeeMeCNC BOSSdelta 500 0505 1.0 nozzle
+printer: SeeMeCNC BOSSdelta 500 0505
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0510-0-4-nozzle
+name: SeeMeCNC BOSSdelta 500 0510 0.4 nozzle
+printer: SeeMeCNC BOSSdelta 500 0510
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0510-0-5-nozzle
+name: SeeMeCNC BOSSdelta 500 0510 0.5 nozzle
+printer: SeeMeCNC BOSSdelta 500 0510
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0510-0-7-nozzle
+name: SeeMeCNC BOSSdelta 500 0510 0.7 nozzle
+printer: SeeMeCNC BOSSdelta 500 0510
+tools:
+- tool: '0.7'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0510-1-0-nozzle
+name: SeeMeCNC BOSSdelta 500 0510 1.0 nozzle
+printer: SeeMeCNC BOSSdelta 500 0510
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0521-0-4-nozzle
+name: SeeMeCNC BOSSdelta 500 0521 0.4 nozzle
+printer: SeeMeCNC BOSSdelta 500 0521
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0521-0-5-nozzle
+name: SeeMeCNC BOSSdelta 500 0521 0.5 nozzle
+printer: SeeMeCNC BOSSdelta 500 0521
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0521-0-7-nozzle
+name: SeeMeCNC BOSSdelta 500 0521 0.7 nozzle
+printer: SeeMeCNC BOSSdelta 500 0521
+tools:
+- tool: '0.7'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-BOSSdelta-500-0521-1-0-nozzle
+name: SeeMeCNC BOSSdelta 500 0521 1.0 nozzle
+printer: SeeMeCNC BOSSdelta 500 0521
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-RostockMAX-v3-2-0-4-nozzle
+name: SeeMeCNC RostockMAX v3.2 0.4 nozzle
+printer: SeeMeCNC RostockMAX v3.2
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-RostockMAX-v3-2-0-5-nozzle
+name: SeeMeCNC RostockMAX v3.2 0.5 nozzle
+printer: SeeMeCNC RostockMAX v3.2
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-RostockMAX-v3-2-0-7-nozzle
+name: SeeMeCNC RostockMAX v3.2 0.7 nozzle
+printer: SeeMeCNC RostockMAX v3.2
+tools:
+- tool: '0.7'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-RostockMAX-v3-2-1-0-nozzle
+name: SeeMeCNC RostockMAX v3.2 1.0 nozzle
+printer: SeeMeCNC RostockMAX v3.2
+tools:
+- tool: '1.0'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-RostockMAX-v4-0-4-nozzle
+name: SeeMeCNC RostockMAX v4 0.4 nozzle
+printer: SeeMeCNC RostockMAX v4
+tools:
+- tool: '0.4'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-RostockMAX-v4-0-5-nozzle
+name: SeeMeCNC RostockMAX v4 0.5 nozzle
+printer: SeeMeCNC RostockMAX v4
+tools:
+- tool: '0.5'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-RostockMAX-v4-0-7-nozzle
+name: SeeMeCNC RostockMAX v4 0.7 nozzle
+printer: SeeMeCNC RostockMAX v4
+tools:
+- tool: '0.7'
+sheet: high_temp_plate
+---
+kind: printer_config
+id: SeeMeCNC-RostockMAX-v4-1-0-nozzle
+name: SeeMeCNC RostockMAX v4 1.0 nozzle
+printer: SeeMeCNC RostockMAX v4
+tools:
+- tool: '1.0'
+sheet: high_temp_plate

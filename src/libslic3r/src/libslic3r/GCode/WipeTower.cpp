@@ -1,4 +1,5 @@
 #include "libslic3r/GCode/WipeTower.hpp"
+#include "libslic3r/GCode/FlushVolCalc.hpp"
 
 #include <LocalesUtils.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -599,6 +600,7 @@ WipeTower::WipeTower(
     const std::vector<unsigned>& extruder_candidates
 ) :
     m_semm(config.get<bool>("single_extruder_multi_material")),
+    m_enable_filament_ramming(config.get<bool>("enable_filament_ramming")),
     m_wipe_tower_pos(pos),
     m_wipe_tower_width(float(config.get<double>("wipe_tower_width"))),
     m_wipe_tower_cone_angle(float(config.get<double>("wipe_tower_cone_angle"))),
@@ -960,7 +962,7 @@ void WipeTower::toolchange_Unload(
 	float remaining = xr - xl ;							// keeps track of distance to the next turnaround
 	float e_done = 0;									// measures E move done from each segment   
 
-    const bool do_ramming = m_semm || m_filpar[m_current_tool].multitool_ramming;
+    const bool do_ramming = (m_semm && m_enable_filament_ramming) || m_filpar[m_current_tool].multitool_ramming;
     const int ramming_temperature_delta = m_filpar[m_current_tool].ramming_temperature_delta;
 
     if (do_ramming) {
@@ -1005,7 +1007,7 @@ void WipeTower::toolchange_Unload(
 
     if (m_switch_filament_monitoring)
         writer.switch_filament_monitoring(false);
-    if (m_filpar[m_current_tool].ramming_initial_delay > 0)
+    if (do_ramming && m_filpar[m_current_tool].ramming_initial_delay > 0)
         writer.wait(m_filpar[m_current_tool].ramming_initial_delay);
 
     // now the ramming itself:
@@ -1038,7 +1040,7 @@ void WipeTower::toolchange_Unload(
     // Retraction:
     float old_x = writer.x();
     float turning_point = (!m_left_to_right ? xl : xr );
-    if (m_semm && (m_cooling_tube_retraction != 0 || m_cooling_tube_length != 0)) {
+    if (m_enable_filament_ramming && m_semm && (m_cooling_tube_retraction != 0 || m_cooling_tube_length != 0)) {
         float total_retraction_distance = m_cooling_tube_retraction + m_cooling_tube_length/2.f - 15.f; // the 15mm is reserved for the first part after ramming
         writer.suppress_preview()
               .retract(15.f, m_filpar[m_current_tool].unloading_speed_start * 60.f) // feedrate 5000mm/min = 83mm/s
@@ -1049,7 +1051,7 @@ void WipeTower::toolchange_Unload(
     }
 
     const int& number_of_cooling_moves = m_filpar[m_current_tool].cooling_moves;
-    const bool cooling_will_happen = m_semm && number_of_cooling_moves > 0;
+    const bool cooling_will_happen = m_enable_filament_ramming && m_semm && number_of_cooling_moves > 0;
     bool change_temp_later = false;
 
     // Wipe tower should only change temperature with single extruder MM. Otherwise, all temperatures should
@@ -1118,7 +1120,7 @@ void WipeTower::toolchange_Unload(
         }
     }
 
-    if (m_semm) {
+    if (m_enable_filament_ramming && m_semm) {
         // let's wait is necessary:
         writer.wait(m_filpar[m_current_tool].delay);
         // we should be at the beginning of the cooling tube again - let's move to parking position:
@@ -1292,7 +1294,7 @@ void WipeTower::toolchange_Wipe(
 }
 
 bool WipeTower::has_semm_loading_move() const {
-    return m_semm && (m_parking_pos_retraction != 0 || m_extra_loading_move != 0);
+    return m_semm && m_enable_filament_ramming && (m_parking_pos_retraction != 0 || m_extra_loading_move != 0);
 }
 
 
@@ -1571,19 +1573,45 @@ std::vector<std::vector<float>> WipeTower::extract_wipe_volumes(const PrintConfi
     // Extract purging volumes for each extruder pair:
     std::vector<std::vector<float>> wipe_volumes;
     const unsigned int number_of_extruders = config.hw_config().material_slot_count();
+    // The project matrix is not resized with the slot count (e.g. an external multi-material
+    // unit with any number of slots); a matrix of another size cannot be used.
+    const bool matrix_fits = wiping_matrix.size() == size_t(number_of_extruders) * number_of_extruders;
+    if (! matrix_fits)
+        wiping_matrix.assign(size_t(number_of_extruders) * number_of_extruders, 0.f);
     for (size_t i = 0; i<number_of_extruders; ++i)
         wipe_volumes.push_back(std::vector<float>(wiping_matrix.begin()+i*number_of_extruders, wiping_matrix.begin()+(i+1)*number_of_extruders));
 
     // For SEMM printers, the project can be configured to use defaults from configuration,
     // in which case the custom matrix shall be ignored. We will overwrite the values.
-    if (config.get<bool>("single_extruder_multi_material") && ! config.get<bool>("wiping_volumes_use_custom_matrix")) {
+    if (config.get<bool>("single_extruder_multi_material") && (! config.get<bool>("wiping_volumes_use_custom_matrix") || ! matrix_fits)) {
+        // Orca: purging volume from the colours of the two filaments (flushing volumes dialog),
+        // scaled by the filament purge multiplier (Orca's flush multiplier).
+        std::vector<float> colour_volumes;
+        if (config.get<bool>("wiping_volumes_by_colour")) {
+            std::vector<std::string> colours = config.get<std::vector<std::string>>("extruder_colour");
+            const std::vector<std::string> filament_colours = config.get<std::vector<std::string>>("filament_colour");
+            colours.resize(number_of_extruders);
+            for (size_t i = 0; i < number_of_extruders; ++i)
+                if (colours[i].empty() && i < filament_colours.size())
+                    colours[i] = filament_colours[i];
+            colour_volumes = FlushVolCalc::calc_flush_volumes(colours);
+        }
         for (size_t i = 0; i < number_of_extruders; ++i) {
             for (size_t j = 0; j < number_of_extruders; ++j) {
+                const double volume = colour_volumes.empty() ? config.get<double>("multimaterial_purging") : colour_volumes[i * number_of_extruders + j];
                 if (i != j)
-                wipe_volumes[i][j] = (i == j ? 0.f : config.get<std::vector<Domain::Percentage>>("filament_purge_multiplier").at(j).get_abs_value(config.get<double>("multimaterial_purging")));
+                wipe_volumes[i][j] = (i == j ? 0.f : config.get<std::vector<Domain::Percentage>>("filament_purge_multiplier").at(j).get_abs_value(volume));
             }
         }
     }
+
+    // Orca (Print.cpp _make_wipe_tower): a printer that does not purge in the prime tower (its
+    // multi-material unit purges into its own chute) primes only prime_volume there
+    if (! config.get<bool>("purge_in_prime_tower"))
+        for (auto& row : wipe_volumes)
+            for (float& volume : row)
+                if (volume > 0.f)
+                    volume = float(config.get<double>("prime_volume"));
 
     // Also include filament_minimal_purge_on_wipe_tower. This is needed for the preview.
     for (unsigned int i = 0; i<number_of_extruders; ++i)
@@ -1626,6 +1654,12 @@ void WipeTower::plan_toolchange(float z_par, float layer_height_par, unsigned in
 										layer_height_par);
 	float ramming_depth = (int(length_to_extrude / width) + 1) * (m_perimeter_width * m_filpar[old_tool].ramming_line_width_multiplicator * m_filpar[old_tool].ramming_step_multiplicator) * m_extra_spacing_ramming;
     float first_wipe_line = - (width*((length_to_extrude / width)-int(length_to_extrude / width)) - width);
+    // Orca: reserve ramming depth only when toolchange_Unload() will actually ram, otherwise
+    // the unprinted reservation leaves blank bands between the purge boxes.
+    if (m_semm && !m_enable_filament_ramming) {
+        ramming_depth   = 0.f;
+        first_wipe_line = 0.f;
+    }
 
     float first_wipe_volume = length_to_volume(first_wipe_line, m_perimeter_width * m_extra_flow, layer_height_par);
     float wiping_depth = get_wipe_depth(wipe_volume - first_wipe_volume, layer_height_par, m_perimeter_width, m_extra_flow, m_extra_spacing_wipe, width);

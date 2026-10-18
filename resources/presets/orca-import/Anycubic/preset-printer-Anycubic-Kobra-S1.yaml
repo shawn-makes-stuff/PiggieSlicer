@@ -1,0 +1,154 @@
+kind: printer
+id: SUIN0KBAenG6TGNjrCVnHQ
+variants:
+- condition: printer.model == "Anycubic Kobra S1"
+  name: Anycubic Kobra S1
+  id: pBxKnqsw0Tso73qYytoLRA
+  variants:
+  - condition: tool.nozzle_diameter == 0.4
+    id: 8zDGupGCeHxSuPTtXm0GMQ
+    values:
+      bed_custom_model: ''
+      bed_custom_texture: ''
+      before_layer_gcode: ; BEFORE_LAYER_CHANGE [layer_num] @ [layer_z]mm
+      change_extrusion_role_gcode: ''
+      toolchange_gcode: |-
+        ; FLUSH_START
+        ;;; M400 P0
+        T[next_extruder] ; change extruder
+        ; 1
+        ;;; G90
+        ;;; G1 Z{toolchange_z+2} F480
+        ;;; G1 X261 Y25 F12000
+        ;;; G1 Y1 F600
+        ;;; M400 P2730
+        ;;; G1 Y25 F3000
+        ;;; M400 P76250
+        ;;; M400 P35780
+        ; 2.1
+        ;;; G90
+        ;;; G1 Z{toolchange_z+2} F480
+        ;;; G1 X47 Y230 F12000
+        ;;; M400 P0
+        ; 2.2
+        ;;; G1 X47 Y276 F600
+        ;;; G1 X47 Y230 F12000
+        ;;; G1 X47 Y276 F600
+        ;;; G1 X47 Y230 F12000
+        ; 3.1
+        ;;; G1 F36000
+        ;;; G1 Y250
+        ;;; G1 F8000
+        ;;; G1 X81
+        ;;; G1 Y273
+        ; 3.2
+        ;;; G1 F8000
+        ;;; G1 X96
+        ;;; G1 X81
+        ;;; G1 F8000
+        ;;; G1 X96
+        ;;; G1 X81
+        ;;; G1 F8000
+        ;;; G1 X96
+        ;;; G1 X81
+        ;;; G1 X96
+        ;;; G1 X81
+        ;;; G1 X96
+        ;;; G1 X81
+        ;;; G1 X96
+        ;;; G1 X81
+        ; 3.3
+        ;;; G1 X72
+        ;;; G1 X77
+        ;;; G1 Z{toolchange_z}
+        ;;; M400 P0
+        ; FLUSH_END
+      cooling_tube_length: 0
+      cooling_tube_retraction: 0
+      default_print: 0.20mm Standard
+      remaining_times: false
+      machine_limits_usage: time_estimate_only
+      enable_filament_ramming: false
+      extra_loading_move: 0
+      extruder_clearance_height: 48
+      extruder_clearance_radius: 60
+      extruder_offset:
+      - '0x0'
+      gcode_flavor: klipper
+      high_current_on_filament_swap: false
+      layer_gcode: ; AFTER_LAYER_CHANGE [layer_num] @ [layer_z]mm
+      end_gcode: "G92 E0\nG1 E-2 F3000\n{if max_layer_z < max_print_height-1}G1 Z{z_offset+min(max_layer_z+2, max_print_height)} F900 ; Move print head further up{endif} \nG1 F12000; present print\nG1 X44;  throw_position_x\nG1 Y270; throw_position_y\nM140 S0 ; turn off heatbed\nM104 S0 ; turn off temperature\nM106 P1 S0 ; turn off fan\nM106 P2 S0\nM106 P3 S0\nM84; disable motors                  \n; disable stepper motors"
+      machine_max_acceleration_e:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_extruding:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_retracting:
+      - 5000.0
+      - 5000.0
+      machine_max_acceleration_travel:
+      - 20000.0
+      - 20000.0
+      machine_max_acceleration_x:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_y:
+      - 10000.0
+      - 10000.0
+      machine_max_acceleration_z:
+      - 500.0
+      - 500.0
+      machine_max_jerk_e:
+      - 2.5
+      - 2.5
+      machine_max_jerk_x:
+      - 9.0
+      - 9.0
+      machine_max_jerk_y:
+      - 9.0
+      - 9.0
+      machine_max_jerk_z:
+      - 3.0
+      - 3.0
+      machine_max_junction_deviation:
+      - 0.01
+      machine_max_feedrate_e:
+      - 80.0
+      - 80.0
+      machine_max_feedrate_x:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_y:
+      - 600.0
+      - 600.0
+      machine_max_feedrate_z:
+      - 15.0
+      - 15.0
+      machine_min_extruding_rate:
+      - 0.0
+      - 0.0
+      machine_min_travel_rate:
+      - 0.0
+      - 0.0
+      pause_print_gcode: M601
+      start_gcode: |-
+        G9111 bedTemp=[first_layer_bed_temperature] extruderTemp=[first_layer_temperature[initial_tool]]
+        M117
+      parking_pos_retraction: 0
+      bed_shape:
+      - '0x0'
+      - 250x0
+      - 250x250
+      - '0x250'
+      max_print_height: 250
+      printer_notes: ''
+      between_objects_gcode: ''
+      purge_in_prime_tower: false
+      single_extruder_multi_material: true
+      support_air_filtration: true
+      template_custom_gcode: ''
+      use_firmware_retraction: false
+      use_relative_e_distances: true
+      z_offset: 0
+      thumbnails: 230x110/PNG

@@ -7,6 +7,7 @@
 #include "Slic3r/App/Yoga/InputTextField.hpp"
 #include "Slic3r/App/Yoga/Icon.hpp"
 #include "Slic3r/Biz/I18N/I18N.hpp"
+#include "Slic3r/Biz/Preset/HwConfigEvaluator.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -127,6 +128,7 @@ AddPrinterPanel::AddPrinterPanel(
 
     m_left_bar = content->emplace_back<ScrollArea>();
     m_left_bar->set_width(240_fpx);
+    m_left_bar->set_flex_shrink(0); // same width whatever the card grid needs (e.g. while searching)
     m_left_bar->set_padding({0, 20_fpx, 0, 20_fpx});
     m_left_bar->set_orientation(Orientation::Vertical);
 
@@ -259,6 +261,7 @@ void AddPrinterPanel::reload_vendor_buttons(const Domain::Preset::Bundle& preset
         button->set_rounding(0);
         button->set_checkable(true);
         button->set_content_justify_content(YGJustifyFlexStart);
+        button->set_flex_shrink(0); // the list scrolls (Orca's 70 vendors), the rows keep their height
         m_button_vendors.emplace(button, vendor_id);
 
         if (m_selected_vendor == vendor_id) {
@@ -277,52 +280,41 @@ void AddPrinterPanel::reload_vendor_buttons(const Domain::Preset::Bundle& preset
     }
 }
 
-void AddPrinterPanel::rebuild_printer_families()
+std::vector<AddPrinterPanel::PrinterFamily> AddPrinterPanel::families_of(const std::string& vendor_id) const
 {
-    m_printer_families.clear();
-    m_vendor_name.clear();
-
+    std::vector<PrinterFamily> families;
     const Domain::Preset::Bundle& preset_bundle{m_project_interactor.workbench().preset_bundle()};
-    if (!m_selected_vendor.has_value()) {
-        return;
-    }
-
-    const auto vendor_it{preset_bundle.vendor_bundles.find(*m_selected_vendor)};
+    const auto vendor_it{preset_bundle.vendor_bundles.find(vendor_id)};
     if (vendor_it == preset_bundle.vendor_bundles.end()) {
-        return;
+        return families;
     }
 
     const Domain::Preset::VendorBundle& vendor_bundle{vendor_it->second};
-    m_vendor_name = vendor_bundle.vendor_data.info.name;
 
-    for (const Domain::Preset::HwPrinterConfig& config : vendor_bundle.printer_configs) {
-        const auto evaluated_it{preset_bundle.evaluated_presets.find(config.id)};
-        if (evaluated_it == preset_bundle.evaluated_presets.end()) {
-            continue;
-        }
-
-        for (const Domain::Preset::EvaluatedPrinterPreset& evaluated : evaluated_it->second) {
-            if (evaluated.preset.origin != Domain::Preset::PresetOrigin::System) {
-                continue;
-            }
-
+    // every printer template of the vendor; a printer is built (and evaluated) when added
+    const Biz::Preset::HwConfigEvaluator config_eval;
+    for (const Domain::Preset::HwPrinterConfigTemplate& printer_template :
+         vendor_bundle.vendor_data.printer_configs) {
+        {
+            const Domain::Preset::HwPrinterConfig config =
+                config_eval.create_printer_config(printer_template, vendor_bundle.vendor_data);
             const PrinterEntry entry{
                 .printer = Printer{
-                    .preset_item_id = evaluated.preset.id,
+                    .template_id    = printer_template.id,
                     .default_config = config,
                     .tools          = m_project_interactor.preset_interactor().get_tool_items(config),
                     .sheets         = m_project_interactor.preset_interactor().get_sheet_items(config)
                 },
-                .preset_name = evaluated.preset.name
+                .preset_name = config.short_name
             };
 
             const auto family_it{
-                std::ranges::find_if(m_printer_families,
+                std::ranges::find_if(families,
                                      [&](const PrinterFamily& family)
                                      { return family.base_model == config.model.base_model; })};
 
-            if (family_it == m_printer_families.end()) {
-                m_printer_families.push_back(PrinterFamily{
+            if (family_it == families.end()) {
+                families.push_back(PrinterFamily{
                     .base_model = config.model.base_model,
                     .printers   = {entry}
                 });
@@ -335,19 +327,19 @@ void AddPrinterPanel::rebuild_printer_families()
     const std::vector<Domain::Preset::PrinterFamilyInfo>& order{
         vendor_bundle.vendor_data.info.printer_families};
     if (order.empty()) {
-        return;
+        return families;
     }
 
     std::vector<PrinterFamily> ordered_families;
-    std::vector<bool> family_used(m_printer_families.size(), false);
+    std::vector<bool> family_used(families.size(), false);
     for (const Domain::Preset::PrinterFamilyInfo& order_entry : order) {
-        for (size_t fi{}; fi < m_printer_families.size(); ++fi) {
-            if (family_used[fi] || m_printer_families[fi].base_model != order_entry.base_model) {
+        for (size_t fi{}; fi < families.size(); ++fi) {
+            if (family_used[fi] || families[fi].base_model != order_entry.base_model) {
                 continue;
             }
 
             family_used[fi] = true;
-            PrinterFamily& family{m_printer_families[fi]};
+            PrinterFamily& family{families[fi]};
 
             std::vector<PrinterEntry> ordered_printers;
             std::vector<bool> printer_used(family.printers.size(), false);
@@ -371,12 +363,27 @@ void AddPrinterPanel::rebuild_printer_families()
             ordered_families.push_back(std::move(family));
         }
     }
-    for (size_t fi{}; fi < m_printer_families.size(); ++fi) {
+    for (size_t fi{}; fi < families.size(); ++fi) {
         if (!family_used[fi]) {
-            ordered_families.push_back(std::move(m_printer_families[fi]));
+            ordered_families.push_back(std::move(families[fi]));
         }
     }
-    m_printer_families = std::move(ordered_families);
+    return ordered_families;
+}
+
+void AddPrinterPanel::rebuild_printer_families()
+{
+    m_printer_families.clear();
+    m_vendor_name.clear();
+    m_all_families.clear(); // the search across vendors builds them again
+    if (!m_selected_vendor.has_value()) {
+        return;
+    }
+    const auto& vendor_bundles = m_project_interactor.workbench().preset_bundle().vendor_bundles;
+    if (const auto it = vendor_bundles.find(*m_selected_vendor); it != vendor_bundles.end()) {
+        m_vendor_name      = it->second.vendor_data.info.name;
+        m_printer_families = families_of(*m_selected_vendor);
+    }
 }
 
 void AddPrinterPanel::rebuild_printer_view()
@@ -386,10 +393,23 @@ void AddPrinterPanel::rebuild_printer_view()
 
     clear_printer_items();
 
-    for (const PrinterFamily& family : m_printer_families) {
+    // Orca's printer search covers every vendor; without a search, the selected vendor's printers
+    if (!m_search_text.empty() && m_all_families.empty()) {
+        for (const auto& [vendor_id, vendor_bundle] :
+             m_project_interactor.workbench().preset_bundle().vendor_bundles) {
+            for (PrinterFamily& family : families_of(vendor_id)) {
+                if (family.label.empty())
+                    family.label = family.base_model;
+                family.label = vendor_bundle.vendor_data.info.name + " " + family.label;
+                m_all_families.emplace_back(vendor_bundle.vendor_data.info.name, std::move(family));
+            }
+        }
+    }
+    auto show = [this](const PrinterFamily& family, const std::string& vendor_name)
+    {
         std::vector<const PrinterEntry*> matched_printers;
         for (const PrinterEntry& entry : family.printers) {
-            if (matches_search(entry, m_vendor_name, m_search_text)) {
+            if (matches_search(entry, vendor_name, m_search_text)) {
                 matched_printers.push_back(&entry);
             }
         }
@@ -397,6 +417,13 @@ void AddPrinterPanel::rebuild_printer_view()
         if (!matched_printers.empty()) {
             append_item(m_printers, create_printer_family(family, matched_printers));
         }
+    };
+    if (m_search_text.empty()) {
+        for (const PrinterFamily& family : m_printer_families)
+            show(family, m_vendor_name);
+    } else {
+        for (const auto& [vendor_name, family] : m_all_families)
+            show(family, vendor_name);
     }
 }
 

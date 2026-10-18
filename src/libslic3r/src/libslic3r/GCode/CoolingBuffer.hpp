@@ -60,6 +60,10 @@ private:
     std::array<float, 5>        m_current_pos;
     // Current known fan speed or -1 if not known yet.
     int                         m_fan_speed;
+    // Orca: the auxiliary fan's speed (-1 = unknown), and whether a role fan (support interface /
+    // ironing) was left on at the end of the last layer
+    int                         m_additional_fan_speed { -1 };
+    bool                        m_role_fan_active { false };
     // Cached from GCodeWriter.
     // Printing extruder IDs, zero based.
     std::vector<unsigned int>   m_extruder_ids;

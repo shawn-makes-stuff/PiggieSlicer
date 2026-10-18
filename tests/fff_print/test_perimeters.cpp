@@ -68,6 +68,7 @@ SCENARIO("Perimeter nesting", "[Perimeters]")
         PerimeterRegions          perimeter_regions;
         PerimeterGenerator::Parameters perimeter_generator_params(
             1., // layer height
+            1., // slice z
             -1, // layer ID
             flow, flow, flow, flow,
             region_config_view,
@@ -545,6 +546,8 @@ SCENARIO("Perimeters3", "[Perimeters]")
     config.print.items.opt("layer_height").set(0.15);
     config.print.items.opt("first_layer_height").set(FloatOrPercentage{0.35});
     config.print.items.opt("bridge_speed").set(99.0);
+    // Orca's internal bridges (over sparse infill) default to 150 % of bridge_speed.
+    config.print.items.opt("internal_bridge_speed").set(FloatOrPercentage{Percentage{100}});
     config.print.items.opt("enable_dynamic_overhang_speeds").set(false);
             // to prevent bridging over sparse infill
     config.print.items.opt("fill_density").set(Percentage{0.0});

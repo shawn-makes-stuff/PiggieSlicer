@@ -6,11 +6,15 @@
 #include "Slic3r/App/InvalidDataDialog.hpp"
 #include "Slic3r/App/Scene/GizmoManager.hpp"
 
+#include <imgui_internal.h>
+
 namespace Slic3r::App {
 
 void RenderModuleBase::on_scene_keyboard_event(const Platform::KeyboardEvent& e)
 {
+    // a modal window (Welcome, printer picker, preferences...) takes the keys, not the scene
     if (!m_render_module_navigator->is_any_modal_dialog_opened()
+        && ImGui::GetTopMostPopupModal() == nullptr
         && !m_gizmo_manager->on_scene_keyboard_event(e))
     {
         Platform::AbstractRenderModule::on_scene_keyboard_event(e);

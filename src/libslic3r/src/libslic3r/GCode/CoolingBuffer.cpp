@@ -69,6 +69,7 @@ void CoolingBuffer::reset(const Vec3d &position)
     m_current_pos[AxisIdx::E] = 0.f;
     m_current_pos[AxisIdx::F] = float(m_config.travel_speed);
     m_fan_speed = -1;
+    m_additional_fan_speed = -1;
 }
 
 enum class AdjustableFeatureType : uint32_t {
@@ -146,6 +147,13 @@ struct CoolingLine
         TYPE_FIRST_INTERNAL_PERIMETER = 1 << 20,
         TYPE_TOOLCHANGE_TIME          = 1 << 21,
         TYPE_TOOLCHANGE_END           = 1 << 22,
+        // Orca: role fans (support interface, ironing)
+        TYPE_SUPPORT_INTERFACE_FAN_START = 1 << 23,
+        TYPE_SUPPORT_INTERFACE_FAN_END   = 1 << 24,
+        TYPE_IRONING_FAN_START           = 1 << 25,
+        TYPE_IRONING_FAN_END             = 1 << 26,
+        TYPE_INTERNAL_BRIDGE_FAN_START   = 1 << 27,
+        TYPE_INTERNAL_BRIDGE_FAN_END     = 1 << 28,
     };
 
     CoolingLine(unsigned int type, size_t  line_start, size_t  line_end) :
@@ -707,7 +715,9 @@ std::vector<PerExtruderAdjustments> CoolingBuffer::parse_layer_gcode(const std::
 
             if (wipe)
                 line.type |= CoolingLine::TYPE_WIPE;
-            if (boost::contains(sline, ";_EXTRUDE_SET_SPEED") && ! wipe) {
+            // Orca: an external perimeter of a "don't slow down outer walls" filament is not adjustable
+            const bool adjust_external = !(external_perimeter && m_config.dont_slow_down_outer_wall.at(adjustment->extruder_id));
+            if (boost::contains(sline, ";_EXTRUDE_SET_SPEED") && ! wipe && adjust_external) {
                 line.type |= CoolingLine::TYPE_ADJUSTABLE;
                 active_speed_modifier = adjustment->lines.size();
             }
@@ -860,6 +870,18 @@ std::vector<PerExtruderAdjustments> CoolingBuffer::parse_layer_gcode(const std::
                         SPDLOG_ERROR("CoolingBuffer encountered an invalid toolchange, maybe from a custom gcode: {}", sline);
                 }
             }
+        } else if (boost::starts_with(sline, ";_SUPP_INTERFACE_FAN_START")) {
+            line.type = CoolingLine::TYPE_SUPPORT_INTERFACE_FAN_START;
+        } else if (boost::starts_with(sline, ";_SUPP_INTERFACE_FAN_END")) {
+            line.type = CoolingLine::TYPE_SUPPORT_INTERFACE_FAN_END;
+        } else if (boost::starts_with(sline, ";_IRONING_FAN_START")) {
+            line.type = CoolingLine::TYPE_IRONING_FAN_START;
+        } else if (boost::starts_with(sline, ";_IRONING_FAN_END")) {
+            line.type = CoolingLine::TYPE_IRONING_FAN_END;
+        } else if (boost::starts_with(sline, ";_INTERNAL_BRIDGE_FAN_START")) {
+            line.type = CoolingLine::TYPE_INTERNAL_BRIDGE_FAN_START;
+        } else if (boost::starts_with(sline, ";_INTERNAL_BRIDGE_FAN_END")) {
+            line.type = CoolingLine::TYPE_INTERNAL_BRIDGE_FAN_END;
         } else if (boost::starts_with(sline, ";_BRIDGE_FAN_START")) {
             line.type = CoolingLine::TYPE_BRIDGE_FAN_START;
         } else if (boost::starts_with(sline, ";_BRIDGE_FAN_END")) {
@@ -1160,13 +1182,23 @@ std::string CoolingBuffer::apply_layer_cooldown(
     new_gcode.reserve(gcode.size() * 2);
     bool bridge_fan_control = false;
     int  bridge_fan_speed   = 0;
-    auto change_extruder_set_fan = [this, layer_id, layer_time, &new_gcode, &bridge_fan_control, &bridge_fan_speed](const int requested_fan_speed = -1) {
+    // Orca: role fans (support interface, ironing), -1 = not used
+    int  supp_interface_fan_speed = -1;
+    int  ironing_fan_speed        = -1;
+    int  internal_bridge_fan_speed = -1;
+    const unsigned int min_pwm = unsigned(std::max(0, m_config.part_cooling_fan_min_pwm));
+    auto change_extruder_set_fan = [this, layer_id, layer_time, &new_gcode, &bridge_fan_control, &bridge_fan_speed,
+                                    &supp_interface_fan_speed, &ironing_fan_speed, &internal_bridge_fan_speed, min_pwm](const int requested_fan_speed = -1) {
         const int min_fan_speed            = m_config.min_fan_speed.at(m_current_extruder);
         const int max_fan_speed            = m_config.max_fan_speed.at(m_current_extruder);
         // Is the fan speed ramp enabled?
         const int full_fan_speed_layer     = m_config.full_fan_speed_layer.at(m_current_extruder);
         int       disable_fan_first_layers = m_config.disable_fan_first_layers.at(m_current_extruder);
         int       fan_speed_new            = m_config.fan_always_on.at(m_current_extruder) ? min_fan_speed : 0;
+        int       additional_fan_speed_new = m_config.additional_cooling_fan_speed.at(m_current_extruder);
+        // Orca: the first layer's fan speed override (used when the fan is not off on the first layers)
+        const int  initial_layer_fan_speed    = m_config.initial_layer_fan_speed.at(m_current_extruder);
+        const bool has_initial_layer_override = initial_layer_fan_speed >= 0 && disable_fan_first_layers <= 0;
 
         struct FanSpeedRange
         {
@@ -1176,13 +1208,23 @@ std::string CoolingBuffer::apply_layer_cooldown(
 
         FanSpeedRange requested_fan_speed_limits{fan_speed_new, 100};
 
-        if (disable_fan_first_layers <= 0 && full_fan_speed_layer > 0) {
+        if (disable_fan_first_layers <= 0 && full_fan_speed_layer > 0 && !has_initial_layer_override) {
             // When ramping up fan speed from disable_fan_first_layers to full_fan_speed_layer, force disable_fan_first_layers above zero,
             // so there will be a zero fan speed at least at the 1st layer.
             disable_fan_first_layers = 1;
         }
 
-        if (int(layer_id) >= disable_fan_first_layers) {
+        if (has_initial_layer_override && layer_id == 0) {
+            // Orca: one stable fan speed on the first layer
+            fan_speed_new                        = initial_layer_fan_speed;
+            bridge_fan_speed                     = initial_layer_fan_speed;
+            bridge_fan_control                   = false;
+            supp_interface_fan_speed             = -1;
+            ironing_fan_speed                    = -1;
+            internal_bridge_fan_speed            = -1;
+            requested_fan_speed_limits.min_speed = initial_layer_fan_speed;
+            requested_fan_speed_limits.max_speed = initial_layer_fan_speed;
+        } else if (int(layer_id) >= disable_fan_first_layers) {
             float slowdown_below_layer_time = float(m_config.slowdown_below_layer_time.at(m_current_extruder));
             float fan_below_layer_time      = float(m_config.fan_below_layer_time.at(m_current_extruder));
             if (m_config.cooling.at(m_current_extruder)) {
@@ -1202,13 +1244,24 @@ std::string CoolingBuffer::apply_layer_cooldown(
 
             bridge_fan_speed = m_config.bridge_fan_speed.at(m_current_extruder);
             if (int(layer_id) >= disable_fan_first_layers && int(layer_id) + 1 < full_fan_speed_layer) {
-                // Ramp up the fan speed from disable_fan_first_layers to full_fan_speed_layer.
-                const float factor = float(int(layer_id + 1) - disable_fan_first_layers) / float(full_fan_speed_layer - disable_fan_first_layers);
+                if (has_initial_layer_override && full_fan_speed_layer > 1) {
+                    // Orca: ramp from the first layer's speed to the regular speed on layer full_fan_speed_layer - 1
+                    const float t      = float(layer_id) / float(full_fan_speed_layer - 1);
+                    const float anchor = float(initial_layer_fan_speed);
+                    fan_speed_new      = std::clamp(int(anchor + t * (float(fan_speed_new) - anchor) + 0.5f), 0, 100);
+                    bridge_fan_speed   = std::clamp(int(anchor + t * (float(bridge_fan_speed) - anchor) + 0.5f), 0, 100);
+                } else {
+                    // Ramp up the fan speed from disable_fan_first_layers to full_fan_speed_layer.
+                    const float factor = float(int(layer_id + 1) - disable_fan_first_layers) / float(full_fan_speed_layer - disable_fan_first_layers);
 
-                fan_speed_new                        = std::clamp(int(float(fan_speed_new) * factor + 0.5f), 0, 100);
-                bridge_fan_speed                     = std::clamp(int(float(bridge_fan_speed) * factor + 0.5f), 0, 100);
+                    fan_speed_new                        = std::clamp(int(float(fan_speed_new) * factor + 0.5f), 0, 100);
+                    bridge_fan_speed                     = std::clamp(int(float(bridge_fan_speed) * factor + 0.5f), 0, 100);
+                }
                 requested_fan_speed_limits.max_speed = fan_speed_new;
             }
+            supp_interface_fan_speed = m_config.support_material_interface_fan_speed.at(m_current_extruder);
+            ironing_fan_speed        = m_config.ironing_fan_speed.at(m_current_extruder);
+            internal_bridge_fan_speed = m_config.internal_bridge_fan_speed.at(m_current_extruder);
 
 #undef EXTRUDER_CONFIG
             bridge_fan_control = bridge_fan_speed > fan_speed_new;
@@ -1216,6 +1269,10 @@ std::string CoolingBuffer::apply_layer_cooldown(
             bridge_fan_control                   = false;
             bridge_fan_speed                     = 0;
             fan_speed_new                        = 0;
+            additional_fan_speed_new             = 0;
+            supp_interface_fan_speed             = -1;
+            ironing_fan_speed                    = -1;
+            internal_bridge_fan_speed            = -1;
             requested_fan_speed_limits.max_speed = 0;
         }
 
@@ -1227,13 +1284,23 @@ std::string CoolingBuffer::apply_layer_cooldown(
 
         if (fan_speed_new != m_fan_speed) {
             m_fan_speed = fan_speed_new;
-            new_gcode  += GCodeWriter::set_fan(m_config.gcode_flavor, m_config.gcode_comments, m_fan_speed);
+            new_gcode  += GCodeWriter::set_fan(m_config.gcode_flavor, m_config.gcode_comments, m_fan_speed, min_pwm);
+        }
+        // Orca: the auxiliary fan
+        if (m_config.auxiliary_fan && additional_fan_speed_new != m_additional_fan_speed) {
+            m_additional_fan_speed = additional_fan_speed_new;
+            new_gcode += GCodeWriter::set_additional_fan(m_config.gcode_comments, m_additional_fan_speed);
         }
     };
 
     const char         *pos               = gcode.c_str();
     int                 current_feedrate  = 0;
 
+    // Orca: a role fan left on at the end of the last layer: emit this layer's fan speed again
+    if (m_role_fan_active) {
+        m_fan_speed       = -1;
+        m_role_fan_active = false;
+    }
     change_extruder_set_fan();
 
     const CoolingLine *line_waiting_for_split = nullptr;
@@ -1314,10 +1381,23 @@ std::string CoolingBuffer::apply_layer_cooldown(
             change_extruder_set_fan();
         } else if (line->type & CoolingLine::TYPE_BRIDGE_FAN_START) {
             if (bridge_fan_control)
-                new_gcode += GCodeWriter::set_fan(m_config.gcode_flavor, m_config.gcode_comments, bridge_fan_speed);
+                new_gcode += GCodeWriter::set_fan(m_config.gcode_flavor, m_config.gcode_comments, bridge_fan_speed, min_pwm);
         } else if (line->type & CoolingLine::TYPE_BRIDGE_FAN_END) {
             if (bridge_fan_control)
-                new_gcode += GCodeWriter::set_fan(m_config.gcode_flavor, m_config.gcode_comments, m_fan_speed);
+                new_gcode += GCodeWriter::set_fan(m_config.gcode_flavor, m_config.gcode_comments, m_fan_speed, min_pwm);
+        } else if (line->type & (CoolingLine::TYPE_SUPPORT_INTERFACE_FAN_START | CoolingLine::TYPE_IRONING_FAN_START | CoolingLine::TYPE_INTERNAL_BRIDGE_FAN_START)) {
+            // Orca: the role's own fan speed
+            const int speed = (line->type & CoolingLine::TYPE_IRONING_FAN_START) ? ironing_fan_speed :
+                (line->type & CoolingLine::TYPE_INTERNAL_BRIDGE_FAN_START) ? internal_bridge_fan_speed : supp_interface_fan_speed;
+            if (speed >= 0) {
+                new_gcode += GCodeWriter::set_fan(m_config.gcode_flavor, m_config.gcode_comments, speed, min_pwm);
+                m_role_fan_active = true;
+            }
+        } else if (line->type & (CoolingLine::TYPE_SUPPORT_INTERFACE_FAN_END | CoolingLine::TYPE_IRONING_FAN_END | CoolingLine::TYPE_INTERNAL_BRIDGE_FAN_END)) {
+            if (m_role_fan_active) {
+                new_gcode += GCodeWriter::set_fan(m_config.gcode_flavor, m_config.gcode_comments, m_fan_speed, min_pwm);
+                m_role_fan_active = false;
+            }
         } else if (line->type & CoolingLine::TYPE_TOOLCHANGE_END) {
             // Custom toolchange gcode may have changed fan speed via M106/M107 that CoolingBuffer
             // doesn't track. Force re-emission to restore the correct fan speed.
