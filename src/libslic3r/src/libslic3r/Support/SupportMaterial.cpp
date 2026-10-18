@@ -1678,11 +1678,7 @@ static void merge_contact_layers(const SlicingParameters &slicing_params, double
 // Generate top contact layers supporting overhangs.
 // For a soluble interface material synchronize the layer heights with the object, otherwise leave the layer height undefined.
 // If supports over bed surface only are requested, don't generate contact layers over an object.
-// Orca overlaps (ClipperUtils): whether two sets of expolygons share any area
-static bool overlaps(const ExPolygons &expolys1, const ExPolygons &expolys2)
-{
-    return ! intersection_ex(expolys1, expolys2).empty();
-}
+using Biz::Algorithms::ExPolygon::overlaps;
 
 // Orca support_remove_small_overhang: the overhang clusters (Orca OverhangCluster)
 struct OverhangCluster {

@@ -53,6 +53,8 @@ bool remove_small_expolygons_and_holes(Domain::ExPolygons& expolygons, double mi
 // Namely expolygons touching at a vertical boundary are considered overlapping, while expolygons touching
 // at a horizontal boundary are NOT considered overlapping.
 bool overlaps(const Domain::ExPolygon& expolygon, const Domain::ExPolygon &other_expolygon);
+// whether any expolygon of one set overlaps any of the other (Orca ExPolygon.cpp)
+bool overlaps(const Domain::ExPolygons& expolygons, const Domain::ExPolygons& other_expolygons);
 
 Domain::Lines to_lines(const Domain::ExPolygon& expolygon);
 Domain::Lines to_lines(const Domain::ExPolygons& expolygons);

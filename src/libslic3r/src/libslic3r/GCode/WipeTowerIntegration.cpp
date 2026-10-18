@@ -75,7 +75,7 @@ std::string WipeTowerIntegration::append_tcr(
 
         const std::vector<double> retract_speed{config.get<std::vector<double>>("retract_speed")};
         const double travel_speed{config.get<double>("travel_speed")};
-        const Biz::Slicing::ExtrudeConfig extrude_config{config};
+        const Biz::Slicing::ExtrudeConfig& extrude_config = gcodegen.extrude_config(config);
 
         gcode += gcodegen.retract_and_wipe(retract_speed, travel_speed);
         gcodegen.m_avoid_crossing_perimeters.use_external_mp_once = true;

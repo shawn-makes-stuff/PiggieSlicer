@@ -198,7 +198,7 @@ void appconfig_config_init_fn(Domain::ConfigDefinitions& defs)
     def->option_group = Domain::ConfigItemDef::OptionGroup::AppConfig_Services_General;
     def->init_fn = []() { return Domain::ConfigValue(false); }; // off by default, so it does not fire before wizard on the first run!
 
-    // Orca's settings visibility (GUI_App::get_saved_mode, "user_mode"): 0 Simple, 1 Advanced, 2 Expert
+    // the sidebar's settings visibility (Orca GUI_App::get_saved_mode, "user_mode"): 0 Simple, 1 Advanced
     def = defs.add("print_settings_mode", typeid(int));
     def->location = Domain::AppConfigLocation{};
     def->category = Domain::ConfigItemDef::Category::Hidden;

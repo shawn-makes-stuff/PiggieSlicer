@@ -1176,7 +1176,7 @@ void PrintObject::detect_surfaces_type()
                         const Polygons   T_polygons = Algorithms::ExPolygon::to_polygons(T);
                         // the walls are laid out on spacing, not width; a single wall over the top surfaces is exactly the
                         // situation handled here
-                        const auto one_wall_top = region.config().get<Domain::TopOnePerimeterType>("top_one_perimeter_type");
+                        const auto one_wall_top = region.extruder_config_value<Domain::TopOnePerimeterType>("top_one_perimeter_type", FlowRole::frPerimeter);
                         const int  perimeters   = region.extruder_config_value<int>("perimeters", FlowRole::frPerimeter);
                         const int  wall_loops   = one_wall_top == Domain::TopOnePerimeterType::TopSurfaces ||
                                 (one_wall_top == Domain::TopOnePerimeterType::TopmostOnly && upper_layer == nullptr) ?

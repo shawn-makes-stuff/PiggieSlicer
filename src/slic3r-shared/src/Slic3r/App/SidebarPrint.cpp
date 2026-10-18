@@ -91,9 +91,9 @@ SidebarPrint::SidebarPrint(Biz::ProjectInteractor& project_interactor, Navigator
     m_mode_group.callbacks().action = [this](AbstractButton* button)
     { set_objects_mode(button == m_objects_button); };
 
-    // Orca: [advanced] 5 [mode] in the Process title (Tab.cpp: "Cycle settings visibility")
+    // Orca: [advanced] 5 [mode] in the Process title: Simple / Advanced settings visibility
     m_settings_mode_button = mode_switch->emplace_back<LayoutButton>(
-        std::string{}, Render::Icon::None, Biz::_u8L("Cycle settings visibility")
+        std::string{}, Render::Icon::Cogs, Biz::_u8L("Settings visibility")
     );
     m_settings_mode_button->set_content_padding({10, 3});
     m_settings_mode_button->set_margin({13.f, 0.f, 0.f, 0.f});
@@ -101,7 +101,7 @@ SidebarPrint::SidebarPrint(Biz::ProjectInteractor& project_interactor, Navigator
     m_settings_mode_button->callbacks().action = [this]
     {
         using Mode = Domain::ConfigItemDef::Mode;
-        set_settings_mode(Mode((int(print_settings_mode()) + 1) % (int(Mode::Expert) + 1)));
+        set_settings_mode(print_settings_mode() == Mode::Simple ? Mode::Advanced : Mode::Simple);
     };
 
     m_global_content = m_section->content()->emplace_back<Item>();
@@ -281,13 +281,16 @@ void SidebarPrint::set_settings_mode(Domain::ConfigItemDef::Mode mode)
     using Mode = Domain::ConfigItemDef::Mode;
     if (mode != print_settings_mode())
         set_print_settings_mode(mode);
-    m_settings_mode_button->set_label(
-        mode == Mode::Simple ? Biz::_u8L("Simple") : mode == Mode::Advanced ? Biz::_u8L("Advanced") : Biz::_u8L("Expert")
-    );
+    m_settings_mode_button->set_label(mode == Mode::Simple ? Biz::_u8L("Simple") : Biz::_u8L("Advanced"));
+    // Orca (Tab::rebuild_page_tree): a page with nothing to show in this visibility has no tab
     for (size_t index = 1; index < m_tab_pages->object_count(); ++index) {
-        if (auto* page = dynamic_cast<PrintTabListView*>(m_tab_pages->get_item(index)))
+        if (auto* page = dynamic_cast<PrintTabListView*>(m_tab_pages->get_item(index))) {
             page->refresh_mode();
+            m_tab_buttons.at(index)->set_visible(!page->is_empty());
+        }
     }
+    if (!m_tab_buttons.at(m_tab_pages->current_index())->is_visible())
+        select_tab(0);
 }
 
 void SidebarPrint::select_tab(size_t index)
@@ -304,7 +307,7 @@ bool SidebarPrint::show_item(const Domain::ConfigItem* config_item)
         if (page != nullptr && page->contains(config_item->def())) {
             // Orca's search: a setting the visibility hides is shown by raising it
             if (!is_shown_in_mode(config_item->def()))
-                set_settings_mode(config_item->def().mode);
+                set_settings_mode(Domain::ConfigItemDef::Mode::Advanced);
             set_objects_mode(false);
             m_section->set_collapsed(false);
             select_tab(index);

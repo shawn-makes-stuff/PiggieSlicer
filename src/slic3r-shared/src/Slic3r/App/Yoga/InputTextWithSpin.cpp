@@ -125,8 +125,15 @@ void InputTextWithSpin::text_updated_internal()
 
 void InputTextWithSpin::set_last_value()
 {
-    m_last_value =
-        boost::get<double>(m_eval.eval(m_parser.parse(validator()->string_without_unit())));
+    // set_text() skips the validator for an unchanged text, but the validator forgets its split text when
+    // its units change (a row rebound to another setting): split the current text again
+    validator()->process(text());
+    try {
+        m_last_value =
+            boost::get<double>(m_eval.eval(m_parser.parse(validator()->string_without_unit())));
+    } catch ([[maybe_unused]] const Biz::Expr::ParseError& error) {
+    } catch ([[maybe_unused]] const Biz::Expr::EvalError& error) {
+    }
 }
 
 } // namespace Slic3r::App::Yoga

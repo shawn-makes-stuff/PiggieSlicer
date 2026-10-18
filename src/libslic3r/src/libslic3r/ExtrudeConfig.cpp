@@ -149,7 +149,11 @@ ExtrudeConfig::ExtrudeConfig(const Domain::ConfigView& config) :
     gap_fill_flow_ratio{config.get<double>("gap_fill_flow_ratio")},
     support_flow_ratio{config.get<double>("support_flow_ratio")},
     support_interface_flow_ratio{config.get<double>("support_interface_flow_ratio")},
-    first_layer_flow_ratio{config.get<double>("first_layer_flow_ratio")}
+    first_layer_flow_ratio{config.get<double>("first_layer_flow_ratio")},
+    change_extrusion_role_gcode{config.get<std::string>("change_extrusion_role_gcode")},
+    filament_change_extrusion_role_gcode{config.get<std::vector<std::string>>("filament_change_extrusion_role_gcode")},
+    process_change_extrusion_role_gcode{config.get<std::string>("process_change_extrusion_role_gcode")},
+    internal_bridge_fan_speed{config.get<std::vector<int>>("internal_bridge_fan_speed")}
 {}
 
 } // namespace Slic3r::Biz::Slicing

@@ -138,6 +138,12 @@ struct ExtrudeConfig
     double support_flow_ratio{1.};
     double support_interface_flow_ratio{1.};
     double first_layer_flow_ratio{1.};
+    // Orca: custom G-code on an extrusion role change (printer, per filament, process)
+    std::string change_extrusion_role_gcode{};
+    std::vector<std::string> filament_change_extrusion_role_gcode{};
+    std::string process_change_extrusion_role_gcode{};
+    // Orca: the internal bridges' own fan speed, -1 = the bridge fan
+    std::vector<int> internal_bridge_fan_speed{};
 };
 
 } // namespace Slic3r::Biz::Slicing

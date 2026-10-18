@@ -5,17 +5,15 @@
 #include <limits>
 #include <sstream>
 
+#include <boost/algorithm/string/trim.hpp>
+
 namespace Slic3r {
+
+using boost::algorithm::trim_copy;
 
 static bool nearly_equal(double a, double b)
 {
     return std::nextafter(a, std::numeric_limits<double>::lowest()) <= b && std::nextafter(a, std::numeric_limits<double>::max()) >= b;
-}
-
-static std::string trimmed(const std::string &s)
-{
-    const size_t first = s.find_first_not_of(" \t\r\n");
-    return first == std::string::npos ? std::string{} : s.substr(first, s.find_last_not_of(" \t\r\n") - first + 1);
 }
 
 std::string SmallAreaInfillFlowCompensator::parse(const std::string &model, std::vector<double> &lengths, std::vector<double> &flow_factors)
@@ -28,17 +26,17 @@ std::string SmallAreaInfillFlowCompensator::parse(const std::string &model, std:
         std::string        value;
         if (!std::getline(iss, value, ','))
             continue;
-        value = trimmed(value);
+        value = trim_copy(value);
         if (value.empty())
             continue;
         try {
             const double length = std::stod(value);
             if (std::getline(iss, value, ',')) {
                 lengths.push_back(length);
-                flow_factors.push_back(std::stod(trimmed(value)));
+                flow_factors.push_back(std::stod(trim_copy(value)));
             }
         } catch (...) {
-            return "Error parsing data point in small area infill compensation model: " + trimmed(line);
+            return "Error parsing data point in small area infill compensation model: " + trim_copy(line);
         }
     }
     for (size_t i = 0; i < lengths.size(); ++i) {

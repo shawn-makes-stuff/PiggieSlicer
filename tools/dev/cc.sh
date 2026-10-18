@@ -7,6 +7,7 @@ MSB=/d/VSBuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe
 for f in "$@"; do
   case "$f" in
     src/libslic3r/*) proj=build/src/libslic3r/libslic3r.vcxproj ;;
+    src/slic3r-biz-algorithms/*) proj=build/src/slic3r-biz-algorithms/slic3r-biz-algorithms.vcxproj ;;
     src/libpgcode/*) proj=build/src/libpgcode/libpgcode.vcxproj ;;
     src/libvgcode/*) proj=build/src/libvgcode/libvgcode.vcxproj ;;
     src/slic3r-biz-parser/*) proj=build/src/slic3r-biz-parser/slic3r-biz-parser.vcxproj ;;

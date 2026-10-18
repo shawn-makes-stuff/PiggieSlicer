@@ -26,7 +26,7 @@ Mode print_settings_mode()
 {
     if (!current_mode) {
         const int saved = AppServices::instance().app_config().get<int>("print_settings_mode");
-        current_mode    = Mode(std::clamp(saved, int(Mode::Simple), int(Mode::Expert)));
+        current_mode    = saved == int(Mode::Simple) ? Mode::Simple : Mode::Advanced;
     }
     return *current_mode;
 }
@@ -39,7 +39,8 @@ void set_print_settings_mode(Mode mode)
 
 bool is_shown_in_mode(const Domain::ConfigItemDef& def)
 {
-    return def.mode <= print_settings_mode();
+    // Advanced shows all, Orca's Expert settings too
+    return print_settings_mode() != Mode::Simple || def.mode == Mode::Simple;
 }
 
 std::vector<PrintTab> print_tabs(Domain::PrinterTechnology technology)

@@ -18,7 +18,7 @@ struct PrintTab
     int orca_page{-1};
 };
 
-/// Orca's settings visibility (Simple / Advanced / Expert), saved in the app config.
+/// The settings visibility, Simple or Advanced (all, Orca's Expert settings too), saved in the app config.
 Domain::ConfigItemDef::Mode print_settings_mode();
 void set_print_settings_mode(Domain::ConfigItemDef::Mode mode);
 /// Whether the current visibility shows the setting.
@@ -56,6 +56,8 @@ public:
     void clear_navigation();
     /// Re-filters the rows after the settings visibility changed.
     void refresh_mode();
+    /// No setting shown (Orca hides such a page).
+    bool is_empty() const { return m_filter->size() == 0; }
 
 private:
     /// The group a setting is shown in: Orca's group, or its category and option group.

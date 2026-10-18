@@ -34,6 +34,7 @@
 
 #include <memory>
 #include <map>
+#include <unordered_map>
 #include <string>
 
 //#include "GCode/PressureEqualizer.hpp"
@@ -162,6 +163,10 @@ public:
     std::optional<Point> last_position;
 
 private:
+    // The ExtrudeConfig of a print / object / region config: built once per export, as reading it takes
+    // over a hundred config lookups (the G-code generator stage is serial).
+    const Biz::Slicing::ExtrudeConfig& extrude_config(const Domain::ConfigView& config);
+
     using InstanceToPrint = GCode::InstanceToPrint;
     using InfillRange = GCode::ExtrusionOrder::InfillRange;
     using SliceExtrusions = GCode::ExtrusionOrder::SliceExtrusions;
@@ -488,6 +493,7 @@ private:
     // Orca: role fan markers open (support interface, ironing) and the layer they were opened on
     std::array<bool, 3>                 m_role_fan_on { false, false, false };
     std::array<int, 3>                  m_role_fan_layer { -1, -1, -1 };
+    std::unordered_map<const Domain::ConfigView*, std::unique_ptr<const Biz::Slicing::ExtrudeConfig>> m_extrude_configs;
     // Orca bed_temperature_formula "by highest temp": first layer / other layers
     std::optional<std::pair<int, int>>  m_highest_bed_temperature;
     // Orca: the filament mass at the last layer change (curr_layer_mass)

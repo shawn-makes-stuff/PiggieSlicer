@@ -1177,6 +1177,7 @@ Domain::ExtraPrintStatistics GCodeGenerator::_do_export(
     }
     // Orca bed_temperature_formula "by highest temp": the filaments printing the first layer / all used ones
     m_highest_bed_temperature.reset();
+    m_extrude_configs.clear();
     if (print.config().get<Domain::BedTemperatureFormula>("bed_temperature_formula") == Domain::BedTemperatureFormula::ByHighestTemp
         && !tool_ordering.layer_tools().empty()) {
         const auto first_layer_temps = print.config().get<std::vector<int>>("first_layer_bed_temperature");
@@ -1670,7 +1671,7 @@ Domain::ExtraPrintStatistics GCodeGenerator::_do_export(
                 file.write(this->writer().travel_to_z_force(travel_z, "ensure z position to clear all already printed objects"));
                 const Vec3crd from{to_3d(*this->last_position, scaled(travel_z))};
                 const Vec3crd to{0, 0, scaled(travel_z)};
-                const Slicing::ExtrudeConfig extrude_config{object.config()};
+                const Slicing::ExtrudeConfig& extrude_config = this->extrude_config(object.config());
                 file.write(this->travel_to(from, to, ExtrusionRole::None, "move to origin position for next object", [](){return "";}, extrude_config));
                 m_enable_cooling_markers = true;
                 // Disable motion planner when traveling to first object point.
@@ -3137,7 +3138,7 @@ LayerResult GCodeGenerator::process_layer(
     }
 
     const PrintObjectConfigView& first_object_config{layer.object()->config()};
-    const Biz::Slicing::ExtrudeConfig first_object_extrude_config{first_object_config};
+    const Biz::Slicing::ExtrudeConfig& first_object_extrude_config = this->extrude_config(first_object_config);
 
     // With a pending tool change there is no safe travel target before the tool change.
     // In that case, the travel to the first point happens after set_extruder() instead.
@@ -3398,7 +3399,7 @@ LayerResult GCodeGenerator::process_layer(
             if (!support_extrusions.empty()) {
                 m_layer = layer_to_print.support_layer;
                 m_object_layer_over_raft = false;
-                const Biz::Slicing::ExtrudeConfig print_object_config{instance.print_object.config()};
+                const Biz::Slicing::ExtrudeConfig& print_object_config = this->extrude_config(instance.print_object.config());
                 gcode += this->extrude_support(support_extrusions, print_object_config);
             }
 
@@ -3700,7 +3701,7 @@ std::string GCodeGenerator::extrude_infill_ranges(
     std::string gcode{};
     for (const InfillRange &infill_range : infill_ranges) {
         if (!infill_range.items.empty()) {
-            const Biz::Slicing::ExtrudeConfig config{infill_range.region->config()};
+            const Biz::Slicing::ExtrudeConfig& config = this->extrude_config(infill_range.region->config());
             for (const GCode::SmoothPath &path : infill_range.items) {
                 gcode += this->extrude_smooth_path(path, false, comment, -1.0, config);
             }
@@ -3859,7 +3860,7 @@ std::string GCodeGenerator::extrude_perimeters(
 ) {
     std::string gcode{};
 
-    const Biz::Slicing::ExtrudeConfig config{region.config()};
+    const Biz::Slicing::ExtrudeConfig& config = this->extrude_config(region.config());
 
     // Orca wipe_inward: the printed prefix of the region's perimeters, the support of an inward wipe
     const auto wipe_inward_distance = region.config().get<Domain::FloatOrPercentage>("wipe_inward_distance");
@@ -3872,11 +3873,15 @@ std::string GCodeGenerator::extrude_perimeters(
                 wipe_support->append(*printed.extrusion_entity);
     }
 
+    // the same for all the perimeters (Orca: SMALL_PERIMETER_LENGTH(small_perimeter_threshold))
+    const double small_perimeter_length    = (m_print->config().get<double>("small_perimeter_threshold") / SCALING_FACTOR) * 2 * PI;
+    const bool   wipe_before_external_loop = region.config().get<bool>("wipe_before_external_loop");
+    const bool   wipe_on_loops             = region.config().get<bool>("wipe_on_loops");
+
     for (const GCode::ExtrusionOrder::Perimeter &perimeter : perimeters) {
         double speed{-1};
-        // Apply the small perimeter speed (Orca: SMALL_PERIMETER_LENGTH(small_perimeter_threshold)).
-        if (perimeter.extrusion_entity->length()
-            <= (m_print->config().get<double>("small_perimeter_threshold") / SCALING_FACTOR) * 2 * PI)
+        // Apply the small perimeter speed.
+        if (perimeter.extrusion_entity->length() <= small_perimeter_length)
             speed = region
                         .extruder_config_value<Domain::FloatOrPercentage>(
                             "small_perimeter_speed",
@@ -3886,7 +3891,7 @@ std::string GCodeGenerator::extrude_perimeters(
                             "perimeter_speed",
                             FlowRole::frExternalPerimeter
                         ));
-        if (region.config().get<bool>("wipe_before_external_loop") && perimeter.extrusion_entity->is_loop() &&
+        if (wipe_before_external_loop && perimeter.extrusion_entity->is_loop() &&
             perimeter.extrusion_entity->role().is_external_perimeter() && perimeters.size() > 1) {
             const double nozzle_diameter = Biz::Slicing::get_nozzle_diameter(region.config().hw_config(), m_writer.extruder()->id());
             if (const std::optional<Point> pt = external_loop_deretract_point(perimeter, perimeters, nozzle_diameter)) {
@@ -3919,7 +3924,7 @@ std::string GCodeGenerator::extrude_perimeters(
         };
 
         if (
-            region.config().get<bool>("wipe_on_loops")
+            wipe_on_loops
             && perimeter.extrusion_entity->role().is_external_perimeter()
             && m_layer != nullptr
             && region.extruder_config_value<int>("perimeters", FlowRole::frPerimeter) > 1
@@ -3973,6 +3978,14 @@ std::string GCodeGenerator::extrude_perimeters(
     }
     return gcode;
 };
+
+const Biz::Slicing::ExtrudeConfig& GCodeGenerator::extrude_config(const Domain::ConfigView& config)
+{
+    std::unique_ptr<const Biz::Slicing::ExtrudeConfig>& cached = m_extrude_configs[&config];
+    if (!cached)
+        cached = std::make_unique<const Biz::Slicing::ExtrudeConfig>(config);
+    return *cached;
+}
 
 bool GCodeGenerator::retract_lift_allowed(const Biz::Slicing::ExtrudeConfig& config, unsigned int extruder_id) const
 {
@@ -4449,14 +4462,12 @@ std::string GCodeGenerator::_extrude(
     if (GCodeExtrusionRole role = extrusion_role_to_gcode_extrusion_role(path_attr.role);
         role != m_last_processor_extrusion_role) {
         const unsigned int extruder_id_now = m_writer.extruder()->id();
-        const std::string& machine_role_change_gcode =
-            m_print->config().get<std::string>("change_extrusion_role_gcode");
-        const auto filament_role_change_gcodes =
-            m_print->config().get<std::vector<std::string>>("filament_change_extrusion_role_gcode");
-        const std::string filament_role_change_gcode = extruder_id_now < filament_role_change_gcodes.size() ?
-            filament_role_change_gcodes[extruder_id_now] : std::string{};
-        const std::string& process_role_change_gcode =
-            m_print->config().get<std::string>("process_change_extrusion_role_gcode");
+        const std::string& machine_role_change_gcode = config.change_extrusion_role_gcode;
+        const std::vector<std::string>& filament_role_change_gcodes = config.filament_change_extrusion_role_gcode;
+        static const std::string no_gcode;
+        const std::string& filament_role_change_gcode = extruder_id_now < filament_role_change_gcodes.size() ?
+            filament_role_change_gcodes[extruder_id_now] : no_gcode;
+        const std::string& process_role_change_gcode = config.process_change_extrusion_role_gcode;
         if (!machine_role_change_gcode.empty() || !filament_role_change_gcode.empty()
             || !process_role_change_gcode.empty()) {
             ParserConfig cfg;
@@ -4502,7 +4513,7 @@ std::string GCodeGenerator::_extrude(
 
     std::string cooling_marker_setspeed_comments;
     const bool  internal_bridge_own_fan = path_attr.role == ExtrusionRole::InternalBridgeInfill &&
-        m_print->config().get<std::vector<int>>("internal_bridge_fan_speed").at(extruder_id) >= 0;
+        config.internal_bridge_fan_speed.at(extruder_id) >= 0;
     if (m_enable_cooling_markers) {
         // Orca (append_role_based_fan_marker): a START when a role with its own fan speed begins (again on
         // every layer, the CoolingBuffer works per layer), an END when another role follows

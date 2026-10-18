@@ -174,6 +174,15 @@ bool overlaps(const Domain::ExPolygon& expolygon, const Domain::ExPolygon &other
         Algorithms::ExPolygon::contains(other_expolygon, expolygon.contour.points.front());
 }
 
+bool overlaps(const Domain::ExPolygons& expolygons, const Domain::ExPolygons& other_expolygons)
+{
+    for (const Domain::ExPolygon& expolygon : expolygons)
+        for (const Domain::ExPolygon& other_expolygon : other_expolygons)
+            if (overlaps(expolygon, other_expolygon))
+                return true;
+    return false;
+}
+
 Domain::Lines to_lines(const Domain::ExPolygon& expolygon)
 {
     Domain::Lines lines;

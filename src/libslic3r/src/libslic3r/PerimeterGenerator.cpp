@@ -1670,12 +1670,20 @@ void PerimeterGenerator::process_classic(
 
     const int extruder_id{params.config.get<int>("perimeter_extruder")-1};
     ASSERT(extruder_id >= 0);
+    // read once: used per loop and per polyline below
+    const int                       perimeters             = params.config.get<std::vector<int>>("perimeters").at(extruder_id);
+    const Domain::TopOnePerimeterType top_one_perimeter_type = params.config.get<std::vector<Domain::TopOnePerimeterType>>("top_one_perimeter_type").at(extruder_id);
+    const bool                      detect_thin_walls      = params.config.get<bool>("thin_walls");
+    const bool                      overhangs              = params.config.get<std::vector<bool>>("overhangs").at(extruder_id);
+    const bool                      overhang_reverse       = params.config.get<bool>("overhang_reverse");
+    const Domain::WallSequence      wall_sequence          = params.config.get<std::vector<Domain::WallSequence>>("wall_sequence").at(extruder_id);
+    const double                    filter_out_gap_fill    = scale_(params.config.get<double>("filter_out_gap_fill"));
 
     bool has_gap_fill = params.config.get<std::vector<bool>>("gap_fill_enabled").at(extruder_id)
         && params.config.get<std::vector<double>>("gap_fill_speed").at(extruder_id) > 0;
 
     // prepare grown lower layer slices for overhang detection
-    if (params.config.get<std::vector<bool>>("overhangs").at(extruder_id) && lower_slices != nullptr && lower_slices_polygons_cache.empty()) {
+    if (overhangs && lower_slices != nullptr && lower_slices_polygons_cache.empty()) {
         // We consider overhang any part where the entire nozzle diameter is not supported by the
         // lower layer, so we take lower slices and offset them by half the nozzle diameter used 
         // in the current layer
@@ -1686,14 +1694,14 @@ void PerimeterGenerator::process_classic(
     // we need to process each island separately because we might have different
     // extra perimeters for each one
     // detect how many perimeters must be generated for this island
-    int        loop_number = params.config.get<std::vector<int>>("perimeters").at(extruder_id) + surface.extra_perimeters - 1;  // 0-indexed loops
+    int        loop_number = perimeters + surface.extra_perimeters - 1;  // 0-indexed loops
     // Orca alternate_extra_wall: an extra wall on every other layer (not in spiral vase, not without infill)
     if (params.config.get<std::vector<bool>>("alternate_extra_wall").at(extruder_id) && params.layer_id % 2 == 1 && !params.spiral_vase &&
         params.config.get<std::vector<Domain::Percentage>>("fill_density").at(params.config.get<int>("infill_extruder") - 1).value > 0)
         loop_number++;
 
     // Set the topmost layer to be one perimeter.
-    if (loop_number > 0 && ((params.config.get<std::vector<Domain::TopOnePerimeterType>>("top_one_perimeter_type").at(extruder_id) != Domain::TopOnePerimeterType::None && upper_slices == nullptr) || (params.config.get<std::vector<bool>>("only_one_perimeter_first_layer").at(extruder_id) && params.layer_id == 0)))
+    if (loop_number > 0 && ((top_one_perimeter_type != Domain::TopOnePerimeterType::None && upper_slices == nullptr) || (params.config.get<std::vector<bool>>("only_one_perimeter_first_layer").at(extruder_id) && params.layer_id == 0)))
         loop_number = 0;
 
     ExPolygons last = union_ex(Algorithms::ExPolygon::simplify_to_polygons(surface.expolygon, params.scaled_resolution));
@@ -1712,14 +1720,14 @@ void PerimeterGenerator::process_classic(
             if (i == 0) {
                 // the minimum thickness of a single loop is:
                 // ext_width/2 + ext_spacing/2 + spacing/2 + width/2
-                offsets = params.config.get<bool>("thin_walls") ?
+                offsets = detect_thin_walls ?
                     offset2_ex(
                         last,
                         - float(ext_perimeter_width / 2. + ext_min_spacing / 2. - 1),
                         + float(ext_min_spacing / 2. - 1)) :
                     offset_ex(last, - float(ext_perimeter_width / 2.));
                 // look for thin walls
-                if (params.config.get<bool>("thin_walls")) {
+                if (detect_thin_walls) {
                     // the following offset2 ensures almost nothing in @thin_walls is narrower than $min_width
                     // (actually, something larger than that still may exist due to mitering or other causes)
                     coord_t min_width = coord_t(scale_(params.ext_perimeter_flow.nozzle_diameter() / 3));
@@ -1739,7 +1747,7 @@ void PerimeterGenerator::process_classic(
                 //FIXME Is this offset correct if the line width of the inner perimeters differs
                 // from the line width of the infill?
                 coord_t distance = (i == 1) ? ext_perimeter_spacing2 : perimeter_spacing;
-                offsets = params.config.get<bool>("thin_walls") ?
+                offsets = detect_thin_walls ?
                     // This path will ensure, that the perimeters do not overfill, as in 
                     // prusa3d/Slic3r GH #32, but with the cost of rounding the perimeters
                     // excessively, creating gaps, which then need to be filled in by the not very 
@@ -1790,13 +1798,13 @@ void PerimeterGenerator::process_classic(
             last = std::move(offsets);
 
             // Store surface for top infill if top_one_perimeter_type is set to TopSurfaces.
-            if (i == 0 && i != loop_number && params.config.get<std::vector<Domain::TopOnePerimeterType>>("top_one_perimeter_type").at(extruder_id) == Domain::TopOnePerimeterType::TopSurfaces && upper_slices != nullptr) {
+            if (i == 0 && i != loop_number && top_one_perimeter_type == Domain::TopOnePerimeterType::TopSurfaces && upper_slices != nullptr) {
                 // Split the polygons with top/not_top.
 
                 // Get the offset from solid surface anchor.
-                const double total_perimeter_spacing      = double(perimeter_spacing * (params.config.get<std::vector<int>>("perimeters").at(extruder_id) - 1));
-                const double top_surface_offset_threshold = params.config.get<std::vector<int>>("perimeters").at(extruder_id) <= 1 ? 0. : 0.9 * total_perimeter_spacing;
-                double       top_surface_offset           = params.config.get<std::vector<int>>("perimeters").at(extruder_id) == 0 ? 0. : 1.5 * double(ext_perimeter_width + total_perimeter_spacing);
+                const double total_perimeter_spacing      = double(perimeter_spacing * (perimeters - 1));
+                const double top_surface_offset_threshold = perimeters <= 1 ? 0. : 0.9 * total_perimeter_spacing;
+                double       top_surface_offset           = perimeters == 0 ? 0. : 1.5 * double(ext_perimeter_width + total_perimeter_spacing);
 
                 // If possible, try to not push the extra perimeters inside the sparse infill.
                 if (top_surface_offset > top_surface_offset_threshold) {
@@ -1930,19 +1938,19 @@ void PerimeterGenerator::process_classic(
         }
         // at this point, all loops should be in contours[0]
         // Orca overhang_reverse: without it no steep overhang detection is needed
-        bool steep_overhang_contour = !params.config.get<bool>("overhang_reverse");
+        bool steep_overhang_contour = !overhang_reverse;
         bool steep_overhang_hole    = steep_overhang_contour;
         ExtrusionEntityCollection entities = traverse_loops_classic(params, lower_slices_polygons_cache, contours.front(), thin_walls, steep_overhang_contour, steep_overhang_hole);
-        if (params.config.get<bool>("overhang_reverse"))
+        if (overhang_reverse)
             reorient_perimeters(entities, steep_overhang_contour, steep_overhang_hole, params.config.get<bool>("overhang_reverse_internal_only"));
         // if brim will be printed, reverse the order of perimeters so that
         // we continue inwards after having finished the brim
         // TODO: add test for perimeter order
-        if (params.config.get<std::vector<Domain::WallSequence>>("wall_sequence").at(extruder_id) == Domain::WallSequence::OuterInner ||
+        if (wall_sequence == Domain::WallSequence::OuterInner ||
             (params.layer_id == 0 && params.config.get<double>("brim_width") > 0))
             entities.reverse();
         // Orca sandwich mode: Inner/Outer/Inner after the first layer
-        else if (params.config.get<std::vector<Domain::WallSequence>>("wall_sequence").at(extruder_id) == Domain::WallSequence::InnerOuterInner && params.layer_id > 0) {
+        else if (wall_sequence == Domain::WallSequence::InnerOuterInner && params.layer_id > 0) {
             entities.reverse(); // order them from external to internal
             inner_outer_inner_order(entities.entities, [](const ExtrusionEntity *e) {
                 const auto *loop = dynamic_cast<const ExtrusionLoop *>(e);
@@ -1969,7 +1977,7 @@ void PerimeterGenerator::process_classic(
             Slic3r::medial_axis(ex, min, max, &polylines);
         // Orca filter_out_gap_fill
         polylines.erase(std::remove_if(polylines.begin(), polylines.end(),
-                                       [&params](const ThickPolyline &p) { return p.length() < scale_(params.config.get<double>("filter_out_gap_fill")); }),
+                                       [filter_out_gap_fill](const ThickPolyline &p) { return p.length() < filter_out_gap_fill; }),
                         polylines.end());
         if (! polylines.empty()) {
 			ExtrusionEntityCollection gap_fill;
@@ -2037,9 +2045,9 @@ void PerimeterGenerator::process_classic(
     }
 
     if (lower_slices != nullptr
-        && params.config.get<std::vector<bool>>("overhangs").at(extruder_id)
+        && overhangs
         && params.config.get<std::vector<bool>>("extra_perimeters_on_overhangs").at(extruder_id)
-        && params.config.get<std::vector<int>>("perimeters").at(extruder_id) > 0
+        && perimeters > 0
         && params.layer_id > params.config.get<int>("raft_layers"))
     {
         // Generate extra perimeters on overhang areas, and cut them to these parts only, to save print time and material
