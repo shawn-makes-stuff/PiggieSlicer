@@ -1098,6 +1098,25 @@ get_min_speed(const std::vector<Domain::FloatOrPercentage>& speeds, const std::v
     return static_cast<float>(min);
 }
 
+// The wall: with the automatic tower Orca's defaults (the rib wall, 8 mm ribs, no extra length, fillet), its size from
+// the tower height; else the settings.
+namespace {
+struct TowerWall
+{
+    Domain::WipeTowerWallType type;
+    float                     rib_width;
+    float                     extra_rib_length;
+    bool                      fillet;
+};
+TowerWall tower_wall(const Domain::ConfigView& config)
+{
+    if (config.get<bool>("wipe_tower_auto_size"))
+        return {Domain::WipeTowerWallType::Rib, 8.f, 0.f, true};
+    return {config.get<Domain::WipeTowerWallType>("wipe_tower_wall_type"), float(config.get<double>("wipe_tower_rib_width")),
+            float(config.get<double>("wipe_tower_extra_rib_length")), config.get<bool>("wipe_tower_fillet_wall")};
+}
+} // namespace
+
 WipeTower::WipeTower(
     const Vec2f& pos,
     double rotation_deg,
@@ -1162,11 +1181,12 @@ WipeTower::WipeTower(
     m_enable_pressure_advance_during_ramming = config.get<bool>("enable_pressure_advance_during_ramming");
 
     // Orca: the wall type and the rib wall
-    m_wall_type                  = config.get<Domain::WipeTowerWallType>("wipe_tower_wall_type");
+    const TowerWall wall         = tower_wall(config);
+    m_wall_type                  = wall.type;
     m_auto_size                  = config.get<bool>("wipe_tower_auto_size");
-    m_used_fillet                = config.get<bool>("wipe_tower_fillet_wall");
-    m_rib_width                  = float(config.get<double>("wipe_tower_rib_width"));
-    m_extra_rib_length           = float(config.get<double>("wipe_tower_extra_rib_length"));
+    m_used_fillet                = wall.fillet;
+    m_rib_width                  = wall.rib_width;
+    m_extra_rib_length           = wall.extra_rib_length;
     m_wipe_tower_max_purge_speed = float(config.get<double>("wipe_tower_max_purge_speed"));
     m_wait_for_temp_on_wipe_tower = wait_for_temp_enabled(config);
     m_enable_tower_interface_features = config.get<bool>("enable_tower_interface_features");
@@ -2357,8 +2377,7 @@ WipeTower::WipeTowerInfo::ToolChange WipeTower::set_toolchange(size_t old_tool, 
 
 bool WipeTower::use_gap_wall(const Domain::ConfigView& config)
 {
-    return config.get<bool>("wipe_tower_skip_points") &&
-        config.get<Domain::WipeTowerWallType>("wipe_tower_wall_type") != Domain::WipeTowerWallType::Cone;
+    return config.get<bool>("wipe_tower_skip_points") && tower_wall(config).type != Domain::WipeTowerWallType::Cone;
 }
 
 // Orca WipeTower2::compute_wall_skip_points: each toolchange's entry, where tool_change() enters the box
@@ -2473,7 +2492,8 @@ std::pair<float, float> WipeTower::estimate_footprint(const PrintConfigView& con
     const float extra_spacing   = float(config.get<Domain::Percentage>("wipe_tower_extra_spacing").get_abs_value(1.0));
     const float perimeter_width = float(Biz::Slicing::get_nozzle_diameter(config.hw_config(), 0)) * 1.25f; // Width_To_Nozzle_Ratio
     float       depth           = volume / (min_height * width) * extra_spacing;
-    const bool  rib             = config.get<Domain::WipeTowerWallType>("wipe_tower_wall_type") == Domain::WipeTowerWallType::Rib;
+    const TowerWall wall        = tower_wall(config);
+    const bool  rib             = wall.type == Domain::WipeTowerWallType::Rib;
     if (config.get<bool>("wipe_tower_auto_size")) {
         // as generate(): square, then the stability minimum (the rib wall's by its ribs below)
         width = depth = std::ceil(std::sqrt(depth * width) / perimeter_width) * perimeter_width;
@@ -2481,8 +2501,7 @@ std::pair<float, float> WipeTower::estimate_footprint(const PrintConfigView& con
             depth = std::max(depth, get_limit_depth_by_height(max_height));
     }
     if (rib) {
-        const float side = rib_footprint_side(width, depth, float(config.get<double>("wipe_tower_rib_width")),
-                                              float(config.get<double>("wipe_tower_extra_rib_length")), max_height);
+        const float side = rib_footprint_side(width, depth, wall.rib_width, wall.extra_rib_length, max_height);
         return {side, side};
     }
     return {width, depth};

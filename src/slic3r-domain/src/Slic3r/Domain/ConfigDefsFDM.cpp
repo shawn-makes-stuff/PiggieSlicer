@@ -8156,14 +8156,14 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
 
     def = defs.add("wipe_tower_auto_size", typeid(bool));
     def->location = Print;
-    def->label = L("Automatic size");
+    def->label = L("Automatic");
     def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
     def->category = ConfigItemDef::Category::Print_MultiMaterial;
     def->order = 1;
     def->gui_type = ConfigItemDef::GUIType::checkbox;
-    def->tooltip = L("Size the wipe tower from the purge it needs: a square tower holding the purge volume, "
-                     "a brim width from the tower height, and at least the depth (or with the rib wall the rib length) "
-                     "a tower of this height needs to stand. Off: the width and brim width set here are used.");
+    def->tooltip = L("Set the wipe tower up from the model and the filaments used: a square tower holding their purge, "
+                     "the brim width and the rib wall (Orca's default wall) sized for the tower's height so it stands. "
+                     "The prime volume is the profile's. Off: the settings below are used.");
     def->init_fn = init_with(true);
 
     def = defs.add("wipe_tower_wall_type", typeid(EnumWrapper));

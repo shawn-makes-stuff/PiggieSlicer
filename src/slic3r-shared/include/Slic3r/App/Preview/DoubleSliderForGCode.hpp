@@ -25,7 +25,7 @@ public:
     void toggle_play();
 
 private:
-    void render_play(const Domain::Vec2f& pos, const Domain::Vec2f& size);
+    void render_play(const ImRect& line);
 
     bool m_render_as_disabled{false};
     bool m_playing{false};

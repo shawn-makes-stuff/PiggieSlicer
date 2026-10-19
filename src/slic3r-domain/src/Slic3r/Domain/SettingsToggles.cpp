@@ -329,13 +329,16 @@ SettingsToggles print_settings_toggles(const ConfigValueGetter& value_of, const 
             "wipe_tower_extra_spacing", "wipe_tower_extra_flow", "wipe_tower_bridging", "wipe_tower_no_sparse_layers", "wipe_tower_acceleration",
             "wipe_tower_extruder", "single_extruder_multi_material_priming"},
            have_wipe_tower);
-    // Orca: the cone angle with the cone wall, the rib settings with the rib wall; the automatic size sets
-    // the width and the brim width itself
-    const auto wall_type = v.enumeration<WipeTowerWallType>("wipe_tower_wall_type").value_or(WipeTowerWallType::Rib);
+    // Orca: the cone angle with the cone wall, the rib settings with the rib wall. Automatic sets the size, the
+    // brim and the wall (the rib wall) itself and keeps the profile's prime volume: those are greyed out.
+    const bool automatic = v.on("wipe_tower_auto_size");
+    const auto wall_type = automatic ? WipeTowerWallType::Rib : v.enumeration<WipeTowerWallType>("wipe_tower_wall_type").value_or(WipeTowerWallType::Rib);
     t.line({"wipe_tower_cone_angle"}, have_wipe_tower && wall_type == WipeTowerWallType::Cone);
     t.line({"wipe_tower_extra_rib_length", "wipe_tower_rib_width", "wipe_tower_fillet_wall"},
            have_wipe_tower && wall_type == WipeTowerWallType::Rib);
-    t.field({"wipe_tower_width", "wipe_tower_brim_width"}, have_wipe_tower && !v.on("wipe_tower_auto_size"));
+    t.field({"wipe_tower_width", "wipe_tower_brim_width", "prime_volume", "wipe_tower_wall_type", "wipe_tower_cone_angle",
+             "wipe_tower_extra_rib_length", "wipe_tower_rib_width", "wipe_tower_fillet_wall"},
+            have_wipe_tower && !automatic);
     // Orca: the cooldown with the interface features; dropping the sparse layers leaves nothing to combine
     t.line({"enable_tower_interface_cooldown_during_tower"}, have_wipe_tower && v.on("enable_tower_interface_features"));
     t.line({"wipe_tower_sparse_layers_combination"}, have_wipe_tower && !v.on("wipe_tower_no_sparse_layers"));

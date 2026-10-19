@@ -226,6 +226,7 @@ private:
     void on_play_start();
     bool on_play_tick(float seconds);
     float m_play_carry{0.f}; // print time played but not yet a whole move
+    std::optional<int> m_play_end; // the last layer played (the layer view's end layer when play started)
     void on_slider_layers_ticks_changed();
     std::string on_slider_layers_get_gcode(Domain::CustomGCode::Type type);
     libvgcode::Palette on_slider_layers_get_extruder_colors();

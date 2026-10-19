@@ -5,7 +5,7 @@ set(SLIC3R_APP_NAME "PiggieSlicer")
 set(SLIC3R_APP_KEY "PiggieSlicer")
 # PiggieSlicer's own version: the ONE place to change it. Everything user-visible (splash,
 # Welcome screen, --version, window title, file properties) is derived from it below.
-set(PIGGIESLICER_VERSION "0.0.1-alpha")
+set(PIGGIESLICER_VERSION "0.0.2-alpha")
 
 # Version of the PrusaSlicer base. Stays as-is: it goes into G-code / 3MF headers, the
 # preset updater's vendor-index compatibility check and the settings folder name.

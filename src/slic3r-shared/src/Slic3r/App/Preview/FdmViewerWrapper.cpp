@@ -825,8 +825,13 @@ void FdmViewerWrapper::on_extrusion_role_visibility_changed()
 void FdmViewerWrapper::on_play_start()
 {
     m_play_carry = 0.f;
-    // at the end: again from the first shown layer
-    if (has_data() && m_slider_gcode->is_higher_at_max() && m_slider_layers->is_higher_at_max()) {
+    if (!has_data())
+        return;
+    // resumed: on to the end layer; else the layer view's range from its start layer to its end layer
+    const int  layer    = m_slider_layers->higher_pos();
+    const bool finished = !m_play_end || layer > *m_play_end || (layer == *m_play_end && m_slider_gcode->is_higher_at_max());
+    if (finished) {
+        m_play_end = layer;
         m_slider_layers->set_higher_pos(m_slider_layers->lower_pos());
         m_slider_gcode->set_higher_pos(m_slider_gcode->lower_pos());
     }
@@ -856,8 +861,8 @@ bool FdmViewerWrapper::on_play_tick(float seconds)
             m_slider_gcode->set_higher_pos(pos);
         if (pos < m_slider_gcode->max_pos())
             return true;
-        // the layer is done: the next one, from its first move
-        if (m_slider_layers->is_higher_at_max()) {
+        // the layer is done: the next one, from its first move, up to the end layer
+        if (m_slider_layers->is_higher_at_max() || (m_play_end && m_slider_layers->higher_pos() >= *m_play_end)) {
             m_play_carry = 0.f;
             return false;
         }
