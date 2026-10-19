@@ -125,6 +125,12 @@ Domain::ExPolygon Slicing::WipeTowerGeometry::get_outline(
     const Domain::ModelWipeTower& model_wipe_tower
 ) const
 {
+    if (!first_layer_outline.empty()) {
+        Domain::ExPolygon outline{first_layer_outline};
+        outline.rotate(Slic3r::deg2rad(model_wipe_tower.rotation));
+        return outline;
+    }
+
     const double depth{depths.empty() ? fallback_depth : depths.front().depth};
 
     const Domain::Polygon recangle{get_rectangle(width + 2 * brim_width, depth + 2 * brim_width)};

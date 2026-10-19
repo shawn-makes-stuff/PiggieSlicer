@@ -4,6 +4,7 @@ add_executable(${_TEST_NAME}_tests
 	${_TEST_NAME}_tests.cpp
     test_line.cpp
     test_point.cpp
+    test_colorstack.cpp
 	test_3mf.cpp
 	test_aabbindirect.cpp
 	test_kdtreeindirect.cpp

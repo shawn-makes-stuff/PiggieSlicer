@@ -567,7 +567,7 @@ private:
             if (line.find('@') != std::string::npos) {
                 std::string replaced = line.substr(0, line.size() - (!line.empty() && line.back() == '\n' ? 1 : 0));
                 if (replace_inline_placeholders(replaced, extruders)) {
-                    m_editing_items.push_back({ EditingType::Replacement, i, { replaced } });
+                    m_editing_items.push_back({ EditingType::Replacement, i, { replaced + '\n' } });
                     continue;
                 }
             }
@@ -749,6 +749,7 @@ private:
             {Tags::Print_Time_Minute_Placeholder,    std::to_string((day_seconds % 3600) / 60)},
             {Tags::Print_Time_Sec_Placeholder,       std::to_string(day_seconds % 60)},
             {Tags::Used_Filament_Length_Placeholder, fmt::format("{:.2f}", filament_mm / 1000.)},
+            {Tags::Print_Time_Dhms_Placeholder,      Utils::get_time_dhms(float(total_sec))},
         };
         bool processed = false;
         for (const auto& [tag, value] : values) {

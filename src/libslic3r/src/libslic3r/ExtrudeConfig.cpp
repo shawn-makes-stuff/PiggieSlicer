@@ -141,6 +141,7 @@ ExtrudeConfig::ExtrudeConfig(const Domain::ConfigView& config) :
     set_other_flow_ratios{config.get<bool>("set_other_flow_ratios")},
     print_flow_ratio{config.get<double>("print_flow_ratio")},
     top_solid_infill_flow_ratio{config.get<double>("top_solid_infill_flow_ratio")},
+    bottom_solid_infill_flow_ratio{config.get<double>("bottom_solid_infill_flow_ratio")},
     outer_wall_flow_ratio{config.get<double>("outer_wall_flow_ratio")},
     inner_wall_flow_ratio{config.get<double>("inner_wall_flow_ratio")},
     overhang_flow_ratio{config.get<double>("overhang_flow_ratio")},

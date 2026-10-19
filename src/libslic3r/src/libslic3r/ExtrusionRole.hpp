@@ -35,6 +35,8 @@ enum class ExtrusionRoleModifier : uint16_t
     Mixed,
     // Orca: brim, a kind of skirt
     Brim,
+    // Orca: the bottom surface of an object
+    Bottom,
     // Stopper, there should be maximum 16 modifiers defined for uint16_t bit mask.
     Count
 };
@@ -75,6 +77,8 @@ struct ExtrusionRole : public ExtrusionRoleModifiers
     static constexpr const ExtrusionRoleModifiers Ironing{ ExtrusionRoleModifier::Infill | ExtrusionRoleModifier::Solid | ExtrusionRoleModifier::Ironing | ExtrusionRoleModifier::External };
     // Visible bridging infill at the bottom of an object.
     static constexpr const ExtrusionRoleModifiers BridgeInfill{ ExtrusionRoleModifier::Infill | ExtrusionRoleModifier::Solid | ExtrusionRoleModifier::Bridge | ExtrusionRoleModifier::External };
+    // Orca: the solid infill of a bottom surface (not bridging)
+    static constexpr const ExtrusionRoleModifiers BottomSurface{ ExtrusionRoleModifier::Infill | ExtrusionRoleModifier::Solid | ExtrusionRoleModifier::Bottom };
     // Orca: bridging infill inside the object (over sparse infill)
     static constexpr const ExtrusionRoleModifiers InternalBridgeInfill{ ExtrusionRoleModifier::Infill | ExtrusionRoleModifier::Solid | ExtrusionRoleModifier::Bridge };
     // Gap fill extrusion, currently used for any variable width extrusion: Thin walls outside of the outer extrusion,

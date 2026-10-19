@@ -141,6 +141,15 @@ std::set<unsigned> get_volume_extruder_candidates(
         }
         result.insert(static_cast<unsigned>(print_settings.items.opt(key).get<int>()) - 1);
     }
+    // Orca's feature filaments, when set ("Default" is the wall / solid infill extruder above)
+    for (const std::string key : {"outer_wall_filament_id", "top_surface_filament_id", "bottom_surface_filament_id"}) {
+        const std::optional<Domain::ConfigItem> volume_value{volume_settings.overrides.get(key)};
+        const std::optional<Domain::ConfigItem> object_value{object_settings.overrides.get(key)};
+        const int filament = volume_value ? volume_value->get<int>() :
+                             object_value ? object_value->get<int>() : print_settings.items.opt(key).get<int>();
+        if (filament > 0)
+            result.insert(static_cast<unsigned>(filament - 1));
+    }
 
     const std::vector<unsigned> collected_extruders{result.begin(), result.end()};
     const std::vector<unsigned> expanded_extruders{

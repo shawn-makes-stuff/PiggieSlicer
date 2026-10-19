@@ -222,6 +222,10 @@ private:
     void on_slider_gcode_scroll_changed();
     void on_extrusion_role_visibility_changed();
     void on_request_extra_frames(unsigned int count = 1);
+    // playback of the moves slider through the layers
+    void on_play_start();
+    bool on_play_tick(float seconds);
+    float m_play_carry{0.f}; // print time played but not yet a whole move
     void on_slider_layers_ticks_changed();
     std::string on_slider_layers_get_gcode(Domain::CustomGCode::Type type);
     libvgcode::Palette on_slider_layers_get_extruder_colors();

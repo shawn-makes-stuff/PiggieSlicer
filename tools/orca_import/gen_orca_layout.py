@@ -59,6 +59,7 @@ ANCHORS = {
     "first_layer_acceleration_over_raft": ("after", "initial_layer_travel_acceleration", None),
     "travel_short_distance_acceleration": ("after", "travel_acceleration", None),
     "wipe_tower_acceleration": ("after", "travel_acceleration", None),
+    "wipe_tower_auto_size": ("after", "prime_tower_brim_width", "Simple"),
     "max_print_speed": ("after", "extrusion_rate_smoothing_external_perimeter_only", None),
     "max_volumetric_speed": ("after", "extrusion_rate_smoothing_external_perimeter_only", None),
     "support_material_first_layer_density": ("after", "raft_first_layer_density", None),

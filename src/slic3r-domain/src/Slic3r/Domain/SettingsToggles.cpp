@@ -120,13 +120,19 @@ SettingsToggles print_settings_toggles(const ConfigValueGetter& value_of, const 
     const bool multi_nozzle   = printer.nozzles > 1;
     t.line({"wipe_tower", "wipe_tower_width", "wipe_tower_brim_width",
             "wipe_tower_cone_angle", "wipe_tower_extra_spacing", "wipe_tower_extra_flow", "wipe_tower_bridging",
-            "wipe_tower_no_sparse_layers", "wipe_tower_acceleration", "wipe_tower_extruder", "wipe_tower_wall_type",
+            "wipe_tower_no_sparse_layers", "wipe_tower_acceleration", "wipe_tower_extruder", "wipe_tower_auto_size", "wipe_tower_wall_type",
             "wipe_tower_extra_rib_length", "wipe_tower_rib_width", "wipe_tower_fillet_wall", "wipe_tower_max_purge_speed",
+            "wipe_tower_skip_points", "wipe_tower_sparse_layers_combination", "enable_tower_interface_features",
+            "color_stacking", "color_stacking_max_layers", "color_stacking_overhang_tolerance", "color_stacking_island_order",
+            "color_stacking_surface_tolerance", "color_stacking_disregard_min_layer_time",
+            "nozzle_contact_height",
+            "enable_tower_interface_cooldown_during_tower",
             "prime_volume", "wipe_into_infill",
             "wipe_into_objects", "toolchange_ordering", "toolchange_cyclic_order", "toolchange_cyclic_first_layer",
             "mmu_segmented_region_max_width", "mmu_segmented_region_interlocking_depth", "interlocking_beam", "interlocking_beam_width",
             "interlocking_orientation", "interlocking_beam_layer_count", "interlocking_depth", "interlocking_boundary_avoidance",
             "perimeter_extruder", "infill_extruder", "solid_infill_extruder", "support_material_extruder",
+            "outer_wall_filament_id", "top_surface_filament_id", "bottom_surface_filament_id",
             "support_material_interface_extruder", "single_extruder_multi_material_priming", "bed_temperature_extruder",
             "interface_shells"},
            multi_material);
@@ -318,16 +324,27 @@ SettingsToggles print_settings_toggles(const ConfigValueGetter& value_of, const 
     t.line({"standby_temperature_delta", "preheat_time"}, ooze_prevention);
     t.line({"preheat_steps"}, ooze_prevention && v.num("preheat_steps") > 0);
     const bool have_wipe_tower = v.on("wipe_tower");
-    t.line({"wipe_tower_width", "wipe_tower_brim_width", "wipe_tower_wall_type", "wipe_tower_max_purge_speed",
+    t.line({"wipe_tower_width", "wipe_tower_brim_width", "wipe_tower_auto_size", "wipe_tower_wall_type", "wipe_tower_max_purge_speed",
+            "wipe_tower_skip_points", "enable_tower_interface_features",
             "wipe_tower_extra_spacing", "wipe_tower_extra_flow", "wipe_tower_bridging", "wipe_tower_no_sparse_layers", "wipe_tower_acceleration",
             "wipe_tower_extruder", "single_extruder_multi_material_priming"},
            have_wipe_tower);
-    // Orca: the cone angle with the cone wall, the rib settings with the rib wall, which squares the tower itself
+    // Orca: the cone angle with the cone wall, the rib settings with the rib wall; the automatic size sets
+    // the width and the brim width itself
     const auto wall_type = v.enumeration<WipeTowerWallType>("wipe_tower_wall_type").value_or(WipeTowerWallType::Rib);
-    const bool rib_wall  = have_wipe_tower && wall_type == WipeTowerWallType::Rib;
     t.line({"wipe_tower_cone_angle"}, have_wipe_tower && wall_type == WipeTowerWallType::Cone);
-    t.line({"wipe_tower_extra_rib_length", "wipe_tower_rib_width", "wipe_tower_fillet_wall"}, rib_wall);
-    t.field({"wipe_tower_width"}, have_wipe_tower && !rib_wall);
+    t.line({"wipe_tower_extra_rib_length", "wipe_tower_rib_width", "wipe_tower_fillet_wall"},
+           have_wipe_tower && wall_type == WipeTowerWallType::Rib);
+    t.field({"wipe_tower_width", "wipe_tower_brim_width"}, have_wipe_tower && !v.on("wipe_tower_auto_size"));
+    // Orca: the cooldown with the interface features; dropping the sparse layers leaves nothing to combine
+    t.line({"enable_tower_interface_cooldown_during_tower"}, have_wipe_tower && v.on("enable_tower_interface_features"));
+    t.line({"wipe_tower_sparse_layers_combination"}, have_wipe_tower && !v.on("wipe_tower_no_sparse_layers"));
+    // colour stacking: its settings with it; not with sequential printing or the spiral vase
+    const bool color_stacking = v.on("color_stacking");
+    t.line({"color_stacking_max_layers", "color_stacking_overhang_tolerance", "color_stacking_island_order",
+            "color_stacking_surface_tolerance", "color_stacking_disregard_min_layer_time",
+            "nozzle_contact_height"}, color_stacking);
+    t.field({"color_stacking"}, !v.on("complete_objects") && !v.on("spiral_vase"));
     // Orca: the tower's prime volume unless the purge goes into it on a single extruder multi material printer
     t.line({"prime_volume"}, have_wipe_tower && (!printer.purge_in_prime_tower || !printer.single_extruder_multi_material));
     t.field({"wipe_into_infill", "wipe_into_objects"}, have_wipe_tower);

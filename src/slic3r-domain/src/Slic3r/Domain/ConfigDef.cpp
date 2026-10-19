@@ -197,6 +197,8 @@ std::string ConfigItemDef::translate_option_group(OptionGroup option_group)
         return L("Bonding & Interlocking");
     case ConfigItemDef::OptionGroup::Print_MultiMaterial_ToolChanges:
         return L("Tool changes");
+    case ConfigItemDef::OptionGroup::Print_MultiMaterial_ColorStacking:
+        return L("Colour stacking");
     case ConfigItemDef::OptionGroup::Print_PrecisionSlicing_SlicingStrategy:
         return L("Slicing Strategy");
     case ConfigItemDef::OptionGroup::Print_PrecisionSlicing_DimensionalAccuracy:

@@ -669,6 +669,10 @@ inline bool has_compatible_layer_regions(const PrintRegionConfigView &config, co
     if (extruder != other_extruder) {
         return false;
     }
+    // Orca: the outer walls' filament too
+    if (config.get<int>("outer_wall_filament_id") != other_config.get<int>("outer_wall_filament_id")) {
+        return false;
+    }
 
     const int extruder_id{extruder == 0 ? 0 : extruder - 1};
 

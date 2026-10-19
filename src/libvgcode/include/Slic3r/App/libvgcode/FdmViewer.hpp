@@ -136,7 +136,8 @@ public:
         Domain::GCodeExtrusionRole::WipeTower,
         Domain::GCodeExtrusionRole::Custom,
         Domain::GCodeExtrusionRole::InternalBridgeInfill,
-        Domain::GCodeExtrusionRole::Brim }) const;
+        Domain::GCodeExtrusionRole::Brim,
+        Domain::GCodeExtrusionRole::BottomSurface }) const;
 
     bool is_option_visible(Biz::libpgcode::OptionType type) const;
     void toggle_option_visibility(Biz::libpgcode::OptionType type);

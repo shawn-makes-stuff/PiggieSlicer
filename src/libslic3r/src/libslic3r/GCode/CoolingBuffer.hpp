@@ -33,14 +33,18 @@ public:
     CoolingBuffer(GCodeGenerator& gcodegen, const Biz::Slicing::CoolingBufferConfig& config);
     void        reset(const Vec3d &position);
     void        set_current_extruder(unsigned int extruder_id) { m_current_extruder = extruder_id; }
-    std::string process_layer(std::string &&gcode, size_t layer_id, bool flush);
+    // time_credit: seconds printed elsewhere before the next layer lands on this one (colour stacking), counted as
+    // layer time for the slow down and the fan; slow_down false: the fan only
+    std::string process_layer(std::string &&gcode, size_t layer_id, bool flush, float time_credit = 0.f, bool slow_down = true);
+    // The time of a layer's G-code before any slow down.
+    float       estimate_time(const std::string &gcode) const;
     std::string process_layer(const std::string &gcode, size_t layer_id, bool flush)
         { return this->process_layer(std::string(gcode), layer_id, flush); }
 
 private:
 	CoolingBuffer& operator=(const CoolingBuffer&) = delete;
     std::vector<PerExtruderAdjustments> parse_layer_gcode(const std::string &gcode, std::array<float, 5> &current_pos) const;
-    float       calculate_layer_slowdown(std::vector<PerExtruderAdjustments> &per_extruder_adjustments);
+    float       calculate_layer_slowdown(std::vector<PerExtruderAdjustments> &per_extruder_adjustments, float time_credit = 0.f);
     // Apply slow down over G-code lines stored in per_extruder_adjustments, enable fan if needed.
     // Returns the adjusted G-code.
     std::string apply_layer_cooldown(const std::string &gcode, size_t layer_id, float layer_time, std::vector<PerExtruderAdjustments> &per_extruder_adjustments);

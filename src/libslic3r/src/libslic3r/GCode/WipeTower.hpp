@@ -13,6 +13,8 @@
 #include "Slic3r/Domain/FullConfigFDM.hpp"
 #include "Slic3r/Domain/GCodeFlavor.hpp"
 #include "Slic3r/Domain/Types.hpp"
+#include "Slic3r/Domain/Polygon.hpp"
+#include "Slic3r/Domain/ConfigDefsFDM.hpp"
 
 namespace Slic3r
 {
@@ -25,9 +27,22 @@ class WipeTower
 {
 public:
     static const std::string never_skip_tag() { return "_GCODE_WIPE_TOWER_NEVER_SKIP_TAG"; }
+    // Orca: marks the wait-for-temp-on-wipe-tower M109
+    static const std::string wait_for_temp_tag() { return ";_WAIT_FOR_TEMP_ON_WIPE_TOWER"; }
+    // Orca: whether the blocking toolchange temperature wait moves onto the wipe tower (not with SEMM, which
+    // runs its own unload / load temperature sequence)
+    static bool wait_for_temp_enabled(const Domain::ConfigView& config);
+    // Orca: whether the wall is cut open at the toolchange entries ("skip points"); the cone wall has
+    // no gap machinery
+    static bool use_gap_wall(const Domain::ConfigView& config);
 	static std::vector<std::vector<float>> extract_wipe_volumes(const PrintConfigView& config);
     // Orca: the brim width used when wipe_tower_brim_width is negative (auto)
     static float get_auto_brim_by_height(float max_height);
+    // Orca: the smallest stable tower depth for a tower this tall
+    static float get_limit_depth_by_height(float max_height);
+    // Orca WipeTowerEstimate (its non-Bambu tower) for this tower: the footprint's width and depth before
+    // slicing, ribs included, for this many filaments and the tallest object
+    static std::pair<float, float> estimate_footprint(const PrintConfigView& config, size_t filaments, float max_height);
 
     struct Extrusion
     {
@@ -90,6 +105,12 @@ public:
 		}
 
 		bool force_travel = false;
+
+        // Orca: a toolchange on a tower interface layer (different materials meet)
+        bool is_contact = false;
+
+        // Orca: the layer was folded into a later, thicker sparse layer and prints nothing
+        bool combined_away = false;
 	};
 
     struct box_coordinates
@@ -127,7 +148,8 @@ public:
     // WipeTowerWriter is moved from !
     ToolChangeResult construct_tcr(WipeTowerWriter& writer,
                                    bool priming,
-                                   size_t old_tool) const;
+                                   size_t old_tool,
+                                   bool is_contact = false) const;
 
 	// x			-- x coordinates of wipe tower in mm ( left bottom corner )
 	// y			-- y coordinates of wipe tower in mm ( left bottom corner )
@@ -158,6 +180,8 @@ public:
 	float get_wipe_tower_height() const { return m_wipe_tower_height; }
 	float get_wipe_tower_cone_radius() const { return m_wipe_tower_cone_radius; }
 	float get_wipe_tower_cone_x_scale() const { return m_wipe_tower_cone_x_scale; }
+    // The first layer's outer outline (wall, ribs and brim) in tower coordinates; empty before generate()
+    const Domain::Polygon& get_first_layer_outline() const { return m_first_layer_outline; }
 
 
 
@@ -180,7 +204,11 @@ public:
 		while (!m_plan.empty() && m_layer_info->z < print_z - WT_EPSILON && m_layer_info+1 != m_plan.end())
 			++m_layer_info;
 
-		m_current_shape = (! this->is_first_layer() && m_current_shape == SHAPE_NORMAL) ? SHAPE_REVERSED : SHAPE_NORMAL;
+        // Orca: a layer with toolchanges is a tower interface layer (different materials meet)
+        m_prev_layer_had_interface    = m_current_layer_has_interface;
+        m_current_layer_has_interface = (m_layer_info != m_plan.end()) && (m_layer_info->toolchanges_depth() > WT_EPSILON);
+		// Orca WipeTower2: the shape is not reversed every other layer (the rib / rectangle walls assume it)
+		m_current_shape = SHAPE_NORMAL;
 		if (this->is_first_layer()) {
             m_num_layer_changes = 0;
             m_num_tool_changes 	= 0;
@@ -252,6 +280,16 @@ public:
 		float               filament_minimal_purge_on_wipe_tower = 0.f;
         int                 ramming_temperature_delta = 0;
         float               ramming_initial_delay = 0.0;
+        float               retract_length = 0.f;
+        float               retract_speed = 0.f;
+        // Orca: tower interface features
+        int                 interface_print_temperature = 0;
+        float               tower_interface_pre_extrusion_dist = 0.f;
+        float               tower_interface_pre_extrusion_length = 0.f;
+        float               tower_ironing_area = 4.f;
+        float               tower_interface_purge_length = 0.f;
+        // Tallest layer this filament's nozzle can lay down; caps the sparse layer combination.
+        float               max_layer_height = 0.f;
     };
 
 private:
@@ -284,6 +322,27 @@ private:
 	float  m_wipe_tower_cone_x_scale = 0.f;
     float  m_wipe_tower_brim_width      = 0.f; 	// Width of brim (mm) from config
     float  m_wipe_tower_brim_width_real = 0.f; 	// Width of brim (mm) after generation
+    Domain::Polygon m_first_layer_outline;      // First layer outline incl. ribs and brim (after generation)
+    // Orca: the outer wall
+    Domain::WipeTowerWallType m_wall_type = Domain::WipeTowerWallType::Rib;
+    bool   m_auto_size          = true; // size from the purge (square, stability minimum, brim by height)
+    bool   m_wait_for_temp_on_wipe_tower = false;
+    bool   m_enable_tower_interface_features = false;
+    bool   m_enable_tower_interface_cooldown_during_tower = false;
+    bool   m_prev_layer_had_interface    = false;
+    bool   m_current_layer_has_interface = false;
+    bool   m_sparse_layers_combined      = false; // Orca: sparse layer runs folded into thicker layers
+    bool   m_use_gap_wall                = false; // Orca: the wall is open at each toolchange's entry
+    // Per plan layer, each toolchange's entry position (tower-local): where the wall is cut open so the
+    // entry travel does not cross the printed wall. Filled by compute_wall_skip_points().
+    std::vector<std::vector<Domain::Vec2f>> m_wall_skip_points;
+    float  m_wipe_tower_rotation_angle   = 0.f; // degrees, the tower's rotation on the bed
+    Domain::Polygon m_bed_polygon;               // the bed (scaled)
+    bool   m_used_fillet        = true;
+    float  m_rib_width          = 10.f;
+    float  m_extra_rib_length   = 0.f;
+    float  m_rib_length         = 0.f;
+    float  m_wipe_tower_max_purge_speed = 90.f;
     float  m_internal_rotation  = 0.f;
 	float  m_y_shift			= 0.f;  // y shift passed to writer
 	float  m_z_pos 				= 0.f;  // Current Z position.
@@ -356,6 +415,12 @@ private:
     // Goes through m_plan, calculates border and finish_layer extrusions and subtracts them from last wipe
     void save_on_last_wipe();
 
+    // Orca: folds runs of sparse layers into thicker ones (wipe_tower_sparse_layers_combination)
+    void combine_sparse_plan();
+
+    // Orca WipeTower2::compute_wall_skip_points
+    void compute_wall_skip_points();
+
 
     // to store information about tool changes for a given layer
 	struct WipeTowerInfo{
@@ -373,6 +438,8 @@ private:
 		float z;		// z position of the layer
 		float height;	// layer height
 		float depth;	// depth of the layer based on all layers above
+		// Orca: folded into a later, thicker layer, so this one prints nothing at all.
+		bool  combined_away{false};
 		float toolchanges_depth() const { float sum = 0.f; for (const auto &a : tool_changes) sum += a.required_depth; return sum; }
 
 		std::vector<ToolChange> tool_changes;
@@ -407,7 +474,9 @@ private:
 	void toolchange_Change(
 		WipeTowerWriter &writer,
         const size_t		new_tool,
-		const std::string& 		new_material);
+		const std::string& 		new_material,
+		const int 				wait_for_temp = 0,
+		const bool 				wait_beside_tower = false);
 	
 	void toolchange_Load(
 		WipeTowerWriter &writer,
@@ -416,9 +485,18 @@ private:
 	void toolchange_Wipe(
 		WipeTowerWriter &writer,
 		const box_coordinates  &cleaning_box,
-		float wipe_volume);
+		float wipe_volume,
+		bool scrub_entry = false);
 
     bool has_semm_loading_move() const;
+
+    // Orca: the rectangle / rib wall (the cone wall is supported_rectangle in finish_layer())
+    Domain::Polygon generate_rib_polygon(const box_coordinates& wt_box);
+    Domain::Polygon generate_support_rib_wall(WipeTowerWriter& writer, const box_coordinates& wt_box, double feedrate,
+                                              bool rib_wall, bool extrude_perimeter);
+
+    // The depth reserved for a toolchange (plan_toolchange() and the rib wall's square tower in generate())
+    WipeTowerInfo::ToolChange set_toolchange(size_t old_tool, size_t new_tool, float layer_height, float wipe_volume);
 };
 
 

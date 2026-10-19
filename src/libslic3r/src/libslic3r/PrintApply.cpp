@@ -494,6 +494,10 @@ PrintRegionConfigView create_mm_painted_region_config(
     volume_settings.overrides.set("infill_extruder", painted_extruder_id);
     volume_settings.overrides.set("perimeter_extruder", painted_extruder_id);
     volume_settings.overrides.set("solid_infill_extruder", painted_extruder_id);
+    // Orca: the painted colour also overrides the feature filaments
+    volume_settings.overrides.set("outer_wall_filament_id", painted_extruder_id);
+    volume_settings.overrides.set("top_surface_filament_id", painted_extruder_id);
+    volume_settings.overrides.set("bottom_surface_filament_id", painted_extruder_id);
 
     PrintRegionConfigView painted_region_cfg = parent_config;
     const PartialVolumeConfigFDM squashed_volume_config{
@@ -1695,19 +1699,20 @@ Biz::Slicing::ApplyStatus::Status Print::apply(
         )};
 
         if (wipe_tower_invalidated || !could_have_had_wipe_tower) {
+            // Orca WipeTowerEstimate: the tower sized for the tallest object and the filaments used
+            double max_height = 0.;
+            for (const PrintObject* object : m_objects)
+                max_height = std::max(max_height, unscaled(object->height()));
             double brim_width = new_full_config_ptr->get<double>("wipe_tower_brim_width");
-            if (brim_width < 0.) {
-                double max_height = 0.;
-                for (const PrintObject* object : m_objects)
-                    max_height = std::max(max_height, unscaled(object->height()));
+            if (brim_width < 0. || new_full_config_ptr->get<bool>("wipe_tower_auto_size"))
                 brim_width = WipeTower::get_auto_brim_by_height(float(max_height));
-            }
+            const auto [estimated_width, estimated_depth] = WipeTower::estimate_footprint(m_config, this->extruders().size(), float(max_height));
             m_on_wipe_tower_geometry(
                 Biz::Slicing::WipeTowerGeometry{
                     .depths   = {},
-                    .fallback_depth = 7.0,
-                    .fallback_height = 25.0,
-                    .width = new_full_config_ptr->get<double>("wipe_tower_width"),
+                    .fallback_depth = estimated_depth > 0.f ? double(estimated_depth) : 7.0,
+                    .fallback_height = max_height > 0. ? max_height : 25.0,
+                    .width = estimated_width,
                     .cone_radius = 5.0,
                     .cone_x_scale = 1.0,
                     .brim_width = brim_width

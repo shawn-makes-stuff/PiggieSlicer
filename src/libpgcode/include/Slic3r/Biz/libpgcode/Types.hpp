@@ -307,6 +307,7 @@ enum class Tags : uint8_t
     Print_Time_Sec_Placeholder,
     Used_Filament_Length_Placeholder,
     PA_Change,
+    Print_Time_Dhms_Placeholder,
     COUNT
 };
 
@@ -332,7 +333,8 @@ static const std::vector<std::string_view> RESERVED_TAGS = {
     "@PRINT_TIME_MINUTE@"sv,
     "@PRINT_TIME_SEC@"sv,
     "@USED_FILAMENT_LENGTH@"sv,
-    "PA_CHANGE:"sv
+    "PA_CHANGE:"sv,
+    "@PRINT_TIME_DHMS@"sv
 };
 
 enum class CustomTags : uint8_t

@@ -34,6 +34,9 @@ int get_extruder_id(
     }
 
     const int extruder_id = layer_tools.extruder(eec, region);
+    // colour stacking: a chunk prints its own pieces only, with its tool
+    if (layer_tools.color_stack != nullptr)
+        return extruder_id;
     if (! layer_tools.has_extruder(extruder_id)) {
         // Extruder is not in layer_tools - we'll print it by last extruder on this layer (could
         // happen e.g. when a wiping object is taller than others - dontcare extruders are
@@ -112,6 +115,13 @@ ExtrusionEntitiesPtr extract_infill_extrusions(
     return result;
 }
 
+// Orca split_mixed_perimeters: the outer walls in their own filament
+static bool walls_split(const PrintRegion &region)
+{
+    const int outer = region.config().get<int>("outer_wall_filament_id");
+    return outer > 0 && outer != region.config().get<int>("perimeter_extruder");
+}
+
 std::vector<Perimeter> extract_perimeter_extrusions(
     const Print &print,
     const Layer &layer,
@@ -136,8 +146,18 @@ std::vector<Perimeter> extract_perimeter_extrusions(
             continue;
         }
 
+        const bool split = walls_split(region);
         for (ExtrusionEntity *ee : *eec) {
             if (ee != nullptr) {
+                if (split) {
+                    // each wall by its own filament (the outer walls' or the inner walls'); a view, not a copy
+                    ExtrusionEntityCollection wall;
+                    wall.entities.push_back(ee);
+                    const bool pick = should_pick_extrusion(wall, region);
+                    wall.entities.clear();
+                    if (!pick)
+                        continue;
+                }
                 std::optional<InstancePoint> last_position{get_instance_point(previous_position, offset)};
                 bool reverse_loop{false};
                 if (auto loop = dynamic_cast<const ExtrusionLoop *>(ee)) {
@@ -493,10 +513,138 @@ static ExtractEntityPredicate instance_extrusion_predicate(const LayerTools &lay
             return false;
         }
 
-        if (get_extruder_id(entity_collection, layer_tools, region, instance.instance_id) != static_cast<int>(extruder_id)) {
-            return false;
+        // colour stacking: the collections with pieces of the chunk
+        if (layer_tools.color_stack != nullptr) {
+            const PrintInstance *print_instance = &instance.print_object.instances()[instance.instance_id];
+            std::vector<const ExtrusionEntity *> leaves;
+            color_stack_leaves(entity_collection, leaves);
+            return std::any_of(leaves.begin(), leaves.end(), [&](const ExtrusionEntity *leaf) {
+                return layer_tools.color_stack->pieces.count({print_instance, leaf}) > 0;
+            });
         }
-        return true;
+        if (get_extruder_id(entity_collection, layer_tools, region, instance.instance_id) == static_cast<int>(extruder_id)) {
+            return true;
+        }
+        // Orca split_mixed_perimeters: a wall collection with outer and inner walls of different filaments
+        return walls_split(region) && layer_tools.extruder_override == 0 &&
+            std::any_of(entity_collection.entities.begin(), entity_collection.entities.end(), [&](const ExtrusionEntity *ee) {
+                return ee->role().is_perimeter() &&
+                    (ee->role().is_external_perimeter() ? layer_tools.outer_wall_extruder(region) : layer_tools.perimeter_extruder(region)) == extruder_id;
+            });
+    };
+}
+
+// Colour stacking: the part of a smooth path on the pieces (instance coordinates)
+static GCode::SmoothPath clip_to_pieces(const GCode::SmoothPath &path, const Polylines &pieces)
+{
+    const double tolerance = scaled<double>(0.05);
+    const double step      = scaled<double>(0.1);
+    std::vector<std::pair<Vec2d, Vec2d>> lines;
+    for (const Polyline &piece : pieces)
+        for (size_t i = 0; i + 1 < piece.points.size(); ++i)
+            lines.emplace_back(piece.points[i].cast<double>(), piece.points[i + 1].cast<double>());
+    const auto on_pieces = [&](const Vec2d &p) {
+        return std::any_of(lines.begin(), lines.end(), [&](const std::pair<Vec2d, Vec2d> &line) {
+            const Vec2d  d   = line.second - line.first;
+            const double len = d.squaredNorm();
+            const double t   = len > 0. ? std::clamp((p - line.first).dot(d) / len, 0., 1.) : 0.;
+            return (line.first + d * t - p).squaredNorm() < tolerance * tolerance;
+        });
+    };
+    GCode::SmoothPath out;
+    for (const GCode::SmoothPathElement &element : path) {
+        std::optional<GCode::SmoothPathElement> run;
+        size_t from = size_t(-1); // the segment the run's last point came from
+        const auto flush = [&]() {
+            if (run && run->path.size() > 1)
+                out.push_back(std::move(*run));
+            run.reset();
+        };
+        for (size_t i = 1; i < element.path.size(); ++i) {
+            const Geometry::ArcWelder::Segment &segment = element.path[i];
+            // an arc as its polyline, the samples on the arc itself
+            const Points line = segment.linear() ? Points{element.path[i - 1].point, segment.point} :
+                Geometry::ArcWelder::arc_discretize(element.path[i - 1].point, segment.point, segment.radius, segment.ccw(), scaled<double>(0.002));
+            // per straight part of the line: its sub-parts, each on the pieces or not
+            std::vector<std::vector<bool>> mine(line.size() - 1);
+            bool all_mine = true;
+            for (size_t l = 0; l + 1 < line.size(); ++l) {
+                const Vec2d a = line[l].cast<double>(), b = line[l + 1].cast<double>();
+                mine[l].resize(std::max(1, int(std::ceil((b - a).norm() / step))));
+                for (size_t k = 0; k < mine[l].size(); ++k)
+                    all_mine &= (mine[l][k] = on_pieces(a + (b - a) * ((k + 0.5) / mine[l].size())));
+            }
+            if (all_mine) {
+                if (!run)
+                    run = GCode::SmoothPathElement{element.path_attributes, {element.path[i - 1]}};
+                run->path.push_back(segment);
+                from = size_t(-1);
+                continue;
+            }
+            for (size_t l = 0; l + 1 < line.size(); ++l) {
+                const Vec2d  a     = line[l].cast<double>(), b = line[l + 1].cast<double>();
+                const size_t parts = mine[l].size();
+                const size_t part  = i * 100000 + l; // the straight part the run's last point came from
+                for (size_t k = 0; k < parts; ++k) {
+                    if (!mine[l][k]) {
+                        flush();
+                        continue;
+                    }
+                    const Point end((a + (b - a) * (double(k + 1) / parts)).cast<coord_t>());
+                    if (!run) {
+                        Geometry::ArcWelder::Segment start = segment;
+                        start.point  = Point((a + (b - a) * (double(k) / parts)).cast<coord_t>());
+                        start.radius = 0.f;
+                        run          = GCode::SmoothPathElement{element.path_attributes, {start}};
+                    } else if (from == part) {
+                        run->path.back().point = end; // the same straight part
+                        continue;
+                    }
+                    Geometry::ArcWelder::Segment piece = segment;
+                    piece.point  = end;
+                    piece.radius = 0.f;
+                    run->path.push_back(piece);
+                    from = part;
+                }
+            }
+        }
+        flush();
+    }
+    return out;
+}
+
+// Colour stacking: the smoothing for an instance, cut to the chunk's pieces
+static PathSmoothingFunction color_stack_smoothing(const ColorStackChunk &chunk, const PrintInstance *instance, const PathSmoothingFunction &smooth_path)
+{
+    return [&chunk, instance, &smooth_path](const Layer *layer, const PrintRegion *region, const ExtrusionEntityReference &reference,
+                                            const unsigned extruder_id, std::optional<InstancePoint> &previous_position) -> PathSmoothingResult {
+        std::vector<const ExtrusionEntity *> leaves;
+        color_stack_leaves(reference.extrusion_entity(), leaves);
+        Polylines pieces;
+        bool      any = false, whole = true;
+        for (const ExtrusionEntity *leaf : leaves) {
+            const auto it = chunk.pieces.find({instance, leaf});
+            if (it == chunk.pieces.end()) {
+                whole = false;
+                continue;
+            }
+            any = true;
+            if (it->second.empty())
+                pieces.push_back(leaf->as_polyline());
+            else {
+                whole = false;
+                append(pieces, it->second);
+            }
+        }
+        if (!any)
+            return {};
+        PathSmoothingResult result = smooth_path(layer, region, reference, extruder_id, previous_position);
+        if (whole)
+            return result;
+        GCode::SmoothPath clipped = clip_to_pieces(result.first, pieces);
+        if (!clipped.empty())
+            previous_position = InstancePoint{clipped.back().path.back().point};
+        return {std::move(clipped), 0};
     };
 }
 
@@ -669,6 +817,9 @@ std::vector<NormalExtrusions> get_normal_extrusions(
         const InstanceToPrint &instance{instances_to_print[visit.instance_index]};
         const PrintObject &print_object = instance.print_object;
         const Point offset = print_object.instances()[instance.instance_id].shift();
+        // colour stacking: the object's paths cut to the chunk's pieces
+        const PathSmoothingFunction chunk_smooth_path = layer_tools.color_stack != nullptr ?
+            color_stack_smoothing(*layer_tools.color_stack, &print_object.instances()[instance.instance_id], smooth_path) : smooth_path;
 
         result.emplace_back();
         result.back().instance_index  = visit.instance_index;
@@ -700,7 +851,7 @@ std::vector<NormalExtrusions> get_normal_extrusions(
                 layers[instance.object_layer_to_print_id],
                 translate_support_extruder(instance.print_object.config().get<int>("support_material_extruder"), layer_tools, print.config().get<std::vector<bool>>("filament_soluble")),
                 translate_support_extruder(instance.print_object.config().get<int>("support_material_interface_extruder"), layer_tools, print.config().get<std::vector<bool>>("filament_soluble")),
-                smooth_path,
+                chunk_smooth_path,
                 previous_position
             );
         }
@@ -710,7 +861,7 @@ std::vector<NormalExtrusions> get_normal_extrusions(
                 print,
                 *layer,
                 instance_extrusion_predicate(layer_tools, instance, extruder_id),
-                smooth_path,
+                chunk_smooth_path,
                 offset,
                 extruder_id,
                 previous_position,

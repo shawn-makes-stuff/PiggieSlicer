@@ -27,6 +27,8 @@ enum class GCodeExtrusionRole : uint8_t {
     InternalBridgeInfill,
     // Orca: brim (was printed as skirt)
     Brim,
+    // Orca: bottom surface (solid infill, not bridging)
+    BottomSurface,
     // Stopper to count number of enums.
     Count
 };

@@ -3726,6 +3726,10 @@ tl::expected<void, std::string>  PresetInteractor::load_selected_preset_from_3mf
     auto& runtime_presets = pc.runtime_presets;
 
     bool runtime_presets_evaluation_required = false;
+    // a project's printer of a vendor whose presets were not read at start-up (no printer of it added)
+    if (auto vb_it = m_workbench.preset_bundle().vendor_bundles.find(selected_preset.hw_config.vendor_id);
+        vb_it != m_workbench.preset_bundle().vendor_bundles.end() && vb_it->second.presets.empty())
+        IO::load_vendor_presets(m_bundle_paths, vb_it->second);
     const auto& preset_bundle = m_workbench.preset_bundle();
 
     // update origin:

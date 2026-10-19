@@ -184,8 +184,10 @@ static std::optional<int> exhaust_fan_speed(const Print& print, const GCodeWrite
 
     std::string OozePrevention::post_toolchange(GCodeGenerator &gcodegen, const Domain::ConfigView& config)
     {
+        // Orca wait_for_temp_on_wipe_tower: the wipe tower waits for the temperature (after the travel to it)
+        const bool wait = !(config.get<bool>("wipe_tower") && WipeTower::wait_for_temp_enabled(config));
         return (config.get<int>("standby_temperature_delta") != 0) ?
-            gcodegen.writer().set_temperature(this->_get_temp(gcodegen, config), true, gcodegen.writer().extruder()->id()) :
+            gcodegen.writer().set_temperature(this->_get_temp(gcodegen, config), wait, gcodegen.writer().extruder()->id()) :
             std::string();
     }
 
@@ -1724,7 +1726,10 @@ Domain::ExtraPrintStatistics GCodeGenerator::_do_export(
                 print.config(),
                 *print.wipe_tower_data()->priming.get(),
                 print.wipe_tower_data()->tool_changes,
-                *print.wipe_tower_data()->final_purge.get()
+                *print.wipe_tower_data()->final_purge.get(),
+                print.wipe_tower_data()->width,
+                print.wipe_tower_data()->depth,
+                print.wipe_tower_data()->first_layer_outline
             );
 
             // Set position for wipe tower generation.
@@ -1902,7 +1907,25 @@ Domain::ExtraPrintStatistics GCodeGenerator::_do_export(
         file.write("\n");
     }
     if (anycubic)
+    {
         file.write_format("\n; ams_info = begin\n; paint_info = [%s]\n; ams_info = end\n\n", paint_info.c_str());
+        // Anycubic Slicer Next's statistics block (the time and filament are filled in by the post processor)
+        Domain::BoundingBox2crd bbox;
+        coord_t                 height = 0;
+        for (const PrintObject* object : print.objects()) {
+            height = std::max(height, object->height());
+            for (const PrintInstance& instance : object->instances()) {
+                const Domain::BoundingBox2crd object_bbox = BB::translated(object->bounding_box(), instance.shift());
+                bbox = bbox.defined ? BB::merge(bbox, object_bbox) : object_bbox;
+            }
+        }
+        const Vec2d size = bbox.defined ? Vec2d(unscaled(bbox.max.x() - bbox.min.x()), unscaled(bbox.max.y() - bbox.min.y())) : Vec2d::Zero();
+        file.write_format("; statistics = begin\n; used_filament = %s\n; print_time = %s\n; model_size = %.2f,%.2f,%.2f\n"
+                          "; total_layers = %u\n; statistics = end\n",
+                          std::string(reserved_tag(Tags::Used_Filament_Length_Placeholder)).c_str(),
+                          std::string(reserved_tag(Tags::Print_Time_Dhms_Placeholder)).c_str(), size.x(), size.y(),
+                          unscaled(height), m_layer_count);
+    }
 
     if (std::optional<std::string> line_M84 = find_M84(print.config().get<std::string>("end_gcode"));
         is_mk2_or_mk3(print.config().get<std::string>("printer_model")) && line_M84.has_value()) {
@@ -1941,6 +1964,10 @@ void GCodeGenerator::process_layers(
     const GCode::SmoothPathCache                                        &smooth_path_cache_global,
     GCodeOutputStream                                                   &output_stream)
 {
+    if (!tool_ordering.color_stack().empty()) {
+        this->process_layers_color_stack(print, tool_ordering, print_object_instances_ordering, layers_to_print, smooth_path_cache_global, output_stream);
+        return;
+    }
     size_t layer_to_print_idx = 0;
     const GCode::SmoothPathCache::InterpolationParameters interpolation_params = interpolation_parameters(print.config());
     std::vector<GCode::SmoothPathCache> smooth_path_cache_per_layer{layers_to_print.size()};
@@ -2159,6 +2186,179 @@ void GCodeGenerator::process_layers(
     // Handler is unregistered when the destructor is called.
     TBBLocalesSetter locales_setter;
     // The pipeline elements are joined using const references, thus no copying is performed.
+    output_stream.find_replace_supress();
+    tbb::parallel_pipeline(12, pipeline_to_layerresult & pipeline_to_string & output);
+    output_stream.find_replace_enable();
+}
+
+void GCodeGenerator::process_layers_color_stack(
+    const Print                                                         &print,
+    const ToolOrdering                                                  &tool_ordering,
+    const std::vector<const PrintInstance*>                             &print_object_instances_ordering,
+    const std::vector<std::pair<double, ObjectsLayerToPrint>>         &layers_to_print,
+    const GCode::SmoothPathCache                                        &smooth_path_cache_global,
+    GCodeOutputStream                                                   &output_stream)
+{
+    const std::vector<LayerTools>      &layer_tools = const_cast<ToolOrdering &>(tool_ordering).layer_tools();
+    const std::vector<Slic3r::ColorStackChunk> &all_chunks  = tool_ordering.color_stack();
+
+    // layer_tools index -> layers_to_print index; the tower layer at or above it
+    std::vector<int> printed(layer_tools.size(), -1), tower(layer_tools.size() + 1, -1);
+    int tower_layers = 0;
+    for (size_t i = 0; i < layer_tools.size(); ++i) {
+        if (layer_tools[i].has_wipe_tower)
+            ++tower_layers;
+        for (size_t k = 0; k < layers_to_print.size(); ++k)
+            if (std::abs(layers_to_print[k].first - layer_tools[i].print_z) < EPSILON)
+                printed[i] = int(k);
+    }
+    tower[layer_tools.size()] = tower_layers;
+    for (int i = int(layer_tools.size()) - 1; i >= 0; --i)
+        tower[i] = layer_tools[i].has_wipe_tower ? --tower_layers : tower[i + 1];
+
+    // the chunks of printed layers; a layer's smooth paths: computed for its first chunk, freed after its last
+    std::vector<size_t> chunks;
+    for (size_t c = 0; c < all_chunks.size(); ++c)
+        if (printed[all_chunks[c].layer] >= 0)
+            chunks.push_back(c);
+    std::vector<size_t> first_chunk(layers_to_print.size(), size_t(-1)), last_chunk(layers_to_print.size(), size_t(-1));
+    for (size_t c = 0; c < chunks.size(); ++c) {
+        const size_t lp = size_t(printed[all_chunks[chunks[c]].layer]);
+        if (first_chunk[lp] == size_t(-1))
+            first_chunk[lp] = c;
+        last_chunk[lp] = c;
+    }
+    // the layer numbers are the layers' (first layer temperatures, fan layers, layer_num), not the chunks'
+    m_layer_count = unsigned(layers_to_print.size());
+    // chunk -> its position; the position of the chunk printed on each chunk
+    std::vector<int> position(all_chunks.size(), -1);
+    for (size_t c = 0; c < chunks.size(); ++c)
+        position[chunks[c]] = int(c);
+    std::vector<int> covered_by(chunks.size(), -1);
+    for (size_t c = 0; c < chunks.size(); ++c)
+        if (const int top = all_chunks[chunks[c]].covered_by; top >= 0)
+            covered_by[c] = position[top];
+
+    const PrintConfigView &config = print.config();
+    const double z_offset = config.get<double>("z_offset");
+
+    size_t chunk_idx = 0;
+    const GCode::SmoothPathCache::InterpolationParameters interpolation_params = interpolation_parameters(print.config());
+    std::vector<GCode::SmoothPathCache> smooth_path_cache_per_layer{layers_to_print.size()};
+    const auto smooth_path_interpolator = tbb::make_filter<void, size_t>(slic3r_tbb_filtermode::serial_in_order,
+        [&](tbb::flow_control &fc) -> size_t {
+            if (chunk_idx >= chunks.size()) {
+                if (chunk_idx == chunks.size() + (m_pressure_equalizer ? 1 : 0)) {
+                    fc.stop();
+                    return {};
+                }
+                return chunk_idx++;
+            }
+            print.throw_if_canceled();
+            const size_t c  = chunk_idx++;
+            const size_t lp = size_t(printed[all_chunks[chunks[c]].layer]);
+            if (first_chunk[lp] == c)
+                for (const ObjectLayerToPrint &l : layers_to_print[lp].second)
+                    GCodeGenerator::smooth_path_interpolate(l, interpolation_params, smooth_path_cache_per_layer[lp]);
+            return c;
+        });
+    const auto generator = tbb::make_filter<size_t, LayerResult>(slic3r_tbb_filtermode::serial_in_order,
+        [&](const size_t c) -> LayerResult {
+            if (c == chunks.size())
+                return LayerResult::make_nop_layer_result();
+            print.throw_if_canceled();
+            const Slic3r::ColorStackChunk &chunk = all_chunks[chunks[c]];
+            const size_t lp = size_t(printed[chunk.layer]);
+
+            LayerTools lt = layer_tools[chunk.layer];
+            lt.extruders   = {chunk.tool};
+            lt.color_stack = &chunk;
+            // the layer's skirt and custom G-code once, with its first chunk
+            if (first_chunk[lp] != c) {
+                lt.has_skirt    = false;
+                lt.custom_gcode = nullptr;
+            }
+
+            ColorStackState state;
+            state.swap_tower_layer = chunk.swap_tower_layer >= 0 ? tower[chunk.swap_tower_layer] : -1;
+            if (chunk.finish_from >= 0) {
+                state.finish_from = tower[chunk.finish_from];
+                state.finish_to   = tower[chunk.finish_to];
+            }
+            state.obstacles    = chunk.obstacles;
+            state.travel_floor = chunk.obstacle_top + z_offset + config.get<std::vector<double>>("retract_lift").at(chunk.tool);
+            m_color_stack_chunk = std::move(state);
+
+            m_layer_index = int(lp) - 1; // change_layer() counts it up
+            const GCode::SmoothPathCache &smooth_path_cache = smooth_path_cache_per_layer[lp];
+            LayerResult layer_result = this->process_layer(print, layers_to_print[lp].second, lt,
+                GCode::SmoothPathCaches{ smooth_path_cache_global, smooth_path_cache },
+                c + 1 == chunks.size(), &print_object_instances_ordering, size_t(-1));
+            m_color_stack_chunk.reset();
+            if (last_chunk[lp] == c)
+                smooth_path_cache_per_layer[lp] = GCode::SmoothPathCache{};
+            return layer_result;
+        });
+    const auto pressure_equalizer = tbb::make_filter<LayerResult, LayerResult>(slic3r_tbb_filtermode::serial_in_order,
+        [pressure_equalizer = this->m_pressure_equalizer.get()](LayerResult in) -> LayerResult {
+             return pressure_equalizer->process_layer(std::move(in));
+        });
+    // A chunk's layer time is its own plus the chunks printed before the first chunk on it: it is cooled (slowed
+    // down, the fan) once that chunk is generated, the chunks in between estimated, in order.
+    struct Held { LayerResult result; size_t chunk; float time; };
+    std::deque<Held> held;
+    const bool slow_down = !config.get<bool>("color_stacking_disregard_min_layer_time");
+    size_t generated = 0;
+    const auto cooling = tbb::make_filter<LayerResult, std::string>(slic3r_tbb_filtermode::serial_in_order,
+        [&, cooling_buffer = this->m_cooling_buffer.get()](LayerResult in)->std::string {
+            if (in.nop_layer_result)
+                return in.gcode;
+            const size_t chunk = generated++;
+            const float  time  = cooling_buffer->estimate_time(in.gcode);
+            held.push_back({std::move(in), chunk, time});
+            std::string out;
+            while (!held.empty()) {
+                Held &front = held.front();
+                const int top = covered_by[front.chunk];
+                if (top >= 0 && size_t(top) > chunk && chunk + 1 < chunks.size())
+                    break; // the chunk on it is not generated yet
+                float credit = 0.f;
+                if (top >= 0)
+                    for (size_t k = 1; k < held.size() && held[k].chunk < size_t(top); ++k)
+                        credit += held[k].time;
+                out += cooling_buffer->process_layer(std::move(front.result.gcode), front.result.layer_id, front.result.cooling_buffer_flush, credit, slow_down);
+                held.pop_front();
+            }
+            return out;
+        });
+    const auto find_replace = tbb::make_filter<std::string, std::string>(slic3r_tbb_filtermode::serial_in_order,
+        [find_replace = this->m_find_replace.get()](std::string s) -> std::string {
+            return find_replace->process_layer(std::move(s));
+        });
+    const auto fan_mover = tbb::make_filter<std::string, std::string>(slic3r_tbb_filtermode::serial_in_order,
+        [fan_mover = this->m_fan_mover.get()](std::string s) -> std::string {
+            return fan_mover->process_gcode(s, true);
+        });
+    const auto pa_processor = tbb::make_filter<std::string, std::string>(slic3r_tbb_filtermode::serial_in_order,
+        [pa_processor = this->m_pa_processor.get()](std::string s) -> std::string {
+            return pa_processor->process_layer(std::move(s));
+        });
+    const auto output = tbb::make_filter<std::string, void>(slic3r_tbb_filtermode::serial_in_order,
+        [&output_stream](std::string s) { output_stream.write(s); }
+    );
+
+    tbb::filter<void, LayerResult> pipeline_to_layerresult = smooth_path_interpolator & generator;
+    if (m_pressure_equalizer)
+        pipeline_to_layerresult = pipeline_to_layerresult & pressure_equalizer;
+    tbb::filter<LayerResult, std::string> pipeline_to_string = cooling;
+    if (m_fan_mover)
+        pipeline_to_string = pipeline_to_string & fan_mover;
+    if (m_pa_processor)
+        pipeline_to_string = pipeline_to_string & pa_processor;
+    if (m_find_replace)
+        pipeline_to_string = pipeline_to_string & find_replace;
+
+    TBBLocalesSetter locales_setter;
     output_stream.find_replace_supress();
     tbb::parallel_pipeline(12, pipeline_to_layerresult & pipeline_to_string & output);
     output_stream.find_replace_enable();
@@ -2928,6 +3128,7 @@ static std::string gcode_extrusion_role_to_string_for_parser(GCodeExtrusionRole 
     case GCodeExtrusionRole::Ironing: return "Ironing";
     case GCodeExtrusionRole::Skirt: return "Skirt";
     case GCodeExtrusionRole::Brim: return "Brim";
+    case GCodeExtrusionRole::BottomSurface: return "BottomSurface";
     case GCodeExtrusionRole::SupportMaterial: return "SupportMaterial";
     case GCodeExtrusionRole::SupportMaterialInterface: return "SupportMaterialInterface";
     case GCodeExtrusionRole::WipeTower: return "WipeTower";
@@ -3289,7 +3490,10 @@ LayerResult GCodeGenerator::process_layer(
     // Extrude the skirt, brim, support, perimeters, infill ordered by the extruders.
     for (const ExtruderExtrusions &extruder_extrusions : extrusions)
     {
-        gcode += uses_wipe_tower ?
+        gcode += uses_wipe_tower && m_color_stack_chunk ?
+            m_wipe_tower->band_tool_change(*this, first_object_config, extruder_extrusions.extruder_id,
+                                           m_color_stack_chunk->swap_tower_layer, m_color_stack_chunk->finish_from, m_color_stack_chunk->finish_to) :
+            uses_wipe_tower ?
             m_wipe_tower->tool_change(
                 *this,
                 first_object_config,
@@ -3565,6 +3769,16 @@ std::string GCodeGenerator::change_layer(
     if (m_layer_count > 0)
         // Increment a progress bar indicator.
         gcode += m_writer.update_progress(++ m_layer_index, m_layer_count);
+
+    // Colour stacking: a band's lower layer after its higher ones. Never drop in place (the nozzle stands over the
+    // plastic just printed): lift over the stack, the first travel descends at its target.
+    if (m_color_stack_chunk && print_z + EPSILON < m_writer.get_position().z()) {
+        gcode += this->retract_and_wipe(config.retract_speed, config.travel_speed);
+        const double floor = std::max(m_writer.get_position().z(), m_color_stack_chunk->travel_floor);
+        gcode += m_writer.travel_to_z(floor, "colour stacking: over the stack");
+        m_wipe.reset_path();
+        return gcode;
+    }
 
     if (m_writer.multiple_extruders) {
         gcode += m_label_objects.maybe_change_instance(m_writer);
@@ -4306,6 +4520,8 @@ std::string GCodeGenerator::_extrude(
         double flow_ratio = config.print_flow_ratio;
         if (path_attr.role == ExtrusionRole::TopSolidInfill)
             flow_ratio *= config.top_solid_infill_flow_ratio;
+        else if (path_attr.role == ExtrusionRole::BottomSurface)
+            flow_ratio *= config.bottom_solid_infill_flow_ratio;
         else if (path_attr.role == ExtrusionRole::InternalBridgeInfill)
             flow_ratio *= config.internal_bridge_flow;
         else if (path_attr.role == ExtrusionRole::Brim)
@@ -4345,9 +4561,10 @@ std::string GCodeGenerator::_extrude(
             return pattern == Domain::InfillPattern::ipRectilinear || pattern == Domain::InfillPattern::ipAlignedRectilinear ||
                 pattern == Domain::InfillPattern::ipMonotonic || pattern == Domain::InfillPattern::ipMonotonicLines;
         };
-        if (path_attr.role != ExtrusionRole::SolidInfill && path_attr.role != ExtrusionRole::TopSolidInfill)
+        if (path_attr.role != ExtrusionRole::SolidInfill && path_attr.role != ExtrusionRole::TopSolidInfill &&
+            path_attr.role != ExtrusionRole::BottomSurface)
             return false;
-        return (this->on_first_layer() && supported(config.bottom_fill_pattern)) ||
+        return ((this->on_first_layer() || path_attr.role == ExtrusionRole::BottomSurface) && supported(config.bottom_fill_pattern)) ||
             (path_attr.role == ExtrusionRole::SolidInfill && supported(config.internal_solid_infill_pattern)) ||
             (path_attr.role == ExtrusionRole::TopSolidInfill && supported(config.top_fill_pattern));
     }();
@@ -4383,6 +4600,9 @@ std::string GCodeGenerator::_extrude(
             }
         } else if (path_attr.role == ExtrusionRole::TopSolidInfill) {
             speed = config.top_solid_infill_speed.at(extruder_id).get_abs_value(solid_infill_speed);
+        } else if (path_attr.role == ExtrusionRole::BottomSurface) {
+            // Orca: bottom surfaces at the first layer's infill speed
+            speed = config.first_layer_solid_infill_speed.at(extruder_id).float_value();
         } else if (path_attr.role == ExtrusionRole::Ironing) {
             speed = config.ironing_speed;
         } else if (path_attr.role == ExtrusionRole::GapFill) {
@@ -4401,7 +4621,7 @@ std::string GCodeGenerator::_extrude(
     if (this->on_first_layer()) {
         if (path_attr.role == ExtrusionRole::InternalInfill) {
             speed = config.first_layer_infill_speed.at(extruder_id).float_value();
-        } else if (path_attr.role == ExtrusionRole::SolidInfill) {
+        } else if (path_attr.role == ExtrusionRole::SolidInfill || path_attr.role == ExtrusionRole::BottomSurface) {
             speed = config.first_layer_solid_infill_speed.at(extruder_id).float_value();
         } else if (path_attr.role == ExtrusionRole::TopSolidInfill) {
             speed = config.first_layer_top_solid_infill_speed.at(extruder_id).float_value();
@@ -4915,6 +5135,21 @@ std::string GCodeGenerator::travel_to(
 
     this->m_avoid_crossing_perimeters.reset_once_modifiers();
 
+    // Colour stacking (ColorStack's travel rule): a travel passing within the nozzle's reach of taller plastic of
+    // the band goes over it: retract, up, across, down at the target
+    if (m_color_stack_chunk && !m_color_stack_chunk->obstacles.empty() && initial_elevation + EPSILON < m_color_stack_chunk->travel_floor) {
+        Polyline in_print = xy_path;
+        in_print.translate(scaled(m_origin));
+        if (!intersection_pl(Polylines{in_print}, m_color_stack_chunk->obstacles).empty()) {
+            if (!needs_retraction)
+                wipe_retract_gcode = this->retract_and_wipe(config.retract_speed, config.travel_speed);
+            Points3 travel = GCode::Impl::Travels::generate_flat_travel(xy_path.points, float(m_color_stack_chunk->travel_floor));
+            travel.insert(travel.begin(), Vec3crd(xy_path.points.front().x(), xy_path.points.front().y(), scaled(initial_elevation)));
+            travel.emplace_back(end_point);
+            return wipe_retract_gcode + generate_travel_gcode(travel, comment, insert_gcode, config, enforce_first_z);
+        }
+    }
+
     const unsigned extruder_id = this->m_writer.extruder()->id();
     const double retract_length = config.retract_length.at(extruder_id);
     bool can_be_flat{!needs_retraction || retract_length == 0};
@@ -5161,7 +5396,14 @@ std::string GCodeGenerator::set_extruder(unsigned int extruder_id, double print_
             dynamic_config.set("travel_point_3_y", 245.);
             dynamic_config.set("wipe_avoid_perimeter", false);
             dynamic_config.set("wipe_avoid_pos_x", 110.);
-            dynamic_config.set("is_prime_tower_interface", false);
+            dynamic_config.set("is_prime_tower_interface", m_toolchange_on_tower_interface);
+            {
+                // Orca: -1 is the filament's highest recommended temperature
+                int interface_temp = config.get<std::vector<int>>("filament_tower_interface_print_temp").at(extruder_id);
+                if (interface_temp == -1)
+                    interface_temp = config.get<std::vector<int>>("nozzle_temperature_range_high").at(extruder_id);
+                dynamic_config.set("filament_tower_interface_print_temp", interface_temp);
+            }
         }
         toolchange_gcode_parsed = placeholder_parser_process("toolchange_gcode", toolchange_gcode, extruder_id, &dynamic_config);
         // Orca: the fan mover does not move fan commands across custom tool change G-code

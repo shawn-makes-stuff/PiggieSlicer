@@ -479,6 +479,41 @@ std::string slice_semm_stacked_cubes(const TestConfig& config)
     return Test::gcode(print);
 }
 
+// Two cubes of different filaments side by side, one object (colour stacking)
+std::string slice_semm_side_by_side(const TestConfig& config)
+{
+    Domain::Model model;
+    Domain::ModelObject* object = model.add_object();
+    object->name = "object.stl";
+    for (int i = 0; i < 2; ++i) {
+        Domain::ModelVolume* volume = add_volume(object, Test::mesh(Test::TestMesh::cube_20x20x20));
+        translate(*volume, i * 40., 0., 0.);
+        VolumeSettings volume_settings;
+        volume_settings.overrides.set("extruder", i + 1);
+        volume->volume_settings = volume_settings;
+    }
+    object->add_instance();
+    ensure_on_bed(*object);
+
+    Domain::Bed model_bed;
+    Domain::BedInstance bed_instance{model_bed};
+    for (Domain::ModelInstance* instance : object->instances)
+        bed_instance.model_instances.push_back(instance);
+    Print print;
+    auto preset_metadata = Test::create_dummy_selected_preset_metadata(config.hw_config);
+    auto metadata = Biz::Slicing::build_gcode_metadata({}, preset_metadata, config);
+    auto status{print.update(
+        model,
+        config,
+        bed_instance,
+        preset_metadata,
+        Biz::Slicing::build_metadata_serializer(metadata, preset_metadata, config)
+    )};
+    REQUIRE(std::holds_alternative<Biz::Slicing::ApplyStatus::Changed>(status));
+    print.validate();
+    return Test::gcode(print);
+}
+
 // Writes the G-code to $PIGGIE_GCODE_DUMP_DIR/<name>.gcode when that variable is set, so the
 // output can be compared byte for byte before and after a change.
 void dump_gcode(const std::string& name, const std::string& gcode)
@@ -614,4 +649,49 @@ TEST_CASE("Per-tool values follow the tool feeding each slot", "[Multi][External
     REQUIRE(offsets[0] == Vec2d{0., 0.});
     REQUIRE(offsets[1] == Vec2d{10., 0.});
     REQUIRE(offsets[3] == Vec2d{10., 0.});
+}
+
+TEST_CASE("Colour stacking prints each colour several layers in a row", "[Multi][SEMM][ColorStack]")
+{
+    // per tool: tool changes, and the heights each tool extrudes at
+    auto analyse = [](const std::string &gcode) {
+        GCodeReader parser;
+        int tool = -1;
+        size_t changes = 0;
+        std::map<int, std::set<coord_t>> heights;
+        // the left cube (x < 30) is filament 1, the right one filament 2: any other tool there is a wrong colour
+        size_t wrong_colour = 0;
+        bool   tower        = false;
+        parser.parse_buffer(gcode, [&](GCodeReader &self, const GCodeReader::GCodeLine &line) {
+            if (boost::starts_with(line.raw(), ";TYPE:"))
+                tower = line.raw().find("Wipe tower") != std::string::npos;
+            if (boost::starts_with(line.cmd(), "T")) {
+                const int new_tool = atoi(line.cmd().data() + 1);
+                if (tool != -1 && new_tool != tool)
+                    ++changes;
+                tool = new_tool;
+            } else if (line.cmd() == "G1" && line.extruding(self) && line.dist_XY(self) > 0) {
+                if (tower)
+                    return; // a band's last colour prints its tower layers
+                heights[tool].insert(scaled<coord_t>(self.z()));
+                if (tool != (line.new_X(self) < 30. ? 0 : 1))
+                    ++wrong_colour;
+            }
+        });
+        return std::make_tuple(changes, heights, wrong_colour);
+    };
+    TestConfig config = semm_config(2);
+    const std::string plain = slice_semm_side_by_side(config);
+    config.print.items.opt("color_stacking").set(true);
+    const std::string stacked = slice_semm_side_by_side(config);
+    dump_gcode("color_stacking", stacked);
+    const auto [plain_changes, plain_heights, plain_wrong] = analyse(plain);
+    const auto [stacked_changes, stacked_heights, stacked_wrong] = analyse(stacked);
+    CHECK(plain_wrong == 0);
+    CHECK(stacked_wrong == 0);
+    INFO("tool changes: " << plain_changes << " -> " << stacked_changes);
+    CHECK(stacked_changes * 3 < plain_changes);
+    // every colour still prints every one of its layers
+    CHECK(stacked_heights.at(0) == plain_heights.at(0));
+    CHECK(stacked_heights.at(1) == plain_heights.at(1));
 }

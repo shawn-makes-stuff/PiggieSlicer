@@ -129,6 +129,7 @@ struct ExtrudeConfig
     bool set_other_flow_ratios{};
     double print_flow_ratio{1.};
     double top_solid_infill_flow_ratio{1.};
+    double bottom_solid_infill_flow_ratio{1.};
     double outer_wall_flow_ratio{1.};
     double inner_wall_flow_ratio{1.};
     double overhang_flow_ratio{1.};

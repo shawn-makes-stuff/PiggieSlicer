@@ -20,6 +20,8 @@ struct WipeTowerGeometry
     double cone_radius{};
     double cone_x_scale{};
     double brim_width{};
+    // the printed first layer's outline (wall, ribs, brim) in tower coordinates, once sliced
+    Domain::Polygon first_layer_outline;
 
     [[nodiscard]] double get_height() const;
 

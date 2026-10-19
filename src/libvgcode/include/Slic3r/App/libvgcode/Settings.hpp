@@ -56,7 +56,8 @@ struct Settings
 				true, // WipeTower
 				true, // Custom
 				true, // InternalBridgeInfill
-				true  // Brim
+				true, // Brim
+				true  // BottomSurface
 		};
 };
 

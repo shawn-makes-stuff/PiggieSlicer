@@ -21,6 +21,7 @@ GCodeExtrusionRole extrusion_role_to_gcode_extrusion_role(ExtrusionRole role)
     if (role == ExtrusionRole::SolidInfill)         return GCodeExtrusionRole::SolidInfill;
     if (role == ExtrusionRole::InfillOverBridge)    return GCodeExtrusionRole::SolidInfill;
     if (role == ExtrusionRole::TopSolidInfill)      return GCodeExtrusionRole::TopSolidInfill;
+    if (role == ExtrusionRole::BottomSurface)       return GCodeExtrusionRole::BottomSurface;
     if (role == ExtrusionRole::Ironing)             return GCodeExtrusionRole::Ironing;
     if (role == ExtrusionRole::BridgeInfill)        return GCodeExtrusionRole::BridgeInfill;
     if (role == ExtrusionRole::InternalBridgeInfill) return GCodeExtrusionRole::InternalBridgeInfill;
@@ -54,6 +55,7 @@ std::string gcode_extrusion_role_to_string(GCodeExtrusionRole role)
         case GCodeExtrusionRole::Custom                       : return L("Custom");
         case GCodeExtrusionRole::InternalBridgeInfill         : return L("Internal bridge infill");
         case GCodeExtrusionRole::Brim                         : return L("Brim");
+        case GCodeExtrusionRole::BottomSurface                : return L("Bottom surface");
         default                             : assert(false);
     }
     return {};

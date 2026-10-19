@@ -181,6 +181,20 @@ void PrintRegion::collect_object_printing_extruders(
         return config.get<std::vector<int>>("top_solid_layers").at(slot) > 0
             || config.get<std::vector<int>>("bottom_solid_layers").at(slot) > 0;
     });
+
+    // Orca's feature filaments, when set
+    if (const int outer_wall = config.get<int>("outer_wall_filament_id"); outer_wall > 0)
+        emplace_extruder(outer_wall, [&](std::size_t slot) {
+            return config.get<std::vector<int>>("perimeters").at(slot) > 0;
+        });
+    if (const int top_surface = config.get<int>("top_surface_filament_id"); top_surface > 0)
+        emplace_extruder(top_surface, [&](std::size_t slot) {
+            return config.get<std::vector<int>>("top_solid_layers").at(slot) > 0;
+        });
+    if (const int bottom_surface = config.get<int>("bottom_surface_filament_id"); bottom_surface > 0)
+        emplace_extruder(bottom_surface, [&](std::size_t slot) {
+            return config.get<std::vector<int>>("bottom_solid_layers").at(slot) > 0;
+        });
 }
 
 double PrintRegion::nozzle_diameter(FlowRole role) const

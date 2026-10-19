@@ -471,7 +471,8 @@ public:
         Domain::GCodeExtrusionRole::WipeTower,
         Domain::GCodeExtrusionRole::Custom,
         Domain::GCodeExtrusionRole::InternalBridgeInfill,
-        Domain::GCodeExtrusionRole::Brim }) const;
+        Domain::GCodeExtrusionRole::Brim,
+        Domain::GCodeExtrusionRole::BottomSurface }) const;
     /** @brief Returns the center of gravity marker position in world coordinates
      *
      * @note The following extrusion types are ignored:

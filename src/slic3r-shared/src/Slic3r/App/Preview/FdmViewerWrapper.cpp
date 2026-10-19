@@ -83,6 +83,7 @@ bool FdmViewerWrapper::set_settings(const FdmViewerWrapperSettings &settings)
         // set gcode slider callbacks
         m_slider_gcode->set_request_extra_frames_callback(std::bind(&FdmViewerWrapper::on_request_extra_frames, this, std::placeholders::_1));
         m_slider_gcode->set_on_thumb_move_callback(std::bind(&FdmViewerWrapper::on_slider_gcode_scroll_changed, this));
+        m_slider_gcode->set_play_callbacks([this]() { on_play_start(); }, [this](float seconds) { return on_play_tick(seconds); });
 
         if (m_viewer.is_top_layer_only_view_range() != settings.seq_top_layer_only)
             m_viewer.toggle_top_layer_only_view_range();
@@ -119,6 +120,7 @@ static void set_pregcode_extrusion_role_colors(FdmViewerWrapper& wrapper)
     wrapper.set_extrusion_role_color(GCodeExtrusionRole::SupportMaterialInterface, ColorRGB(0.5f, 1.0f, 0.5f));
     wrapper.set_extrusion_role_color(GCodeExtrusionRole::InternalInfill,           ColorRGB(1.0f, 0.5f, 0.5f));
     wrapper.set_extrusion_role_color(GCodeExtrusionRole::SolidInfill,              ColorRGB(1.0f, 0.5f, 0.5f));
+    wrapper.set_extrusion_role_color(GCodeExtrusionRole::BottomSurface,            ColorRGB(1.0f, 0.5f, 0.5f));
     wrapper.set_extrusion_role_color(GCodeExtrusionRole::WipeTower,                ColorRGB(0.5f, 1.0f, 0.5f));
 }
 
@@ -818,6 +820,50 @@ void FdmViewerWrapper::on_extrusion_role_visibility_changed()
 {
     const Interval& range = m_viewer.view_visible_range();
     update_slider_gcode(range[0], range[1]);
+}
+
+void FdmViewerWrapper::on_play_start()
+{
+    m_play_carry = 0.f;
+    // at the end: again from the first shown layer
+    if (has_data() && m_slider_gcode->is_higher_at_max() && m_slider_layers->is_higher_at_max()) {
+        m_slider_layers->set_higher_pos(m_slider_layers->lower_pos());
+        m_slider_gcode->set_higher_pos(m_slider_gcode->lower_pos());
+    }
+}
+
+bool FdmViewerWrapper::on_play_tick(float seconds)
+{
+    if (!has_data() || !m_slider_gcode->is_visible())
+        return false;
+    m_play_carry += seconds;
+    const size_t mode = size_t(m_viewer.time_mode());
+    while (true) {
+        // the moves of this layer the time covers; the slider's values are the last vertex id + 1 per position
+        const std::vector<unsigned int>& values = m_slider_gcode->slider_values();
+        const int start = m_slider_gcode->higher_pos();
+        int       pos   = start;
+        while (pos < m_slider_gcode->max_pos()) {
+            float move = 0.f;
+            for (unsigned int v = values[pos]; v < values[pos + 1]; ++v)
+                move += m_viewer.vertex_at(v).time[mode];
+            if (m_play_carry < move)
+                break;
+            m_play_carry -= move;
+            ++pos;
+        }
+        if (pos != start)
+            m_slider_gcode->set_higher_pos(pos);
+        if (pos < m_slider_gcode->max_pos())
+            return true;
+        // the layer is done: the next one, from its first move
+        if (m_slider_layers->is_higher_at_max()) {
+            m_play_carry = 0.f;
+            return false;
+        }
+        m_slider_layers->set_higher_pos(m_slider_layers->higher_pos() + 1);
+        m_slider_gcode->set_higher_pos(m_slider_gcode->lower_pos());
+    }
 }
 
 void FdmViewerWrapper::on_request_extra_frames(unsigned int count)

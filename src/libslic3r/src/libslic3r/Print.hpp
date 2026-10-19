@@ -519,6 +519,8 @@ struct WipeTowerData
     float                                                 first_layer_height{};
     float                                                 cone_x_scale{};
     float                                                 cone_radius{};
+    // First layer outline (wall, ribs, brim) in tower coordinates
+    Domain::Polygon                                       first_layer_outline;
     Domain::Vec2d                                         position{};
     float                                                 rotation_angle{};
 };

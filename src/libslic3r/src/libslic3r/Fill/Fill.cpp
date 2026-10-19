@@ -676,6 +676,9 @@ std::vector<SurfaceFill> group_fills(const Layer &layer, LockRegionParam &lock_p
                     if (surface.is_solid()) {
                         if (surface.is_top()) {
                             params.extrusion_role = ExtrusionRole::TopSolidInfill;
+                        } else if (surface.is_bottom()) {
+                            // Orca: bottom surfaces have their own role (speed, flow ratio, filament)
+                            params.extrusion_role = ExtrusionRole::BottomSurface;
                         } else if (surface.surface_type == stSolidOverBridge) {
                             params.extrusion_role = ExtrusionRole::InfillOverBridge;
                         } else {
@@ -685,6 +688,11 @@ std::vector<SurfaceFill> group_fills(const Layer &layer, LockRegionParam &lock_p
                         params.extrusion_role = ExtrusionRole::InternalInfill;
                     }
                 }
+		        // Orca: top / bottom surfaces in their own filament
+		        if (const int filament = params.extrusion_role == ExtrusionRole::TopSolidInfill ? region_config.get<int>("top_surface_filament_id") :
+		                                 params.extrusion_role == ExtrusionRole::BottomSurface  ? region_config.get<int>("bottom_surface_filament_id") : 0;
+		            filament > 0)
+		            params.extruder = filament;
 		        params.bridge_angle = float(surface.bridge_angle);
 		        // Orca: sparse infill at the fill angle, solid infill at solid_infill_direction, top / bottom surfaces
 		        // at their fixed direction if set
@@ -1560,6 +1568,9 @@ void Layer::make_ironing()
 					// Iron just the infill.
 					ironing_params.extruder = config.get<int>("solid_infill_extruder");
 				}
+				// Orca: ironing in the top surface's filament
+				if (config.get<int>("top_surface_filament_id") > 0)
+					ironing_params.extruder = config.get<int>("top_surface_filament_id");
 			}
 			if (ironing_params.extruder != -1) {
 				//TODO just_infill is currently not used.

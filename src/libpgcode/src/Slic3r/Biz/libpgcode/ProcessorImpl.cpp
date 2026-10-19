@@ -1871,6 +1871,8 @@ GCodeExtrusionRole string_to_gcode_extrusion_role(const std::string_view role)
         return GCodeExtrusionRole::InternalBridgeInfill;
     else if (role == "Brim")
         return GCodeExtrusionRole::Brim;
+    else if (role == "Bottom surface")
+        return GCodeExtrusionRole::BottomSurface;
     else
         return GCodeExtrusionRole::None;
 }
@@ -2100,7 +2102,7 @@ void ProcessorImpl::process_bambustudio_tags(const std::string_view comment)
     // see: BambuStudio-01.09.07.52\src\libslic3r\ExtrusionEntity.cpp
     //
     static const std::vector<std::pair<std::string_view, GCodeExtrusionRole>> ROLE_DICTIONARY = {
-        { "Bottom surface"sv,        GCodeExtrusionRole::None },
+        { "Bottom surface"sv,        GCodeExtrusionRole::BottomSurface },
         { "Bridge"sv,                GCodeExtrusionRole::BridgeInfill },
         { "Brim"sv,                  GCodeExtrusionRole::Brim},
         { "Custom"sv,                GCodeExtrusionRole::Custom},
@@ -2454,7 +2456,7 @@ void ProcessorImpl::process_orcaslicer_tags(const std::string_view comment)
     // see: OrcaSlicer-2.1.1\src\libslic3r\ExtrusionEntity.cpp
     //
     static const std::vector<std::pair<std::string_view, GCodeExtrusionRole>> ROLE_DICTIONARY = {
-        { "Bottom surface"sv,        GCodeExtrusionRole::None },
+        { "Bottom surface"sv,        GCodeExtrusionRole::BottomSurface },
         { "Bridge"sv,                GCodeExtrusionRole::BridgeInfill },
         { "Brim"sv,                  GCodeExtrusionRole::Brim},
         { "Custom"sv,                GCodeExtrusionRole::Custom},

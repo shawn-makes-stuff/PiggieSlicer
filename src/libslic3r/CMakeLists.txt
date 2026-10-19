@@ -278,6 +278,8 @@ set(SLIC3R_SOURCES
     src/libslic3r/GCode/FlushVolCalc.cpp
     src/libslic3r/GCode/WipeTowerIntegration.cpp
     src/libslic3r/GCode/WipeTowerIntegration.hpp
+    src/libslic3r/GCode/ColorStack.cpp
+    src/libslic3r/GCode/ColorStack.hpp
     src/libslic3r/Geometry.hpp
     src/libslic3r/Geometry/ArcWelder.cpp
     src/libslic3r/Geometry/ArcWelder.hpp

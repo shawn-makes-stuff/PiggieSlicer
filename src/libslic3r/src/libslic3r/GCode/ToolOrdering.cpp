@@ -1,6 +1,7 @@
 #include "libslic3r/Print.hpp"
 #include "libslic3r/Layer.hpp"
 #include "libslic3r/GCode/ToolOrdering.hpp"
+#include "libslic3r/GCode/WipeTower.hpp"
 #include "libslic3r/CustomGCode.hpp"
 #include "libslic3r/ExtrusionEntity.hpp"
 #include "libslic3r/ExtrusionEntityCollection.hpp"
@@ -8,6 +9,8 @@
 #include "libslic3r/LayerRegion.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/HwConfigUtils.hpp"
+#include "libslic3r/ClipperUtils.hpp"
+#include "Slic3r/Biz/Algorithms/ExPolygon.hpp"
 
 // #define SLIC3R_DEBUG
 
@@ -25,6 +28,8 @@
 #include <cmath>
 #include <cstring>
 #include <sstream>
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
 
 namespace Slic3r {
 
@@ -66,19 +71,48 @@ unsigned int LayerTools::solid_infill_extruder(const PrintRegion &region) const
 	return ((this->extruder_override == 0) ? region.config().get<int>("solid_infill_extruder") : this->extruder_override) - 1;
 }
 
+// Orca's feature filaments, 1 based: "Default" (0) is the wall / solid infill extruder (Orca normalize_fdm)
+static int feature_filament(const PrintRegion &region, const char *key, const char *fallback)
+{
+    const int filament = region.config().get<int>(key);
+    return filament > 0 ? filament : region.config().get<int>(fallback);
+}
+
+unsigned int LayerTools::outer_wall_extruder(const PrintRegion &region) const
+{
+	return ((this->extruder_override == 0) ? feature_filament(region, "outer_wall_filament_id", "perimeter_extruder") : this->extruder_override) - 1;
+}
+
+unsigned int LayerTools::top_surface_extruder(const PrintRegion &region) const
+{
+	return ((this->extruder_override == 0) ? feature_filament(region, "top_surface_filament_id", "solid_infill_extruder") : this->extruder_override) - 1;
+}
+
+unsigned int LayerTools::bottom_surface_extruder(const PrintRegion &region) const
+{
+	return ((this->extruder_override == 0) ? feature_filament(region, "bottom_surface_filament_id", "solid_infill_extruder") : this->extruder_override) - 1;
+}
+
 // Returns a zero based extruder this eec should be printed with, according to PrintRegion config or extruder_override if overriden.
 unsigned int LayerTools::extruder(const ExtrusionEntityCollection &extrusions, const PrintRegion &region) const
 {
 	assert(region.config().get<int>("perimeter_extruder") > 0);
 	assert(region.config().get<int>("infill_extruder") > 0);
 	assert(region.config().get<int>("solid_infill_extruder") > 0);
-	// 1 based extruder ID.
-	unsigned int extruder = this->extruder_override == 0 ?
-	    (extrusions.role().is_infill() ?
-	    	(extrusions.entities.front()->role().is_solid_infill() ? region.config().get<int>("solid_infill_extruder") : region.config().get<int>("infill_extruder")) :
-			region.config().get<int>("perimeter_extruder")) :
-		this->extruder_override;
-	return (extruder == 0) ? 0 : extruder - 1;
+	if (this->extruder_override != 0)
+		return this->extruder_override - 1;
+	// Orca LayerTools::extruder: top surfaces (and ironing), bottom surfaces and outer walls by their feature filament
+	if (extrusions.role().is_infill()) {
+		const ExtrusionRole role = extrusions.entities.front()->role();
+		if (!role.is_solid_infill())
+			return infill_extruder(region);
+		if (role == ExtrusionRole::TopSolidInfill || role == ExtrusionRole::Ironing)
+			return top_surface_extruder(region);
+		if (role == ExtrusionRole::BottomSurface)
+			return bottom_surface_extruder(region);
+		return solid_infill_extruder(region);
+	}
+	return extrusions.role().is_external_perimeter() ? outer_wall_extruder(region) : perimeter_extruder(region);
 }
 
 static double calc_max_layer_height(const PrintConfigView &config, double max_object_layer_height)
@@ -122,6 +156,7 @@ ToolOrdering::ToolOrdering(const PrintObject &object, unsigned int first_extrude
 
     this->fill_wipe_tower_partitions(object.print()->config(), object.layers().front()->print_z - object.layers().front()->height, max_layer_height);
 
+    m_prime_multi_material = prime_multi_material;
     this->collect_extruder_statistics(prime_multi_material);
 
     this->mark_skirt_layers(object.print()->config(), max_layer_height);
@@ -195,6 +230,7 @@ ToolOrdering::ToolOrdering(const Print &print, unsigned int first_extruder, bool
         this->fill_wipe_tower_partitions(print.config(), object_bottom_z, max_layer_height);
     }
 
+    m_prime_multi_material = prime_multi_material;
     this->collect_extruder_statistics(prime_multi_material);
 
     this->mark_skirt_layers(print.config(), max_layer_height);
@@ -278,20 +314,30 @@ void ToolOrdering::collect_extruders(
                             something_nonoverriddable = true;
                 }
 
-                if (something_nonoverriddable)
+                if (something_nonoverriddable) {
                		layer_tools.extruders.emplace_back(extruder_override == 0 ? region.config().get<int>("perimeter_extruder") : extruder_override);
+                    // Orca: the outer walls' own filament
+                    if (extruder_override == 0)
+                        layer_tools.extruders.emplace_back(feature_filament(region, "outer_wall_filament_id", "perimeter_extruder"));
+                }
 
                 layer_tools.has_object = true;
             }
 
             bool has_infill       = false;
             bool has_solid_infill = false;
+            bool has_top_surface  = false;
+            bool has_bottom_surface = false;
             bool something_nonoverriddable = false;
             for (const ExtrusionEntity *ee : layerm->fills()) {
                 // fill represents infill extrusions of a single island.
                 const auto *fill = dynamic_cast<const ExtrusionEntityCollection*>(ee);
                 ExtrusionRole role = fill->entities.empty() ? ExtrusionRole::None : fill->entities.front()->role();
-                if (role.is_solid_infill())
+                if (role == ExtrusionRole::TopSolidInfill || role == ExtrusionRole::Ironing)
+                    has_top_surface = true;
+                else if (role == ExtrusionRole::BottomSurface)
+                    has_bottom_surface = true;
+                else if (role.is_solid_infill())
                     has_solid_infill = true;
                 else if (role != ExtrusionRole::None)
                     has_infill = true;
@@ -308,12 +354,16 @@ void ToolOrdering::collect_extruders(
             	if (extruder_override == 0) {
 	                if (has_solid_infill)
 	                    layer_tools.extruders.emplace_back(region.config().get<int>("solid_infill_extruder"));
+	                if (has_top_surface)
+	                    layer_tools.extruders.emplace_back(feature_filament(region, "top_surface_filament_id", "solid_infill_extruder"));
+	                if (has_bottom_surface)
+	                    layer_tools.extruders.emplace_back(feature_filament(region, "bottom_surface_filament_id", "solid_infill_extruder"));
 	                if (has_infill)
 	                    layer_tools.extruders.emplace_back(region.config().get<int>("infill_extruder"));
-            	} else if (has_solid_infill || has_infill)
+            	} else if (has_solid_infill || has_top_surface || has_bottom_surface || has_infill)
             		layer_tools.extruders.emplace_back(extruder_override);
             }
-            if (has_solid_infill || has_infill)
+            if (has_solid_infill || has_top_surface || has_bottom_surface || has_infill)
                 layer_tools.has_object = true;
         }
     }
@@ -676,6 +726,357 @@ void ToolOrdering::mark_skirt_layers(const Domain::ConfigView &config, double ma
 // Assign a pointer to a custom G-code to the respective ToolOrdering::LayerTools.
 // Ignore color changes, which are performed on a layer and for such an extruder, that the extruder will not be printing above that layer.
 // If multiple events are planned over a span of a single layer, use the last one.
+bool ToolOrdering::color_stacking_enabled(const Print &print)
+{
+    const PrintConfigView &config = print.config();
+    return config.get<bool>("color_stacking") && !config.get<bool>("complete_objects") && !config.get<bool>("spiral_vase") &&
+        config.hw_config().tools.size() == 1 && config.hw_config().material_slot_count() > 1;
+}
+
+void color_stack_leaves(const ExtrusionEntity &entity, std::vector<const ExtrusionEntity*> &out)
+{
+    if (const auto *eec = dynamic_cast<const ExtrusionEntityCollection *>(&entity)) {
+        for (const ExtrusionEntity *ee : eec->entities)
+            color_stack_leaves(*ee, out);
+    } else if (const auto *loop = dynamic_cast<const ExtrusionLoop *>(&entity)) {
+        for (const ExtrusionPath &path : loop->paths)
+            out.push_back(&path);
+    } else if (const auto *multipath = dynamic_cast<const ExtrusionMultiPath *>(&entity)) {
+        for (const ExtrusionPath &path : multipath->paths)
+            out.push_back(&path);
+    } else
+        out.push_back(&entity);
+}
+
+// ColorStack's path types (Orca's ;TYPE: names) by extrusion role
+static ColorStack::PathType color_stack_type(const ExtrusionRole role)
+{
+    if (role.is_external_perimeter())
+        return ColorStack::PathType::OuterWall;
+    if (role == ExtrusionRole::OverhangPerimeter)
+        return ColorStack::PathType::OverhangWall;
+    if (role == ExtrusionRole::TopSolidInfill)
+        return ColorStack::PathType::TopSurface;
+    if (role == ExtrusionRole::BottomSurface)
+        return ColorStack::PathType::BottomSurface;
+    if (role == ExtrusionRole::Ironing)
+        return ColorStack::PathType::Ironing;
+    if (role.is_support())
+        return ColorStack::PathType::Support;
+    return ColorStack::PathType::Other;
+}
+
+bool ToolOrdering::apply_color_stacking(const Print &print)
+{
+    m_color_stack.clear();
+    if (!color_stacking_enabled(print) || m_layer_tools.empty())
+        return false;
+    const PrintConfigView &config = print.config();
+
+    // custom G-code (pauses, colour changes, inserted code) at a layer: a band starts there
+    std::vector<double> barrier_zs;
+    if (const auto &custom = print.custom_gcode(); custom)
+        for (const auto &item : custom->get().gcodes)
+            barrier_zs.push_back(item.print_z);
+
+    // islands: the slices of an object joined to the slices below they overlap
+    std::map<std::pair<const Layer *, size_t>, int> slice_node;
+    std::vector<int> parent;
+    auto find = [&parent](int i) {
+        while (parent[i] != i)
+            i = parent[i] = parent[parent[i]];
+        return i;
+    };
+    auto node = [&](const Layer *layer, size_t slice) {
+        auto [it, added] = slice_node.try_emplace({layer, slice}, int(parent.size()));
+        if (added)
+            parent.push_back(it->second);
+        return it->second;
+    };
+    for (const PrintObject *object : print.objects())
+        for (const Layer *layer : object->layers())
+            for (size_t s = 0; s < layer->lslices_ex.size(); ++s)
+                if (layer->lower_layer != nullptr)
+                    for (const LayerSlice::Link &link : layer->lslices_ex[s].overlaps_below) {
+                        const int a = find(node(layer, s));
+                        const int b = find(node(layer->lower_layer, size_t(link.slice_idx)));
+                        parent[a] = b;
+                    }
+    std::map<std::pair<int, int>, int> island_ids; // (object instance, island root or -1: support) -> id
+    auto island_id = [&island_ids](int instance, int root) { return island_ids.try_emplace({instance, root}, int(island_ids.size())).first->second; };
+    // the slices of the object instances, for the planner's band islands
+    std::map<std::tuple<int, const Layer *, size_t>, int> slice_ids;
+    auto slice_id = [&slice_ids](int instance, const Layer *layer, size_t slice) {
+        return slice_ids.try_emplace({instance, layer, slice}, int(slice_ids.size())).first->second;
+    };
+
+    // every leaf path of every layer, over all objects and instances, in print coordinates (mm)
+    struct Source { const PrintInstance *instance; const ExtrusionEntity *leaf; Point shift; double length; };
+    std::vector<Source>            sources;
+    std::vector<ColorStack::Layer> layers(m_layer_tools.size());
+    const std::vector<bool>        soluble = config.get<std::vector<bool>>("filament_soluble");
+    int    seq        = 0;
+    double previous_z = 0.;
+    for (size_t i = 0; i < m_layer_tools.size(); ++i) {
+        const LayerTools  &lt    = m_layer_tools[i];
+        ColorStack::Layer &layer = layers[i];
+        layer.z       = lt.print_z;
+        layer.height  = lt.print_z - previous_z;
+        layer.barrier = std::any_of(barrier_zs.begin(), barrier_zs.end(),
+                                    [&](double z) { return z > previous_z + EPSILON && z <= lt.print_z + EPSILON; });
+        previous_z = lt.print_z;
+        auto add = [&](const ExtrusionEntity &entity, auto &&tool_of, const PrintInstance &instance, int obj, int island, int slice) {
+            std::vector<const ExtrusionEntity *> leaves;
+            color_stack_leaves(entity, leaves);
+            for (const ExtrusionEntity *leaf : leaves) {
+                const auto *path = dynamic_cast<const ExtrusionPath *>(leaf);
+                if (path == nullptr || path->polyline.size() < 2)
+                    continue;
+                ColorStack::Path p;
+                p.tool   = int(tool_of(*path));
+                p.type   = color_stack_type(path->role());
+                p.width  = path->width();
+                p.obj    = obj;
+                p.island = island;
+                p.slice  = slice;
+                p.seq    = seq++;
+                p.source = int(sources.size());
+                for (const Point &pt : path->polyline.points)
+                    p.pts.push_back(unscaled(Point(pt + instance.shift())));
+                sources.push_back({&instance, leaf, instance.shift(), p.length()});
+                layer.paths.push_back(std::move(p));
+            }
+        };
+        int obj = 0;
+        for (const PrintObject *object : print.objects()) {
+            const Layer        *object_layer  = object->get_layer_at_printz(lt.print_z, EPSILON);
+            const SupportLayer *support_layer = nullptr;
+            for (const SupportLayer *s : object->support_layers())
+                if (std::abs(s->print_z - lt.print_z) < EPSILON)
+                    support_layer = s;
+            for (const PrintInstance &instance : object->instances()) {
+                if (object_layer)
+                    for (const ExPolygon &slice : object_layer->lslices) {
+                        // the part's outline, so the planner knows its surface
+                        auto add_outline = [&](const Polygon &polygon) {
+                            std::vector<Vec2d> line;
+                            for (const Point &pt : polygon.points)
+                                line.push_back(unscaled(Point(pt + instance.shift())));
+                            if (!line.empty())
+                                line.push_back(line.front());
+                            layer.outline.push_back(std::move(line));
+                        };
+                        add_outline(slice.contour);
+                        for (const Polygon &hole : slice.holes)
+                            add_outline(hole);
+                    }
+                if (object_layer)
+                    for (const size_t s : object_layer->lslice_indices_sorted_by_print_order) {
+                        const int island = island_id(obj, find(node(object_layer, s)));
+                        const int slice  = slice_id(obj, object_layer, s);
+                        if (object_layer->lower_layer != nullptr)
+                            for (const LayerSlice::Link &link : object_layer->lslices_ex[s].overlaps_below)
+                                layer.links.emplace_back(slice, slice_id(obj, object_layer->lower_layer, size_t(link.slice_idx)));
+                        for (const LayerIsland &layer_island : object_layer->lslices_ex[s].islands) {
+                            const LayerRegion &perimeters = *object_layer->get_region(layer_island.perimeters.region());
+                            const PrintRegion &region     = print.get_print_region(perimeters.region().print_region_id());
+                            for (uint32_t id : layer_island.perimeters)
+                                add(*perimeters.perimeters().entities[id], [&](const ExtrusionPath &path) {
+                                    return path.role().is_external_perimeter() ? lt.outer_wall_extruder(region) : lt.perimeter_extruder(region);
+                                }, instance, obj, island, slice);
+                            for (const LayerExtrusionRange &fill : layer_island.fills) {
+                                const LayerRegion &fills       = *object_layer->get_region(fill.region());
+                                const PrintRegion &fill_region = print.get_print_region(fills.region().print_region_id());
+                                for (uint32_t id : fill)
+                                    if (const auto *eec = dynamic_cast<const ExtrusionEntityCollection *>(fills.fills().entities[id]); eec && !eec->empty())
+                                        add(*eec, [&](const ExtrusionPath &) { return lt.extruder(*eec, fill_region); }, instance, obj, island, slice);
+                            }
+                        }
+                    }
+                if (support_layer)
+                    add(support_layer->support_fills, [&](const ExtrusionPath &path) {
+                        const int configured = object->config().get<int>(path.role() == ExtrusionRole::SupportMaterial ?
+                                                                              "support_material_extruder" : "support_material_interface_extruder");
+                        if (configured > 0)
+                            return unsigned(configured - 1);
+                        // "any" support: the layer's first non-soluble filament (ExtrusionOrder translate_support_extruder)
+                        const auto it = std::find_if(lt.extruders.begin(), lt.extruders.end(), [&](unsigned e) { return !soluble.at(e); });
+                        return it == lt.extruders.end() ? lt.extruders.front() : *it;
+                    }, instance, obj, island_id(obj, -1), -1);
+                ++obj;
+            }
+        }
+    }
+
+    ColorStack::Nozzle nozzle;
+    nozzle.tip_radius   = config.get<double>("nozzle_tip_diameter") / 2.;
+    nozzle.cone_angle   = config.get<double>("nozzle_cone_angle");
+    nozzle.clear_height = config.get<double>("nozzle_clear_height");
+    nozzle.contact      = config.get<double>("nozzle_contact_height");
+    ColorStack::Options options;
+    options.max_band_layers    = config.get<int>("color_stacking_max_layers");
+    options.surface_tolerance  = config.get<double>("color_stacking_surface_tolerance");
+    // shorter leftovers would be printed without retracting before the travel to them: handed over with the rest
+    const std::vector<double> retract_before_travel = config.get<std::vector<double>>("retract_before_travel");
+    options.min_piece = retract_before_travel.empty() ? 2. : *std::min_element(retract_before_travel.begin(), retract_before_travel.end());
+    options.islands            = config.get<bool>("color_stacking_island_order");
+    options.overhang_tolerance = config.get<double>("color_stacking_overhang_tolerance");
+    options.purge              = WipeTower::extract_wipe_volumes(config);
+    // the filament loaded when the first layer starts: the last one primed, else the first printing
+    const unsigned loaded = m_prime_multi_material && !m_all_printing_extruders.empty() ? m_all_printing_extruders.back() :
+                            m_first_printing_extruder == (unsigned int)-1 ? 0u : m_first_printing_extruder;
+    // per object and staggered are planned where they can differ, the better plan kept (ColorStack's pipeline)
+    const std::vector<ColorStack::Band> bands = ColorStack::plan(layers, int(loaded), nozzle, options, true);
+
+    // the chunks (a unit's pieces of a layer; none when it has nothing there)
+    const size_t n = m_layer_tools.size();
+    std::vector<std::vector<unsigned>>                     swaps_at(n);
+    std::vector<std::vector<std::pair<double, Polylines>>> footprint_lines; // per chunk: width, its lines (print coordinates)
+    std::vector<double>                                    printed(sources.size(), 0.);
+    auto add_chunk = [&](size_t layer, const ColorStack::Unit &u, const std::vector<std::pair<ColorStack::Unit, ColorStack::Path>> &work) {
+        ColorStackChunk chunk;
+        chunk.layer = layer;
+        chunk.tool  = unsigned(u.tool);
+        std::map<int, std::vector<const ColorStack::Path *>> by_source;
+        for (const auto &[owner, path] : work)
+            if (owner == u && path.source >= 0)
+                by_source[path.source].push_back(&path);
+        if (by_source.empty())
+            return false;
+        footprint_lines.emplace_back();
+        for (const auto &[source, pieces] : by_source) {
+            const Source &src   = sources[source];
+            Polylines    &local = chunk.pieces[{src.instance, src.leaf}];
+            Polylines     lines;
+            double        length = 0.;
+            for (const ColorStack::Path *piece : pieces) {
+                Polyline line;
+                for (const Vec2d &pt : piece->pts)
+                    line.points.push_back(Point(scaled(pt)));
+                lines.push_back(line);
+                line.translate(-src.shift);
+                local.push_back(std::move(line));
+                length += piece->length();
+            }
+            printed[source] += length;
+            if (pieces.size() == 1 && std::abs(length - src.length) < 1e-6)
+                local.clear(); // the whole path
+            footprint_lines.back().emplace_back(pieces.front()->width, std::move(lines));
+        }
+        m_color_stack.push_back(std::move(chunk));
+        return true;
+    };
+    // the tower as ColorStack's RunTower places it (tower.py): a swap wipes on the lowest tower layer not completed;
+    // the layers due (a band: a layer once its last unit printed it; a run: the layers every unit is past) are
+    // completed by the next chunk, after its swap
+    unsigned loaded_tool = loaded;
+    size_t   done        = 0; // tower layers below are completed
+    size_t   due         = 0; // tower layers below may be completed
+    auto print_chunk = [&](size_t layer, const ColorStack::Unit &u, const std::vector<std::pair<ColorStack::Unit, ColorStack::Path>> &work) {
+        if (!add_chunk(layer, u, work))
+            return false;
+        ColorStackChunk &chunk = m_color_stack.back();
+        if (chunk.tool != loaded_tool) {
+            if (done < n) {
+                swaps_at[done].push_back(chunk.tool);
+                chunk.swap_tower_layer = int(done);
+            }
+            loaded_tool = chunk.tool;
+        }
+        if (due > done) {
+            chunk.finish_from = int(done);
+            chunk.finish_to   = int(due);
+            done              = due;
+        }
+        return true;
+    };
+    auto complete_with_last = [&]() {
+        if (due > done && !m_color_stack.empty()) {
+            ColorStackChunk &chunk = m_color_stack.back();
+            if (chunk.finish_from < 0)
+                chunk.finish_from = int(done);
+            chunk.finish_to = int(due);
+            done            = due;
+        }
+    };
+    for (const ColorStack::Band &band : bands) {
+        if (band.run) {
+            bool printed_any = false;
+            for (size_t j = 0; j < band.count; ++j)
+                printed_any |= print_chunk(band.first + j, band.order.front(), band.work[j]);
+            due = std::max(due, band.complete_to);
+            if (printed_any)
+                complete_with_last();
+            continue;
+        }
+        for (size_t k = 0; k < band.order.size(); ++k)
+            for (size_t j = 0; j < band.count; ++j) {
+                if (k + 1 == band.order.size())
+                    due = std::max(due, band.first + j + 1);
+                print_chunk(band.first + j, band.order[k], band.work[j]);
+            }
+    }
+    complete_with_last();
+
+    // every path printed whole, once
+    for (size_t s = 0; s < sources.size(); ++s)
+        if (std::abs(printed[s] - sources[s].length) > 1e-3)
+            SPDLOG_WARN("colour stacking: a path of {:.3f} mm prints {:.3f} mm", sources[s].length, printed[s]);
+
+    // the plastic printed before each chunk above its layer, grown by the nozzle's reach (ColorStack's clearance)
+    std::vector<ExPolygons> footprints(m_color_stack.size());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, m_color_stack.size()), [&](const tbb::blocked_range<size_t> &range) {
+        for (size_t c = range.begin(); c != range.end(); ++c) {
+            Polygons area;
+            for (const auto &[width, lines] : footprint_lines[c])
+                append(area, offset(lines, float(scaled<double>(width / 2.))));
+            footprints[c] = union_ex(area);
+        }
+    });
+    // the first chunk printed on each chunk (its cooling: the time until then)
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, m_color_stack.size()), [&](const tbb::blocked_range<size_t> &range) {
+        for (size_t c = range.begin(); c != range.end(); ++c) {
+            if (footprints[c].empty())
+                continue;
+            const BoundingBox box = get_extents(footprints[c]);
+            for (size_t e = c + 1; e < m_color_stack.size(); ++e)
+                if (m_color_stack[e].layer == m_color_stack[c].layer + 1 && get_extents(footprints[e]).overlap(box) &&
+                    !intersection_ex(footprints[e], footprints[c]).empty()) {
+                    m_color_stack[c].covered_by = int(e);
+                    break;
+                }
+        }
+    });
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, m_color_stack.size()), [&](const tbb::blocked_range<size_t> &range) {
+        for (size_t c = range.begin(); c != range.end(); ++c) {
+            ColorStackChunk &chunk = m_color_stack[c];
+            const double     z     = m_layer_tools[chunk.layer].print_z;
+            Polygons         grown;
+            for (size_t e = 0; e < c; ++e) {
+                const double dz = m_layer_tools[m_color_stack[e].layer].print_z - z;
+                if (dz < EPSILON || footprints[e].empty())
+                    continue;
+                append(grown, offset(footprints[e], float(scaled<double>(nozzle.reach(std::max(0., nozzle.over(dz)))))));
+                chunk.obstacle_top = std::max(chunk.obstacle_top, z + dz);
+            }
+            chunk.obstacles = union_ex(grown);
+        }
+    });
+
+    // the layers' extruders: the swaps on each tower layer
+    unsigned current = loaded;
+    for (size_t i = 0; i < n; ++i) {
+        std::vector<unsigned> extruders{current};
+        for (unsigned tool : swaps_at[i])
+            if (tool != extruders.back())
+                extruders.push_back(tool);
+        m_layer_tools[i].extruders = extruders;
+        current = extruders.back();
+    }
+    this->collect_extruder_statistics(m_prime_multi_material);
+    return true;
+}
+
 void ToolOrdering::assign_custom_gcodes(const Print &print)
 {
 	// Only valid for non-sequential print.

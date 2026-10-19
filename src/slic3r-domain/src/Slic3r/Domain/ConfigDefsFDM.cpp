@@ -1939,6 +1939,66 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = 0;
     def->init_fn = init_with(2.2);
 
+    def = defs.add("filament_tower_interface_pre_extrusion_dist", typeid(double));
+    def->location = Filament;
+    def->label = L("Interface layer pre-extrusion distance");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MultiMaterial_WipeTowerPurging;
+    def->category = ConfigItemDef::Category::Filament_MultiMaterial;
+    def->order = 2;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Pre-extrusion distance for prime tower interface layer (where different materials meet).");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(10.);
+
+    def = defs.add("filament_tower_interface_pre_extrusion_length", typeid(double));
+    def->location = Filament;
+    def->label = L("Interface layer pre-extrusion length");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MultiMaterial_WipeTowerPurging;
+    def->category = ConfigItemDef::Category::Filament_MultiMaterial;
+    def->order = 3;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Pre-extrusion length for prime tower interface layer (where different materials meet).");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("filament_tower_ironing_area", typeid(double));
+    def->location = Filament;
+    def->label = L("Tower ironing area");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MultiMaterial_WipeTowerPurging;
+    def->category = ConfigItemDef::Category::Filament_MultiMaterial;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Ironing area for prime tower interface layer (where different materials meet).");
+    def->units = {L("mm²")};
+    def->min = 0;
+    def->init_fn = init_with(4.);
+
+    def = defs.add("filament_tower_interface_purge_volume", typeid(double));
+    def->location = Filament;
+    def->label = L("Interface layer purge length");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MultiMaterial_WipeTowerPurging;
+    def->category = ConfigItemDef::Category::Filament_MultiMaterial;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Purge length for prime tower interface layer (where different materials meet).");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(20.);
+
+    def = defs.add("filament_tower_interface_print_temp", typeid(int));
+    def->location = Filament;
+    def->label = L("Interface layer print temperature");
+    def->option_group = ConfigItemDef::OptionGroup::Filament_MultiMaterial_WipeTowerPurging;
+    def->category = ConfigItemDef::Category::Filament_MultiMaterial;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Print temperature for prime tower interface layer (where different materials meet). If set to -1, use max recommended nozzle temperature.");
+    def->units = {L("°C")};
+    def->min = -1;
+    def->init_fn = init_with(-1);
+
     def = defs.add("filament_minimal_purge_on_wipe_tower", typeid(double));
     def->location = Filament;
     def->label = L("Minimal purge on wipe tower");
@@ -3270,6 +3330,20 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->init_fn = init_with(false);
 
     // Ported from OrcaSlicer (purge_in_prime_tower, PrintConfig.cpp).
+    def = defs.add("wait_for_temp_on_wipe_tower", typeid(bool));
+    def->location = Printer;
+    def->label = L("Wait for temperature on wipe tower");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Pick up the new tool without waiting for it to reach printing temperature, travel to the wipe "
+                     "tower, and wait for the temperature there, right before purging. Ooze from the heat-up lands on "
+                     "the tower instead of the model, and the travel overlaps with the heating. "
+                     "Only relevant for multi-extruder (multi-toolhead) printers. "
+                     "The firmware or tool change macro must not wait for the temperature itself. "
+                     "When disabled, the temperature wait is issued right after the tool change command.");
+    def->init_fn = init_with(false);
+
     def = defs.add("purge_in_prime_tower", typeid(bool));
     def->location = Printer;
     def->label = L("Purge in prime tower");
@@ -4407,6 +4481,45 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = 1;
     def->init_fn = init_with(1);
 
+    // Orca: the filament of a feature, 0 = the wall / solid infill extruder
+    def = defs.add("outer_wall_filament_id", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Outer walls");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ExtruderAssignment;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 1;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Filament to print outer walls.\n\"Default\" (0) uses the active object/part filament.");
+    def->min = 0;
+    def->init_fn = init_with(0);
+
+    // Orca: the filament of a feature, 0 = the wall / solid infill extruder
+    def = defs.add("top_surface_filament_id", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Top surface");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ExtruderAssignment;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Filament to print top surface.\n\"Default\" (0) uses the active object/part filament.");
+    def->min = 0;
+    def->init_fn = init_with(0);
+
+    // Orca: the filament of a feature, 0 = the wall / solid infill extruder
+    def = defs.add("bottom_surface_filament_id", typeid(int));
+    def->location = Print;
+    def->overrides_in = Locations{ Object, Volume };
+    def->label = L("Bottom surface");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ExtruderAssignment;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 5;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("Filament to print bottom surface.\n\"Default\" (0) uses the active object/part filament.");
+    def->min = 0;
+    def->init_fn = init_with(0);
+
     def = defs.add("perimeter_extrusion_width", typeid(FloatOrPercentage));
     def->location = Print;
     def->overrides_in = Locations{ Tool, Object, Volume };
@@ -5259,6 +5372,19 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->tooltip = L("This factor affects the amount of material for top solid infill. You can decrease it slightly to "
                      "have smooth surface finish. The actual top surface flow used is calculated by multiplying this "
                      "value with the filament flow ratio, and if set, the object's flow ratio.");
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("bottom_solid_infill_flow_ratio", typeid(double));
+    def->location = Print;
+    def->label = L("Bottom surface flow ratio");
+    def->option_group = ConfigItemDef::OptionGroup::Print_WallsPerimeters_WallsQuality;
+    def->category = ConfigItemDef::Category::Print_WallsPerimeters;
+    def->order = 33;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("This factor affects the amount of material for bottom solid infill.\n\n"
+                     "The actual bottom solid infill flow used is calculated by multiplying this value with the filament flow ratio, and if set, the object's flow ratio.");
     def->min = 0;
     def->max = 2;
     def->init_fn = init_with(1.);
@@ -7870,6 +7996,175 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = 0.;
     def->max = 90.;
     def->init_fn = init_with(0.);
+
+    def = defs.add("enable_tower_interface_features", typeid(bool));
+    def->location = Print;
+    def->label = L("Enable tower interface features");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 10;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Enable optimized prime tower interface behavior when different materials meet.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("enable_tower_interface_cooldown_during_tower", typeid(bool));
+    def->location = Print;
+    def->label = L("Cool down from interface boost during prime tower");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 11;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("When interface-layer temperature boost is active, set the nozzle back to print temperature at the start of the prime tower so it cools down during the tower.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("color_stacking", typeid(bool));
+    def->location = Print;
+    def->label = L("Colour stacking (experimental)");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ColorStacking;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 20;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Print several layers of one colour in a row wherever the nozzle can do so without hitting earlier plastic, so a multicolour print swaps filament far less often (ColorStack). Interior material in the way is handed to the colour printed after it; visible surfaces keep their colour. Needs the nozzle geometry in the printer settings.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("color_stacking_max_layers", typeid(int));
+    def->location = Print;
+    def->label = L("Most layers per stack");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ColorStacking;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 21;
+    def->gui_type = ConfigItemDef::GUIType::spinbox;
+    def->tooltip = L("The most layers one colour prints before the next colour.");
+    def->min = 1;
+    def->max = 100;
+    def->init_fn = init_with(10);
+
+    def = defs.add("color_stacking_overhang_tolerance", typeid(double));
+    def->location = Print;
+    def->label = L("Overhang tolerance");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ColorStacking;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 22;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("How much of a line's edge may rest on a colour printed later in the stack; a line resting on it further is handed to that colour.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->max = 2;
+    def->init_fn = init_with(0.2);
+
+    def = defs.add("color_stacking_disregard_min_layer_time", typeid(bool));
+    def->location = Print;
+    def->label = L("Disregard minimum layer time");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ColorStacking;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 24;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Don't slow down a colour printed straight on top of itself to the minimum layer time; the fan still follows the layer time (ColorStack).");
+    def->init_fn = init_with(true);
+
+    def = defs.add("color_stacking_island_order", typeid(bool));
+    def->location = Print;
+    def->label = L("Island by island");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ColorStacking;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 23;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Stack each island on its own: one island's colours, then the next island's (less travel, and overhangs of crossing colours keep their colours).");
+    def->init_fn = init_with(false);
+
+    def = defs.add("color_stacking_surface_tolerance", typeid(double));
+    def->location = Print;
+    def->label = L("Edge shift");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ColorStacking;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 25;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("How far a colour edge on a visible surface may move. 0 = never.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("nozzle_tip_diameter", typeid(double));
+    def->location = Printer;
+    def->label = L("Nozzle tip diameter");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 50;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The flat face at the very tip of the nozzle (colour stacking).");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(1.);
+
+    def = defs.add("nozzle_cone_angle", typeid(double));
+    def->location = Printer;
+    def->label = L("Nozzle cone angle");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 51;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The angle of the nozzle taper from vertical, half the full cone angle (colour stacking).");
+    def->units = {L("°")};
+    def->min = 0;
+    def->max = 89;
+    def->init_fn = init_with(45.);
+
+    def = defs.add("nozzle_clear_height", typeid(double));
+    def->location = Printer;
+    def->label = L("Nozzle clear height");
+    def->option_group = ConfigItemDef::OptionGroup::Printer_General_CapabilitiesFeatures;
+    def->category = ConfigItemDef::Category::Printer_General;
+    def->order = 52;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("How far the nozzle tip sticks out below the heater block, silicone sock or fan duct (colour stacking).");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(2.);
+
+    def = defs.add("nozzle_contact_height", typeid(double));
+    def->location = Print;
+    def->label = L("Edge contact");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_ColorStacking;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 24;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("How much taller a neighbouring edge may be while the nozzle face slides past it (colour stacking): 0.2 lets two layers stack next to each other, 0.4 three.");
+    def->units = {L("mm")};
+    def->min = 0;
+    def->init_fn = init_with(0.2);
+
+    def = defs.add("wipe_tower_skip_points", typeid(bool));
+    def->location = Print;
+    def->label = L("Skip points");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 13;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("The wall of prime tower will skip the start points of wipe path.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("wipe_tower_sparse_layers_combination", typeid(bool));
+    def->location = Print;
+    def->label = L("Combine sparse layers");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 12;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Print runs of wipe tower layers that have no tool change as fewer, thicker layers, "
+                     "up to the maximum layer height of the nozzle that prints them.");
+    def->init_fn = init_with(false);
+
+    def = defs.add("wipe_tower_auto_size", typeid(bool));
+    def->location = Print;
+    def->label = L("Automatic size");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 1;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("Size the wipe tower from the purge it needs: a square tower holding the purge volume, "
+                     "a brim width from the tower height, and at least the depth (or with the rib wall the rib length) "
+                     "a tower of this height needs to stand. Off: the width and brim width set here are used.");
+    def->init_fn = init_with(true);
 
     def = defs.add("wipe_tower_wall_type", typeid(EnumWrapper));
     def->location = Print;

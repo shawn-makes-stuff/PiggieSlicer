@@ -268,6 +268,16 @@ private:
         const GCode::SmoothPathCache            &smooth_path_cache_global,
         GCodeOutputStream                       &output_stream);
 
+    // Colour stacking: the layers band by band, each band's steps one after another, each step its layers
+    // bottom-up (docs/design/COLORSTACK_MODE.md).
+    void process_layers_color_stack(
+        const Print                                                   &print,
+        const ToolOrdering                                            &tool_ordering,
+        const std::vector<const PrintInstance*>                       &print_object_instances_ordering,
+        const std::vector<std::pair<double, ObjectsLayerToPrint>>   &layers_to_print,
+        const GCode::SmoothPathCache                                  &smooth_path_cache_global,
+        GCodeOutputStream                                             &output_stream);
+
     void            set_extruders(const std::vector<unsigned int> &extruder_ids, const PrintConfigView& config);
     std::string     preamble(const double z_offset);
     std::string change_layer(
@@ -467,6 +477,8 @@ private:
     std::optional<Vec3d>                m_previous_layer_last_position;
     std::optional<Vec3d>                m_previous_layer_last_position_before_wipe;
     bool                                m_moved_to_first_layer_point{false};
+    // Orca: the toolchange being written is on a tower interface layer (is_prime_tower_interface)
+    bool                                m_toolchange_on_tower_interface{false};
 
     // This needs to be populated during the layer processing!
     std::unique_ptr<CoolingBuffer>      m_cooling_buffer;
@@ -487,6 +499,16 @@ private:
     double                              m_apa_average_mm3_per_mm{0.};
     double                              m_apa_last_mm3_per_mm{0.};
     std::unique_ptr<GCode::WipeTowerIntegration> m_wipe_tower;
+    // Colour stacking: the chunk (one step's layer of a band) being written
+    struct ColorStackState
+    {
+        int        swap_tower_layer{-1};   // a swap wipes on this tower layer
+        int        finish_from{-1};        // then the tower layers [finish_from, finish_to) are completed
+        int        finish_to{-1};
+        ExPolygons obstacles;              // taller plastic printed before, grown by the nozzle's reach (print coordinates)
+        double     travel_floor{0.};       // a travel over it goes this high
+    };
+    std::optional<ColorStackState>               m_color_stack_chunk;
 
     // Current fan speed set by dynamic fan speed control.
     std::optional<float>                m_current_dynamic_fan_speed;

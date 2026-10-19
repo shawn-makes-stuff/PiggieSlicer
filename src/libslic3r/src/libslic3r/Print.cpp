@@ -1315,6 +1315,7 @@ Biz::Slicing::WipeTowerGeometry get_wipe_tower_geometry(const WipeTowerData& wip
     result.brim_width = wipe_tower_data.brim_width;
     result.cone_radius = wipe_tower_data.cone_radius;
     result.cone_x_scale = wipe_tower_data.cone_x_scale;
+    result.first_layer_outline = wipe_tower_data.first_layer_outline;
 
     return result;
 }
@@ -1396,6 +1397,7 @@ void Print::process()
         } else if (! this->config().get<bool>("complete_objects")) {
         	// Initialize the tool ordering, so it could be used by the G-code preview slider for planning tool changes and filament switches.
         	m_tool_ordering = ToolOrdering(*this, -1, false);
+            m_tool_ordering.apply_color_stacking(*this);
             if (m_tool_ordering.empty() || m_tool_ordering.last_extruder() == unsigned(-1)) {
                 throw Biz::Slicing::Exception{
                     Biz::Slicing::Error{Biz::Slicing::ErrorCode::EmptyPrint}
@@ -1958,16 +1960,22 @@ Points Print::first_layer_wipe_tower_corners() const
 
     if (m_wipe_tower_data) {
         const WipeTowerData& wipe_tower_data{*m_wipe_tower_data};
-        double width = m_config.get<double>("wipe_tower_width") + 2*wipe_tower_data.brim_width;
+        std::vector<Vec2d> pts;
+        if (!wipe_tower_data.first_layer_outline.empty()) {
+            // the printed first layer: wall (with Orca's ribs) and brim
+            for (const Point& pt : wipe_tower_data.first_layer_outline.points)
+                pts.emplace_back(unscale(pt));
+        } else {
+        double width = wipe_tower_data.width + 2*wipe_tower_data.brim_width;
         double depth = wipe_tower_data.depth + 2*wipe_tower_data.brim_width;
         Vec2d pt0(-wipe_tower_data.brim_width, -wipe_tower_data.brim_width);
 
         // First the corners.
-        std::vector<Vec2d> pts = { pt0,
-                                   Vec2d(pt0.x()+width, pt0.y()),
-                                   Vec2d(pt0.x()+width, pt0.y()+depth),
-                                   Vec2d(pt0.x(),pt0.y()+depth)
-                                 };
+        pts = { pt0,
+                Vec2d(pt0.x()+width, pt0.y()),
+                Vec2d(pt0.x()+width, pt0.y()+depth),
+                Vec2d(pt0.x(),pt0.y()+depth)
+              };
 
         // Now the stabilization cone.
         Vec2d center = (pts[0] + pts[2])/2.;
@@ -1976,6 +1984,7 @@ Points Print::first_layer_wipe_tower_corners() const
         double r = cone_R + wipe_tower_data.brim_width;
         for (double alpha = 0.; alpha<2*M_PI; alpha += M_PI/20.)
             pts.emplace_back(center + r*Vec2d(std::cos(alpha)/cone_x_scale, std::sin(alpha)));
+        }
 
         for (Vec2d& pt : pts) {
             pt = Eigen::Rotation2Dd(deg2rad(wipe_tower()->rotation)) * pt;
@@ -2211,6 +2220,9 @@ std::optional<WipeTowerData> Print::generate_wipe_tower_data()
 
     // Let the ToolOrdering class know there will be initial priming extrusions at the start of the print.
     m_tool_ordering = ToolOrdering(*this, (unsigned int)-1, true);
+    // colour stacking: the tower plans the bands' swaps only, and nothing is purged into objects (a band prints
+    // an object's colours at other times than the layer's toolchanges)
+    const bool color_stacking = m_tool_ordering.apply_color_stacking(*this);
 
     if (! m_tool_ordering.has_wipe_tower())
         // Don't generate any wipe tower.
@@ -2284,7 +2296,7 @@ std::optional<WipeTowerData> Print::generate_wipe_tower_data()
                     float volume_to_wipe = wipe_volumes[current_extruder_id][extruder_id];             // total volume to wipe after this toolchange
                     // Orca: without purging in the prime tower, only the prime volume goes there
                     // and nothing is wiped into infill or objects
-                    if (m_config.get<bool>("purge_in_prime_tower")) {
+                    if (m_config.get<bool>("purge_in_prime_tower") && !color_stacking) {
                     // Not all of that can be used for infill purging:
                     volume_to_wipe -= (float)m_config.get<std::vector<double>>("filament_minimal_purge_on_wipe_tower").at(extruder_id);
 
@@ -2341,6 +2353,7 @@ std::optional<WipeTowerData> Print::generate_wipe_tower_data()
     result.first_layer_height = config().get<Domain::FloatOrPercentage>("first_layer_height").get_abs_value(layer_height);
     result.cone_x_scale = wipe_tower.get_wipe_tower_cone_x_scale();
     result.cone_radius = wipe_tower.get_wipe_tower_cone_radius();
+    result.first_layer_outline = wipe_tower.get_first_layer_outline();
 
     return result;
 }

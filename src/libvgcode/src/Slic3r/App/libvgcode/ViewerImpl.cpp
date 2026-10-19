@@ -95,7 +95,8 @@ static const std::array<ColorRGB, GCODE_EXTRUSION_ROLES_COUNT> DEFAULT_EXTRUSION
     { 0.70f, 0.89f, 0.67f }, // WipeTower
     { 0.37f, 0.82f, 0.58f }, // Custom
     { 0.30f, 0.50f, 0.73f }, // InternalBridgeInfill (Orca)
-    { 0.00f, 0.23f, 0.43f }  // Brim (Orca)
+    { 0.00f, 0.23f, 0.43f }, // Brim (Orca)
+    { 0.40f, 0.36f, 0.78f }  // BottomSurface (Orca 102, 92, 199)
 }};
 
 static const std::array<ColorRGB, OPTION_TYPES_COUNT> DEFAULT_OPTIONS_COLORS{{

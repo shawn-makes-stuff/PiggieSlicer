@@ -54,6 +54,7 @@ std::string to_string(GCodeExtrusionRole role)
     case GCodeExtrusionRole::Custom:                   { return _u8L("Custom"); }
     case GCodeExtrusionRole::InternalBridgeInfill:     { return _u8L("Internal bridge"); }
     case GCodeExtrusionRole::Brim:                     { return _u8L("Brim"); }
+    case GCodeExtrusionRole::BottomSurface:            { return _u8L("Bottom surface"); }
     }
 }
 
