@@ -269,6 +269,14 @@ enum class ToolChangeOrderingType
     Cyclic,
 };
 
+// Orca: the wipe tower's outer wall
+enum class WipeTowerWallType
+{
+    Rectangle,
+    Cone,
+    Rib,
+};
+
 const ConfigDefinitions& get_defs_fdm();
 
 } // namespace Slic3r::Domain

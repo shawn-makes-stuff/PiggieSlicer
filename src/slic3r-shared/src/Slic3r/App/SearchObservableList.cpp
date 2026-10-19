@@ -1,4 +1,5 @@
 #include "Slic3r/App/SearchObservableList.hpp"
+#include "Slic3r/App/Config/PrintTabListView.hpp"
 
 #include "Slic3r/App/AppServices.hpp"
 #include "Slic3r/App/AppConfigInteractor.hpp"
@@ -193,6 +194,10 @@ void SearchObservableList::refresh_search()
 
     if (!m_search_text_cleaned.empty()) {
         for (const Domain::ConfigItem* item : std::as_const(m_source_items)) {
+            // a setting that cannot apply now is not offered: its row (and maybe its tab) is hidden
+            if (is_setting_hidden(item->name())) {
+                continue;
+            }
             const int score = score_item(item);
             if (!score) {
                 continue;

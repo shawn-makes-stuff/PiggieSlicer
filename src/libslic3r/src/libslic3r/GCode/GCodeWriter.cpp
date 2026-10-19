@@ -395,7 +395,10 @@ std::string GCodeWriter::toolchange(unsigned int extruder_id)
     // return the toolchange command
     // if we are running a single-extruder setup, just set the extruder and return nothing
     std::ostringstream gcode;
-    if (this->multiple_extruders) {
+    // Orca GCodeWriter::toolchange: also for a single extruder fed with several filaments (e.g. the Kobra 3's
+    // ACE maps the file's filaments to its slots by the T commands, so it needs the first one even in a
+    // single colour print)
+    if (this->multiple_extruders || config.filament_toolchange_commands) {
         gcode << this->toolchange_prefix() << extruder_id;
         if (this->config.gcode_comments)
             gcode << " ; change extruder";

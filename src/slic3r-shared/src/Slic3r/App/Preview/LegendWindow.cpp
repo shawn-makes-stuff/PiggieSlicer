@@ -119,6 +119,14 @@ SlicedInfoWindow::SlicedInfoWindow()
     cost_label->set_font_type(Render::ImguiFontType::Bold);
     cost_label->set_width(70.f);
     m_cost = m_cost_row->emplace_back<Text>(std::string{});
+
+    m_features_header = content()->emplace_back<Item>();
+    m_features_header->set_margin({0.f, 8.f, 0.f, 0.f});
+    Text* features_label = m_features_header->emplace_back<Text>(_u8L("Features"));
+    features_label->set_font_type(Render::ImguiFontType::Bold);
+    m_features = content()->emplace_back<Item>();
+    m_features->set_orientation(Orientation::Vertical);
+    m_features->set_gap(6.f);
 }
 
 SlicedInfoWindow::Row SlicedInfoWindow::add_row(const std::string& label, bool bold)
@@ -175,6 +183,36 @@ void SlicedInfoWindow::update(const Domain::FullPrintStatistics& stats, const Fd
     m_purge.row->set_visible(purge_time > 0.f || purge_mm > 0.f);
     m_cost->set_text(format("%1$.2f", stats.total_filament_cost));
     m_cost_row->set_visible(stats.total_filament_cost > 0.f);
+
+    // per feature: the swatch in the legend's colour, the time, the filament (metres and grams per role)
+    while (m_features->object_count() > 0)
+        m_features->remove(m_features->get_item(0));
+    for (const auto& [role, used] : stats.used_filaments_per_role) {
+        const float time = viewer.extrusion_role_estimated_time(role);
+        if (used.first <= 0.f && time <= 0.f)
+            continue;
+        Item* row = m_features->emplace_back<Item>();
+        row->set_gap(10.f);
+        row->set_align_items(YGAlignCenter);
+        // the feature name in its legend colour
+        const Domain::ColorRGB& color = viewer.extrusion_role_color(role);
+        Text* label = row->emplace_back<Text>(to_string(role));
+        label->set_width(120.f); // the feature names are longer than the rows above
+        label->set_flex_shrink(0.f);
+        label->set_font_type(Render::ImguiFontType::Bold);
+        label->set_text_color(ImColor(color.r(), color.g(), color.b()));
+        label->set_wrap_mode(Text::WrapMode::WrapElide);
+        auto value = [row](const std::string& text)
+        {
+            Text* value_text = row->emplace_back<Text>(text);
+            value_text->set_flex_basis(0.f);
+            value_text->set_flex_grow(1.f);
+        };
+        value(Utils::get_time_dhms(std::max(0.f, time)));
+        value(format("%1$.2f g", std::max(0.f, used.second)));
+        value(format("%1$.2f m", std::max(0.f, used.first)));
+    }
+    m_features_header->set_visible(m_features->object_count() > 0);
 }
 
 } // namespace Slic3r::App::Preview

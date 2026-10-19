@@ -516,7 +516,8 @@ static std::vector<InstanceVisit> get_instance_visits(
     const GCode::ObjectsLayerToPrint &layers,
     const LayerTools &layer_tools,
     const std::vector<InstanceToPrint> &instances_to_print,
-    const unsigned int extruder_id
+    const unsigned int extruder_id,
+    TourCache &tour_cache
 ) {
     std::vector<InstanceVisit> visits;
     const Domain::PrintOrder print_order = print.config().get<Domain::PrintOrder>("print_order");
@@ -560,8 +561,13 @@ static std::vector<InstanceVisit> get_instance_visits(
     // Orca builds the wipe tower point from the unscaled position, here it is scaled.
     const std::optional<Domain::ModelWipeTower> wipe_tower = print.wipe_tower();
     const std::optional<Point> wipe_tower_point = wipe_tower ? std::optional<Point>(scaled(wipe_tower->position)) : std::nullopt;
-    std::vector<size_t> tour = order_points_with_strategy(node_points, print_order, wipe_tower_point ? &*wipe_tower_point : nullptr);
-    std::reverse(tour.begin(), tour.end());
+    // the tour depends on the points only (the strategy and the wipe tower are the same for the whole export)
+    auto &[cached_points, tour] = tour_cache[extruder_id];
+    if (cached_points != node_points || tour.size() != node_points.size()) {
+        tour = order_points_with_strategy(node_points, print_order, wipe_tower_point ? &*wipe_tower_point : nullptr);
+        std::reverse(tour.begin(), tour.end());
+        cached_points = std::move(node_points);
+    }
 
     std::vector<bool> instance_seen(instances_to_print.size(), false);
     for (size_t node_idx : tour) {
@@ -653,12 +659,13 @@ std::vector<NormalExtrusions> get_normal_extrusions(
     const bool is_first_layer,
     const SkirtGroupDueFunction &skirt_group_due,
     std::set<ObjectInstanceID> &pending_brims,
+    TourCache &tour_cache,
     std::optional<Point> &previous_position
 ) {
     std::vector<NormalExtrusions> result;
     const bool per_object_skirt = print.config().get<Domain::SkirtType>("skirt_type") == Domain::SkirtType::PerObject;
 
-    for (const InstanceVisit &visit : get_instance_visits(print, layers, layer_tools, instances_to_print, extruder_id)) {
+    for (const InstanceVisit &visit : get_instance_visits(print, layers, layer_tools, instances_to_print, extruder_id, tour_cache)) {
         const InstanceToPrint &instance{instances_to_print[visit.instance_index]};
         const PrintObject &print_object = instance.print_object;
         const Point offset = print_object.instances()[instance.instance_id].shift();
@@ -758,6 +765,7 @@ std::vector<ExtruderExtrusions> get_extrusions(
     const std::vector<InstanceToPrint> &instances_to_print,
     const SkirtGroupDueFunction &skirt_group_due,
     std::set<ObjectInstanceID> &pending_brims,
+    TourCache &tour_cache,
     unsigned current_extruder_id,
     const PathSmoothingFunction &smooth_path,
     std::optional<Point> previous_position
@@ -805,7 +813,7 @@ std::vector<ExtruderExtrusions> get_extrusions(
         using GCode::ExtrusionOrder::get_normal_extrusions;
         extruder_extrusions.normal_extrusions = get_normal_extrusions(
             print, layers, layer_tools, instances_to_print, extruder_id, smooth_path,
-            is_first_layer, skirt_group_due, pending_brims, previous_position
+            is_first_layer, skirt_group_due, pending_brims, tour_cache, previous_position
         );
 
         extrusions.push_back(std::move(extruder_extrusions));

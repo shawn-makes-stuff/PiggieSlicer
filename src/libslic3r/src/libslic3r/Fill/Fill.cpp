@@ -16,6 +16,7 @@
 #include "Slic3r/Biz/Algorithms/ExPolygon.hpp"
 #include "Slic3r/Biz/Algorithms/Polygon.hpp"
 #include "Slic3r/Domain/BoundingBox.hpp"
+#include "Slic3r/Domain/InfillPatternTraits.hpp"
 
 #include "libslic3r/ClipperUtils.hpp"
 #include "libslic3r/Geometry.hpp"
@@ -257,70 +258,6 @@ static double calculate_infill_rotation_angle(const PrintObject* object,
             angle = deg2rad(rotate_angles[layer_id % rotate_angles.size()]);
     }
     return angle;
-}
-
-// Orca is_separable_infill_pattern: the patterns separated_infills can center on each connected body
-static bool is_separable_infill_pattern(Domain::InfillPattern pattern)
-{
-    switch (pattern) {
-    case Domain::InfillPattern::ipMonotonic:
-    case Domain::InfillPattern::ipMonotonicLines:
-    case Domain::InfillPattern::ipRectilinear:
-    case Domain::InfillPattern::ipAlignedRectilinear:
-    case Domain::InfillPattern::ipZigZag:
-    case Domain::InfillPattern::ipCrossZag:
-    case Domain::InfillPattern::ipLockedZag:
-    case Domain::InfillPattern::ipLine:
-    case Domain::InfillPattern::ipGrid:
-    case Domain::InfillPattern::ipTriangles:
-    case Domain::InfillPattern::ipStars:
-    case Domain::InfillPattern::ipCubic:
-    case Domain::InfillPattern::ipQuarterCubic:
-    case Domain::InfillPattern::ipHoneycomb:
-    case Domain::InfillPattern::ip3DHoneycomb:
-    case Domain::InfillPattern::ip3DHoneycombClassic:
-    case Domain::InfillPattern::ipLateralHoneycomb:
-    case Domain::InfillPattern::ipLateralLattice:
-    case Domain::InfillPattern::ipCrossHatch:
-    case Domain::InfillPattern::ipTpmsD:
-    case Domain::InfillPattern::ipTpmsFK:
-    case Domain::InfillPattern::ipGyroid:
-    case Domain::InfillPattern::ipHilbertCurve:
-    case Domain::InfillPattern::ipArchimedeanChords:
-    case Domain::InfillPattern::ipOctagramSpiral:
-        return true;
-    default:
-        return false;
-    }
-}
-
-// Orca is_tpms_adaptive_pattern: the patterns graded by tpms_adaptive
-static bool is_tpms_adaptive_pattern(Domain::InfillPattern pattern)
-{
-    return pattern == Domain::InfillPattern::ipGyroid || pattern == Domain::InfillPattern::ipTpmsD || pattern == Domain::InfillPattern::ipTpmsFK;
-}
-
-// Orca is_smoothable_infill_pattern: the patterns rounding their corners (sparse_infill_smooth_factor); Grid,
-// Triangles, Tri-hexagon and Cubic only in their trapezoidal (multiline) form.
-static bool is_smoothable_infill_pattern(Domain::InfillPattern pattern, int multiline)
-{
-    switch (pattern) {
-    case Domain::InfillPattern::ipHilbertCurve:
-    case Domain::InfillPattern::ipOctagramSpiral:
-    case Domain::InfillPattern::ipLightning:
-    case Domain::InfillPattern::ipHoneycomb:
-    case Domain::InfillPattern::ip3DHoneycomb:
-    case Domain::InfillPattern::ipConcentric:
-    case Domain::InfillPattern::ipCrossHatch:
-        return true;
-    case Domain::InfillPattern::ipGrid:
-    case Domain::InfillPattern::ipTriangles:
-    case Domain::InfillPattern::ipStars:
-    case Domain::InfillPattern::ipCubic:
-        return multiline > 1;
-    default:
-        return false;
-    }
 }
 
 // Orca align_infill_direction_to_model: the rotation of the model on the plate

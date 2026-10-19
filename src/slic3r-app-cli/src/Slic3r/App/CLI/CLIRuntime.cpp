@@ -174,9 +174,18 @@ CLIRuntime::CLIRuntime(const InitParams& init_params) :
 
     // subcommands do not need loaded presets
     if (!init_params.action.has_subcommand_action()) {
-        m_project_interactor->preset_interactor().load_preset_bundle(
-            Preset::IO::BundlePaths::make_standard_runtime()
-        );
+        const auto bundle_paths = Preset::IO::BundlePaths::make_standard_runtime();
+        auto& preset_interactor = m_project_interactor->preset_interactor();
+        // a named system printer: build and evaluate only it (and read only its vendor's presets),
+        // as the GUI does for its added printers; otherwise (a user printer, a project's printer,
+        // the model list) every printer as before
+        if (init_params.input.printer_profile_preset && !init_params.action.query_printer_models) {
+            std::set<std::string> keys = Preset::PresetInteractor::template_printers_named(
+                bundle_paths, *init_params.input.printer_profile_preset);
+            if (!keys.empty())
+                preset_interactor.set_added_printers(std::move(keys));
+        }
+        preset_interactor.load_preset_bundle(bundle_paths);
     }
 }
 

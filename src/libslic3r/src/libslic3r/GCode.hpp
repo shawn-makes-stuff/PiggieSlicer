@@ -503,6 +503,7 @@ private:
     // instances whose brims are not extruded yet
     std::vector<std::vector<double>>    m_skirt_group_done;
     std::set<ObjectInstanceID>          m_pending_brims;
+    GCode::ExtrusionOrder::TourCache    m_tour_cache;
     // Flag indicating whether the nozzle temperature changes from 1st to 2nd layer were performed.
     bool                                m_second_layer_things_done;
     // G-code that is due to be written before the next extrusion

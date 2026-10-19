@@ -5,7 +5,10 @@
 
 #include "Slic3r/App/Config/PrintToolSubcategoryListView.hpp"
 
+#include <string>
 #include <vector>
+
+#include "Slic3r/Domain/SettingsToggles.hpp"
 
 namespace Slic3r::App {
 
@@ -23,6 +26,14 @@ Domain::ConfigItemDef::Mode print_settings_mode();
 void set_print_settings_mode(Domain::ConfigItemDef::Mode mode);
 /// Whether the current visibility shows the setting.
 bool is_shown_in_mode(const Domain::ConfigItemDef& def);
+
+/// The print settings the current values and the printer grey out / hide (Biz PresetInteractor::
+/// print_settings_toggles), shared by the sidebars. Returns whether they changed.
+bool set_settings_toggles(Domain::SettingsToggles toggles);
+/// Counts the changes, for the sidebars to refresh once each.
+size_t settings_toggles_version();
+bool is_setting_hidden(const std::string& key);
+bool is_setting_disabled(const std::string& key);
 
 /**
  * @brief Orca's print tabs (Tab.cpp TabPrint::build: Quality, Strength, Speed, Support,

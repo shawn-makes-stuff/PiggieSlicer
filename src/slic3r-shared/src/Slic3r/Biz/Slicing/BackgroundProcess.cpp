@@ -79,10 +79,26 @@ IPrint::MetadataSerializeFn build_metadata_serializer(
     {
         // TODO: update captured `metadata.stats` with `gcode_stats`
 
-        const SerializedConfig serialized_config{
+        SerializedConfig serialized_config{
             .json = beautify_json(metadata, 2, 14),
             .ini  = Biz::serialize_as_legacy_config(config, preset_metadata.hw_config)
         };
+        // the selected presets' names, as Orca and Anycubic Slicer Next write them (printers show the material from them)
+        const auto set_value = [&ini = serialized_config.ini](const std::string& key, const std::string& value) {
+            const std::string line = key + " = ";
+            size_t start = ini.compare(0, line.size(), line) == 0 ? 0 : ini.find("\n" + line);
+            if (start == std::string::npos)
+                return;
+            start += (start == 0 ? 0 : 1) + line.size();
+            ini.replace(start, std::min(ini.find('\n', start), ini.size()) - start, value);
+        };
+        set_value("printer_settings_id", preset_metadata.printer.name);
+        set_value("print_settings_id", preset_metadata.print.name);
+        std::string materials;
+        for (const auto& material : preset_metadata.materials)
+            materials += (materials.empty() ? "\"" : ";\"") + material.name + "\"";
+        if (!materials.empty())
+            set_value("filament_settings_id", materials);
 
         return serialized_config;
     };

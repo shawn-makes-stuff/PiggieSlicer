@@ -52,6 +52,7 @@ public:
         const Domain::ConfigValue& value
     );
 
+    const Domain::ConfigItem* find_print_item(const std::string& name) const;
     const Domain::ConfigValue* find_print_value(const std::string& name) const;
 
     const Domain::ConfigValue* find_tool_value(const std::string& name, size_t index) const;

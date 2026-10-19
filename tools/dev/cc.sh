@@ -11,6 +11,9 @@ for f in "$@"; do
     src/libpgcode/*) proj=build/src/libpgcode/libpgcode.vcxproj ;;
     src/libvgcode/*) proj=build/src/libvgcode/libvgcode.vcxproj ;;
     src/slic3r-biz-parser/*) proj=build/src/slic3r-biz-parser/slic3r-biz-parser.vcxproj ;;
+    src/slic3r-app-launcher/*) proj=build/src/slic3r-app-launcher/slic3r-app-launcher.vcxproj ;;
+    src/slic3r-app-cli/*) proj=build/src/slic3r-app-cli/slic3r-app-cli.vcxproj ;;
+    src/slic3r-render/*) proj=build/src/slic3r-render/slic3r-render.vcxproj ;;
     src/slic3r-shared/test/*) proj=build/src/slic3r-shared/slic3r-shared-tests.vcxproj ;;
     src/slic3r-shared/*) proj=build/src/slic3r-shared/slic3r-shared.vcxproj ;;
     src/slic3r-app-desktop/*) proj=build/src/slic3r-app-desktop/slic3r-app-desktop.vcxproj ;;

@@ -161,7 +161,7 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"bottom_solid_layers", steps({propagate(posPrepareInfill)})},
     {"bottom_solid_min_thickness", steps({propagate(posPrepareInfill)})},
     {"bridge_acceleration", steps({propagate(psGCodeExport)})},
-    {"bridge_angle", steps({propagate(posPrepareInfill)})},
+    {"bridge_angle", steps({propagate(posPerimeters)})}, // also counterbore hole bridging (PerimeterGenerator::process_no_bridge)
     {"bridge_fan_speed", steps({propagate(psGCodeExport)})},
     {"bridge_flow_ratio",
      steps({propagate(posPerimeters), propagate(posInfill), propagate(posSupportMaterial)})},
@@ -209,7 +209,7 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"external_perimeter_acceleration", steps({propagate(psGCodeExport)})},
     {"external_perimeter_extrusion_width",
      steps({propagate(posPerimeters), propagate(posSupportMaterial)})},
-    {"external_perimeter_speed", steps({propagate(psGCodeExport)})},
+    {"external_perimeter_speed", steps({propagate(psSkirtBrim)})}, // auto brim width
     {"wall_sequence", steps({propagate(posPerimeters)})},
     {"extra_loading_move", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
     {"extra_perimeters", steps({propagate(posPerimeters)})},
@@ -267,7 +267,7 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"filament_vendor", steps({})},
     {"fill_angle", steps({propagate(posInfill)})},
     {"internal_bridge_angle", steps({propagate(posPrepareInfill)})},
-    {"relative_bridge_angle", steps({propagate(posPrepareInfill)})},
+    {"relative_bridge_angle", steps({propagate(posPerimeters)})}, // as bridge_angle
     {"bridge_density", steps({propagate(posInfill)})},
     {"internal_bridge_density", steps({propagate(posInfill)})},
     {"thick_internal_bridges", steps({propagate(posInfill)})},
@@ -412,7 +412,7 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"top_bottom_infill_wall_overlap", steps({propagate(posPerimeters)})},
     {"min_width_top_surface", steps({propagate(posPerimeters)})},
     {"filter_out_gap_fill", steps({propagate(posPerimeters)})},
-    {"infill_speed", steps({propagate(psWipeTower), propagate(psGCodeExport)})},
+    {"infill_speed", steps({propagate(psWipeTower), propagate(psSkirtBrim)})}, // and the auto brim width
     {"inherits_cummulative", steps({})},
     {"interface_shells", steps({propagate(posPrepareInfill)})},
     {"interlocking_beam", all_steps()}, // TODO: Probably too harsh.
@@ -471,7 +471,7 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"max_volumetric_extrusion_rate_slope_segment_length", steps({propagate(psGCodeExport)})},
     {"extrusion_rate_smoothing_external_perimeter_only", steps({propagate(psGCodeExport)})},
     {"slowdown_for_curled_perimeters", steps({propagate(posEstimateCurledExtrusions)})},
-    {"small_support_perimeter_speed", steps({propagate(psGCodeExport)})},
+    {"small_support_perimeter_speed", steps({propagate(psSkirtBrim)})}, // auto brim width
     {"small_support_perimeter_threshold", steps({propagate(psGCodeExport)})},
     {"max_volumetric_speed", steps({propagate(psGCodeExport)})},
     {"initial_layer_min_bead_width", steps({propagate(posPerimeters)})},
@@ -515,7 +515,7 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"perimeter_extruder", steps({propagate(posPerimeters), propagate(posSupportMaterial)})},
     {"perimeter_extrusion_width", steps({propagate(posPerimeters)})},
     {"perimeter_generator", steps({propagate(posSlice)})},
-    {"perimeter_speed", steps({propagate(psWipeTower), propagate(psGCodeExport)})},
+    {"perimeter_speed", steps({propagate(psWipeTower), propagate(psSkirtBrim)})}, // and Orca's auto brim width (Brim.cpp)
     {"perimeters", steps({propagate(posPerimeters)})},
     {"alternate_extra_wall", steps({propagate(posPerimeters)})},
     {"overhang_reverse", steps({propagate(posPerimeters)})},
@@ -657,14 +657,14 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"slice_closing_radius", steps({propagate(posSlice)})},
     {"slicing_mode", steps({propagate(posSlice)})},
     {"slowdown_below_layer_time", steps({propagate(psGCodeExport)})},
-    {"small_perimeter_speed", steps({propagate(psGCodeExport)})},
+    {"small_perimeter_speed", steps({propagate(psSkirtBrim)})}, // auto brim width
     {"solid_infill_acceleration", steps({propagate(psGCodeExport)})},
     {"solid_infill_below_area", steps({propagate(posPrepareInfill)})},
     {"solid_infill_every_layers", steps({propagate(posPrepareInfill)})},
     {"solid_infill_extruder", steps({propagate(posPrepareInfill)})},
     {"solid_infill_extrusion_width",
      steps({propagate(posPrepareInfill), propagate(posPerimeters)})},
-    {"solid_infill_speed", steps({propagate(psGCodeExport)})},
+    {"solid_infill_speed", steps({propagate(psSkirtBrim)})}, // auto brim width
     {"spiral_vase", steps({propagate(posSlice)})},
     {"staggered_inner_seams", steps({propagate(psGCodeExport)})},
     {"standby_temperature_delta", steps({propagate(psGCodeExport)})},
@@ -691,7 +691,7 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"support_material_interface_speed", steps({propagate(psGCodeExport)})},
     {"support_material_pattern", steps({propagate(posSupportMaterial)})},
     {"support_material_spacing", steps({propagate(posSupportMaterial)})},
-    {"support_material_speed", steps({propagate(psGCodeExport)})},
+    {"support_material_speed", steps({propagate(psSkirtBrim)})}, // auto brim width
     {"support_material_style", steps({propagate(posSupportMaterial)})},
     {"support_material_synchronize_layers", steps({propagate(posSupportMaterial)})},
     {"support_material_threshold", steps({propagate(posSupportMaterial)})},
@@ -719,7 +719,7 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"top_infill_extrusion_width", steps({propagate(posInfill)})},
     {"top_one_perimeter_type", steps({propagate(posPerimeters)})},
     {"top_solid_infill_acceleration", steps({propagate(psGCodeExport)})},
-    {"top_solid_infill_speed", steps({propagate(psGCodeExport)})},
+    {"top_solid_infill_speed", steps({propagate(psSkirtBrim)})}, // auto brim width
     {"top_solid_layers", steps({propagate(posPrepareInfill)})},
     {"top_solid_min_thickness", steps({propagate(posPrepareInfill)})},
     {"travel_acceleration", steps({propagate(psGCodeExport)})},
@@ -751,6 +751,11 @@ const std::map<std::string, std::vector<Step>> invalidated_by{
     {"wipe_tower_bridging", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
     {"wipe_tower_brim_width", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
     {"wipe_tower_cone_angle", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
+    {"wipe_tower_wall_type", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
+    {"wipe_tower_extra_rib_length", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
+    {"wipe_tower_rib_width", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
+    {"wipe_tower_fillet_wall", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
+    {"wipe_tower_max_purge_speed", steps({propagate(psWipeTower)})},
     {"wipe_tower_extra_flow", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
     {"wipe_tower_extra_spacing", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},
     {"wipe_tower_extruder", steps({propagate(psWipeTower), propagate(psSkirtBrim)})},

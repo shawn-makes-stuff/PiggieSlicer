@@ -4,8 +4,10 @@
 #include "Slic3r/Domain/TestUtils.hpp"
 #include "Slic3r/Domain/Config.hpp"
 #include "Slic3r/Domain/OrcaLayout.hpp"
+#include "Slic3r/Domain/SettingsToggles.hpp"
 
 #include <algorithm>
+#include <map>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
@@ -377,4 +379,60 @@ TEST_CASE("Orca's sidebar layout is applied to the print settings", "[FDMConfig]
     // Orca's wall_loops (Strength > Walls) is 3.0's perimeters
     CHECK(groups[find("perimeters").orca_group].label == "Walls");
     CHECK(find("perimeters").orca_order < find("thin_walls").orca_order);
+}
+
+TEST_CASE("Settings rules hide and grey out by printer and values", "[FDMConfig]")
+{
+    // every setting at its default, some changed by the test
+    std::map<std::string, ConfigValue> values;
+    for (const ConfigItemDef& def : get_defs_fdm().defs())
+        if (def.init_fn)
+            values.emplace(def.name, def.init_fn());
+    const ConfigValueGetter value_of = [&values](const std::string& key) -> const ConfigValue* {
+        const auto it = values.find(key);
+        return it != values.end() ? &it->second : nullptr;
+    };
+    const auto set = [&values](const std::string& key, const auto& value) { values.at(key).set(value); };
+
+    PrinterKind single;
+    PrinterKind unit; // one nozzle fed by an external unit
+    unit.filaments                      = 4;
+    unit.single_extruder_multi_material = true;
+    PrinterKind tools; // tool changer
+    tools.nozzles   = 2;
+    tools.filaments = 2;
+
+    // multi material only with several filaments, ooze prevention only with several nozzles
+    CHECK(print_settings_toggles(value_of, single).hidden.contains("wipe_tower"));
+    CHECK(print_settings_toggles(value_of, single).hidden.contains("infill_extruder"));
+    CHECK(!print_settings_toggles(value_of, unit).hidden.contains("wipe_tower"));
+    CHECK(print_settings_toggles(value_of, unit).hidden.contains("ooze_prevention"));
+    CHECK(!print_settings_toggles(value_of, tools).hidden.contains("ooze_prevention"));
+
+    // supports: Manual only keeps the support settings, the threshold only with On
+    set("support_material", std::string("enforcers_only"));
+    CHECK(!print_settings_toggles(value_of, single).disabled.contains("support_material_style"));
+    CHECK(print_settings_toggles(value_of, single).disabled.contains("support_material_threshold"));
+    set("support_material", std::string("none"));
+    CHECK(print_settings_toggles(value_of, single).disabled.contains("support_material_style"));
+
+    // the two ways of avoiding crossing exclude each other; one that is on stays editable
+    set("avoid_crossing_perimeters", true);
+    set("avoid_crossing_curled_overhangs", false);
+    CHECK(print_settings_toggles(value_of, single).disabled.contains("avoid_crossing_curled_overhangs"));
+    set("avoid_crossing_curled_overhangs", true);
+    const auto fixes = print_settings_fixes("avoid_crossing_curled_overhangs", value_of);
+    REQUIRE(fixes.size() == 1);
+    CHECK(fixes.front().first == "avoid_crossing_perimeters");
+    CHECK(fixes.front().second.get<bool>() == false);
+
+    // spiral vase: one wall, no top layers, no infill, no supports
+    set("spiral_vase", true);
+    set("perimeters", 3);
+    set("support_material", std::string("everywhere"));
+    std::map<std::string, ConfigValue> spiral_fixes;
+    for (const auto& [key, value] : print_settings_fixes("spiral_vase", value_of))
+        spiral_fixes.emplace(key, value);
+    CHECK(spiral_fixes.at("perimeters").get<int>() == 1);
+    CHECK(spiral_fixes.at("support_material").get<SupportMode>() == SupportMode::None);
 }

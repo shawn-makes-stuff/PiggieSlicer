@@ -543,12 +543,17 @@ MAP = {
     "filename_format": [("print", "output_filename_format", text)],
     "enable_prime_tower": [("print", "wipe_tower", boolean)],
     "prime_tower_width": [("print", "wipe_tower_width", num)],
-    "prime_tower_brim_width": [("print", "wipe_tower_brim_width", non_negative)],
+    "prime_tower_brim_width": [("print", "wipe_tower_brim_width", num)],  # -1 = auto
     "wipe_tower_cone_angle": [("print", "wipe_tower_cone_angle", num)],
     "wipe_tower_extra_spacing": [("print", "wipe_tower_extra_spacing", percent)],
     "wipe_tower_extra_flow": [("print", "wipe_tower_extra_flow", percent)],
     "wipe_tower_bridging": [("print", "wipe_tower_bridging", num)],
     "wipe_tower_no_sparse_layers": [("print", "wipe_tower_no_sparse_layers", boolean)],
+    "wipe_tower_wall_type": [("print", "wipe_tower_wall_type", enum({"rectangle": "rectangle", "cone": "cone", "rib": "rib"}))],
+    "wipe_tower_rib_width": [("print", "wipe_tower_rib_width", num)],
+    "wipe_tower_extra_rib_length": [("print", "wipe_tower_extra_rib_length", num)],
+    "wipe_tower_fillet_wall": [("print", "wipe_tower_fillet_wall", boolean)],
+    "wipe_tower_max_purge_speed": [("print", "wipe_tower_max_purge_speed", num)],
     # Orca's current names (orca_source.py renames the legacy *_extruder keys before mapping)
     "wipe_tower_filament": [("print", "wipe_tower_extruder", integer)],
     "support_filament": [("print", "support_material_extruder", integer)],

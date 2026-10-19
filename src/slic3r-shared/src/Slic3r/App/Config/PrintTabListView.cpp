@@ -37,6 +37,25 @@ void set_print_settings_mode(Mode mode)
     AppServices::instance().app_config().set<int>("print_settings_mode", int(mode));
 }
 
+namespace {
+Domain::SettingsToggles current_toggles;
+size_t                  toggles_version = 0;
+} // namespace
+
+size_t settings_toggles_version() { return toggles_version; }
+
+bool set_settings_toggles(Domain::SettingsToggles toggles)
+{
+    if (toggles == current_toggles)
+        return false;
+    current_toggles = std::move(toggles);
+    ++toggles_version;
+    return true;
+}
+
+bool is_setting_hidden(const std::string& key) { return current_toggles.hidden.contains(key); }
+bool is_setting_disabled(const std::string& key) { return current_toggles.disabled.contains(key); }
+
 bool is_shown_in_mode(const Domain::ConfigItemDef& def)
 {
     // Advanced shows all, Orca's Expert settings too
@@ -91,7 +110,7 @@ PrintTabListView::PrintTabListView(
         [this](const Biz::PrintToolItem& item)
         {
             const Domain::ConfigItemDef& def = item.print_item->def();
-            return contains(def) && (m_orca_page < 0 || is_shown_in_mode(def));
+            return contains(def) && (m_orca_page < 0 || is_shown_in_mode(def)) && !is_setting_hidden(item.name);
         }
     );
     m_filter->set_group_by_fn(

@@ -64,6 +64,11 @@ GCodeWriterConfig::GCodeWriterConfig(const PrintConfigView& print_config)
     initial_layer_travel_speed = print_config.get<Domain::FloatOrPercentage>("initial_layer_travel_speed");
     travel_speed_z = print_config.get<double>("travel_speed_z");
     filament_diameter        = print_config.get<std::vector<double>>("filament_diameter");
+    // Orca: T commands with several filaments (not on Bambu printers). Anycubic Slicer Next always selects the
+    // first tool (its projects list the ACE's slots); the Kobra firmware maps the file's filaments to ACE slots
+    // by the T commands, so a single colour print needs its T0 too.
+    filament_toolchange_commands = (filament_diameter.size() > 1 && print_config.hw_config().vendor_id != "BBL") ||
+                                   print_config.hw_config().vendor_id == "Anycubic";
     filament_density         = print_config.get<std::vector<double>>("filament_density");
     filament_cost            = print_config.get<std::vector<double>>("filament_cost");
     extrusion_multiplier     = print_config.get<std::vector<double>>("extrusion_multiplier");

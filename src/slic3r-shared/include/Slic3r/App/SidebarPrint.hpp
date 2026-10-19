@@ -44,6 +44,9 @@ public:
     bool show_item(const Domain::ConfigItem* config_item);
     void clear_navigation();
 
+    /// Applies the settings rules (greyed out / hidden settings) before drawing, once the values changed.
+    void render(const Yoga::Vec2f& pos, const Yoga::Vec2f& size) override;
+
     void on_preset_selection_changed(
         Domain::SelectionId project_id,
         Domain::SelectionId config_container_id,
@@ -74,6 +77,9 @@ private:
     void refresh_tools_comboboxes_label_colors();
 
 private:
+    // the settings rules: recomputed on the next frame after a change (the value lists are updated by then)
+    bool   m_toggles_dirty{true};
+    size_t m_toggles_version{0};
     using ToolHeadListView = Yoga::ListView<
         SidebarToolHeadRow,
         Biz::Preset::PresetItemObservableList,

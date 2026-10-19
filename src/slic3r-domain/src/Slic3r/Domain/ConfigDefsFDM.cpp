@@ -72,11 +72,12 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->category = ConfigItemDef::Category::Print_PrecisionSlicing;
     def->order = 2;
     def->gui_type = ConfigItemDef::GUIType::combobox;
-    def->tooltip = L("Enable to get a G-code file which has G2 and G3 moves. "
+    def->tooltip = L("Enable to get a G-code file which has G2 and G3 moves (arcs with I J center offsets). "
                      "G-code resolution will be used as the fitting tolerance.");
+    // Orca shows this as a plain on / off (enable_arc_fitting)
     def->init_fn = init_with(ArcFittingType::Disabled, {
         { int(ArcFittingType::Disabled), "disabled", L("Disabled") },
-        { int(ArcFittingType::EmitCenter), "emit_center", L("Enabled: G2/3 I J") }
+        { int(ArcFittingType::EmitCenter), "emit_center", L("Enabled") }
     });
 
     def = defs.add("automatic_extrusion_widths", typeid(bool));
@@ -7847,10 +7848,13 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
     def->category = ConfigItemDef::Category::Print_MultiMaterial;
     def->order = 2;
-    def->gui_type = ConfigItemDef::GUIType::textfield;
-    def->tooltip = L("Wipe tower brim width");
+    def->gui_type = ConfigItemDef::GUIType::f_enum_open;
+    def->tooltip = L("Brim width of the wipe tower. A negative number means auto: the width is calculated from the tower height.");
     def->units = {L("mm")};
-    def->min = 0.;
+    def->min = -1.;
+    def->choices = {
+        { -1., L("Auto") }
+    };
     def->init_fn = init_with(2.);
 
     def = defs.add("wipe_tower_cone_angle", typeid(double));
@@ -7866,6 +7870,79 @@ void fdm_config_init_fn(ConfigDefinitions& defs)
     def->min = 0.;
     def->max = 90.;
     def->init_fn = init_with(0.);
+
+    def = defs.add("wipe_tower_wall_type", typeid(EnumWrapper));
+    def->location = Print;
+    def->label = L("Wall type");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 4;
+    def->gui_type = ConfigItemDef::GUIType::combobox;
+    def->tooltip = L("Wipe tower outer wall type.\n"
+                     "1. Rectangle: A rectangle with fixed width and height.\n"
+                     "2. Cone: A cone with a fillet at the bottom to help stabilize the wipe tower.\n"
+                     "3. Rib: The default wall type, which adds four ribs to the tower wall for enhanced stability.");
+    def->init_fn = init_with(
+        WipeTowerWallType::Rib,
+        {
+            {int(WipeTowerWallType::Rectangle), "rectangle", L("Rectangle")},
+            {int(WipeTowerWallType::Cone),      "cone",      L("Cone")},
+            {int(WipeTowerWallType::Rib),       "rib",       L("Rib")},
+        }
+    );
+
+    def = defs.add("wipe_tower_extra_rib_length", typeid(double));
+    def->location = Print;
+    def->label = L("Extra rib length");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 6;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Positive values can increase the size of the rib wall, while negative values can reduce the size. "
+                     "However, the size of the rib wall can not be smaller than that determined by the cleaning volume.");
+    def->units = {L("mm")};
+    def->max = 300.;
+    def->init_fn = init_with(0.);
+
+    def = defs.add("wipe_tower_rib_width", typeid(double));
+    def->location = Print;
+    def->label = L("Rib width");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 7;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("Rib width is always less than half the prime tower side length.");
+    def->units = {L("mm")};
+    def->min = 0.;
+    def->max = 300.;
+    def->init_fn = init_with(8.);
+
+    def = defs.add("wipe_tower_fillet_wall", typeid(bool));
+    def->location = Print;
+    def->label = L("Fillet wall");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 8;
+    def->gui_type = ConfigItemDef::GUIType::checkbox;
+    def->tooltip = L("The wall of prime tower will fillet.");
+    def->init_fn = init_with(true);
+
+    def = defs.add("wipe_tower_max_purge_speed", typeid(double));
+    def->location = Print;
+    def->label = L("Maximum wipe tower print speed");
+    def->option_group = ConfigItemDef::OptionGroup::Print_MultiMaterial_WipeTower;
+    def->category = ConfigItemDef::Category::Print_MultiMaterial;
+    def->order = 9;
+    def->gui_type = ConfigItemDef::GUIType::textfield;
+    def->tooltip = L("The maximum print speed when purging in the wipe tower and printing the wipe tower sparse layers. "
+                     "When purging, if the sparse infill speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n\n"
+                     "When printing the sparse layers, if the sparse infill speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n\n"
+                     "Increasing this speed may affect the tower's stability as well as increase the force with which the nozzle collides with any blobs that may have formed on the wipe tower.\n\n"
+                     "Before increasing this parameter beyond the default of 90 mm/s, make sure your printer can reliably bridge at the increased speeds and that ooze when tool changing is well controlled.\n\n"
+                     "For the wipe tower external perimeters the internal perimeter speed is used, also limited by this setting.");
+    def->units = {L("mm/s")};
+    def->min = 10.;
+    def->init_fn = init_with(90.);
 
     def = defs.add("wipe_tower_extra_spacing", typeid(Percentage));
     def->location = Print;

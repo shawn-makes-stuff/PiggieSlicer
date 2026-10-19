@@ -1,5 +1,6 @@
 #ifdef _WIN32
 #include <windows.h>
+#include <dbghelp.h>
 #endif
 #ifdef SLIC3R_GUI
 #include "Slic3r/App/Desktop/Run.hpp"
@@ -16,12 +17,14 @@
 
 #include "SentryScope.hpp"
 
+#include <algorithm>
 #include <cstdlib>
+#include <vector>
 #include <string>
 
 #include <CLI/CLI.hpp>
 
-#include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
 
 #include "Slic3r/Version.hpp"
 #include "libslic3r/Utils.hpp"
@@ -76,6 +79,47 @@ std::string app_description()
 } // namespace
 
 
+#ifdef _WIN32
+// A crash writes a minidump into the data directory's crash_dumps folder (the newest 10 are kept), then
+// Windows handles the crash as before.
+static std::wstring crash_dump_dir;
+
+static LONG WINAPI write_crash_dump(EXCEPTION_POINTERS* exception)
+{
+    SYSTEMTIME now;
+    GetLocalTime(&now);
+    wchar_t name[64];
+    swprintf(name, 64, L"\\piggie-slicer-%04u%02u%02u-%02u%02u%02u.dmp", now.wYear, now.wMonth, now.wDay, now.wHour,
+             now.wMinute, now.wSecond);
+    const std::wstring path = crash_dump_dir + name;
+    HANDLE file = CreateFileW(path.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (file != INVALID_HANDLE_VALUE) {
+        MINIDUMP_EXCEPTION_INFORMATION info{GetCurrentThreadId(), exception, FALSE};
+        MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpNormal, &info, nullptr, nullptr);
+        CloseHandle(file);
+    }
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
+static void install_crash_dumps(const boost::filesystem::path& dir)
+{
+    boost::system::error_code ec;
+    boost::filesystem::create_directories(dir, ec);
+    if (ec)
+        return;
+    // the oldest go when there are more than 10
+    std::vector<boost::filesystem::path> dumps;
+    for (const auto& entry : boost::filesystem::directory_iterator(dir, ec))
+        if (entry.path().extension() == ".dmp")
+            dumps.push_back(entry.path());
+    std::sort(dumps.begin(), dumps.end()); // the names sort by time
+    for (size_t i = 0; i + 10 < dumps.size(); ++i)
+        boost::filesystem::remove(dumps[i], ec);
+    crash_dump_dir = dir.wstring();
+    SetUnhandledExceptionFilter(write_crash_dump);
+}
+#endif
+
 int main(int argc, char** argv)
 {
     CLI::App app{app_description(), app_name};
@@ -90,6 +134,9 @@ int main(int argc, char** argv)
     }
 
     Slic3r::App::init_paths(init_params);
+#ifdef _WIN32
+    install_crash_dumps(boost::filesystem::path{Slic3r::data_dir()} / "crash_dumps");
+#endif
 
     boost::filesystem::path log_path = boost::filesystem::path{Slic3r::get_default_datadir()} / "shared_runtime" / "log.txt";
     Slic3r::FileLogConfig file_log_config;

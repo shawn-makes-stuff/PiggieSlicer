@@ -13,6 +13,17 @@ PiggieSlicer is a fork of [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) 
 * **Runs alongside PrusaSlicer.** PiggieSlicer keeps its own settings, presets and logs, and never touches an installed PrusaSlicer.
 * **Compatible files.** Projects (3MF) and G-code are written in PrusaSlicer's formats, so they open in PrusaSlicer and work with printer hosts that expect them.
 
+## OrcaSlicer features
+
+PiggieSlicer ports features from [OrcaSlicer](https://github.com/SoftFever/OrcaSlicer), copying Orca's own logic:
+
+* **Orca's process settings and layout.** The print settings sidebar follows Orca's pages and groups (Quality, Strength, Speed, Support, Multimaterial, Others). It includes Orca's scarf seams, wipe options, precise wall and Z height, polyholes, brim ears, skirt types, per-feature jerk, fan kick-start, adaptive bed mesh and more.
+* **Settings that fit the printer.** Options that cannot apply to the selected printer (single nozzle, multiple nozzles or a multi-material unit) are hidden, conflicting options cannot both be on, and search only finds settings you can see.
+* **Orca printer profiles.** Printer, process and filament profiles converted from Orca's library, including Anycubic.
+* **Anycubic Kobra and ACE.** G-code carries Anycubic Slicer Next's header, config and colour blocks so the printer can map filaments to ACE slots.
+* **Purge tower.** Automatic brim width scaled to the tower height; Orca's wall types (rectangle, cone, rib) are in progress.
+* **Sliced info by feature.** Time, weight and length per feature (walls, infill, supports, ...), coloured like the preview legend.
+
 ## Main features
 
 * Set the **printing parameters** precisely, from settings for the **whole print** down to **single-layer adjustments**.

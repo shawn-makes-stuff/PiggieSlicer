@@ -1506,7 +1506,8 @@ WipeTower::ToolChangeResult WipeTower::finish_layer()
 
     // brim (first layer only)
     if (first_layer) {
-        size_t loops_num = (m_wipe_tower_brim_width + spacing/2.f) / spacing;
+        const float brim_width = m_wipe_tower_brim_width < 0.f ? get_auto_brim_by_height(m_wipe_tower_height) : m_wipe_tower_brim_width;
+        size_t loops_num = (brim_width + spacing/2.f) / spacing;
         
         for (size_t i = 0; i < loops_num; ++ i) {
             poly = offset(poly, scale_(spacing)).front();
@@ -1668,6 +1669,13 @@ void WipeTower::plan_toolchange(float z_par, float layer_height_par, unsigned in
 }
 
 
+
+float WipeTower::get_auto_brim_by_height(float max_height)
+{
+    if (max_height < 100)
+        return max_height / 100.f * 8.f;
+    return 8.f;
+}
 
 void WipeTower::plan_tower()
 {

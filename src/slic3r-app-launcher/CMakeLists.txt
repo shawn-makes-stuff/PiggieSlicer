@@ -21,6 +21,9 @@ find_package(CLI11 CONFIG REQUIRED)
 
 target_include_directories(slic3r-app-launcher PRIVATE src)
 target_link_libraries(slic3r-app-launcher PRIVATE slic3r-app-cli CLI11::CLI11)
+if (WIN32)
+    target_link_libraries(slic3r-app-launcher PRIVATE dbghelp) # crash dumps (main.cpp)
+endif ()
 
 slic3r_add_tracy(slic3r-app-launcher)
 

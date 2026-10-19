@@ -6,8 +6,9 @@ namespace Slic3r::App::Imgui::DoubleSlider {
 
 ImU32 Control::fg_color() const
 {
-    return ImGui::GetColorU32({0.99f, 0.41f, 0.2f, 1.0f});
-} // color from SidebarAfterSlice::render()
+    // piggie pink, as the Slice button (was Prusa orange)
+    return m_theme->color_imgui(Platform::Color::AccentPrimary);
+}
 
 ImU32 Control::bg_color() const
 {

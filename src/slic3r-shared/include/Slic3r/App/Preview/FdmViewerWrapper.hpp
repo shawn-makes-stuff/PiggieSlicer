@@ -103,6 +103,7 @@ public:
 
     void set_extrusion_role_color(Domain::GCodeExtrusionRole role, const Domain::ColorRGB& color) { return m_viewer.set_extrusion_role_color(role, color); }
     float extrusion_role_estimated_time(Domain::GCodeExtrusionRole role) const { return m_viewer.extrusion_role_estimated_time(role); }
+    const Domain::ColorRGB& extrusion_role_color(Domain::GCodeExtrusionRole role) const { return m_viewer.extrusion_role_color(role); }
     
     libvgcode::ViewType view_type() const { return m_viewer.view_type(); }
     void set_view_type(libvgcode::ViewType type);

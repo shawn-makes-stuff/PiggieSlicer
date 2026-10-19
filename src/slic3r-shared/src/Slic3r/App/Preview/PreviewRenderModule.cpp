@@ -476,6 +476,16 @@ void PreviewRenderModule::on_init(
     init_dialog_navigation();
 
     m_scene_presenter->scene().set_lights(Slic3r::App::global_lighting());
+
+    // A bed sliced before the preview existed (auto-reslice runs in Prepare): its result came while nobody
+    // listened, so take it now, as a project change does (the listeners above take the later ones).
+    if (!m_project_interactor.scene_interactor().bed_selection().empty()) {
+        update_viewer();
+        if (m_viewer == &m_fdm_viewer)
+            update_fdm_viewer_data(m_project_interactor.selected_bed_slicing_id());
+        else
+            update_sla_viewer_data(m_project_interactor.selected_bed_slicing_id());
+    }
 }
 
 void PreviewRenderModule::on_activated()

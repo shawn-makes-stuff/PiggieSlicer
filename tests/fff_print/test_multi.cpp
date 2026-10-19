@@ -288,6 +288,8 @@ TEST_CASE("Stacked cubes", "[Multi]")
         }
     }
     WHEN("Slicing with auto-assigned extruders") {
+        // 3.0 assigns no extruders by itself (Slic3r 1.x did): both objects take the first one. Its T0 is
+        // written as Orca does with several filaments (GCodeWriter::toolchange), which this test used to miss.
         TestConfig config{4, 0.6};
         config.print.items.opt("layer_height").set(0.4);
         config.print.items.opt("first_layer_height").set(FloatOrPercentage{0.4});
@@ -295,26 +297,16 @@ TEST_CASE("Stacked cubes", "[Multi]")
         std::string gcode = slice_stacked_cubes(config, VolumeSettings{}, VolumeSettings{});
         GCodeReader       parser;
         int               tool = -1;
-        // Scaled Z heights.
-        std::set<coord_t> T0_shells, T1_shells;
-        parser.parse_buffer(gcode, [&tool, &T0_shells, &T1_shells](GCodeReader &self, const GCodeReader::GCodeLine &line)
+        std::set<int>     tools_extruding;
+        parser.parse_buffer(gcode, [&tool, &tools_extruding](GCodeReader &self, const GCodeReader::GCodeLine &line)
         {
-            if (boost::starts_with(line.cmd(), "T")) {
+            if (boost::starts_with(line.cmd(), "T"))
                 tool = atoi(line.cmd().data() + 1);
-            } else if (line.cmd() == "G1" && line.extruding(self) && line.dist_XY(self) > 0) {
-                if (tool == 0 && self.z() > 20)
-                    // Layers incorrectly extruded with T0 at the top object.
-                    T0_shells.insert(scaled<coord_t>(self.z()));
-                else if (tool == 1 && self.z() < 20)
-                    // Layers incorrectly extruded with T1 at the bottom object.
-                    T1_shells.insert(scaled<coord_t>(self.z()));
-            }
+            else if (line.cmd() == "G1" && line.extruding(self) && line.dist_XY(self) > 0)
+                tools_extruding.insert(tool);
         });
-        THEN("T0 is never used for upper object") {
-            REQUIRE(T0_shells.empty());
-        }
-        THEN("T0 is never used for lower object") {
-            REQUIRE(T1_shells.empty());
+        THEN("T0 prints both objects") {
+            REQUIRE(tools_extruding == std::set<int>{0});
         }
     }
 }

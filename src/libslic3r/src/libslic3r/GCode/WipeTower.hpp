@@ -26,6 +26,8 @@ class WipeTower
 public:
     static const std::string never_skip_tag() { return "_GCODE_WIPE_TOWER_NEVER_SKIP_TAG"; }
 	static std::vector<std::vector<float>> extract_wipe_volumes(const PrintConfigView& config);
+    // Orca: the brim width used when wipe_tower_brim_width is negative (auto)
+    static float get_auto_brim_by_height(float max_height);
 
     struct Extrusion
     {

@@ -3889,7 +3889,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Wipe tower brim width");
     def->sidetext = L("mm");
     def->mode = comAdvanced;
-    def->min = 0.;
+    def->min = -1.;
     def->set_default_value(new ConfigOptionFloat(2.));
 
     def = this->add("wipe_tower_cone_angle", coFloat);

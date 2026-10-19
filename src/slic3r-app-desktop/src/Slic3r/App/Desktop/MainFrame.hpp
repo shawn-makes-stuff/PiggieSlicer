@@ -20,6 +20,8 @@
 #include "Slic3r/Biz/StatusCache.hpp"
 #include "Slic3r/Biz/ISelectedBedInstanceChangedListener.hpp"
 
+#include "Slic3r/App/Platform/ICommand.hpp"
+
 #include <wx/wx.h>
 
 namespace Slic3r::App::Desktop::Preset {
@@ -158,6 +160,12 @@ private:
     unsigned long m_dpi_signal_id{0}; //!< Only used on GTK, signal for notify::gtk-xft-dpi
 
     wxAcceleratorTable m_accel_table;
+    // The commands of the accelerator table's entries, at ids from ACCEL_ID_FIRST: one wxEVT_MENU handler is
+    // bound to the id range once (binding one per entry on every table update piled up handlers on each
+    // Prepare / Preview switch).
+    static constexpr int ACCEL_ID_FIRST = wxID_HIGHEST + 5000;
+    static constexpr int ACCEL_ID_COUNT = 1000;
+    std::vector<Platform::ICommand*> m_accel_commands;
     wxWindow* m_accel_table_window{nullptr};
 
 #ifdef WIN32

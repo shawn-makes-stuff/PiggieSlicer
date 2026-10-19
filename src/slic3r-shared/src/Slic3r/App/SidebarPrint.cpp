@@ -293,6 +293,20 @@ void SidebarPrint::set_settings_mode(Domain::ConfigItemDef::Mode mode)
         select_tab(0);
 }
 
+void SidebarPrint::render(const Yoga::Vec2f& pos, const Yoga::Vec2f& size)
+{
+    if (m_toggles_dirty) {
+        m_toggles_dirty = false;
+        set_settings_toggles(m_project_interactor.preset_interactor().print_settings_toggles());
+    }
+    if (m_toggles_version != settings_toggles_version()) {
+        m_toggles_version = settings_toggles_version();
+        // re-filters the pages, greys out the rows, hides the tabs left empty
+        set_settings_mode(print_settings_mode());
+    }
+    Yoga::Item::render(pos, size);
+}
+
 void SidebarPrint::select_tab(size_t index)
 {
     m_tab_buttons.at(index)->set_checked(true);
@@ -370,6 +384,11 @@ void SidebarPrint::update_visibility()
     if (m_object_list != nullptr) {
         m_object_list->set_visible(m_objects_mode);
         m_object_settings->set_visible(m_objects_mode && m_object_selected);
+        // windows of their own drawn over the Process window: in front when shown, else its background covers them
+        if (m_objects_mode)
+            for (Yoga::Item* item : {m_object_list, m_object_settings})
+                if (auto* window = dynamic_cast<Yoga::Window*>(item))
+                    window->bring_to_front();
     }
 }
 
@@ -426,6 +445,7 @@ void SidebarPrint::on_preset_selection_changed(
     Biz::Preset::PresetItemType type
 )
 {
+    m_toggles_dirty = true;
     if (m_project_interactor.selected_project_id() == project_id
         && m_project_interactor.selected_config_container_id() == config_container_id)
     {
@@ -454,6 +474,7 @@ void SidebarPrint::on_preset_value_changed(
     const Domain::ConfigItem& item
 )
 {
+    m_toggles_dirty = true;
     if (std::holds_alternative<Domain::FDMConfigLocation>(item.location())) {
         const auto location{std::get<Domain::FDMConfigLocation>(item.location())};
         if (location == Domain::FDMConfigLocation::Print) {
@@ -472,6 +493,7 @@ void SidebarPrint::on_preset_value_changed(
 
 void SidebarPrint::on_preset_bundles_loaded()
 {
+    m_toggles_dirty = true;
     refresh_print_combobox_label_color();
     refresh_tools_comboboxes_label_colors();
 }
@@ -481,6 +503,7 @@ void SidebarPrint::on_config_container_selection_changed(
     Domain::SelectionId config_container_id
 )
 {
+    m_toggles_dirty = true;
     if (m_project_interactor.selected_project_id() == project_id
         && m_project_interactor.selected_config_container_id() == config_container_id)
     {

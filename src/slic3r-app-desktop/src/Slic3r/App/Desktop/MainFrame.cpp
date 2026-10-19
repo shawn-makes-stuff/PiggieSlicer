@@ -144,6 +144,24 @@ MainFrame::MainFrame(
     complete_and_bind_left_bar();
 
     this->Bind(
+        wxEVT_MENU,
+        [this](wxCommandEvent& event)
+        {
+            const size_t index = size_t(event.GetId() - ACCEL_ID_FIRST);
+            if (index >= m_accel_commands.size())
+                return;
+            if (!m_canvas->HasFocus()) {
+                m_canvas->SetFocus();
+            }
+            if (Platform::ICommand* cmd_ptr = m_accel_commands[index]; cmd_ptr->enabled()) {
+                cmd_ptr->execute();
+            }
+        },
+        ACCEL_ID_FIRST,
+        ACCEL_ID_FIRST + ACCEL_ID_COUNT - 1
+    );
+
+    this->Bind(
         wxEVT_SYS_COLOUR_CHANGED,
         [this](wxSysColourChangedEvent& event)
         {
@@ -485,6 +503,7 @@ void MainFrame::update_accel_table()
 #else
     std::vector<wxAcceleratorEntry> entries;
     entries.reserve(100);
+    m_accel_commands.clear();
 
     auto add_entry = [&entries, this](const std::string& cmd_id, Platform::ICommand* cmd_ptr) {
         if (!cmd_ptr->keyboard_shortcuts().has_value()) {
@@ -494,25 +513,16 @@ void MainFrame::update_accel_table()
 
         std::vector<std::string>  keyboard_shortcuts = cmd_ptr->keyboard_shortcut_accel_string();
         for (const std::string& keyboard_shortcut : keyboard_shortcuts) {
-            int entry_id = wxNewId();
+            if (m_accel_commands.size() >= size_t(ACCEL_ID_COUNT)) {
+                assert(false); // raise ACCEL_ID_COUNT
+                return;
+            }
+            const int entry_id = ACCEL_ID_FIRST + int(m_accel_commands.size());
             if (auto entry{ std::unique_ptr<wxAcceleratorEntry>{wxAcceleratorEntry::Create(
                     WX::from_u8("\t" + keyboard_shortcut))} })
             {
                 entries.emplace_back(entry->GetFlags(), entry->GetKeyCode(), entry_id);
-
-                this->Bind(
-                    wxEVT_MENU,
-                    [cmd_ptr, this](wxCommandEvent& event)
-                    {
-                        if (!m_canvas->HasFocus()) {
-                            m_canvas->SetFocus();
-                        }
-                        if (cmd_ptr->enabled()) {
-                            cmd_ptr->execute();
-                        }
-                    },
-                    entry_id
-                );
+                m_accel_commands.push_back(cmd_ptr);
             }
         }
     };

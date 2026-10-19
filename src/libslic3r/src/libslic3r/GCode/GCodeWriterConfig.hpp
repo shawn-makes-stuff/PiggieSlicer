@@ -22,6 +22,8 @@ struct GCodeWriterConfig
     double max_jerk_y{};
     bool accel_to_decel_enable{};
     bool manual_filament_change{};
+    // Orca: T commands also on one nozzle fed with several filaments (not on Bambu printers)
+    bool filament_toolchange_commands{};
     double accel_to_decel_factor{};
     double max_junction_deviation{};
 

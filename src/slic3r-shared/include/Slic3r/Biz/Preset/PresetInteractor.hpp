@@ -9,6 +9,7 @@
 #include <tl/expected.hpp>
 
 #include "Slic3r/Domain/Workbench.hpp"
+#include "Slic3r/Domain/SettingsToggles.hpp"
 
 #include "Slic3r/Biz/ISlicingInputChangedListener.hpp"
 #include "Slic3r/InvokeLaterBag.hpp"
@@ -120,6 +121,9 @@ public:
     /// every template of every vendor (the CLI, and the one migration start of an older setup).
     void set_added_printers(std::optional<std::set<std::string>> added_printers);
     static std::string added_printer_key(const std::string& vendor_id, const std::string& template_id);
+    /// The added_printer_key of every vendor template whose printer is named `name` (reads the
+    /// vendors' templates only, no presets): lets the CLI build just the printer it was asked for.
+    static std::set<std::string> template_printers_named(const IO::BundlePaths& bundle_paths, const std::string& name);
     /// The added_printer_key of the loaded printers with a system printer preset among preset_ids
     /// (what the favourites-filtered printer list showed before the added list existed).
     std::set<std::string> added_printers_with_presets(const std::set<std::string>& preset_ids) const;
@@ -331,6 +335,9 @@ public:
 
     ConfigBoxInteractor& printer_cbi();
     PrintToolConfigBoxInteractor& print_tool_cbi();
+    /// The print settings greyed out / hidden by the current print values and the selected printer (Orca's
+    /// ConfigManipulation rules, Domain::print_settings_toggles).
+    Domain::SettingsToggles print_settings_toggles();
     OverridableCBIObservableList& material_cbi_list();
     const OverridableCBIObservableList& material_cbi_list() const;
 

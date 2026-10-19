@@ -167,7 +167,7 @@ void ConfigRowItem::navigate_to_item(const Domain::ConfigItem* config_item)
 {
     if (m_state == config_item) {
         // the active tab's colour (subdued piggie pink)
-        set_border_color(m_theme->color_imgui(Platform::Color::Button, Platform::ColorGroup::Active));
+        set_border_color(m_theme->color_imgui(Platform::Color::AccentPrimary)); // the search highlight: piggie pink
     } else {
         set_border_color(m_theme->color_imgui(Platform::Color::Transparent));
     }

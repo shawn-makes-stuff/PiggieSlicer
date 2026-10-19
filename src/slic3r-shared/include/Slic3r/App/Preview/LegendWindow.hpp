@@ -64,6 +64,9 @@ private:
     Row m_total;
     Yoga::Item* m_cost_row{nullptr};
     Yoga::Text* m_cost{nullptr};
+    // the time and filament of each feature (extrusion role), coloured as the legend
+    Yoga::Item* m_features_header{nullptr};
+    Yoga::Item* m_features{nullptr};
 };
 
 } // namespace Slic3r::App::Preview

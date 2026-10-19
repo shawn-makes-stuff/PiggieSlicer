@@ -54,6 +54,8 @@ public:
      * @note use this method when you are not working with real images or files that represents an image
      */
     TexturePtr get_or_create_dynamic(const std::string& name, Domain::PixelFormat pf, size_t w, size_t h);
+    /// The live dynamic texture of this name, or nullptr (lets callers skip regenerating its data).
+    TexturePtr find_dynamic(const std::string& name) const;
 
     /**
      * @brief Drop all cached image textures and the remembered on-disk size for the given filename.

@@ -109,7 +109,10 @@ add_library(slic3r-domain STATIC
     include/Slic3r/Domain/ConfigDefsFDM.hpp
     src/Slic3r/Domain/ConfigDefsFDM.cpp
     include/Slic3r/Domain/OrcaLayout.hpp
+    include/Slic3r/Domain/SettingsToggles.hpp
+    include/Slic3r/Domain/InfillPatternTraits.hpp
     src/Slic3r/Domain/OrcaLayout.cpp
+    src/Slic3r/Domain/SettingsToggles.cpp
 
     include/Slic3r/Domain/ConfigBoxesFDM.hpp
     src/Slic3r/Domain/ConfigBoxesFDM.cpp

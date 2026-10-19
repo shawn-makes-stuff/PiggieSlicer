@@ -60,6 +60,8 @@ ObjectListWindow::ObjectListWindow(Biz::ProjectInteractor* project_interactor, b
 
     m_object_list = m_scroll_area->emplace_back<ObjectList>(project_interactor, mode);
     m_object_list->set_flex_shrink(0.f);
+    // the scroll area lays out horizontally: grow to its width (else 0 wide in the Process section's Objects tab)
+    m_object_list->set_flex_grow(1.f);
     m_object_list->set_horizontal_padding(15.f);
 
     init_cc_context_menu();

@@ -11,6 +11,7 @@
 #include "Slic3r/App/Config/PrintToolRowButton.hpp"
 #include "Slic3r/App/Config/ExplanationContainer.hpp"
 #include "Slic3r/App/Config/FavoriteButton.hpp"
+#include "Slic3r/App/Config/PrintTabListView.hpp"
 #include "Slic3r/App/AppServices.hpp"
 #include "Slic3r/App/AppConfigInteractor.hpp"
 
@@ -103,8 +104,7 @@ PrintToolRowItem::~PrintToolRowItem()
 void PrintToolRowItem::navigate_to_item(const Domain::ConfigItem* config_item)
 {
     if (config_item && m_state->print_item->name() == config_item->name()) {
-        // the active tab's colour (subdued piggie pink), as ConfigRowItem
-        set_border_color(m_theme->color_imgui(Platform::Color::Button, Platform::ColorGroup::Active));
+        set_border_color(m_theme->color_imgui(Platform::Color::AccentPrimary)); // the search highlight: piggie pink
         if (m_main_button) {
             m_main_button->set_checked(true);
         }
@@ -227,6 +227,9 @@ void PrintToolRowItem::on_preset_item_discarded_changes(
 
 void PrintToolRowItem::on_data_update()
 {
+    // greyed out when a setting it depends on makes it ineffective (Orca toggle_field)
+    set_enabled(!is_setting_disabled(m_state->name));
+
     const bool need_multiple =
         m_state->shared_context.has_multiple_extruders && !m_state->tool_overrides.empty();
     const bool need_init = m_initialized_type == InitializedType::None

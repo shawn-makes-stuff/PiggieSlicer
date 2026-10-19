@@ -4,12 +4,15 @@
 #include <Slic3r/App/libvgcode/FdmViewer.hpp>
 
 #include "Slic3r/Biz/I18N/I18N.hpp"
+#include "Slic3r/App/AppServices.hpp"
+#include "Slic3r/App/Theme.hpp"
 
 #include <imgui/imgui_internal.h>
 
 namespace Slic3r::App::Preview {
 
-static ImVec4 id_color() { return { 0.99f, 0.41f, 0.2f, 1.0f }; } // color from SidebarAfterSlice::render()
+// the line numbers: piggie pink, as the Slice button (was Prusa orange)
+static ImVec4 id_color() { return AppServices::instance().theme().color_imgui(Platform::Color::AccentPrimary).Value; }
 static ImVec4 cmd_color() { return { 0.8f, 0.8f, 0.0f, 1.0f }; }
 static ImVec4 params_color() { return ImGui::GetStyleColorVec4(ImGuiCol_Text); }
 static ImVec4 comment_color() { return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled); }

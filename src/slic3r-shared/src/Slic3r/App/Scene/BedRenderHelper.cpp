@@ -64,6 +64,19 @@ std::shared_ptr<Render::Texture> BedRenderHelper::label_texture(const std::strin
         s_text_to_image = std::make_unique<Render::TextImageGenerator>(font_path, 128);
     }
 
+    std::string texture_name = "bed_label_" + label;
+    if (color.has_value()) {
+        texture_name += "_" + std::to_string(color->r_uchar());
+        texture_name += "_" + std::to_string(color->g_uchar());
+        texture_name += "_" + std::to_string(color->b_uchar());
+    }
+    else
+        texture_name += "_255_255_255";
+    // the image depends only on the name (label, colour): reuse the live texture instead of
+    // rasterising, mipmapping and compressing it again on every bed rebuild
+    if (std::shared_ptr<Render::Texture> cached = manager.find_dynamic(texture_name))
+        return cached;
+
     Image img = s_text_to_image->to_image(label, 2, 2, color);
     size_t width = img.width();
     size_t height = img.height();
@@ -73,15 +86,6 @@ std::shared_ptr<Render::Texture> BedRenderHelper::label_texture(const std::strin
     while (mipmaps.back().width() > 1 || mipmaps.back().height() > 1) {
         mipmaps.emplace_back(half_sampled(mipmaps.back()));
     }
-
-    std::string texture_name = "bed_label_" + label;
-    if (color.has_value()) {
-        texture_name += "_" + std::to_string(color->r_uchar());
-        texture_name += "_" + std::to_string(color->g_uchar());
-        texture_name += "_" + std::to_string(color->b_uchar());
-    }
-    else
-        texture_name += "_255_255_255";
     std::shared_ptr<Render::Texture> tex = manager.get_or_create_dynamic(texture_name, Domain::PixelFormat::RGBA8, width, height);
     tex->set_filtering(Render::TextureMinFilter::MipMapLinearLinear, Render::TextureMagFilter::Linear);
     for (size_t i = 0; i < mipmaps.size(); ++i) {

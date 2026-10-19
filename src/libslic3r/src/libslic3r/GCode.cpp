@@ -1475,15 +1475,20 @@ Domain::ExtraPrintStatistics GCodeGenerator::_do_export(
     file.write_format("; %s\n", Slic3r::header_slic3r_generated().c_str());
     if (! prepared_by_info.empty())
         file.write_format("; prepared by %s\n", prepared_by_info.c_str());
+    // each slot's colour: the extruder colour, else the filament colour
+    const std::vector<std::string> extruder_colours = print.config().get<std::vector<std::string>>("extruder_colour");
+    const std::vector<std::string> filament_colours = print.config().get<std::vector<std::string>>("filament_colour");
+    const auto slot_colour = [&](unsigned int id) {
+        std::string colour = id < extruder_colours.size() ? extruder_colours[id] : std::string{};
+        if (colour.empty() && id < filament_colours.size())
+            colour = filament_colours[id];
+        return colour;
+    };
+    std::string paint_info;
     {
-        std::vector<std::string>       colours          = print.config().get<std::vector<std::string>>("extruder_colour");
-        const std::vector<std::string> filament_colours = print.config().get<std::vector<std::string>>("filament_colour");
-        const std::vector<std::string> filament_types   = print.config().get<std::vector<std::string>>("filament_type");
-        std::string paint_info;
+        const std::vector<std::string> filament_types = print.config().get<std::vector<std::string>>("filament_type");
         for (unsigned int id : tool_ordering.all_extruders()) {
-            std::string colour = id < colours.size() ? colours[id] : std::string{};
-            if (colour.empty() && id < filament_colours.size())
-                colour = filament_colours[id];
+            const std::string colour = slot_colour(id);
             Domain::ColorRGB rgb;
             if (!Biz::Algorithms::Color::decode_color(colour, rgb))
                 rgb = Domain::ColorRGB{1.f, 1.f, 1.f};
@@ -1570,6 +1575,7 @@ Domain::ExtraPrintStatistics GCodeGenerator::_do_export(
     // Orca: the skirt / brim groups
     m_skirt_group_done.assign(print.skirt_brim_groups().size(), {});
     m_pending_brims.clear();
+    m_tour_cache.clear();
     for (const Print::SkirtBrimGroup &group : print.skirt_brim_groups())
         for (const Print::SkirtBrimGroup::Brim &brim : group.brims)
             if (! brim.brim.empty())
@@ -1869,11 +1875,34 @@ Domain::ExtraPrintStatistics GCodeGenerator::_do_export(
     // if exporting gcode in ascii format, config export is done here
     // Append full config, delimited by two 'phony' configuration keys prusaslicer_config = begin and prusaslicer_config = end.
     // The delimiters are structured as configuration key / value pairs to be parsable by older versions of PrusaSlicer G-code viewer.
+    // Anycubic Slicer Next's blocks: the Kobra firmware reads the filament colours and ACE slots from the
+    // config block and paint_info again from the ams_info block at the end
+    const bool anycubic = print.config().hw_config().vendor_id == "Anycubic";
     if (write_config_block) {
-        file.write("\n; prusaslicer_config = begin\n");
-        file.write(std::string("; ") + boost::replace_all_copy(serialized_config.ini, "\n", "\n; ") + "\n");
-        file.write("; prusaslicer_config = end\n\n");
+        std::string ini = serialized_config.ini;
+        // the filament colours are the slots' colours (3.0 keeps them per project, Orca-style readers look here)
+        std::string colours, boxes, slots;
+        for (unsigned int id = 0; id < std::max<size_t>({filament_colours.size(), extruder_colours.size(), 1}); ++id) {
+            colours += (id == 0 ? "" : ";") + slot_colour(id);
+            boxes += id == 0 ? "0" : ",0";
+            slots += (id == 0 ? "" : ",") + std::to_string(id + 1);
+        }
+        const std::string key = "\nfilament_colour = ";
+        if (const size_t start = ini.find(key); start != std::string::npos)
+            ini.replace(start + key.size(), ini.find('\n', start + 1) - start - key.size(), colours);
+        if (anycubic) {
+            ini = "ace_t_box_vector = " + boxes + "\nace_t_slot_vector = " + slots + "\n" + ini;
+            file.write("\n; CONFIG_BLOCK_START = begin\n");
+        }
+        file.write(anycubic ? "; prusaslicer_config = begin\n" : "\n; prusaslicer_config = begin\n");
+        file.write(std::string("; ") + boost::replace_all_copy(ini, "\n", "\n; ") + "\n");
+        file.write("; prusaslicer_config = end\n");
+        if (anycubic)
+            file.write("; CONFIG_BLOCK_END = end\n");
+        file.write("\n");
     }
+    if (anycubic)
+        file.write_format("\n; ams_info = begin\n; paint_info = [%s]\n; ams_info = end\n\n", paint_info.c_str());
 
     if (std::optional<std::string> line_M84 = find_M84(print.config().get<std::string>("end_gcode"));
         is_mk2_or_mk3(print.config().get<std::string>("printer_model")) && line_M84.has_value()) {
@@ -2956,6 +2985,7 @@ std::vector<GCode::ExtrusionOrder::ExtruderExtrusions> GCodeGenerator::get_sorte
             instances_to_print,
             skirt_group_due,
             m_pending_brims,
+            m_tour_cache,
             this->m_writer.extruder()->id(),
             smooth_path,
             previous_position

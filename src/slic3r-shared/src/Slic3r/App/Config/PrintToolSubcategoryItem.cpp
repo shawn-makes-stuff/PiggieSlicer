@@ -61,6 +61,8 @@ PrintToolSubcategoryItem::PrintToolSubcategoryItem(
         [this](const Biz::PrintToolItem& item) -> bool
         {
             const Domain::ConfigItemDef& def = item.print_item->def();
+            if (is_setting_hidden(item.name))
+                return false;
             if (m_orca_layout)
                 return def.orca_group == m_orca_group && is_shown_in_mode(def);
             return def.option_group == m_option_group && def.category == m_category;
@@ -144,6 +146,8 @@ void PrintToolSubcategoryItem::on_data_update()
 void PrintToolSubcategoryItem::refresh_mode()
 {
     m_rows_filter_list->invalidate();
+    for (size_t row_index = 0; row_index < m_rows_filter_list->size() && row_index < m_rows_list_view->object_count(); ++row_index)
+        m_rows_list_view->item_at(row_index)->set_enabled(!is_setting_disabled(m_rows_filter_list->at(row_index).name));
 }
 
 void PrintToolSubcategoryItem::on_index_update()

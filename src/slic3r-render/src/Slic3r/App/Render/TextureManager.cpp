@@ -139,6 +139,12 @@ TexturePtr TextureManager::get_or_create_dynamic(
     return shared_tex;
 }
 
+TexturePtr TextureManager::find_dynamic(const std::string& name) const
+{
+    DynamicTextureMap::const_iterator it = m_dynamic_textures.find(name);
+    return it != m_dynamic_textures.end() ? it->second.lock() : nullptr;
+}
+
 void TextureManager::set_resource_resolver(std::unique_ptr<IResourceResolver> resource_resolver)
 {
     m_resource_resolver = std::move(resource_resolver);

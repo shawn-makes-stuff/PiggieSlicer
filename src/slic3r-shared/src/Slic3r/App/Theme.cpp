@@ -135,7 +135,8 @@ void Theme::initialize_dark_colors()
     m_colors[Platform::Color::AccentPrimary].color_disabled =
         std::make_unique<ImColor>(150, 120, 124);
     m_colors[Platform::Color::AccentSecondary]  = ColorEntry{{0.32f, 0.48f, 0.84f, 1.0f}};
-    m_colors[Platform::Color::AccentTertiary]   = ColorEntry{{175, 119, 255}};
+    // the "modified" marks (tab / preset names, revert buttons): piggie pink, as the Slice button
+    m_colors[Platform::Color::AccentTertiary]   = ColorEntry{k_piggie_pink};
     m_colors[Platform::Color::Error]            = ColorEntry{{0.79f, 0.18f, 0.14f, 1.0f}};
     m_colors[Platform::Color::Success]          = ColorEntry{{0.14f, 0.65f, 0.27f, 1.0f}};
     m_colors[Platform::Color::Warning]          = ColorEntry{{255, 193, 7}};
@@ -228,7 +229,8 @@ void Theme::initialize_light_colors()
     // Piggie pink is the primary accent
     m_colors[Platform::Color::AccentPrimary]    = ColorEntry{k_piggie_pink};
     m_colors[Platform::Color::AccentSecondary]  = ColorEntry{{0.32f, 0.48f, 0.84f, 1.0f}};
-    m_colors[Platform::Color::AccentTertiary]   = ColorEntry{{175, 119, 255}};
+    // the "modified" marks (tab / preset names, revert buttons): piggie pink, as the Slice button
+    m_colors[Platform::Color::AccentTertiary]   = ColorEntry{k_piggie_pink};
     m_colors[Platform::Color::Error]            = ColorEntry{{0.79f, 0.18f, 0.14f, 1.0f}};
     m_colors[Platform::Color::Success]          = ColorEntry{{0.14f, 0.65f, 0.27f, 1.0f}};
     m_colors[Platform::Color::Warning]          = ColorEntry{{0.85f, 0.47f, 0.02f, 1.0f}};

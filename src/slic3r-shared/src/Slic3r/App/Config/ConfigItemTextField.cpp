@@ -56,9 +56,13 @@ void ConfigItemTextField::on_data_update()
             if (m_state->def().multiline) {
                 set_input_flags(input_flags() | ImGuiInputTextFlags_Multiline);
                 set_resizable(true);
-                input_text()->set_min_height(80);
-                // a few lines to start with, not the whole G-code / notes; drag to resize
-                input_text()->set_height(120);
+                // 6 lines to start with, not the whole G-code / notes; drag to resize (the last frame's
+                // font: 120 before the first frame)
+                const float line_height = ImGui::GetCurrentContext() != nullptr && ImGui::GetFontSize() > 0.f ?
+                    ImGui::GetTextLineHeightWithSpacing() : 20.f;
+                const float padding     = ImGui::GetCurrentContext() != nullptr ? 2.f * ImGui::GetStyle().FramePadding.y : 0.f;
+                input_text()->set_min_height(2.f * line_height + padding);
+                input_text()->set_height(6.f * line_height + padding);
             } else {
                 set_input_flags(input_flags() & ~ImGuiInputTextFlags_Multiline);
                 set_resizable(false);

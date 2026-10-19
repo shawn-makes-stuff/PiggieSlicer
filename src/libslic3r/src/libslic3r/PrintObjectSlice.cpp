@@ -953,10 +953,19 @@ static std::vector<PrintObject::VolumeGroupSlices> group_volumes_for_brim(
                 return mv;
         return nullptr;
     };
-    std::vector<VolumeSlices> parts;
+    std::vector<const VolumeSlices*> part_slices;
     for (const VolumeSlices &vs : volume_slices)
         if (const Domain::ModelVolume *mv = volume_of(vs.volume_id); mv != nullptr && mv->is_model_part())
-            parts.push_back(vs);
+            part_slices.push_back(&vs);
+    // only the connections between parts look past the first layer: a single part is copied (and offset)
+    // on its first layer alone, the rest would be thrown away
+    std::vector<VolumeSlices> parts;
+    parts.reserve(part_slices.size());
+    for (const VolumeSlices *vs : part_slices)
+        if (part_slices.size() > 1 || vs->slices.empty())
+            parts.push_back(*vs);
+        else
+            parts.push_back({ vs->volume_id, { vs->slices.front() } });
 
     const double offset_value = 0.05 / SCALING_FACTOR;
     for (VolumeSlices &vs : parts)

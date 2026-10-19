@@ -14,6 +14,11 @@ PrintToolConfigBoxInteractor::PrintToolConfigBoxInteractor(
     set_accessor.set_source(m_observable_list.get());
 }
 
+const Domain::ConfigItem* PrintToolConfigBoxInteractor::find_print_item(const std::string& name) const
+{
+    return m_observable_list->find_print_item(name);
+}
+
 const Domain::ConfigValue* PrintToolConfigBoxInteractor::find_print_value(
     const std::string& name
 ) const

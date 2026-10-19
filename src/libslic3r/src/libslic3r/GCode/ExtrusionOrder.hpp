@@ -143,6 +143,10 @@ using PathSmoothingFunction = std::function<PathSmoothingResult(
 // Orca: whether the skirt of a skirt / brim group is printed on this layer, with the layer's skirt height
 using SkirtGroupDueFunction = std::function<std::optional<double>(std::size_t group_idx)>;
 
+// Orca m_ordering_cache: per extruder the island tour of the last layer, reused while its points are the same (the
+// points are on a 1 mm grid, so the layers of a straight wall keep it). One per G-code export.
+using TourCache = std::map<unsigned, std::pair<Points, std::vector<std::size_t>>>;
+
 struct ExtruderExtrusions {
     unsigned extruder_id;
     // Orca: the combined skirts (with the first extruder of the layer) and the layer's skirt height
@@ -167,6 +171,7 @@ std::vector<ExtruderExtrusions> get_extrusions(
     const SkirtGroupDueFunction &skirt_group_due,
     // Orca: the instances whose brims are not printed yet, those printed now are taken out
     std::set<ObjectInstanceID> &pending_brims,
+    TourCache &tour_cache,
     unsigned current_extruder_id,
     const PathSmoothingFunction &smooth_path,
     std::optional<Point> previous_position

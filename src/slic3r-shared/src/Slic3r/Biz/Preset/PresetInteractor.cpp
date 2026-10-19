@@ -302,9 +302,48 @@ void PresetInteractor::set_added_printers(std::optional<std::set<std::string>> a
     m_added_printers = std::move(added_printers);
 }
 
+Domain::SettingsToggles PresetInteractor::print_settings_toggles()
+{
+    const Domain::Preset::SelectedPreset& printer = selected_printer_preset();
+    const auto printer_value = [&printer](const std::string& key) -> const Domain::ConfigValue* {
+        const Domain::ConfigItem* item = printer.printer.config_box().items.find(key);
+        return item != nullptr ? &item->value() : nullptr;
+    };
+    const auto printer_bool = [&printer_value](const std::string& key) {
+        const Domain::ConfigValue* value = printer_value(key);
+        return value != nullptr && value->holds_alternative<bool>() && value->get<bool>();
+    };
+    Domain::PrinterKind kind;
+    kind.nozzles                        = printer.hw_config.tools.size();
+    kind.filaments                      = printer.hw_config.material_slot_count();
+    kind.single_extruder_multi_material = printer_bool("single_extruder_multi_material");
+    kind.purge_in_prime_tower           = printer_bool("purge_in_prime_tower");
+    if (const Domain::ConfigValue* flavor = printer_value("gcode_flavor"); flavor != nullptr && flavor->holds_alternative<Domain::EnumWrapper>())
+        kind.gcode_flavor = flavor->get<Domain::GCodeFlavor>();
+    if (const Domain::ConfigValue* jd = printer_value("machine_max_junction_deviation"); jd != nullptr && jd->holds_alternative<std::vector<double>>()) {
+        const std::vector<double> values = jd->get<std::vector<double>>();
+        kind.junction_deviation = kind.gcode_flavor == Domain::GCodeFlavor::gcfMarlinFirmware && !values.empty() && values.front() > 0.;
+    }
+    PrintToolConfigBoxInteractor& cbi = print_tool_cbi();
+    return Domain::print_settings_toggles([&cbi](const std::string& key) { return cbi.find_print_value(key); }, kind);
+}
+
 std::string PresetInteractor::added_printer_key(const std::string& vendor_id, const std::string& template_id)
 {
     return vendor_id + "/" + template_id;
+}
+
+std::set<std::string> PresetInteractor::template_printers_named(const IO::BundlePaths& bundle_paths, const std::string& name)
+{
+    const std::set<std::string> no_preset_vendors;
+    const Domain::Preset::Bundle bundle = IO::load_bundle(bundle_paths, &no_preset_vendors);
+    HwConfigEvaluator config_eval;
+    std::set<std::string> keys;
+    for (const auto& [vendor, vendor_bundle] : bundle.vendor_bundles)
+        for (const auto& hw_printer_template : vendor_bundle.vendor_data.printer_configs)
+            if (config_eval.create_printer_config(hw_printer_template, vendor_bundle.vendor_data).name == name)
+                keys.insert(added_printer_key(vendor, hw_printer_template.id));
+    return keys;
 }
 
 std::set<std::string> PresetInteractor::added_printers_with_presets(const std::set<std::string>& preset_ids) const
@@ -2975,6 +3014,16 @@ void PresetInteractor::set_item_value(
     );
     m_backup_store.invalidate_backup(m_selected_project_id);
     invoke_on_preset_value_changed(item);
+    // the settings this one conflicts with (Orca ConfigManipulation): turned off / adjusted
+    if (const auto location = item.location(); std::holds_alternative<Domain::FDMConfigLocation>(location) &&
+        std::get<Domain::FDMConfigLocation>(location) == Domain::FDMConfigLocation::Print) {
+        PrintToolConfigBoxInteractor& cbi = print_tool_cbi();
+        for (const auto& [key, fixed] : Domain::print_settings_fixes(name, [&cbi](const std::string& k) { return cbi.find_print_value(k); })) {
+            m_print_tool_cbi_accessor.set_print_value(key, fixed);
+            if (const Domain::ConfigItem* fixed_item = cbi.find_print_item(key))
+                invoke_on_preset_value_changed(*fixed_item);
+        }
+    }
     invoke_slicing_input_changed();
 }
 

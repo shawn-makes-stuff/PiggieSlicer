@@ -159,11 +159,16 @@ void PrintToolConfigObservableList::set_tool_value(
     }
 }
 
+const Domain::ConfigItem* PrintToolConfigObservableList::find_print_item(const std::string& name) const
+{
+    return m_print_config_box->items.find(name);
+}
+
 const Domain::ConfigValue* PrintToolConfigObservableList::find_print_value(
     const std::string& name
 ) const
 {
-    Domain::ConfigItem* found_item = m_print_config_box->items.find(name);
+    const Domain::ConfigItem* found_item = find_print_item(name);
     return found_item ? &found_item->value() : nullptr;
 }
 
